@@ -1,6 +1,6 @@
 # Welcome to Co-book
 
-![image-20200721094245879](images/README/image-20200721094245879.png)
+![co-book](./images/README/co-book.png)
 
 > 코북 (Co-book) 웹사이트 
 
