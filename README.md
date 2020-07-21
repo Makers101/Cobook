@@ -24,7 +24,7 @@
 
 **Hyo Jin Lim**
 
-- 😉Github: [@genie97](https://github.com/genie97)
+- 🐰Github: [@genie97](https://github.com/genie97)
 
 **Da Hun Jeong**
 
