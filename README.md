@@ -20,7 +20,7 @@
 
 **Sun Hwan Park**
 
-- 😄Github: [@SunHwan-Park](https://github.com/SunHwan-Park)
+- 🧙‍♂️Github: [@SunHwan-Park](https://github.com/SunHwan-Park)
 
 **Hyo Jin Lim**
 
