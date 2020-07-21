@@ -56,12 +56,11 @@
     <a href="./document/Dev_log/20200717_회의록.md"><li>7/17 - 기획 (서비스 이름), Convention 정하기</li></a>
     </ul>
 </details>
-
 <details>
     <summary>2주차</summary>
     <ul>
-        <li><a href="../document/Dev_log/20200720_회의록.md">7/20 - 기획 (발표 준비) + ERD + 개발 환경 세팅</a></li>
-        <li><a href="../document/Dev_log/20200721_회의록.md">7/21 - ERD + OAuth/Book API 관련 discussion</a></li>
+        <li><a href="Document/Dev_log/20200720_회의록.md">7/20 - 기획 (발표 준비) + ERD + 개발 환경 세팅</a></li>
+        <li><a href="Document/Dev_log/20200721_회의록.md">7/21 - ERD + OAuth/Book API 관련 discussion</a></li>
     </ul>
 </details>
 
