@@ -12,7 +12,7 @@
 
 **Soo Min Hwang**
 
-- 😊Github: [@smhwang0109](https://github.com/smhwang0109)
+- 🐲Github: [@smhwang0109](https://github.com/smhwang0109)
 
 **Chae Lin Shin**
 
