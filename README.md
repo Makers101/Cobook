@@ -28,7 +28,7 @@
 
 **Da Hun Jeong**
 
-- 😃Github: [@PandaHun](https://github.com/PandaHun)
+- 🐼Github: [@PandaHun](https://github.com/PandaHun)
 
 <br>
 
