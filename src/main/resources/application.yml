@@ -1,0 +1,33 @@
+spring:
+  profiles:
+    active: local
+
+---
+
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/cobook
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /console
+  jpa:
+    hibernate:
+      ddl-auto: create
+  thymeleaf:
+    cache: false
+  security:
+    oauth2:
+      client:
+        registration:
+           google:
+             client-id: 722675530533-8lddsa5lo60rlmmlijrno06n5elge0tn.apps.googleusercontent.com
+             client-secret: bFE2aTcKEFwHSDhrMyUrUJz2
+---
+#spring:
+#  profiles: dev
+#    include: cobook
