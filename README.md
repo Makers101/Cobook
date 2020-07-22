@@ -48,12 +48,12 @@
 <details>
     <summary>1주차</summary>
     <ul>
-        <a href="./document/Dev_log/20200710_회의록.md"><li>7/10 - 기획 (모씨 및 어라운드/ 페르소나 설정)</li></a>
-    <a href="./document/Dev_log/20200713_회의록.md"><li>7/13 - 기획 (아이돌 - 스토리라인/ 아이돌 왕국)</li></a>
-    <a href="./document/Dev_log/20200714_회의록.md"><li>7/14 - 기획 (아이돌- 아이디어 스크럼/ 저작권 관련 & 책모임)</li></a>
-    <a href="./document/Dev_log/20200715_회의록.md"><li>7/15 - 개인과제 진행</li></a>
-    <a href="./document/Dev_log/20200716_회의록.md"><li>7/16 - 기획(책모임-아이디어 회의/ 프로젝트 방향성/ 와이어프레임)</li></a>
-    <a href="./document/Dev_log/20200717_회의록.md"><li>7/17 - 기획 (서비스 이름), Convention 정하기</li></a>
+        <a href="Document/Dev_log/20200710_회의록.md"><li>7/10 - 기획 (모씨 및 어라운드/ 페르소나 설정)</li></a>
+    <a href="Document/Dev_log/20200713_회의록.md"><li>7/13 - 기획 (아이돌 - 스토리라인/ 아이돌 왕국)</li></a>
+    <a href="Document/Dev_log/20200714_회의록.md"><li>7/14 - 기획 (아이돌- 아이디어 스크럼/ 저작권 관련 & 책모임)</li></a>
+    <a href="Document/Dev_log/20200715_회의록.md"><li>7/15 - 개인과제 진행</li></a>
+    <a href="Document/Dev_log/20200716_회의록.md"><li>7/16 - 기획(책모임-아이디어 회의/ 프로젝트 방향성/ 와이어프레임)</li></a>
+    <a href="Document/Dev_log/20200717_회의록.md"><li>7/17 - 기획 (서비스 이름), Convention 정하기</li></a>
     </ul>
 </details>
 <details>
