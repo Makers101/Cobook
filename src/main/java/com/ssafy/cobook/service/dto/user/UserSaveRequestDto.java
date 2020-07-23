@@ -5,8 +5,6 @@ import com.ssafy.cobook.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,11 +16,9 @@ public class UserSaveRequestDto {
     private PlatformType platformType;
 
     public User toEntity(){
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodePassword = passwordEncoder.encode(password);
         return User.builder()
                 .email(email)
-                .password(encodePassword)
+                .password(password)
                 .userName(userName)
                 .platformType(platformType)
                 .build();
