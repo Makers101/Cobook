@@ -9,6 +9,7 @@ import com.ssafy.cobook.domain.postcomment.PostComment;
 import com.ssafy.cobook.domain.postlike.PostLike;
 import com.ssafy.cobook.domain.readingmember.ReadingMember;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -61,4 +62,12 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<MeetUpMember> meetUpMembers = new ArrayList<>();
+
+    @Builder
+    public User(String email, String password, String userName, PlatformType platformType){
+        this.email = email;
+        this.password = password;
+        this.userName = userName;
+        this.platformType = platformType;
+    }
 }

@@ -3,6 +3,7 @@ package com.ssafy.cobook.config.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -18,12 +19,15 @@ import java.util.stream.Collectors;
 
 import static com.ssafy.cobook.config.security.SocialType.GOOGLE;
 
-
+@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeRequests()
-                .antMatchers("/", "/oauth2/**", "/login/**", "/css/**",
+        // csrf().disable() 처리는 추후에 front에서 하는걸로 변경할 필요 있음 => 보안상 좋다고 함 "jin"
+        httpSecurity
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/", "/oauth2/**", "/api/**", "/css/**",
                         "/images/**", "/js/**", "/console/**", "/favicon.ico/**")
                 .permitAll()
                 .antMatchers("/google").hasAuthority(GOOGLE.getRoleType())
