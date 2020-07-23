@@ -16,6 +16,7 @@ public class UserSaveRequestDto {
     private PlatformType platformType;
 
     public User toEntity(){
+
         return User.builder()
                 .email(email)
                 .password(password)

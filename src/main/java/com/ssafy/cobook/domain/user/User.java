@@ -70,4 +70,8 @@ public class User {
         this.userName = userName;
         this.platformType = platformType;
     }
+
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
+    }
 }

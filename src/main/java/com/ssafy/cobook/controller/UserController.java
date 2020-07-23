@@ -31,6 +31,5 @@ public class UserController {
     public ResponseEntity<UserResponseDto>saveUser(@RequestBody final UserSaveRequestDto userSaveRequestDto){
         UserResponseDto userResponseDto = userService.saveUser(userSaveRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
-
     }
 }
