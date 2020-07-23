@@ -18,6 +18,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/oauth2/**", "/login/**", "/css/**",
                         "/images/**", "/js/**", "/console/**", "/favicon.ico/**")
                 .permitAll()
+                .antMatchers(
+                        "/v2/api-docs", "/swagger-resources/**",
+                        "/swagger-ui.html", "/webjars/**", "/swagger/**")
+                .permitAll()
                 .antMatchers("/google").hasAuthority(GOOGLE.getRoleType())
                 .anyRequest().authenticated()
                 .and()
@@ -28,7 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/loginFailure")
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
+                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")).and()
+                .cors()
+                .and()
+                .csrf().disable();
     }
 
     @Override
@@ -36,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // swagger 관련 리소스 시큐리티 필터 제거
         web.ignoring().antMatchers(
                 "/v2/api-docs", "/swagger-resources/**",
-                "/swagger-ui.html", "/webjars/**", "/swagger/**");
+                "/swagger-ui.html", "/webjars/**", "/swagger/**", "/configuration/**");
     }
 
     private ClientRegistration getRegistration(OAuth2ClientProperties clientProperties, String client) {
