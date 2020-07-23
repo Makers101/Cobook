@@ -62,6 +62,7 @@
         <li><a href="Document/Dev_log/20200720_회의록.md">7/20 - 기획 (발표 준비) + ERD + 개발 환경 세팅</a></li>
         <li><a href="Document/Dev_log/20200721_회의록.md">7/21 - ERD + OAuth/Book API 관련 discussion</a></li>
         <li><a href="Document/Dev_log/20200722_dev_log.md">7/22 - 기획 발표 + 컨벤션 정리 (Java/Vue) + 지라 이슈 정리 + AWS 확인 + API 요청 리스트 정리</a></li>
+        <li><a href="Document/Dev_log/20200723_dev_log.md">7/23 - Back-end (OAuth + Post CRUD) & Front-end (디자인 회의 + Wireframe) </a></li>
     </ul>
 </details>
 
