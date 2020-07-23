@@ -1,12 +1,20 @@
 package com.ssafy.cobook.config.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.ssafy.cobook.config.security.SocialType.GOOGLE;
 
@@ -47,4 +55,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return null;
     }
 
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository(
+            OAuth2ClientProperties oAuth2ClientProperties,
+            @Value("${custom.oauth2.kakao.client-id}") String kakaoClientId,
+            @Value("${custom.oauth2.kakao.client-secret}") String kakaoClientSecret) {
+        List<ClientRegistration> registrations = oAuth2ClientProperties
+                .getRegistration().keySet().stream()
+                .map(client -> getRegistration(oAuth2ClientProperties, client))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        registrations.add(CustomOAuth2Provider.KAKAO.getBuilder("kakao")
+                .clientId(kakaoClientId)
+                .clientSecret(kakaoClientSecret)
+                .jwkSetUri("temp").build());
+        return new InMemoryClientRegistrationRepository(registrations);
+    }
 }
