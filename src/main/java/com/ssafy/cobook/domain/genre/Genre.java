@@ -1,6 +1,6 @@
 package com.ssafy.cobook.domain.genre;
 
-import com.ssafy.cobook.domain.bookgenre.BookGenre;
+import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.clubgenre.ClubGenre;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
 import lombok.AccessLevel;
@@ -28,7 +28,7 @@ public class Genre {
     private List<UserGenre> userList = new ArrayList<>();
 
     @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL)
-    private List<BookGenre> bookList = new ArrayList<>();
+    private List<Book> bookList = new ArrayList<>();
 
     private String genre;
 }

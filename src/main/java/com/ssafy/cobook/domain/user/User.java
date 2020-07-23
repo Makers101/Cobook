@@ -9,8 +9,7 @@ import com.ssafy.cobook.domain.postcomment.PostComment;
 import com.ssafy.cobook.domain.postlike.PostLike;
 import com.ssafy.cobook.domain.readingmember.ReadingMember;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.List;
 
 @Getter
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
@@ -61,4 +60,12 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<MeetUpMember> meetUpMembers = new ArrayList<>();
+
+    @Builder
+    public User(String email, String password, String userName, String description) {
+        this.email = email;
+        this.password = password;
+        this.userName = userName;
+        this.description = description;
+    }
 }
