@@ -25,8 +25,14 @@ spring:
       client:
         registration:
            google:
-             client-id: 722675530533-8lddsa5lo60rlmmlijrno06n5elge0tn.apps.googleusercontent.com
-             client-secret: bFE2aTcKEFwHSDhrMyUrUJz2
+             client-id:
+             client-secret:
+
+custom:
+  oauth2:
+    kakao:
+      client-id:
+      client-secret:
 ---
 #spring:
 #  profiles: dev
