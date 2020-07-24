@@ -60,7 +60,7 @@
 <script>
 export default {
   name: 'Login',
-   data: () => {
+  data() {
     return {
       email: "",
       password: "",
@@ -70,10 +70,52 @@ export default {
       },
       isSubmit: false,
     };
-   },
+  },
+  created() {
+    this.component = this;
+  },
+  watch: {
+    email() {
+      this.checkEmailForm();
+    },
+    password() {
+      this.checkPasswordForm();
+    },
+  },
   methods: {
+    checkEmailForm() {
+      if ( this.email.length > 0 && !this.validEmail(this.email) ) {
+        this.error.email = "올바른 이메일 형식이 아니에요"   
+      }
+      else this.error.email = false;
+    },
+    validEmail(email) {
+      // eslint-disable-next-line
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    },
+    checkPasswordForm() {
+      if (this.password.length > 0 && this.password.length < 8) {
+          this.error.password = "비밀번호가 너무 짧아요"
+        } else if ( this.password.length >= 8 && !this.validPassword(this.password) ) {
+          this.error.password = "영문, 숫자 포함 8 자리 이상이어야 해요.";
+        } else this.error.password = false;
+      
+      let isSubmit = true;
+      Object.values(this.error).map(v => {
+        if (v) isSubmit = false;
+      });
+      this.isSubmit = isSubmit;
+    },
+    validPassword(password) {
+      var va = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z]{8,}$/;
+      return va.test(password);
+    },
     clickSignup() {
       this.$router.push( {name: 'Signup' })
+    },
+    clickLogin() {
+      this.$router.push('/')
     }
   }
 }
