@@ -76,4 +76,8 @@ public class User {
     public void enrollClub(ClubMember clubMember) {
         this.clubMembers.add(clubMember);
     }
+
+    public void addComments(PostComment postComment) {
+        this.comments.add(postComment);
+    }
 }

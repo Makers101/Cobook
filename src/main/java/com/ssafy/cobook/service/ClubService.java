@@ -14,10 +14,12 @@ import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.service.dto.club.*;
+import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
 import com.ssafy.cobook.service.dto.user.UserSimpleResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ClubService {
 
@@ -38,6 +41,7 @@ public class ClubService {
     private final GenreRepository genreRepository;
     private final ClubGenreRepository clubGenreRepository;
 
+    @Transactional
     public ClubCreateResDto create(ClubCreateReqDto reqDto) throws IOException {
         if (clubRepository.findByName(reqDto.getName()).isPresent()) {
             throw new BaseException(ErrorCode.EXIST_CLUB_NAME);
@@ -53,22 +57,25 @@ public class ClubService {
                 .map(g -> clubGenreRepository.save(new ClubGenre(club, g)))
                 .collect(Collectors.toList());
         club.setGenres(clubGenres);
-        club.setProfile(uploadFile(reqDto.getImage()));
+//        club.setProfile(uploadFile(reqDto.getImage()));
         return new ClubCreateResDto(club.getId());
     }
 
     private Genre getGenre(String genre) {
-        return genreRepository.findByGenre(genre)
+        System.out.println(genre);
+        return genreRepository.findByGenreName(genre)
                 .orElseThrow(() -> new BaseException(ErrorCode.INVALID_GENRE));
     }
 
-    private String uploadFile(MultipartFile file) throws IOException {
+    @Transactional
+    public String uploadFile(MultipartFile file) throws IOException {
         String originName = file.getOriginalFilename();
         File dest = new File(IMAGE_DIR + originName);
         file.transferTo(dest);
         return dest.getCanonicalPath();
     }
 
+    @Transactional
     public void joinClub(ClubEnrollReqDto reqDto) {
         User user = getUser(reqDto.getUserId());
         Club club = getClub(reqDto.getClubId());
@@ -97,8 +104,11 @@ public class ClubService {
         Club club = getClub(clubId);
         List<UserSimpleResDto> users = club.getMembers()
                 .stream()
-                .map(c-> new UserSimpleResDto(c.getUser(), c.getRole()))
+                .map(c -> new UserSimpleResDto(c.getUser(), c.getRole()))
                 .collect(Collectors.toList());
-        return new ClubDetailResDto(club, users);
+        List<ReadingSimpleResDto> readings = club.getReadingList().stream()
+                .map(ReadingSimpleResDto::new)
+                .collect(Collectors.toList());
+        return new ClubDetailResDto(club, users, readings);
     }
 }

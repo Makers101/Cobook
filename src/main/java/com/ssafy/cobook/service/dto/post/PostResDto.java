@@ -3,6 +3,7 @@ package com.ssafy.cobook.service.dto.post;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.posttag.PostTag;
 import com.ssafy.cobook.domain.tag.Tag;
+import com.ssafy.cobook.service.dto.posttag.PostTagDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class PostResDto {
     private String bookTitle;
     private Integer likeCount;
     private Integer commentsCount;
-    private List<PostTag> tags;
+    private List<PostTagDto> tags;
 
     public static PostResDto ofClub(Post post) {
         return PostResDto.builder()
@@ -30,7 +31,7 @@ public class PostResDto {
                 .bookTitle(post.getBook().getTitle())
                 .onelineReview(post.getOnelineReview())
                 .userName(post.getClub().getName())
-                .tags(post.getTags())
+//                .tags(post.getTags())
                 .commentsCount(post.getComments().size())
                 .likeCount(post.getPostLikes().size())
                 .build();
@@ -43,14 +44,14 @@ public class PostResDto {
                 .bookTitle(post.getBook().getTitle())
                 .onelineReview(post.getOnelineReview())
                 .userName(post.getUser().getUserName())
-                .tags(post.getTags())
+//                .tags(post.getTags())
                 .commentsCount(post.getComments().size())
                 .likeCount(post.getPostLikes().size())
                 .build();
     }
 
     @Builder
-    public PostResDto(Long postId, String bookImage, String onelineReview, String userName, String bookTitle, Integer likeCount, Integer commentsCount, List<PostTag> tags) {
+    public PostResDto(Long postId, String bookImage, String onelineReview, String userName, String bookTitle, Integer likeCount, Integer commentsCount, List<PostTagDto> tags) {
         this.postId = postId;
         this.bookImage = bookImage;
         this.onelineReview = onelineReview;

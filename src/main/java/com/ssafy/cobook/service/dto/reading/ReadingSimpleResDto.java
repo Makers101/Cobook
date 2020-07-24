@@ -16,6 +16,9 @@ public class ReadingSimpleResDto {
     private String place;
     private LocalDateTime datetime;
     private Integer participant_num;
+    private Long bookId;
+    private String bookImage;
+    private String bookTitle;
 
     public ReadingSimpleResDto(Reading reading) {
         this.readingId = reading.getId();
@@ -23,5 +26,8 @@ public class ReadingSimpleResDto {
         this.place = reading.getPlace();
         this.datetime = reading.getDateTime();
         this.participant_num = reading.getMembers().size();
+        this.bookId = reading.getBook().getId();
+        this.bookImage = reading.getBook().getBookImg();
+        this.bookTitle = reading.getBook().getTitle();
     }
 }

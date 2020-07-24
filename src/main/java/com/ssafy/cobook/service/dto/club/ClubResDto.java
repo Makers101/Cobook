@@ -29,7 +29,7 @@ public class ClubResDto {
         this.onelineDescription = club.getOnelineDescription();
         this.clubGenres = club.getGenres().stream()
                 .map(ClubGenre::getGenre)
-                .map(Genre::getGenre)
+                .map(Genre::getGenreName)
                 .collect(Collectors.toList());
         this.following = club.getFollowList().size();
         this.recruit = club.getRecruit();

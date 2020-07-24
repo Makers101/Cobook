@@ -53,4 +53,8 @@ public class Book {
     public void enrollReading(Reading reading) {
         this.readingBooks.add(reading);
     }
+
+    public void connetPost(Post post) {
+        this.posts.add(post);
+    }
 }

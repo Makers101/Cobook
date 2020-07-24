@@ -4,6 +4,7 @@ import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.book.BookRepository;
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.club.ClubRepository;
+import com.ssafy.cobook.domain.clubmember.MemberRole;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
 import com.ssafy.cobook.domain.reading.Reading;
@@ -16,6 +17,7 @@ import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.service.dto.post.PostSimpleResDto;
 import com.ssafy.cobook.service.dto.question.QuestionResDto;
+import com.ssafy.cobook.service.dto.reading.ReadingApplyReqDto;
 import com.ssafy.cobook.service.dto.reading.ReadingDetailResDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSaveReqDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSaveResDto;
@@ -23,13 +25,14 @@ import com.ssafy.cobook.service.dto.user.UserSimpleResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReadingService {
 
@@ -40,6 +43,7 @@ public class ReadingService {
     private final ReadingMemberRepository readingMemberRepository;
     private final PostRepository postRepository;
 
+    @Transactional
     public ReadingSaveResDto makeReading(ReadingSaveReqDto reqDto) {
         Club club = getClub(reqDto.getClubId());
         Book book = getBook(reqDto.getBookId());
@@ -94,5 +98,21 @@ public class ReadingService {
     private Post getPost(User user, Book book) {
         return postRepository.findByUserAndBook(user, book)
                 .orElse(null);
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(()->new BaseException(ErrorCode.UNEXPECTED_USER));
+    }
+
+    @Transactional
+    public void applyReading(ReadingApplyReqDto reqDto) {
+        Club club = getClub(reqDto.getClubId());
+        Reading reading = getReading(reqDto.getReadingId());
+        if( !reading.getClub().getId().equals(club.getId())) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
+        }
+        User user = getUser(reqDto.getUserId());
+        ReadingMember readingMember = readingMemberRepository.save(new ReadingMember(user, reading, MemberRole.MEMBER));
     }
 }
