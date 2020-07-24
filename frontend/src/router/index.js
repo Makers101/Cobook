@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '@/views/accounts/Login.vue'
 import Signup from '@/views/accounts/Signup.vue'
 import SignupEmail from '@/views/accounts/SignupEmail.vue'
+import PasswordFind from '@/views/accounts/PasswordFind.vue'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ Vue.use(VueRouter)
     path: '/signup/email',
     name: 'SignupEmail',
     component: SignupEmail
+  },
+  {
+    path: '/password',
+    name: 'PasswordFind',
+    component: PasswordFind
   }
 ]
 
