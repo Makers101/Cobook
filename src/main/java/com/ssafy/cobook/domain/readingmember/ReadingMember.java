@@ -1,5 +1,6 @@
 package com.ssafy.cobook.domain.readingmember;
 
+import com.ssafy.cobook.domain.clubmember.MemberRole;
 import com.ssafy.cobook.domain.reading.Reading;
 import com.ssafy.cobook.domain.user.User;
 import lombok.AccessLevel;
@@ -27,5 +28,5 @@ public class ReadingMember {
     private Reading reading;
 
     @Enumerated(EnumType.STRING)
-    private ReadingRole role;
+    private MemberRole role;
 }

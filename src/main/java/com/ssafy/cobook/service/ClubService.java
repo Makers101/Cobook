@@ -97,7 +97,7 @@ public class ClubService {
         Club club = getClub(clubId);
         List<UserSimpleResDto> users = club.getMembers()
                 .stream()
-                .map(c-> new UserSimpleResDto(c.getUser(), c))
+                .map(c-> new UserSimpleResDto(c.getUser(), c.getRole()))
                 .collect(Collectors.toList());
         return new ClubDetailResDto(club, users);
     }
