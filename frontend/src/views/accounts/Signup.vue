@@ -108,7 +108,7 @@ export default {
       isSubmit: false,
     };
   },
-   created() {
+  created() {
     this.component = this;
   },
   watch: {
