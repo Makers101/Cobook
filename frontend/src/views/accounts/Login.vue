@@ -150,7 +150,6 @@ h3 {
   background-color: #88A498;
   color: #F8F8F8;
   width: 70%;
-  /* font-size: 10px; */
 }
 
 .divide {
