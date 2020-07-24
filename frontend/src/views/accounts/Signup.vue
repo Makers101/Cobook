@@ -1,11 +1,12 @@
 <template>
   <div>
-    <div class="container p-3">
+    <div class="container p-3 mt-5">
       <h3>회원가입</h3>
 
       <div class="input-with-label">
         <input 
           v-model="nickName"
+          v-bind:class="{error: error.nickName, complete:!error.nickName&&nickName.length!==0}"
           class="inputs"
           id="nickName"
           placeholder="닉네임" 
@@ -15,12 +16,13 @@
           style="text-transform:lowercase"
         />
         <label for="nickName"></label>
-        <!-- <div class="error-text ml-5" v-if="error.nickName">{{error.nickName}}</div> -->
+        <div class="error-text ml-3" v-if="error.nickName">{{error.nickName}}</div>
       </div>
 
       <div class="input-with-label">
         <input 
           v-model="email" 
+          v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}"
           class="inputs"
           id="email" 
           placeholder="이메일" 
@@ -28,37 +30,44 @@
           autocapitalize="none"
           autocorrect="none"
           style="text-transform:lowercase"
+          required
           />
         <label for="email"></label>
-        <!-- <div class="error-text ml-5" v-if="error.email">{{error.email}}</div> -->
+        <div class="error-text ml-3" v-if="error.email">{{error.email}}</div>
       </div>
 
       <div class="input-with-label">
         <input 
           v-model="password" 
+          
+          v-bind:class="{error : error.password, complete:!error.password&&password.length!==0}"
           class="inputs"
           id="password" 
-          :type="passwordType"
+          type="password"
           placeholder="비밀번호를 입력하세요." 
+          required
         />
         <label for="password"></label>
-        <!-- <div class="error-text ml-5" v-if="error.password">{{error.password}}</div> -->
+        <div class="error-text ml-3" v-if="error.password">{{error.password}}</div>
       </div>
 
       <div class="input-with-label">
         <input
           v-model="passwordConfirm"
-          :type="passwordConfirmType"
+          
+          type="password"
           id="password-confirm"
+          v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&passwordConfirm.length!==0}"
           placeholder="비밀번호를 다시 입력해주세요."
           class="inputs"
+          required
         />
         <label for="password-confirm"></label>
-        <!-- <div class="error-text ml-5" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div> -->
+        <div class="error-text ml-3" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
       </div>
 
       <div class="buttons mt-3">
-        <button class="btn signup-button">가입하기</button>
+        <button class="btn signup-button" :class="{disabled: !isSubmit}" >가입하기</button>
       </div>
 
       <hr class="divide">
@@ -97,24 +106,66 @@ export default {
         passwordConfirm: false,
       },
       isSubmit: false,
-      passwordType: "password",
-      passwordConfirmType: "password",
     };
   },
    created() {
     this.component = this;
-
-    this.passwordSchema
-      .is()
-      .min(8)
-      .is()
-      .max(100)
-      .has()
-      .digits()
-      .has()
-      .letters();
+  },
+  watch: {
+    nickName: function() {
+      this.checknickNameForm();
+    },
+    email: function() {
+      this.checkEmailForm();
+    },
+    password: function() {
+      this.checkPasswordForm();
+    },
+    passwordConfirm: function() {
+      this.checkPasswordConfirmationForm();
+    }
   },
   methods: {
+    checknickNameForm() {
+      if ( this.nickName.length > 0) {
+        this.error.nickName = false;
+      }
+      else this.error.nickName="닉네임을 입력해주세요."
+    },
+    checkEmailForm() {
+      if ( this.email.length > 0 && !this.validEmail(this.email) ) {
+        this.error.email = "올바른 이메일 형식이 아니에요"   
+      }
+      else this.error.email = false;
+    },
+    validEmail(email) {
+      // eslint-disable-next-line
+      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    },
+    checkPasswordForm() {
+      if (this.password.length > 0 && this.password.length < 8) {
+          this.error.password = "비밀번호가 너무 짧아요"
+        } else if ( this.password.length >= 8 && !this.validPassword(this.password) ) {
+          this.error.password = "영문, 숫자 포함 8 자리 이상이어야 해요.";
+        } else this.error.password = false;
+    },
+    validPassword(password) {
+      var va = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z]{8,}$/;
+      return va.test(password);
+    },
+    checkPasswordConfirmationForm() {
+      if (this.password !== this.passwordConfirm )
+        this.error.passwordConfirm = "비밀번호가 일치하지 않아요."
+      else this.error.passwordConfirm = false;
+      
+      // 버튼 활성화 코드 (다 통과 했을 때 넘어갈 수 있도록 생성 )
+      let isSubmit = true;
+      Object.values(this.error).map(v => {
+        if (v) isSubmit = false;
+      });
+      this.isSubmit = isSubmit;
+    },
   }
 }
 </script>
@@ -161,5 +212,27 @@ export default {
   width: 70%;
 }
 
+.inputs:focus {
+  border-style: none;
+  border-bottom: 2px solid #D6CBBD;
+  outline-style: none;
+}
+
+input[type="password"] {
+  font-family:sans-serif;
+}
+.error, .error:focus {
+  border-bottom: 2px solid rgb(250, 25, 59, 0.7); 
+}
+
+.error-text {
+  color: rgb(250, 25, 59, 0.7);
+  text-align: left;
+  padding-left: 5px;
+}
+
+.disabled {
+  background-color: rgb(136, 154, 152, 0.25);
+}
 
 </style>
