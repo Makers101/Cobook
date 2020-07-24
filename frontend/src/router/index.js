@@ -4,11 +4,13 @@ import Login from '@/views/accounts/Login.vue'
 import Signup from '@/views/accounts/Signup.vue'
 import SignupEmail from '@/views/accounts/SignupEmail.vue'
 import PasswordFind from '@/views/accounts/PasswordFind.vue'
+import PasswordChange from '@/views/accounts/PasswordChange.vue'
 
 Vue.use(VueRouter)
 
   const routes = [
-  {
+
+    {
     path: '/login',
     name: 'Login',
     component: Login
@@ -27,6 +29,11 @@ Vue.use(VueRouter)
     path: '/password',
     name: 'PasswordFind',
     component: PasswordFind
+  },
+  {
+    path: '/password/change',
+    name: 'PasswordChange',
+    component: PasswordChange
   }
 ]
 
