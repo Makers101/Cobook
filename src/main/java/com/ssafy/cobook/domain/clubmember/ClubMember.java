@@ -28,4 +28,14 @@ public class ClubMember {
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
+
+    public ClubMember(User user, Club club, MemberRole role) {
+        this.user = user;
+        this.club = club;
+        this.role = role;
+    }
+
+    public void enroll(Club club) {
+        this.club = club;
+    }
 }
