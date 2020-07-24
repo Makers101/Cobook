@@ -20,6 +20,18 @@ spring:
       ddl-auto: create
   thymeleaf:
     cache: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: cobookservice2020@gmail.com
+    password: hqltrepxhfnlohfn
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
   security:
     oauth2:
       client:
