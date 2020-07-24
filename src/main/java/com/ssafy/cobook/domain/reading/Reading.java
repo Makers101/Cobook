@@ -2,10 +2,10 @@ package com.ssafy.cobook.domain.reading;
 
 import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.club.Club;
-import com.ssafy.cobook.domain.readingbook.ReadingBook;
 import com.ssafy.cobook.domain.readingmember.ReadingMember;
 import com.ssafy.cobook.domain.readingquestion.ReadingQuestion;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,8 +28,9 @@ public class Reading {
     @JoinColumn(name = "club_id")
     private Club club;
 
-    @OneToMany(mappedBy = "reading", cascade = CascadeType.ALL)
-    private List<ReadingBook> readingBooks = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
+    private Book book;
 
     @OneToMany(mappedBy = "reading", cascade = CascadeType.ALL)
     private List<ReadingQuestion> questions = new ArrayList<>();
@@ -42,4 +43,21 @@ public class Reading {
     private String place;
     private String description;
     private String oneLineDescription;
+
+    @Builder
+    public Reading(String title, LocalDateTime dateTime, String place, String description, String oneLineDescription) {
+        this.title = title;
+        this.dateTime = dateTime;
+        this.place = place;
+        this.description = description;
+        this.oneLineDescription = oneLineDescription;
+    }
+
+    public void ofClub(Club club) {
+        this.club = club;
+    }
+
+    public void ofBook(Book book) {
+        this.book = book;
+    }
 }

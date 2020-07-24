@@ -23,7 +23,6 @@ public class PostResDto {
     private Integer commentsCount;
     private List<PostTag> tags;
 
-
     public static PostResDto ofClub(Post post) {
         return PostResDto.builder()
                 .postId(post.getId())
