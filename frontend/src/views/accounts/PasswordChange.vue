@@ -89,7 +89,7 @@ export default {
     },
     clickChange() {
       if ( this.isSubmit ){
-        this.$router.push('/')
+        this.$router.push({ name: 'PasswordChangeSuccessful' })
       }
     }
   }
