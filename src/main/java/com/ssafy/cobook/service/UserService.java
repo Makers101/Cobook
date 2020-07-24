@@ -9,6 +9,7 @@ import com.ssafy.cobook.service.dto.user.UserResponseDto;
 import com.ssafy.cobook.service.dto.user.UserSaveRequestDto;
 import com.ssafy.cobook.service.dto.user.UserUpdatePwdDto;
 import com.ssafy.cobook.util.JwtTokenProvider;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ public class UserService {
         if (userRepository.findByEmail(userSaveRequestDto.getEmail()).isPresent()) {
             throw new UserException("이미 가입된 메일입니다", ErrorCode.MEMBER_DUPLICATED_EMAIL);
         }
-        passwordEncoder = new BCryptPasswordEncoder(10);
+        passwordEncoder = new BCryptPasswordEncoder();
         logger.info(userSaveRequestDto.getPassword());
         String encodePassword = passwordEncoder.encode(userSaveRequestDto.getPassword());
 
@@ -55,15 +56,12 @@ public class UserService {
     public String createToken(UserLoginRequestDto userLoginRequestDto) {
         String email = userLoginRequestDto.getEmail();
         User user = getUser(email);
-        passwordEncoder = new BCryptPasswordEncoder(10);
+        passwordEncoder = new BCryptPasswordEncoder();
 
-        String pwd = user.getPassword();
-        String rawPwd = userLoginRequestDto.getPassword();
+        String encodePassword = user.getPassword();
+        String rawPassword = userLoginRequestDto.getPassword();
 
-        logger.info(pwd);
-        logger.info(rawPwd);
-
-        if (!passwordEncoder.matches(rawPwd,pwd)) {
+        if (!passwordEncoder.matches(rawPassword,encodePassword)) {
             throw new UserException("잘못된 비밀번호입니다.", ErrorCode.WRONG_PASSWORD);
         }
         return jwtTokenProvider.createToken(userLoginRequestDto.getEmail());
@@ -78,9 +76,13 @@ public class UserService {
 
         User user = getUser(userLoginRequestDto.getEmail());
 
-        if (!user.getPassword().equals(userLoginRequestDto.getPassword())) {
-            throw new UserException(ErrorCode.WRONG_PASSWORD);
+        String encodePassword = user.getPassword();
+        String rawPassword = userLoginRequestDto.getPassword();
+
+        if (!passwordEncoder.matches(rawPassword,encodePassword)) {
+            throw new UserException("잘못된 비밀번호입니다.", ErrorCode.WRONG_PASSWORD);
         }
+
         return user.getId();
     }
 
