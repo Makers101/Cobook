@@ -62,10 +62,14 @@ public class User {
     private List<MeetUpMember> meetUpMembers = new ArrayList<>();
 
     @Builder
-    public User(String email, String password, String userName, String description) {
+    public User(String email, String password, String userName, PlatformType platformType){
         this.email = email;
         this.password = password;
         this.userName = userName;
-        this.description = description;
+        this.platformType = platformType;
+    }
+
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
     }
 }

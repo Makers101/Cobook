@@ -1,7 +1,9 @@
 package com.ssafy.cobook.config.security;
 
 public enum SocialType {
-    GOOGLE("google");
+    GOOGLE("google"),
+    KAKAO("kakao");
+
 
     private final String ROLE_PREFIX = "ROLE_";
     private String name;
