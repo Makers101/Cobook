@@ -182,6 +182,10 @@ export default {
   border-radius: 25px;
 }
 
+h3 { 
+  color: #88A498;
+}
+
 .inputs {
   border-style: none;
   border-bottom: 1px solid #88A498;
