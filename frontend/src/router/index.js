@@ -5,6 +5,8 @@ import Signup from '@/views/accounts/Signup.vue'
 import SignupEmail from '@/views/accounts/SignupEmail.vue'
 import PasswordFind from '@/views/accounts/PasswordFind.vue'
 import PasswordChange from '@/views/accounts/PasswordChange.vue'
+import PasswordChangeSuccessful from '@/views/accounts/PasswordChangeSuccessful.vue'
+
 
 Vue.use(VueRouter)
 
@@ -34,6 +36,11 @@ Vue.use(VueRouter)
     path: '/password/change',
     name: 'PasswordChange',
     component: PasswordChange
+  },
+  {
+    path: '/password/success',
+    name: 'PasswordChangeSuccessful',
+    component: PasswordChangeSuccessful
   }
 ]
 
