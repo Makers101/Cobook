@@ -93,7 +93,7 @@
 export default {
   name: 'Signup',
 
-  data: () => {
+  data() {
     return {
       email: "",
       password: "",
@@ -112,16 +112,16 @@ export default {
     this.component = this;
   },
   watch: {
-    nickName: function() {
+    nickName() {
       this.checknickNameForm();
     },
-    email: function() {
+    email() {
       this.checkEmailForm();
     },
-    password: function() {
+    password() {
       this.checkPasswordForm();
     },
-    passwordConfirm: function() {
+    passwordConfirm() {
       this.checkPasswordConfirmationForm();
     }
   },
@@ -140,7 +140,7 @@ export default {
     },
     validEmail(email) {
       // eslint-disable-next-line
-      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     },
     checkPasswordForm() {
