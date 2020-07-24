@@ -1,7 +1,7 @@
 package com.ssafy.cobook.domain.book;
 
-import com.ssafy.cobook.domain.bookgenre.BookGenre;
 import com.ssafy.cobook.domain.booklike.BookLike;
+import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.meetup.MeetUp;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.readingbook.ReadingBook;
@@ -43,8 +43,9 @@ public class Book {
     private List<ReadingBook> readingBooks = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-    private List<BookGenre> bookGenres = new ArrayList<>();
-
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<MeetUp> meetUps = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "genre_id")
+    private Genre genre;
 }

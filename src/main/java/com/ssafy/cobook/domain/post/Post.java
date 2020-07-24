@@ -1,5 +1,6 @@
 package com.ssafy.cobook.domain.post;
 
+import com.ssafy.cobook.domain.baseEntity.BaseEntity;
 import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.postbookmark.PostBookMark;
@@ -8,6 +9,7 @@ import com.ssafy.cobook.domain.postlike.PostLike;
 import com.ssafy.cobook.domain.posttag.PostTag;
 import com.ssafy.cobook.domain.user.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +20,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post {
+public class Post extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +40,7 @@ public class Post {
     private Club club;
 
     private String onelineReview;
+    private String review;
     private Integer rank;
     private Boolean open;
     private Boolean isClub;
@@ -53,4 +56,32 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostTag> tags = new ArrayList<>();
+
+    @Builder
+    public Post(String onelineReview, String review, Integer rank, Boolean open, Boolean isClub) {
+        this.onelineReview = onelineReview;
+        this.review = review;
+        this.rank = rank;
+        this.open = open;
+        this.isClub = isClub;
+    }
+
+    public void of(User user) {
+        this.user = user;
+    }
+
+    public void of(Club club) {
+        this.club = club;
+    }
+
+    public void setTags(List<PostTag> tags) {
+        this.tags = tags;
+        for( PostTag p : tags) {
+            p.ofPost(this);
+        }
+    }
+
+    public boolean ofClub() {
+        return this.isClub;
+    }
 }
