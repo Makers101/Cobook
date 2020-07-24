@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container p-3 mt-5">
+    <div class="container p-3 mt-5 bg-light-ivory">
       <h3>회원가입</h3>
 
       <div class="input-with-label">
@@ -67,7 +67,7 @@
       </div>
 
       <div class="buttons mt-3">
-        <button class="btn signup-button" :class="{disabled: !isSubmit}" >가입하기</button>
+        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickSignup" >가입하기</button>
       </div>
 
       <hr class="divide">
@@ -166,6 +166,12 @@ export default {
       });
       this.isSubmit = isSubmit;
     },
+    clickSignup() {
+      if (this.isSubmit){
+        this.$router.push( {name: 'SignupEmail' })
+      }
+      
+    }
   }
 }
 </script>
@@ -173,7 +179,6 @@ export default {
 <style scoped>
 .container {
   width: 30%;
-  background-color: #F8F8F8;
   border-radius: 25px;
 }
 
@@ -231,8 +236,14 @@ input[type="password"] {
   padding-left: 5px;
 }
 
-.disabled {
+.signup-button:hover {
+  background-color: #3c755a;
+  color: #F8F8F8;
+}
+
+.disabled, .disabled:hover {
   background-color: rgb(136, 154, 152, 0.25);
+  color: #F8F8F8;
 }
 
 </style>
