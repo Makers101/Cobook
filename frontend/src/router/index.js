@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/views/accounts/Login.vue'
 
+import ClubList from '@/views/clubs/ClubList.vue'
+
 Vue.use(VueRouter)
 
   const routes = [
@@ -9,6 +11,12 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Login',
     component: Login
+  },
+  // clubs
+  {
+    path: '/clubs',
+    name: 'ClubList',
+    component: ClubList
   },
 ]
 

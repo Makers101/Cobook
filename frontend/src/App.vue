@@ -33,7 +33,7 @@
               </router-link>
             </li>
             <li class="nav-item col-3">
-              <router-link class="nav-link" to="/">
+              <router-link class="nav-link" :to="{ name: 'ClubList' }">
                 <i class="fas fa-users color-green"></i>
                 Club
               </router-link>
