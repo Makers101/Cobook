@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -24,7 +22,16 @@ public class PostTag {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @OneToMany(mappedBy = "postTag")
-    private List<Tag> tags = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tag_id")
+    private Tag tag;
 
+    public PostTag(Post post, Tag tag) {
+        this.post = post;
+        this.tag = tag;
+    }
+
+    public void ofPost(Post post) {
+        this.post = post;
+    }
 }

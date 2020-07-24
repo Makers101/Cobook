@@ -2,7 +2,7 @@ package com.ssafy.cobook.domain.user;
 
 public enum PlatformType {
 
-    KAKAO, GOOGLE;
+    NONE, KAKAO, GOOGLE;
 
     private String platform;
 }
