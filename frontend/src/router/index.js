@@ -1,12 +1,18 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+// accounts
 import Login from '@/views/accounts/Login.vue'
 import Signup from '@/views/accounts/Signup.vue'
 import SignupEmail from '@/views/accounts/SignupEmail.vue'
 import PasswordFind from '@/views/accounts/PasswordFind.vue'
 import PasswordChange from '@/views/accounts/PasswordChange.vue'
 import PasswordChangeSuccessful from '@/views/accounts/PasswordChangeSuccessful.vue'
-
+// profile
+import Profile from '@/views/profile/Profile.vue'
+import ProfileFeed from '@/views/profile/ProfileFeed.vue'
+import ProfileClub from '@/views/profile/ProfileClub'
+import ProfileBookmark from '@/views/profile/ProfileBookmark'
+import ProfileOverview from '@/views/profile/ProfileOverview'
 
 Vue.use(VueRouter)
 
@@ -41,7 +47,32 @@ Vue.use(VueRouter)
     path: '/password/success',
     name: 'PasswordChangeSuccessful',
     component: PasswordChangeSuccessful
-  }
+  },
+  // profile
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
+    children: [
+      {
+        path: 'feed',
+        component: ProfileFeed
+      },
+      {
+        path: 'club',
+        component: ProfileClub
+      },
+      {
+        path: 'bookmark',
+        component: ProfileBookmark
+      },
+      {
+        path: 'overview',
+        component: ProfileOverview
+      },
+    ]
+  },
+  
 ]
 
 const router = new VueRouter({
