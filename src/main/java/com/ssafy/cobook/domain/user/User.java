@@ -80,4 +80,8 @@ public class User {
     public void addComments(PostComment postComment) {
         this.comments.add(postComment);
     }
+
+    public void addPosts(Post post) {
+        this.posts.add(post);
+    }
 }

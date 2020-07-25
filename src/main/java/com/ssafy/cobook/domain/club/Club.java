@@ -76,4 +76,8 @@ public class Club extends BaseTimeEntity {
     public void enrollReading(Reading reading) {
         this.readingList.add(reading);
     }
+
+    public void addPosts(Post post) {
+        this.posts.add(post);
+    }
 }

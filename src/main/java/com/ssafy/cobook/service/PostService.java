@@ -55,11 +55,13 @@ public class PostService {
 
     @Transactional
     public PostSaveResDto savePosts(PostSaveReqDto reqDto, Long userId) {
-        Post post = postRepository.save(reqDto.toEntity());
-        post.of(getUserById(userId));
-        post = postRepository.save(post);
+        Post post = reqDto.toEntity();
+        User user = getUserById(userId);
+        post.of(user);
         Book book = getBook(reqDto.getBookId());
         post.ofBook(book);
+        post = postRepository.save(post);
+        user.addPosts(post);
         book.connetPost(post);
         List<Tag> tags = reqDto.getTags().stream()
                 .map(this::saveTag)
@@ -163,5 +165,31 @@ public class PostService {
                 .filter(Post::getOpen)
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public List<PostByClubResponseDto> getClubPosts(Long clubId) {
+        return postRepository.findAll().stream()
+                .filter(Post::getOpen)
+                .filter(p->p.getClub().getId().equals(clubId))
+                .map(PostByClubResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public PostSaveResDto saveClubPosts(PostSaveByClubReqDto requsetDto, Long clubId) {
+        Post post = requsetDto.toEntity();
+        Club club = getClub(clubId);
+        post.of(club);
+        Book book = getBook(requsetDto.getBookId());
+        post.ofBook(book);
+        post = postRepository.save(post);
+        club.addPosts(post);
+        book.connetPost(post);
+        return new PostSaveResDto(post.getId());
+    }
+
+    private Club getClub(Long clubId) {
+        return clubRepository.findById(clubId)
+                .orElseThrow(()-> new BaseException(ErrorCode.UNEXPECTED_CLUB));
     }
 }

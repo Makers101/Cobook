@@ -43,14 +43,16 @@ public class Reading {
     private String place;
     private String description;
     private String oneLineDescription;
+    private Boolean closed;
 
     @Builder
-    public Reading(String title, LocalDateTime dateTime, String place, String description, String oneLineDescription) {
+    public Reading(String title, LocalDateTime dateTime, String place, String description, String oneLineDescription, Boolean closed) {
         this.title = title;
         this.dateTime = dateTime;
         this.place = place;
         this.description = description;
         this.oneLineDescription = oneLineDescription;
+        this.closed = closed;
     }
 
     public void ofClub(Club club) {

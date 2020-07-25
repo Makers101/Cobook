@@ -1,6 +1,7 @@
 package com.ssafy.cobook.service.dto.club;
 
 import com.ssafy.cobook.domain.club.Club;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,18 +12,21 @@ import java.util.List;
 @NoArgsConstructor
 public class ClubCreateReqDto {
 
-    private Long userId;
+    @ApiModelProperty(position = 1)
     private String name;
-    private String oneline_description;
+    @ApiModelProperty(position = 2)
+    private String onelineDescription;
+    @ApiModelProperty(position = 3)
     private String description;
+    @ApiModelProperty(position = 4)
     private String residence;
-    private List<String> clubGenres;
-    private MultipartFile image;
+    @ApiModelProperty(position = 5)
+    private List<Long> genres;
 
     public Club toEntity() {
         return Club.builder()
                 .description(description)
-                .onelineDescription(oneline_description)
+                .onelineDescription(onelineDescription)
                 .name(name)
                 .residence(residence)
                 .build();
