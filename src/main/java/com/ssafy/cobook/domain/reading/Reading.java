@@ -62,4 +62,8 @@ public class Reading {
     public void ofBook(Book book) {
         this.book = book;
     }
+
+    public void enrollQuestion(List<ReadingQuestion> questions) {
+        this.questions = questions;
+    }
 }

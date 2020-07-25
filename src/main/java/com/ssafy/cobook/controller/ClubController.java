@@ -2,8 +2,12 @@ package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.service.ClubService;
 import com.ssafy.cobook.service.PostService;
+import com.ssafy.cobook.service.ReadingService;
 import com.ssafy.cobook.service.dto.club.*;
 import com.ssafy.cobook.service.dto.post.*;
+import com.ssafy.cobook.service.dto.reading.ReadingDetailResDto;
+import com.ssafy.cobook.service.dto.reading.ReadingSaveReqDto;
+import com.ssafy.cobook.service.dto.reading.ReadingSaveResDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +34,7 @@ public class ClubController {
 
     private final ClubService clubService;
     private final PostService postService;
+    private final ReadingService readingService;
 
     @ApiOperation(value = "클럽을 생성한다", response = ClubCreateResDto.class)
     @PostMapping
@@ -84,5 +89,21 @@ public class ClubController {
                                                         @RequestBody final PostSaveByClubReqDto requsetDto) {
         PostSaveResDto resDto = postService.saveClubPosts(requsetDto, clubId);
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
+    }
+
+    @ApiOperation(value = "리딩을 생성한다.", response = ReadingSaveResDto.class)
+    @PostMapping("/{clubId}/readings")
+    public ResponseEntity<ReadingSaveResDto> makeReading(@PathVariable("clubId") final Long clubId,
+                                                         @RequestBody final ReadingSaveReqDto reqDto) {
+        ReadingSaveResDto resDto = readingService.makeReading(clubId, reqDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
+    }
+
+    @ApiOperation(value ="리딩의 상세정보를 조회한다")
+    @GetMapping("/{clubId}/readings/{readingId}")
+    public ResponseEntity<ReadingDetailResDto> getReadingDetail(@PathVariable("clubId") final Long clubId,
+                                                                @PathVariable("readingId") final Long readingId) {
+        ReadingDetailResDto resDto = readingService.getDetails(clubId, readingId);
+        return ResponseEntity.status(HttpStatus.OK).body(resDto);
     }
 }

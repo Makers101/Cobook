@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReadingSaveResDto {
 
-    private Long readingId;
+    private Long id;
 
     public ReadingSaveResDto(Long readingId) {
-        this.readingId = readingId;
+        this.id = readingId;
     }
 }
