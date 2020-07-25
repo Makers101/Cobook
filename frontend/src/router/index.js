@@ -20,21 +20,11 @@ import ClubList from '@/views/clubs/ClubList.vue'
 Vue.use(VueRouter)
 
   const routes = [
-
-    {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  {,
-    path: '/',
-    name: 'PostList',
-    component: PostList
-  },
-  // clubs
+  // accounts
   {
-    path: '/clubs',
-    name: 'ClubList',
-    component: ClubList
+  path: '/login',
+  name: 'Login',
+  component: Login
   },
   {
     path: '/signup',
@@ -61,6 +51,7 @@ Vue.use(VueRouter)
     name: 'PasswordChangeSuccessful',
     component: PasswordChangeSuccessful
   },
+
   // profile
   {
     path: '/profile',
@@ -84,6 +75,20 @@ Vue.use(VueRouter)
         component: ProfileOverview
       },
     ]
+  },
+
+  // posts
+  {
+    path: '/',
+    name: 'PostList',
+    component: PostList
+  },
+
+  // clubs
+  {
+    path: '/clubs',
+    name: 'ClubList',
+    component: ClubList
   },
   
 ]
