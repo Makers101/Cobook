@@ -38,12 +38,12 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts());
     }
 
-    @ApiOperation(value = "게시글을 작성", response = PostSaveResDto.class)
+    @ApiOperation(value = "사용자가 게시글을 작성", response = PostSaveResDto.class)
     @PostMapping
     public ResponseEntity<PostSaveResDto> savePosts(@ApiIgnore final Authentication authentication,
-                                                    @RequestBody final PostSaveReqDto reqDto) {
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(postService.savePosts(reqDto));
+                                                    @RequestBody final PostSaveReqDto requestDto) {
+        Long userId = Long.parseLong((String) authentication.getPrincipal());
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.savePosts(requestDto, userId));
     }
 
 //    @ApiOperation(value = "팔로우 한 사람들의 게시글을 조회한다.", response = PostResDto.class)
@@ -60,15 +60,19 @@ public class PostController {
 
     @ApiOperation(value = "게시글의 좋아요를 누른다")
     @PostMapping("/likes")
-    public ResponseEntity<Void> likePosts(@RequestBody final PostLikeReqDto reqDto) {
-        postService.likePosts(reqDto);
+    public ResponseEntity<Void> likePosts(@ApiIgnore final Authentication authentication,
+                                          @RequestBody final PostLikeReqDto reqDto) {
+        Long userId = Long.parseLong((String) authentication.getPrincipal());
+        postService.likePosts(reqDto, userId);
         return ResponseEntity.ok().build();
     }
 
     @ApiOperation(value = "게시글을 북마크한다")
     @PostMapping("/bookmarks")
-    public ResponseEntity<Void> bookMarks(@RequestBody final PostBookMarkReqDto reqDto) {
-        postService.bookMarks(reqDto);
+    public ResponseEntity<Void> bookMarks(@ApiIgnore final Authentication authentication,
+                                          @RequestBody final PostBookMarkReqDto reqDto) {
+        Long userId = Long.parseLong((String) authentication.getPrincipal());
+        postService.bookMarks(reqDto, userId);
         return ResponseEntity.ok().build();
     }
 

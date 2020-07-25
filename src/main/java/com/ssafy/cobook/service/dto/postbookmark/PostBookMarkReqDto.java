@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostBookMarkReqDto {
 
-    private Long userId;
     private Long postId;
 }
