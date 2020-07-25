@@ -1,8 +1,24 @@
 <template>
   <div>
     <div class="container p-3 mt-5 bg-light-ivory">
-      <h3>로그인</h3>
-    
+      <h3>회원가입</h3>
+
+      <div class="input-with-label">
+        <input 
+          v-model="nickName"
+          v-bind:class="{error: error.nickName, complete:!error.nickName&&nickName.length!==0}"
+          class="inputs"
+          id="nickName"
+          placeholder="닉네임" 
+          type="text" 
+          autocapitalize="none"
+          autocorrect="none"
+          style="text-transform:lowercase"
+        />
+        <label for="nickName"></label>
+        <div class="error-text ml-3" v-if="error.nickName">{{error.nickName}}</div>
+      </div>
+
       <div class="input-with-label">
         <input 
           v-model="email" 
@@ -19,6 +35,7 @@
         <label for="email"></label>
         <div class="error-text ml-3" v-if="error.email">{{error.email}}</div>
       </div>
+
       <div class="input-with-label">
         <input 
           v-model="password" 
@@ -30,43 +47,63 @@
           placeholder="비밀번호를 입력하세요." 
           required
         />
-      <label for="password"></label>
-      <div class="error-text ml-3" v-if="error.password">{{error.password}}</div>
-    </div>
-    <p class="my-3"><span class="items" @click="clickSignup">회원가입 </span>ㆍ<span class="items" @click="clickPasswordFind">비밀번호 찾기</span></p>
-    <div class="buttons mt-3">
-      <button class="btn login-button" :class="{disabled: !isSubmit}" @click="clickLogin" >로그인하기</button>
-    </div>
+        <label for="password"></label>
+        <div class="error-text ml-3" v-if="error.password">{{error.password}}</div>
+      </div>
 
-    <hr class="divide">
+      <div class="input-with-label">
+        <input
+          v-model="passwordConfirm"
+          
+          type="password"
+          id="password-confirm"
+          v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&passwordConfirm.length!==0}"
+          placeholder="비밀번호를 다시 입력해주세요."
+          class="inputs"
+          required
+        />
+        <label for="password-confirm"></label>
+        <div class="error-text ml-3" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
+      </div>
 
-    <div class="buttons d-flex justify-content-center">
-      <button class="btn kakao d-flex align-items-center justify-content-center">
-        <i class="xi-2x xi-kakaotalk text-dark"></i>
-        <span class="justify-content-center">카카오 아이디 로그인</span>
-      </button>
-    </div>
-    <div class="buttons mt-2 d-flex justify-content-center">
-      <button class="btn google d-flex align-items-center justify-content-center row">
-        <!-- <i class="fab fa-google-plus-g"></i> -->
-        <img class="google-logo" src="@/assets/google.png" width="32px" height="32px" >
-        <span class="justify-content-center col-">구글 아이디 로그인</span>
-      </button>
+      <div class="buttons mt-3">
+        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickSignup" >가입하기</button>
+      </div>
+
+      <hr class="divide">
+
+      <div class="buttons d-flex justify-content-center">
+        <button class="btn kakao d-flex align-items-center justify-content-center">
+          <i class="xi-2x xi-kakaotalk text-dark"></i>
+          <span class="justify-content-center">카카오 아이디 로그인</span>
+        </button>
+      </div>
+      <div class="buttons mt-2 d-flex justify-content-center">
+        <button class="btn google d-flex align-items-center justify-content-center row">
+          <!-- <i class="fab fa-google-plus-g"></i> -->
+          <img class="google-logo" src="@/assets/google.png" width="32px" height="32px" >
+          <span class="justify-content-center col-">구글 아이디 로그인</span>
+        </button>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
 export default {
-  name: 'Login',
+  name: 'Signup',
+
   data() {
     return {
       email: "",
       password: "",
+      passwordConfirm: "",
+      nickName: "",
       error: {
         email: false,
         password: false,
+        nickName: false,
+        passwordConfirm: false,
       },
       isSubmit: false,
     };
@@ -75,14 +112,26 @@ export default {
     this.component = this;
   },
   watch: {
+    nickName() {
+      this.checknickNameForm();
+    },
     email() {
       this.checkEmailForm();
     },
     password() {
       this.checkPasswordForm();
     },
+    passwordConfirm() {
+      this.checkPasswordConfirmationForm();
+    }
   },
   methods: {
+    checknickNameForm() {
+      if ( this.nickName.length > 0) {
+        this.error.nickName = false;
+      }
+      else this.error.nickName="닉네임을 입력해주세요."
+    },
     checkEmailForm() {
       if ( this.email.length > 0 && !this.validEmail(this.email) ) {
         this.error.email = "올바른 이메일 형식이 아니에요"   
@@ -100,27 +149,28 @@ export default {
         } else if ( this.password.length >= 8 && !this.validPassword(this.password) ) {
           this.error.password = "영문, 숫자 포함 8 자리 이상이어야 해요.";
         } else this.error.password = false;
+    },
+    validPassword(password) {
+      var va = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z]{8,}$/;
+      return va.test(password);
+    },
+    checkPasswordConfirmationForm() {
+      if (this.password !== this.passwordConfirm )
+        this.error.passwordConfirm = "비밀번호가 일치하지 않아요."
+      else this.error.passwordConfirm = false;
       
+      // 버튼 활성화 코드 (다 통과 했을 때 넘어갈 수 있도록 생성 )
       let isSubmit = true;
       Object.values(this.error).map(v => {
         if (v) isSubmit = false;
       });
       this.isSubmit = isSubmit;
     },
-    validPassword(password) {
-      var va = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z]{8,}$/;
-      return va.test(password);
-    },
     clickSignup() {
-      this.$router.push({ name: 'Signup' })
-    },
-    clickLogin() {
-      if ( this.isSubmit ) {
-        this.$router.push('/')
+      if (this.isSubmit){
+        this.$router.push( {name: 'SignupEmail' })
       }
-    },
-    clickPasswordFind() {
-      this.$router.push({ name: 'PasswordFind' })
+      
     }
   }
 }
@@ -146,10 +196,11 @@ h3 {
   margin-top: 20px;
 }
 
-.login-button{
+.signup-button{
   background-color: #88A498;
   color: #F8F8F8;
   width: 70%;
+  /* font-size: 10px; */
 }
 
 .divide {
@@ -189,7 +240,7 @@ input[type="password"] {
   padding-left: 5px;
 }
 
-.login-button:hover {
+.signup-button:hover {
   background-color: #3c755a;
   color: #F8F8F8;
 }
@@ -199,8 +250,4 @@ input[type="password"] {
   color: #F8F8F8;
 }
 
-.items:hover {
-  cursor:pointer;
-  color: #D6CBBD;
-}
 </style>
