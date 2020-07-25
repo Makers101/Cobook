@@ -36,9 +36,9 @@ public class PostDetailResDto {
     @ApiModelProperty(position = 7)
     private String review;
     @ApiModelProperty(position = 8)
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     @ApiModelProperty(position = 9)
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
     @ApiModelProperty(position = 10)
     private Boolean isClub;
     @ApiModelProperty(position = 11)
@@ -61,8 +61,8 @@ public class PostDetailResDto {
         this.open = post.getOpen();
         this.isClub = post.getIsClub();
         this.book = new BookDetailsDto(post.getBook());
-        this.createAt = post.getCreatDateTime();
-        this.updateAt = post.getLastModifiedDate();
+        this.createdAt = post.getCreatDateTime();
+        this.updatedAt = post.getLastModifiedDate();
         this.likeUsers = post.getPostLikes().stream()
                 .map(p->p.getUser().getId())
                 .collect(Collectors.toList());

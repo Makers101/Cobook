@@ -20,15 +20,15 @@ public class CommentsResDto {
     @ApiModelProperty(position = 3)
     private String content;
     @ApiModelProperty(position = 4)
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     @ApiModelProperty(position = 5)
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     public CommentsResDto(PostComment postComment) {
         this.id = postComment.getId();
         this.content = postComment.getContent();
         this.user = new UserByPostDto(postComment.getUser());
-        this.createAt = postComment.getCreatDateTime();
-        this.updateAt = postComment.getLastModifiedDate();
+        this.createdAt = postComment.getCreatDateTime();
+        this.updatedAt = postComment.getLastModifiedDate();
     }
 }

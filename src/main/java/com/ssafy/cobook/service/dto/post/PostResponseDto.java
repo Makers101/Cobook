@@ -36,9 +36,9 @@ public class PostResponseDto {
     @ApiModelProperty(position = 7)
     private String review;
     @ApiModelProperty(position = 8)
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     @ApiModelProperty(position = 9)
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
     @ApiModelProperty(position = 10)
     private Boolean isClub;
     @ApiModelProperty(position = 11)
@@ -60,8 +60,8 @@ public class PostResponseDto {
         this.rank = post.getRank();
         this.open = post.getOpen();
         this.review = post.getReview();
-        this.createAt = post.getCreatDateTime();
-        this.updateAt = post.getLastModifiedDate();
+        this.createdAt = post.getCreatDateTime();
+        this.updatedAt = post.getLastModifiedDate();
         this.isClub = post.getIsClub();
         this.likeUsers = post.getPostLikes().stream()
                 .map(p->p.getUser().getId())
