@@ -152,9 +152,9 @@ public class PostService {
                 .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_BOOK));
     }
 
-    public void addComments(CommentsReqDto dto) {
-        User user = getUserById(dto.getUserId());
-        Post post = getPostById(dto.getPostId());
+    public void addComments(Long userId, Long postId, CommentsReqDto dto) {
+        User user = getUserById(userId);
+        Post post = getPostById(postId);
         PostComment postComment = postCommentRepository.save(new PostComment(post, user, dto.getContents()));
         user.addComments(postComment);
         post.addComments(postComment);

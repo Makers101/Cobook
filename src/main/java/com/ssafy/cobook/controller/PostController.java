@@ -89,9 +89,13 @@ public class PostController {
     }
 
     @ApiOperation(value = "게시글에 댓글을 단다")
-    @PostMapping("/comments")
-    public ResponseEntity<Void> addComments(@RequestBody final CommentsReqDto dto) {
-        postService.addComments(dto);
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PostMapping("/{postId}/comments")
+    public ResponseEntity<Void> addComments(@ApiIgnore final Authentication authentication,
+                                            @PathVariable("postId") final Long postId,
+                                            @RequestBody final CommentsReqDto dto) {
+        Long userId = Long.parseLong((String) authentication.getPrincipal());
+        postService.addComments(userId, postId, dto);
         return ResponseEntity.ok().build();
     }
 }

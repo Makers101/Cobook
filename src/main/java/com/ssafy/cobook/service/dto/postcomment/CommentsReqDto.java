@@ -8,7 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentsReqDto {
 
-    private Long postId;
-    private Long userId;
     private String contents;
 }
