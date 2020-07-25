@@ -9,6 +9,8 @@ import com.ssafy.cobook.service.dto.postbookmark.PostBookMarkReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.postlike.PostLikeReqDto;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +41,7 @@ public class PostController {
     }
 
     @ApiOperation(value = "사용자가 게시글을 작성", response = PostSaveResDto.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping
     public ResponseEntity<PostSaveResDto> savePosts(@ApiIgnore final Authentication authentication,
                                                     @RequestBody final PostSaveReqDto requestDto) {
@@ -59,6 +62,7 @@ public class PostController {
     }
 
     @ApiOperation(value = "게시글의 좋아요를 누른다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/likes")
     public ResponseEntity<Void> likePosts(@ApiIgnore final Authentication authentication,
                                           @RequestBody final PostLikeReqDto reqDto) {
@@ -68,6 +72,7 @@ public class PostController {
     }
 
     @ApiOperation(value = "게시글을 북마크한다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/bookmarks")
     public ResponseEntity<Void> bookMarks(@ApiIgnore final Authentication authentication,
                                           @RequestBody final PostBookMarkReqDto reqDto) {
@@ -84,9 +89,13 @@ public class PostController {
     }
 
     @ApiOperation(value = "게시글에 댓글을 단다")
-    @PostMapping("/comments")
-    public ResponseEntity<Void> addComments(@RequestBody final CommentsReqDto dto) {
-        postService.addComments(dto);
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PostMapping("/{postId}/comments")
+    public ResponseEntity<Void> addComments(@ApiIgnore final Authentication authentication,
+                                            @PathVariable("postId") final Long postId,
+                                            @RequestBody final CommentsReqDto dto) {
+        Long userId = Long.parseLong((String) authentication.getPrincipal());
+        postService.addComments(userId, postId, dto);
         return ResponseEntity.ok().build();
     }
 }

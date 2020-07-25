@@ -8,6 +8,8 @@ import com.ssafy.cobook.service.dto.post.*;
 import com.ssafy.cobook.service.dto.reading.ReadingDetailResDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSaveReqDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSaveResDto;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +39,7 @@ public class ClubController {
     private final ReadingService readingService;
 
     @ApiOperation(value = "클럽을 생성한다", response = ClubCreateResDto.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping
     public ResponseEntity<ClubCreateResDto> createClub(@ApiIgnore final Authentication authentication,
                                                        @RequestParam MultipartFile clubImg,
