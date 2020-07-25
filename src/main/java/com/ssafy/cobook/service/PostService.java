@@ -22,10 +22,7 @@ import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
-import com.ssafy.cobook.service.dto.post.PostDetailResDto;
-import com.ssafy.cobook.service.dto.post.PostResDto;
-import com.ssafy.cobook.service.dto.post.PostSaveReqDto;
-import com.ssafy.cobook.service.dto.post.PostSaveResDto;
+import com.ssafy.cobook.service.dto.post.*;
 import com.ssafy.cobook.service.dto.postbookmark.PostBookMarkReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
@@ -169,5 +166,12 @@ public class PostService {
         PostComment postComment = postCommentRepository.save(new PostComment(post, user, dto.getContents()));
         user.addComments(postComment);
         post.addComments(postComment);
+    }
+
+    public List<PostResponseDto> getAllPosts() {
+        return postRepository.findAll().stream()
+                .filter(Post::getOpen)
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
     }
 }

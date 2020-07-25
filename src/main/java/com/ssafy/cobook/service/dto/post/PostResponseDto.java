@@ -2,7 +2,7 @@ package com.ssafy.cobook.service.dto.post;
 
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.posttag.PostTag;
-import com.ssafy.cobook.service.dto.book.BookDetailsDto;
+import com.ssafy.cobook.service.dto.book.BookByPostDto;
 import com.ssafy.cobook.service.dto.club.ClubByPostDto;
 import com.ssafy.cobook.service.dto.tag.TagByPostDto;
 import com.ssafy.cobook.service.dto.user.UserByPostDto;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostDetailResDto {
+public class PostResponseDto {
 
     @ApiModelProperty(position = 1)
     private Long id;
@@ -25,7 +25,7 @@ public class PostDetailResDto {
     @ApiModelProperty(position = 2)
     private ClubByPostDto club;
     @ApiModelProperty(position = 3)
-    private BookDetailsDto book;
+    private BookByPostDto book;
     @ApiModelProperty(position = 4)
     private String onelineReview;
     @ApiModelProperty(position = 5)
@@ -47,21 +47,21 @@ public class PostDetailResDto {
     @ApiModelProperty(position = 13)
     private List<TagByPostDto> tags;
 
-    public PostDetailResDto(Post post) {
+    public PostResponseDto(Post post) {
         this.id = post.getId();
-        if (post.ofClub()) {
+        if (post.getIsClub()) {
             this.club = new ClubByPostDto(post.getClub());
         } else {
             this.user = new UserByPostDto(post.getUser());
         }
+        this.book = new BookByPostDto(post.getBook());
         this.onelineReview = post.getOnelineReview();
-        this.review = post.getReview();
         this.rank = post.getRank();
         this.open = post.getOpen();
-        this.isClub = post.getIsClub();
-        this.book = new BookDetailsDto(post.getBook());
+        this.review = post.getReview();
         this.createAt = post.getCreatDateTime().toString();
         this.updateAt = post.getLastModifiedDate().toString();
+        this.isClub = post.getIsClub();
         this.likeUsers = post.getPostLikes().stream()
                 .map(p->p.getUser().getId())
                 .collect(Collectors.toList());
