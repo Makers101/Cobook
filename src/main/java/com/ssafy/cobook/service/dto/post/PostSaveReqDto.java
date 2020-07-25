@@ -27,6 +27,7 @@ public class PostSaveReqDto {
                 .review(review)
                 .rank(rank)
                 .open(open)
+                .isClub(isClub)
                 .build();
     }
 

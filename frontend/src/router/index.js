@@ -13,6 +13,9 @@ import ProfileFeed from '@/views/profile/ProfileFeed.vue'
 import ProfileClub from '@/views/profile/ProfileClub'
 import ProfileBookmark from '@/views/profile/ProfileBookmark'
 import ProfileOverview from '@/views/profile/ProfileOverview'
+import PostList from '@/views/posts/PostList.vue'
+
+import ClubList from '@/views/clubs/ClubList.vue'
 
 Vue.use(VueRouter)
 
@@ -22,6 +25,16 @@ Vue.use(VueRouter)
     path: '/login',
     name: 'Login',
     component: Login
+  {,
+    path: '/',
+    name: 'PostList',
+    component: PostList
+  },
+  // clubs
+  {
+    path: '/clubs',
+    name: 'ClubList',
+    component: ClubList
   },
   {
     path: '/signup',

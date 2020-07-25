@@ -69,7 +69,15 @@ public class User {
         this.platformType = platformType;
     }
 
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
+    public void changePassword(String password){
+        this.password = password;
+    }
+
+    public void enrollClub(ClubMember clubMember) {
+        this.clubMembers.add(clubMember);
+    }
+
+    public void addComments(PostComment postComment) {
+        this.comments.add(postComment);
     }
 }
