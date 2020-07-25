@@ -17,7 +17,7 @@ spring:
       path: /console
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
   thymeleaf:
     cache: false
   mail:
