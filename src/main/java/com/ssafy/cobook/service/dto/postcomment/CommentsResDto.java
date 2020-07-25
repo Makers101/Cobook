@@ -2,7 +2,6 @@ package com.ssafy.cobook.service.dto.postcomment;
 
 import com.ssafy.cobook.domain.postcomment.PostComment;
 import com.ssafy.cobook.service.dto.user.UserByPostDto;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,15 +12,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentsResDto {
 
-    @ApiModelProperty(position = 1)
     private Long id;
-    @ApiModelProperty(position = 2)
     private UserByPostDto user;
-    @ApiModelProperty(position = 3)
     private String content;
-    @ApiModelProperty(position = 4)
     private LocalDateTime createdAt;
-    @ApiModelProperty(position = 5)
     private LocalDateTime updatedAt;
 
     public CommentsResDto(PostComment postComment) {
