@@ -2,11 +2,12 @@ package com.ssafy.cobook.service.dto.club;
 
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.clubgenre.ClubGenre;
-import com.ssafy.cobook.domain.genre.Genre;
+import com.ssafy.cobook.service.dto.genre.GenreResponseDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,24 +15,34 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClubResDto {
 
-    private Long clubId;
-    private String clubImage;
-    private String clubName;
+    private Long id;
+    private String name;
+    private String clubImg;
     private String onelineDescription;
-    private List<String> clubGenres;
-    private Integer following;
+    private String description;
+    private String residence;
     private Boolean recruit;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private Integer memberCnt;
+    private Integer followerCnt;
+    private List<GenreResponseDto> genres;
 
     public ClubResDto(Club club) {
-        this.clubId = club.getId();
-        this.clubImage = club.getClubImg();
-        this.clubName = club.getName();
+        this.id = club.getId();
+        this.name = club.getName();
+        this.clubImg = club.getClubImg();
         this.onelineDescription = club.getOnelineDescription();
-        this.clubGenres = club.getGenres().stream()
-                .map(ClubGenre::getGenre)
-                .map(Genre::getGenreName)
-                .collect(Collectors.toList());
-        this.following = club.getFollowList().size();
+        this.description = club.getDescription();
+        this.residence = club.getResidence();
         this.recruit = club.getRecruit();
+        this.createdAt = club.getCreatDateTime();
+        this.updatedAt = club.getLastModifiedDate();
+        this.memberCnt = club.getMembers().size();
+        this.followerCnt = club.getFollowList().size();
+        this.genres = club.getGenres().stream()
+                .map(ClubGenre::getGenre)
+                .map(GenreResponseDto::new)
+                .collect(Collectors.toList());
     }
 }

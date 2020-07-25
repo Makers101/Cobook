@@ -14,4 +14,8 @@ public class PostSaveResDto {
     public PostSaveResDto(Post post) {
         this.id = post.getId();
     }
+
+    public PostSaveResDto(Long id) {
+        this.id = id;
+    }
 }

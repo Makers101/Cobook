@@ -42,28 +42,27 @@ public class ClubService {
     private final ClubGenreRepository clubGenreRepository;
 
     @Transactional
-    public ClubCreateResDto create(ClubCreateReqDto reqDto) throws IOException {
+    public ClubCreateResDto create(Long userId, ClubCreateReqDto reqDto, MultipartFile clubImg) throws IOException {
         if (clubRepository.findByName(reqDto.getName()).isPresent()) {
             throw new BaseException(ErrorCode.EXIST_CLUB_NAME);
         }
-        User user = getUser(reqDto.getUserId());
+        User user = getUser(userId);
         Club club = clubRepository.save(reqDto.toEntity());
         ClubMember leader = clubMemberRepository.save(new ClubMember(user, club, MemberRole.LEADER));
         club.enrolls(leader);
-        List<Genre> genres = reqDto.getClubGenres().stream()
+        List<Genre> genres = reqDto.getGenres().stream()
                 .map(this::getGenre)
                 .collect(Collectors.toList());
         List<ClubGenre> clubGenres = genres.stream()
                 .map(g -> clubGenreRepository.save(new ClubGenre(club, g)))
                 .collect(Collectors.toList());
         club.setGenres(clubGenres);
-//        club.setProfile(uploadFile(reqDto.getImage()));
+        club.setProfile(uploadFile(clubImg));
         return new ClubCreateResDto(club.getId());
     }
 
-    private Genre getGenre(String genre) {
-        System.out.println(genre);
-        return genreRepository.findByGenreName(genre)
+    private Genre getGenre(Long id) {
+        return genreRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.INVALID_GENRE));
     }
 
@@ -109,6 +108,6 @@ public class ClubService {
         List<ReadingSimpleResDto> readings = club.getReadingList().stream()
                 .map(ReadingSimpleResDto::new)
                 .collect(Collectors.toList());
-        return new ClubDetailResDto(club, users, readings);
+        return new ClubDetailResDto(club);
     }
 }

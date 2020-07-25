@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClubCreateResDto {
 
-    private Long clubId;
+    private Long id;
 
     public ClubCreateResDto(Long id) {
-        this.clubId = id;
+        this.id = id;
     }
 }

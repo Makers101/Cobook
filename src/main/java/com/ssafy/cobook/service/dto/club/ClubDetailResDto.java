@@ -2,7 +2,10 @@ package com.ssafy.cobook.service.dto.club;
 
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.clubgenre.ClubGenre;
+import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.genre.Genre;
+import com.ssafy.cobook.service.dto.clubmember.ClubMemberResponseDto;
+import com.ssafy.cobook.service.dto.genre.GenreResponseDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
 import com.ssafy.cobook.service.dto.user.UserSimpleResDto;
 import lombok.AccessLevel;
@@ -17,36 +20,43 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClubDetailResDto {
 
-    private Long clubId;
-    private String clubName;
+    private Long id;
+    private String name;
+    private String clubImg;
     private String onelineDescription;
     private String description;
-    private String clubImage;
     private String residence;
-    private LocalDateTime createDateTime;
-    private LocalDateTime lastModifiedTime;
-    private Integer parcipantCount;
     private Boolean recruit;
-    private List<UserSimpleResDto> users;
-    private List<String> genres;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private Integer memberCnt;
+    private Integer followerCnt;
+    private List<GenreResponseDto> genres;
+    private List<ClubMemberResponseDto> members;
     private List<ReadingSimpleResDto> readings;
 
-    public ClubDetailResDto(Club club, List<UserSimpleResDto> users, List<ReadingSimpleResDto> readings) {
-        this.clubId = club.getId();
-        this.clubName = club.getName();
+    public ClubDetailResDto(Club club) {
+        this.id = club.getId();
+        this.name = club.getName();
+        this.clubImg = club.getClubImg();
         this.onelineDescription = club.getOnelineDescription();
         this.description = club.getDescription();
-        this.clubImage = club.getClubImg();
         this.residence = club.getResidence();
-        this.createDateTime = club.getCreatDateTime();
-        this.lastModifiedTime = club.getLastModifiedDate();
-        this.parcipantCount = club.getParticipantCount();
         this.recruit = club.getRecruit();
-        this.users = users;
+        this.createdAt = club.getCreatDateTime();
+        this.updatedAt = club.getLastModifiedDate();
+        this.memberCnt = club.getMembers().size();
+        this.followerCnt = club.getFollowList().size();
         this.genres = club.getGenres().stream()
                 .map(ClubGenre::getGenre)
-                .map(Genre::getGenreName)
+                .map(GenreResponseDto::new)
                 .collect(Collectors.toList());
-        this.readings = readings;
+        this.members = club.getMembers().stream()
+                .map(ClubMember::getUser)
+                .map(ClubMemberResponseDto::new)
+                .collect(Collectors.toList());
+        this.readings = club.getReadingList().stream()
+                .map(ReadingSimpleResDto::new)
+                .collect(Collectors.toList());
     }
 }
