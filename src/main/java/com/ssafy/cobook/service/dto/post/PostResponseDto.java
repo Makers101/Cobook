@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,9 +36,9 @@ public class PostResponseDto {
     @ApiModelProperty(position = 7)
     private String review;
     @ApiModelProperty(position = 8)
-    private String createAt;
+    private LocalDateTime createAt;
     @ApiModelProperty(position = 9)
-    private String updateAt;
+    private LocalDateTime updateAt;
     @ApiModelProperty(position = 10)
     private Boolean isClub;
     @ApiModelProperty(position = 11)
@@ -59,8 +60,8 @@ public class PostResponseDto {
         this.rank = post.getRank();
         this.open = post.getOpen();
         this.review = post.getReview();
-        this.createAt = post.getCreatDateTime().toString();
-        this.updateAt = post.getLastModifiedDate().toString();
+        this.createAt = post.getCreatDateTime();
+        this.updateAt = post.getLastModifiedDate();
         this.isClub = post.getIsClub();
         this.likeUsers = post.getPostLikes().stream()
                 .map(p->p.getUser().getId())
