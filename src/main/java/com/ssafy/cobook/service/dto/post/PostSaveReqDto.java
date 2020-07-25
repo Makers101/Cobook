@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -12,13 +13,13 @@ import java.util.List;
 public class PostSaveReqDto {
 
     private Long bookId;
-    private Long clubId;
-    private Long userId;
     private String onelineReview;
-    private String review;
     private Integer rank;
     private Boolean open;
+    private String review;
     private Boolean isClub;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private List<String> tags;
 
     public Post toEntity() {

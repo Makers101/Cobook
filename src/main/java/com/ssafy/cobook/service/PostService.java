@@ -22,10 +22,7 @@ import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
-import com.ssafy.cobook.service.dto.post.PostDetailResDto;
-import com.ssafy.cobook.service.dto.post.PostResDto;
-import com.ssafy.cobook.service.dto.post.PostSaveReqDto;
-import com.ssafy.cobook.service.dto.post.PostSaveResDto;
+import com.ssafy.cobook.service.dto.post.*;
 import com.ssafy.cobook.service.dto.postbookmark.PostBookMarkReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
@@ -57,15 +54,9 @@ public class PostService {
     private final BookRepository bookRepository;
 
     @Transactional
-    public PostSaveResDto savePosts(PostSaveReqDto reqDto) {
+    public PostSaveResDto savePosts(PostSaveReqDto reqDto, Long userId) {
         Post post = postRepository.save(reqDto.toEntity());
-        if (reqDto.isClub()) {
-            Club club = clubRepository.findById(reqDto.getClubId())
-                    .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_CLUB));
-            post.of(club);
-        } else {
-            post.of(getUserById(reqDto.getUserId()));
-        }
+        post.of(getUserById(userId));
         post = postRepository.save(post);
         Book book = getBook(reqDto.getBookId());
         post.ofBook(book);
@@ -75,7 +66,7 @@ public class PostService {
                 .collect(Collectors.toList());
         Post finalPost = post;
         List<PostTag> postTags = tags.stream()
-                .map(t-> new PostTag(finalPost, t))
+                .map(t -> new PostTag(finalPost, t))
                 .map(postTagRepository::save)
                 .collect(Collectors.toList());
         post.setTags(postTags);
@@ -84,7 +75,7 @@ public class PostService {
 
     @Transactional
     public Tag saveTag(String tagName) {
-        if( tagRepository.findByTagName(tagName).isPresent()) {
+        if (tagRepository.findByTagName(tagName).isPresent()) {
             tagRepository.findByTagName(tagName);
         }
         return tagRepository.save(new Tag(tagName));
@@ -123,25 +114,21 @@ public class PostService {
 
     public PostDetailResDto details(Long postId) {
         Post post = getPostById(postId);
-        List<PostTagDto> tags = post.getTags().stream()
-                .map(PostTag::getTag)
-                .map(PostTagDto::new)
-                .collect(Collectors.toList());
-        return new PostDetailResDto(post, tags);
+        return new PostDetailResDto(post);
     }
 
     @Transactional
-    public void likePosts(PostLikeReqDto reqDto) {
+    public void likePosts(PostLikeReqDto reqDto, Long userId) {
         Post post = getPostById(reqDto.getPostId());
-        User user = getUserById(reqDto.getUserId());
+        User user = getUserById(userId);
         PostLike postLike = new PostLike(post, user);
         postLikeRepository.save(postLike);
     }
 
     @Transactional
-    public void bookMarks(PostBookMarkReqDto reqDto) {
+    public void bookMarks(PostBookMarkReqDto reqDto, Long userId) {
         Post post = getPostById(reqDto.getPostId());
-        User user = getUserById(reqDto.getUserId());
+        User user = getUserById(userId);
         PostBookMark postBookMark = new PostBookMark(post, user);
         postBookMarkRepository.save(postBookMark);
     }
@@ -169,5 +156,12 @@ public class PostService {
         PostComment postComment = postCommentRepository.save(new PostComment(post, user, dto.getContents()));
         user.addComments(postComment);
         post.addComments(postComment);
+    }
+
+    public List<PostResponseDto> getAllPosts() {
+        return postRepository.findAll().stream()
+                .filter(Post::getOpen)
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
     }
 }

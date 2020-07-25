@@ -1,6 +1,7 @@
 package com.ssafy.cobook.service.dto.postcomment;
 
 import com.ssafy.cobook.domain.postcomment.PostComment;
+import com.ssafy.cobook.service.dto.user.UserByPostDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,19 +12,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentsResDto {
 
-    private Long postCommentId;
+    private Long id;
+    private UserByPostDto user;
     private String content;
-    private Long userId;
-    private String username;
-    private LocalDateTime createDateTime;
-    private LocalDateTime updateDateTime;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public CommentsResDto(PostComment postComment) {
-        this.postCommentId = postComment.getId();
+        this.id = postComment.getId();
         this.content = postComment.getContent();
-        this.userId = postComment.getUser().getId();
-        this.username = postComment.getUser().getUserName();
-        this.createDateTime = postComment.getCreatDateTime();
-        this.updateDateTime = postComment.getLastModifiedDate();
+        this.user = new UserByPostDto(postComment.getUser());
+        this.createdAt = postComment.getCreatDateTime();
+        this.updatedAt = postComment.getLastModifiedDate();
     }
 }
