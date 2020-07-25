@@ -1,6 +1,7 @@
 package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.service.ReadingService;
+import com.ssafy.cobook.service.dto.reading.ReadingApplyReqDto;
 import com.ssafy.cobook.service.dto.reading.ReadingDetailResDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSaveReqDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSaveResDto;
@@ -23,7 +24,7 @@ public class ReadingController {
 
     private final ReadingService readingService;
 
-    @ApiOperation(value = "리딩을 생성한다.")
+    @ApiOperation(value = "리딩을 생성한다.", response = ReadingSaveResDto.class)
     @PostMapping
     public ResponseEntity<ReadingSaveResDto> makeReading(@RequestBody final ReadingSaveReqDto reqDto) {
         ReadingSaveResDto resDto = readingService.makeReading(reqDto);
@@ -37,5 +38,11 @@ public class ReadingController {
         ReadingDetailResDto resDto = readingService.getDetails(clubId, readingId);
         return ResponseEntity.status(HttpStatus.OK).body(resDto);
     }
-    
+
+    @ApiOperation(value = "리딩에 신청한다")
+    @PostMapping("/clubs/users")
+    public ResponseEntity<Void> applyReading(@RequestBody ReadingApplyReqDto reqDto) {
+        readingService.applyReading(reqDto);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -16,7 +16,6 @@ public class ClubCreateReqDto {
     private String oneline_description;
     private String description;
     private String residence;
-    private String capacity;
     private List<String> clubGenres;
     private MultipartFile image;
 

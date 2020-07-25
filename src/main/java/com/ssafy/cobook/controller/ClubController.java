@@ -55,10 +55,10 @@ public class ClubController {
         return ResponseEntity.status(HttpStatus.OK).body(resDtos);
     }
 
-    @ApiOperation(value = "클럽 상세 조회", response = ClubDetailResDto.class)
-    @GetMapping("/{clubId}")
-    public ResponseEntity<ClubDetailResDto> getClubDetails(@PathVariable("clubId") final Long clubId) {
-        ClubDetailResDto dto = clubService.getClubDetail(clubId);
-        return ResponseEntity.status(HttpStatus.OK).body(dto);
-    }
+//    @ApiOperation(value = "클럽 상세 조회", response = ClubDetailResDto.class)
+//    @GetMapping("/{clubId}")
+//    public ResponseEntity<ClubDetailResDto> getClubDetails(@PathVariable("clubId") final Long clubId) {
+//        ClubDetailResDto dto = clubService.getClubDetail(clubId);
+//        return ResponseEntity.status(HttpStatus.OK).body(dto);
+//    }
 }

@@ -30,5 +30,5 @@ public class Genre {
     @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL)
     private List<Book> bookList = new ArrayList<>();
 
-    private String genre;
+    private String genreName;
 }

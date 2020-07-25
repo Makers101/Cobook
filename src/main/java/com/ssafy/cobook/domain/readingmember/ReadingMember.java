@@ -29,4 +29,10 @@ public class ReadingMember {
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
+
+    public ReadingMember(User user, Reading reading, MemberRole role) {
+        this.user = user;
+        this.reading = reading;
+        this.role = role;
+    }
 }

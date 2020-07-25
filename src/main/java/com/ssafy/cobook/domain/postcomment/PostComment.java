@@ -1,6 +1,6 @@
 package com.ssafy.cobook.domain.postcomment;
 
-import com.ssafy.cobook.domain.baseEntity.BaseEntity;
+import com.ssafy.cobook.domain.baseEntity.BaseTimeEntity;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.user.User;
 import lombok.AccessLevel;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostComment extends BaseEntity {
+public class PostComment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +26,10 @@ public class PostComment extends BaseEntity {
     private User user;
 
     private String content;
+
+    public PostComment(Post post, User user, String content) {
+        this.post = post;
+        this.user = user;
+        this.content = content;
+    }
 }

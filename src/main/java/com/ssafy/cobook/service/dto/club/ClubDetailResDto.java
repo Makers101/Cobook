@@ -31,7 +31,7 @@ public class ClubDetailResDto {
     private List<String> genres;
     private List<ReadingSimpleResDto> readings;
 
-    public ClubDetailResDto(Club club, List<UserSimpleResDto> users) {
+    public ClubDetailResDto(Club club, List<UserSimpleResDto> users, List<ReadingSimpleResDto> readings) {
         this.clubId = club.getId();
         this.clubName = club.getName();
         this.onelineDescription = club.getOnelineDescription();
@@ -45,10 +45,8 @@ public class ClubDetailResDto {
         this.users = users;
         this.genres = club.getGenres().stream()
                 .map(ClubGenre::getGenre)
-                .map(Genre::getGenre)
+                .map(Genre::getGenreName)
                 .collect(Collectors.toList());
-        this.readings = club.getReadingList().stream()
-                .map(ReadingSimpleResDto::new)
-                .collect(Collectors.toList());
+        this.readings = readings;
     }
 }

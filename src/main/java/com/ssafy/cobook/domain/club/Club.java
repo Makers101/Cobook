@@ -1,6 +1,7 @@
 package com.ssafy.cobook.domain.club;
 
 import com.ssafy.cobook.domain.baseEntity.BaseEntity;
+import com.ssafy.cobook.domain.baseEntity.BaseTimeEntity;
 import com.ssafy.cobook.domain.clubgenre.ClubGenre;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.follow.Follow;
@@ -18,7 +19,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Club extends BaseEntity {
+public class Club extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

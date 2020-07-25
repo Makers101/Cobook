@@ -6,6 +6,7 @@ import com.ssafy.cobook.service.dto.post.PostResDto;
 import com.ssafy.cobook.service.dto.post.PostSaveReqDto;
 import com.ssafy.cobook.service.dto.post.PostSaveResDto;
 import com.ssafy.cobook.service.dto.postbookmark.PostBookMarkReqDto;
+import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.postlike.PostLikeReqDto;
 import io.swagger.annotations.ApiOperation;
@@ -35,11 +36,11 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.savePosts(reqDto));
     }
 
-    @ApiOperation(value = "팔로우 한 사람들의 게시글을 조회한다.", response = PostResDto.class)
-    @GetMapping("/users/{userId}/follows")
-    public ResponseEntity<List<PostResDto>> getPosts(@PathVariable("userId") final Long userId) {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.getFollowPosts(userId));
-    }
+//    @ApiOperation(value = "팔로우 한 사람들의 게시글을 조회한다.", response = PostResDto.class)
+//    @GetMapping("/users/{userId}/follows")
+//    public ResponseEntity<List<PostResDto>> getPosts(@PathVariable("userId") final Long userId) {
+//        return ResponseEntity.status(HttpStatus.OK).body(postService.getFollowPosts(userId));
+//    }
 
     @ApiOperation(value = "게시글의 상세 내용을 조회한다.", response = PostDetailResDto.class)
     @GetMapping("/{postId}")
@@ -66,5 +67,12 @@ public class PostController {
     public ResponseEntity<List<CommentsResDto>> getComments(@PathVariable("postId") final Long postId) {
         List<CommentsResDto> comments = postService.getComments(postId);
         return ResponseEntity.status(HttpStatus.OK).body(comments);
+    }
+
+    @ApiOperation(value = "게시글에 댓글을 단다")
+    @PostMapping("/comments")
+    public ResponseEntity<Void> addComments(@RequestBody final CommentsReqDto dto) {
+        postService.addComments(dto);
+        return ResponseEntity.ok().build();
     }
 }
