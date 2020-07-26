@@ -71,7 +71,7 @@ export default {
     },
     clickDone() {
       if ( this.isSubmit ){
-        this.$router.push('/')
+        this.$router.push({name: 'PasswordFindEmail'})
       }
       
     }

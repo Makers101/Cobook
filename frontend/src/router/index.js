@@ -1,15 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // accounts
-import Login from '@/views/accounts/Login.vue'
-import Signup from '@/views/accounts/Signup.vue'
-import SignupEmail from '@/views/accounts/SignupEmail.vue'
-import PasswordFind from '@/views/accounts/PasswordFind.vue'
-import PasswordChange from '@/views/accounts/PasswordChange.vue'
-import PasswordChangeSuccessful from '@/views/accounts/PasswordChangeSuccessful.vue'
+import Login from '@/views/accounts/Login'
+import Signup from '@/views/accounts/Signup'
+import SignupEmail from '@/views/accounts/SignupEmail'
+import PasswordFind from '@/views/accounts/PasswordFind'
+import PasswordFindEmail from '@/views/accounts/PasswordFindEmail'
+import PasswordChange from '@/views/accounts/PasswordChange'
+import PasswordChangeSuccessful from '@/views/accounts/PasswordChangeSuccessful'
 // profiles
-import Profile from '@/views/profile/Profile.vue'
-import ProfileFeed from '@/views/profile/ProfileFeed.vue'
+import Profile from '@/views/profile/Profile'
+import ProfileFeed from '@/views/profile/ProfileFeed'
 import ProfileClub from '@/views/profile/ProfileClub'
 import ProfileBookmark from '@/views/profile/ProfileBookmark'
 import ProfileOverview from '@/views/profile/ProfileOverview'
@@ -44,10 +45,16 @@ Vue.use(VueRouter)
     component: PasswordFind
   },
   {
+    path: '/password/email',
+    name: 'PasswordFindEmail',
+    component: PasswordFindEmail
+  },
+  {
     path: '/password/change',
     name: 'PasswordChange',
     component: PasswordChange
   },
+  
   {
     path: '/password/success',
     name: 'PasswordChangeSuccessful',

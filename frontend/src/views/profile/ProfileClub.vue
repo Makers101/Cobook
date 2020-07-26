@@ -1,6 +1,7 @@
 <template>
   <div class="mt-3">
     <h5 class="text-left font-weight-bold">Club</h5>
+    <!-- Club cards -->
     <div class="club-list my-2 row">
       <div 
         class="col-sm-4 col-12 p-3"
@@ -47,20 +48,26 @@
         </div>
       </div>
     </div>
+    <!-- Reading & Meetups -->
     <h5 class="text-left font-weight-bold">Reading & Meetup</h5>
-    <div class="row rows-cols-1 row-cols-md-3">
-      <div class="col mb-4" v-for="reading in readings" :key="reading.id">
+    <div class="row rows-cols-1 row-cols-sm-3">
+      <div class="col mb-4 col-12 col-4" v-for="reading in readings" :key="reading.id">
         <div class="card h-100">
           <div class="row no-gutters">
-            <div class="col-6 p-0">
-              <img class="bg-image img-fluid" :src="`${ reading.book.bookImg }`">
+            <div class="col-6">
+              <img class="bg-image" :src="`${ reading.book.bookImg }`" width="100%">
             </div>
-            <div class="col-6 p-0">
-              <h5 class="color-light-black book-title" lt="book">{{ reading.book.title }}</h5>
-              <h5>{{ reading.name }}</h5>
-              <p><i class="fas fa-users"></i> {{ reading.participantCnt}}</p>
-              <p><i class="fas fa-map-marker-alt"></i>{{ reading.place }}</p>
-              <p>{{ reading.datetime }}</p>
+            <div class="col-6 text-left d-flex flex-column p-2">
+              <p class="color-light-black book-title" lt="book">{{ reading.book.title }}</p>
+              <small>{{ reading.name }}</small>
+              <div class="mt-auto">
+                <div class="d-flex justify-content-between">
+                  <span><small><i class="fas fa-users"></i> {{ reading.participantCnt}}</small></span>
+                  <span><small><i class="fas fa-map-marker-alt"></i> {{ reading.place }}</small></span>
+                </div>
+                <span><small>{{ reading.datetime }}</small></span>
+              </div>
+              
             </div>
           </div>
          
@@ -139,7 +146,7 @@ const sample_readings = [
     place: '역삼역',
     book: {
       id: 4,
-      title: '야큐정전',
+      title: '아큐정전',
       bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
     }
   },
@@ -152,7 +159,7 @@ const sample_readings = [
     place: '역삼역',
     book: {
       id: 4,
-      title: '야큐정전',
+      title: '아큐정전',
       bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
     }
   },
@@ -165,7 +172,7 @@ const sample_readings = [
     place: '역삼역',
     book: {
       id: 4,
-      title: '야큐정전',
+      title: '아큐정전',
       bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
     }
   },
@@ -178,7 +185,7 @@ const sample_readings = [
     place: '역삼역',
     book: {
       id: 4,
-      title: '야큐정전',
+      title: '아큐정전',
       bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
     }
   },
@@ -191,7 +198,7 @@ const sample_readings = [
     place: '역삼역',
     book: {
       id: 4,
-      title: '야큐정전',
+      title: '아큐정전',
       bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
     }
   },
@@ -204,7 +211,7 @@ const sample_readings = [
     place: '역삼역',
     book: {
       id: 4,
-      title: '야큐정전',
+      title: '아큐정전',
       bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
     }
   },
