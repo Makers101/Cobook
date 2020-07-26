@@ -48,6 +48,25 @@
       </div>
     </div>
     <h5 class="text-left font-weight-bold">Reading & Meetup</h5>
+    <div class="row rows-cols-1 row-cols-md-3">
+      <div class="col mb-4" v-for="reading in readings" :key="reading.id">
+        <div class="card h-100">
+          <div class="row no-gutters">
+            <div class="col-6 p-0">
+              <img class="bg-image img-fluid" :src="`${ reading.book.bookImg }`">
+            </div>
+            <div class="col-6 p-0">
+              <h5 class="color-light-black book-title" lt="book">{{ reading.book.title }}</h5>
+              <h5>{{ reading.name }}</h5>
+              <p><i class="fas fa-users"></i> {{ reading.participantCnt}}</p>
+              <p><i class="fas fa-map-marker-alt"></i>{{ reading.place }}</p>
+              <p>{{ reading.datetime }}</p>
+            </div>
+          </div>
+         
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -109,7 +128,86 @@ const sample_clubs = [
     ],
     open: true
   },
-
+]
+const sample_readings = [
+  {
+    id: 1,
+    name: '만든이101 1회 리딩',
+    datetime: '2020-07-10 16:00~',
+    participantCnt: 5,
+    closed: true,
+    place: '역삼역',
+    book: {
+      id: 4,
+      title: '야큐정전',
+      bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
+    }
+  },
+  {
+    id: 2,
+    name: '만든이101 2회 리딩',
+    datetime: '2020-07-15 16:00~',
+    participantCnt: 5,
+    closed: true,
+    place: '역삼역',
+    book: {
+      id: 4,
+      title: '야큐정전',
+      bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
+    }
+  },
+  {
+    id: 3,
+    name: '만든이101 3회 리딩',
+    datetime: '2020-07-20 16:00~',
+    participantCnt: 4,
+    closed: true,
+    place: '역삼역',
+    book: {
+      id: 4,
+      title: '야큐정전',
+      bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
+    }
+  },
+  {
+    id: 4,
+    name: '만든이101 4회 리딩',
+    datetime: '2020-07-23 16:00~',
+    participantCnt: 5,
+    closed: true,
+    place: '역삼역',
+    book: {
+      id: 4,
+      title: '야큐정전',
+      bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
+    }
+  },
+  {
+    id: 5,
+    name: '만든이101 5회 리딩',
+    datetime: '2020-07-25 16:00~',
+    participantCnt: 4,
+    closed: true,
+    place: '역삼역',
+    book: {
+      id: 4,
+      title: '야큐정전',
+      bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
+    }
+  },
+  {
+    id: 6,
+    name: '만든이101 6회 리딩',
+    datetime: '2020-07-26 16:00~',
+    participantCnt: 5,
+    closed: true,
+    place: '역삼역',
+    book: {
+      id: 4,
+      title: '야큐정전',
+      bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
+    }
+  },
 ]
 
 import router from '@/router'
@@ -135,7 +233,9 @@ export default {
           id: 3,
           name: '예술',
         }
-      ]
+      ],
+
+      readings: sample_readings,
     }
   },
   methods: {
