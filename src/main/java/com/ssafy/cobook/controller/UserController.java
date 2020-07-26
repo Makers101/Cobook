@@ -1,10 +1,8 @@
 package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.service.UserService;
-import com.ssafy.cobook.service.dto.user.UserResetPwdRequestDto;
-import com.ssafy.cobook.service.dto.user.UserResponseDto;
-import com.ssafy.cobook.service.dto.user.UserSaveRequestDto;
-import com.ssafy.cobook.service.dto.user.UserUpdatePwdDto;
+import com.ssafy.cobook.service.dto.TokenResponse;
+import com.ssafy.cobook.service.dto.user.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +17,7 @@ import javax.servlet.http.HttpSession;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/users") // 프론트에서 restAPI 보낼 때 기본 맵핑 주소
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 
 //http:/.localhost:8080/swagger-ui.html
@@ -28,10 +26,19 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class); // 로그찍기
 
     @ApiOperation(value = "이메일, 패스워드, 유저명을 받아서 회원가입한다.", response = UserResponseDto.class)
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<UserResponseDto>saveUser(@RequestBody final UserSaveRequestDto userSaveRequestDto){
         UserResponseDto userResponseDto = userService.saveUser(userSaveRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
+    }
+
+
+    @ApiOperation(value = "이메일, 패스워드를 받아서 로그인하여 토큰을 반환한다", response = TokenResponse.class)
+    @PostMapping("/signin")
+    public TokenResponse login(@RequestBody UserLoginRequestDto userLoginRequestDto){
+        String token = userService.createToken(userLoginRequestDto);
+        Long userId = userService.login(userLoginRequestDto);
+        return new TokenResponse(token, userId);
     }
 
     @ApiOperation(value = "이메일을 받아서 인증코드를 보낸다.", response = String.class)
