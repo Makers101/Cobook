@@ -21,8 +21,8 @@
       <!-- club-menubar -->
       <div class="club-menubar my-3 d-flex justify-content-between">
         <div class="club-toggle">
-          <!-- <button class="btn btn-toggle-false mx-1" @click="selectFilter('popular')" v-show="popular_filter">#인기</button>
-          <button class="btn btn-toggle-true mx-1" @click="selectFilter('popular')" v-show="!popular_filter">#인기</button> -->
+          <button class="btn btn-toggle-false mx-1" @click="selectFilter('popular')" v-show="popular_filter">#인기</button>
+          <button class="btn btn-toggle-true mx-1" @click="selectFilter('popular')" v-show="!popular_filter">#인기</button>
 
           <button class="btn btn-toggle-false mx-1" @click="selectFilter('open')" v-show="open_filter">#모집중</button>
           <button class="btn btn-toggle-true mx-1" @click="selectFilter('open')" v-show="!open_filter">#모집중</button>
@@ -147,9 +147,6 @@
                   <p class="card-text mb-0 mr-2">
                     <small class="color-black"><i class="fas fa-users"></i> {{ club.participant_num }}</small>
                   </p>
-                  <!-- <p class="card-text mb-0" v-if="club.open">
-                    <small class="text-danger font-weight-bold">모집중</small>
-                  </p> -->
                 </div>
               </div>
             </div>
@@ -161,130 +158,8 @@
 </template>
 
 <script>
-const sample_clubs = [
-  {
-    id: 1,
-    name: 'sample_name_1',
-    image: 'http://placehold.jp/300x200.png?text=sample',
-    oneline_description: '주로 문학 작품을 읽는 클럽 sample_club_1입니다. 쿄쿄쿄쿄쿄쿜쿄쿄쿄쿄쿄쿄쿄',
-    residence: '역삼동',
-    participant_num: 3,
-    followers: 50,
-    genres: [
-      {
-        id: 1,
-        name: '문학'
-      },
-      {
-        id: 3,
-        name: '예술'
-      }
-    ],
-    open: true
-  },
-  {
-    id: 2,
-    name: 'sample_name_2',
-    image: 'http://placehold.jp/300x200.png?text=sample',
-    oneline_description: '주로 철학 작품을 읽는 클럽 sample_club_2입니다.',
-    residence: '온라인',
-    participant_num: 5,
-    followers: 10,
-    genres: [
-      {
-        id: 2,
-        name: '철학',
-      },
-    ],
-    open: true
-  },
-  {
-    id: 3,
-    name: 'sample_name_3',
-    image: 'http://placehold.jp/300x200.png?text=sample',
-    oneline_description: '같이 읽어봐요 sample_club_3입니다.',
-    residence: '온라인',
-    participant_num: 1,
-    followers: 1,
-    genres: [
-      {
-        id: 1,
-        name: '문학',
-      },
-      {
-        id: 2,
-        name: '철학',
-      },
-    ],
-    open: true
-  },
-  {
-    id: 4,
-    name: 'sample_name_4',
-    image: 'http://placehold.jp/300x200.png?text=sample',
-    oneline_description: '주로 문학작품을 읽는 클럽 sample_club입니다.',
-    residence: '온라인',
-    participant_num: 3,
-    followers: 50,
-    genres: [
-      {
-        id: 1,
-        name: '문학',
-      },
-      {
-        id: 2,
-        name: '철학',
-      },
-    ],
-    open: true
-  },
-  {
-    id: 5,
-    name: 'sample_name_5',
-    image: 'http://placehold.jp/300x200.png?text=sample',
-    oneline_description: '주로 문학작품을 읽는 클럽 sample_club입니다.',
-    residence: '온라인',
-    participant_num: 3,
-    followers: 50,
-    genres: [
-      {
-        id: 1,
-        name: '문학',
-      },
-      {
-        id: 2,
-        name: '철학',
-      },
-    ],
-    open: false
-  },
-  {
-    id: 6,
-    name: 'sample_name_6길다리이름이',
-    image: 'http://placehold.jp/300x200.png?text=sample',
-    oneline_description: '주로 문학작품을 읽는 클럽 sample_club입니다.',
-    residence: '신촌',
-    participant_num: 3,
-    followers: 50,
-    genres: [
-      {
-        id: 1,
-        name: '문학',
-      },
-      {
-        id: 2,
-        name: '철학',
-      },
-      {
-        id: 3,
-        name: '예술',
-      }
-    ],
-    open: true
-  }
-]
-
 import router from '@/router'
+import { mapState } from 'vuex'
 export default {
   name: 'ClubList',
   data() {
@@ -292,23 +167,11 @@ export default {
       popular_filter: false,
       open_filter: false,
       genre_filter: new Set(),
-      
-      clubs: sample_clubs,
-      user_genres: [
-        {
-          id: 1,
-          name: '문학',
-        },
-        {
-          id: 2,
-          name: '철학',
-        },
-        {
-          id: 3,
-          name: '예술',
-        }
-      ]
+      user_genres: ['문학', '철학', '예술']
     }
+  },
+  computed: {
+    ...mapState('clubStore', ['clubs']),
   },
   methods: {
     selectClub(club_id) {
@@ -318,13 +181,13 @@ export default {
       let new_clubs = []
             
       if (this.open_filter) {
-        sample_clubs.forEach(club => {
+        this.clubs.forEach(club => {
           if (club.open) {
             new_clubs.push(club)
           }
         });
       } else {
-        new_clubs = sample_clubs
+        new_clubs = this.clubs
       }
 
       console.log(new_clubs)
