@@ -59,6 +59,7 @@
                 class="nav-link dropdown-toggle" 
                 to="/" 
                 id="navbarDropdown" 
+                type="button"
                 role="button" 
                 data-toggle="dropdown" 
                 aria-haspopup="true" 
@@ -67,8 +68,8 @@
                 <i class="fas fa-user color-green"></i>
               </router-link>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <router-link class="dropdown-item" to="/profile">프로필</router-link>
-                <router-link class="dropdown-item" to="/">프로필 수정</router-link>
+                <router-link class="dropdown-item" :to="{ name: 'Profile' }">프로필</router-link>
+                <router-link class="dropdown-item" :to="{ name: 'ProfileUpdate'}">프로필 수정</router-link>
                 <div class="dropdown-divider"></div>
                 <router-link class="dropdown-item" to="/">로그아웃</router-link>
               </div>
@@ -112,6 +113,11 @@
 
 .club-img {
   height: 23px;
+}
+
+.dropdown-menu {
+  top: 50px;
+  left: -70px;
 }
 
 </style>
