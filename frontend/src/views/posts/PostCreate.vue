@@ -31,21 +31,29 @@
                     :class="{ 'mr-5' : !oneline }"
                     @keydown.enter="makeTwoline"
                     type="text" 
-                    placeholder="한줄 평을 입력해주세요."
+                    placeholder="책 리뷰를 입력해주세요."
                   >
                   <input
                     class="content-input ml-5 bg-light-beige" 
                     :class="{ 'd-none' : oneline, active : oneline}"
                     type="text" 
-                    placeholder=""
+                    placeholder="책 리뷰를 입력해주세요."
                   >
                   <div class="large-text text-right"><i class="fas fa-quote-right"></i></div>
+                  <p class="detail-review-button mt-5" @click="createDetailReview">상세 리뷰 작성</p>
                 </div>
               </div>
             </div>
             <div class="post-footer text-left mt-2">
               <span class="badge bg-green rounded-pill px-3 py-2 mr-2">태그1</span>
               <span class="badge bg-green rounded-pill px-3 py-2">태그2</span>
+            </div>
+            <div v-if="detailReview">
+              <input type="text">
+            </div>
+
+            <div class="text-right">
+              <div class="btn btn-outline-green rounded">작성 완료</div>
             </div>
           </div>
         </div>
@@ -59,12 +67,19 @@ export default {
   name: 'PostCreate',
   data() {
     return {
-      oneline: true
+      oneline: true,
+      detailReview: false,
+      postData: {
+        tags: []
+      }
     }
   },
   methods: {
     makeTwoline() {
       this.oneline = false
+    },
+    createDetailReview() {
+      this.detailReview = !this.detailReview
     }
   }
 
@@ -105,4 +120,12 @@ export default {
   outline: none;
 }
 
+.detail-review-button {
+  color: #6C757d
+}
+
+.detail-review-button:hover {
+  cursor: pointer;
+  color: black
+}
 </style>
