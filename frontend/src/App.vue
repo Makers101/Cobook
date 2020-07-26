@@ -27,7 +27,7 @@
           </form>
           <ul class="navbar-nav mr-auto row w-100">
             <li class="nav-item col-3">
-              <router-link class="nav-link" to="/">
+              <router-link class="nav-link" :to="{ name: 'PostList' }">
                 <i class="fas fa-home color-green"></i>
                 Feed
               </router-link>
@@ -44,9 +44,14 @@
                 Meetup
               </router-link>
             </li>
-            <li class="nav-item offset-1 col-1">
+            <li class="nav-item col-1">
               <router-link class="nav-link" to="/">
                 <i class="fas fa-bell color-green"></i>
+              </router-link>
+            </li>
+            <li class="nav-item col-1">
+              <router-link class="nav-link" :to="{ name: 'PostCreate' }">
+                <i class="fas fa-plus-circle color-green"></i>
               </router-link>
             </li>
             <li class="nav-item dropdown col-1">

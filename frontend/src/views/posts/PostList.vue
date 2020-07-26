@@ -18,30 +18,7 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-8 col-12">
-      <!-- Button trigger modal -->
-      <div type="button" class="border rounded my-3" data-toggle="modal" data-target="#createPostModal">
-        <i class="fas fa-plus-circle color-green my-3"></i>
-        <div class="text-muted">책 리뷰 게시물을 작성해주세요.</div>
-      </div>
-
-      <!-- Modal -->
-      <div class="modal fade" id="createPostModal" tabindex="-1" role="dialog" aria-labelledby="createPostModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-body">
-              ...
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <hr class="mb-4">
+    <div class="col-lg-8 col-12 mt-3">
       <div class="post mb-5">
         <div class="post-header d-flex justify-content-between mb-2">
           <div>
