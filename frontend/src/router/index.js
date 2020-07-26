@@ -7,13 +7,15 @@ import SignupEmail from '@/views/accounts/SignupEmail.vue'
 import PasswordFind from '@/views/accounts/PasswordFind.vue'
 import PasswordChange from '@/views/accounts/PasswordChange.vue'
 import PasswordChangeSuccessful from '@/views/accounts/PasswordChangeSuccessful.vue'
-// profile
+// profiles
 import Profile from '@/views/profile/Profile.vue'
 import ProfileFeed from '@/views/profile/ProfileFeed.vue'
 import ProfileClub from '@/views/profile/ProfileClub'
 import ProfileBookmark from '@/views/profile/ProfileBookmark'
 import ProfileOverview from '@/views/profile/ProfileOverview'
-import PostList from '@/views/posts/PostList.vue'
+// posts
+import PostList from '@/views/posts/PostList'
+import PostCreate from '@/views/posts/PostCreate'
 
 import ClubList from '@/views/clubs/ClubList.vue'
 
@@ -82,6 +84,11 @@ Vue.use(VueRouter)
     path: '/',
     name: 'PostList',
     component: PostList
+  },
+  {
+    path: '/posts/create',
+    name: 'PostCreate',
+    component: PostCreate
   },
 
   // clubs
