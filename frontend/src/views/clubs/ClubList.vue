@@ -2,7 +2,7 @@
   <div class="row">
     <div class="offset-lg-2 col-lg-8 col-12">
 
-      <!-- club-banner -->
+      <!-- clubs-banner -->
       <div class="club-banner">
         <img
           class="club-banner-img"
@@ -18,18 +18,18 @@
         </div>
       </div>
 
-      <!-- club-menubar -->
+      <!-- clubs-menubar -->
       <div class="club-menubar my-3 d-flex justify-content-between">
         <div class="club-toggle">
-          <button class="btn btn-toggle-false mx-1" @click="selectFilter('popular')" v-show="popular_filter">#인기</button>
-          <button class="btn btn-toggle-true mx-1" @click="selectFilter('popular')" v-show="!popular_filter">#인기</button>
+          <!-- <button class="btn btn-toggle-false mx-1" @click="selectFilter('popular')" v-show="popular_filter">#인기</button>
+          <button class="btn btn-toggle-true mx-1" @click="selectFilter('popular')" v-show="!popular_filter">#인기</button> -->
 
           <button class="btn btn-toggle-false mx-1" @click="selectFilter('open')" v-show="open_filter">#모집중</button>
           <button class="btn btn-toggle-true mx-1" @click="selectFilter('open')" v-show="!open_filter">#모집중</button>
 
           <span             
-            v-for="genre in user_genres"
-            :key="`user_genre_${genre.id}`"
+            v-for="genre in userGenres"
+            :key="`userGenres_${genre.id}`"
           >
             <button 
               class="btn btn btn-toggle-false mx-1"
@@ -47,69 +47,10 @@
             </button>
           </span>
         </div>
-        
-        <!-- club-create -->
-        <button class="btn btn-club-create mx-1" data-toggle="modal" data-target="#exampleModal">클럽 생성</button>
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
-                  <!-- <ol class="carousel-indicators">
-                    <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
-                    <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-                    <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
-                  </ol> -->
-                  <div class="carousel-inner">
-                    <div class="carousel-item active">
-                      <!-- <img src="http://placehold.jp/300x200.png?text=sample" class="d-block w-100" alt="..."> -->
-                      <!-- <div class="carousel-caption d-none d-md-block"> -->
-                        <h5>First slide label</h5>
-                        <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                      <!-- </div> -->
-                    </div>
-                    <div class="carousel-item">
-                      <!-- <img src="http://placehold.jp/300x200.png?text=sample" class="d-block w-100" alt="..."> -->
-                      <!-- <div class="carousel-caption d-none d-md-block"> -->
-                        <h5>Second slide label</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                      <!-- </div> -->
-                    </div>
-                    <div class="carousel-item">
-                      <!-- <img src="http://placehold.jp/300x200.png?text=sample" class="d-block w-100" alt="..."> -->
-                      <!-- <div class="carousel-caption d-none d-md-block"> -->
-                        <h5>Third slide label</h5>
-                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                      <!-- </div> -->
-                    </div>
-                  </div>
-                  <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                  </a>
-                  <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                  </a>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
       <hr class="my-0">
 
-      <!-- club-list -->
+      <!-- clubs-list -->
       <div class="club-list my-2 row">
         <div 
           class="col-sm-4 col-12 p-3"
@@ -119,18 +60,18 @@
             <div class="card-head">
               <img
                 class="card-img-top to-detail"
-                :src="club.image"
+                :src="club.clubImg"
                 :alt="club.name"
                 @click="selectClub(club.id)"
               >
-              <span class="badge mb-0 club-open" v-if="club.open">모집중</span>
+              <span class="badge mb-0 club-open" v-if="club.recruit">모집중</span>
             </div>        
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4 class="card-title font-weight-bold mb-0 club-name to-detail" @click="selectClub(club.id)">{{ club.name }}</h4>
-                <small class="color-green font-weight-bold club-followers">{{ club.followers }} FOLLOW</small>
+                <small class="color-green font-weight-bold club-followers">{{ club.followerCnt }} FOLLOW</small>
               </div>
-              <p class="card-text text-left club-oneline">{{ club.oneline_description }}</p>
+              <p class="card-text text-left club-oneline">{{ club.onelineDescription }}</p>
               <div class="d-flex justify-content-start my-3">
                 <span
                   class="badge badge-genre mr-2"
@@ -145,7 +86,7 @@
                 </p>
                 <div class="d-flex">
                   <p class="card-text mb-0 mr-2">
-                    <small class="color-black"><i class="fas fa-users"></i> {{ club.participant_num }}</small>
+                    <small class="color-black"><i class="fas fa-users"></i> {{ club.memberCnt }}</small>
                   </p>
                 </div>
               </div>
@@ -159,7 +100,7 @@
 
 <script>
 import router from '@/router'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'ClubList',
   data() {
@@ -167,53 +108,48 @@ export default {
       popular_filter: false,
       open_filter: false,
       genre_filter: new Set(),
-      user_genres: ['문학', '철학', '예술']
+      
     }
   },
   computed: {
-    ...mapState('clubStore', ['clubs']),
+    ...mapState('clubStore', ['clubs', 'userGenres']),
   },
   methods: {
-    selectClub(club_id) {
-      router.push({ name: 'ClubDetail', params: { club_id: club_id }})
+    ...mapActions('clubStore', ['fetchClubs']),
+    selectClub(clubId) {
+      router.push({ name: 'ClubDetail', params: { clubId: clubId }})
     },
-    filterClubs() {
-      let new_clubs = []
+    // filterClubs() {
+    //   let new_clubs = []
             
-      if (this.open_filter) {
-        this.clubs.forEach(club => {
-          if (club.open) {
-            new_clubs.push(club)
-          }
-        });
-      } else {
-        new_clubs = this.clubs
-      }
+    //   if (this.open_filter) {
+    //     this.clubs.forEach(club => {
+    //       if (club.open) {
+    //         new_clubs.push(club)
+    //       }
+    //     });
+    //   } else {
+    //     new_clubs = this.clubs
+    //   }
 
-      console.log(new_clubs)
-
-      if (this.genre_filter.size !== 0) {
-        console.log('여기1')
-        let new_clubs2 = new Set()
-        new_clubs.forEach(club => {
-          let temp = 0
-          club.genres.forEach(genre => {
-            if (this.genre_filter.has(genre.name)) {
-              temp = temp + 1
-            }
-          })
-          console.log(club.genres.length)
-          console.log(temp)
-          if (club.genres.length === temp) {
-            new_clubs2.add(club)
-          }
-        })
-        this.clubs = new_clubs2
-      } else {
-        console.log('여기2')
-        this.clubs = new_clubs
-      }
-    },
+    //   if (this.genre_filter.size !== 0) {
+    //     let new_clubs2 = new Set()
+    //     new_clubs.forEach(club => {
+    //       let temp = 0
+    //       club.genres.forEach(genre => {
+    //         if (this.genre_filter.has(genre.name)) {
+    //           temp = temp + 1
+    //         }
+    //       })
+    //       if (club.genres.length === temp) {
+    //         new_clubs2.add(club)
+    //       }
+    //     })
+    //     this.clubs = new_clubs2
+    //   } else {
+    //     this.clubs = new_clubs
+    //   }
+    // },
     selectFilter(filter) {
       if (filter === 'popular') {
         this.popular_filter = !this.popular_filter
@@ -227,8 +163,11 @@ export default {
         }
       }
       this.$forceUpdate();
-      this.filterClubs()
+      // this.filterClubs()
     }
+  },
+  created() {
+    // this.fetchClubs()
   }
 }
 </script>
