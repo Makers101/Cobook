@@ -47,6 +47,7 @@
             </button>
           </span>
         </div>
+        <button class="btn btn-green mx-1">클럽 생성</button>
       </div>
       <hr class="my-0">
 
@@ -63,6 +64,14 @@
                 :src="club.clubImg"
                 :alt="club.name"
                 @click="selectClub(club.id)"
+                v-if="club.clubImg"
+              >
+              <img
+                class="card-img-top to-detail"
+                src="http://placehold.jp/300x200.png?text=sample"
+                :alt="club.name"
+                @click="selectClub(club.id)"
+                v-else
               >
               <span class="badge mb-0 club-open" v-if="club.recruit">모집중</span>
             </div>        
@@ -115,7 +124,7 @@ export default {
     ...mapState('clubStore', ['clubs', 'userGenres']),
   },
   methods: {
-    ...mapActions('clubStore', ['fetchClubs']),
+    ...mapActions('clubStore', ['fetchClubs', 'findClub']),
     selectClub(clubId) {
       router.push({ name: 'ClubDetail', params: { clubId: clubId }})
     },
@@ -167,7 +176,7 @@ export default {
     }
   },
   created() {
-    // this.fetchClubs()
+    this.fetchClubs()
   }
 }
 </script>
