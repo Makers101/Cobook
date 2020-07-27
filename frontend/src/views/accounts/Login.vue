@@ -33,9 +33,9 @@
       <label for="password"></label>
       <div class="error-text ml-3" v-if="error.password">{{error.password}}</div>
     </div>
-    <p class="my-3"><span class="items" @click="clickSignup">회원가입 </span>ㆍ<span class="items" @click="clickPasswordFind">비밀번호 찾기</span></p>
+    <p class="my-3"><span class="items" @click="clickSignup">회원가입하기</span>ㆍ<span class="items" @click="clickPasswordFind">비밀번호 찾기</span></p>
     <div class="buttons mt-3">
-      <button class="btn login-button" :class="{disabled: !isSubmit}" @click="clickLogin" >로그인하기</button>
+      <button class="btn login-button" :class="{disabled: !isSubmit}" @click="login(loginData)" >로그인하기</button>
     </div>
 
     <hr class="divide">
@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'Login',
   data() {
@@ -104,7 +105,7 @@ export default {
         } else if ( this.loginData.password.length >= 8 && !this.validPassword(this.loginData.password) ) {
           this.error.password = "영문, 숫자 포함 8 자리 이상이어야 해요.";
         } else this.error.password = false;
-      
+      // 버튼 활성화
       if (this.loginData.password.length > 0 && this.loginData.email.length > 0){
         let isSubmit = true;
         Object.values(this.error).map(v => {
@@ -112,7 +113,6 @@ export default {
         });
         this.isSubmit = isSubmit;
       }
-      
     },
     validPassword(password) {
       var va = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z]{8,}$/;
@@ -128,7 +128,8 @@ export default {
     },
     clickPasswordFind() {
       this.$router.push({ name: 'PasswordFind' })
-    }
+    },
+    ...mapActions('accountStore', ['login'])
   }
 }
 </script>

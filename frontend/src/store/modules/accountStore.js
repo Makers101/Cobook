@@ -24,7 +24,6 @@ const accountStore = {
                 .then(res => {
                     commit('SET_TOKEN', res.data.key)
                     // dispatch('getMyAccount')
-                    console.log(res)
                     router.push({ name: 'SignupEmail' })
                 })
                 .catch(err => {
@@ -39,6 +38,14 @@ const accountStore = {
             }
             dispatch('postAuthData', info)
         },
+        login({ dispatch }, loginData) {
+            const info = {
+                data: loginData,
+                location: SERVER.ROUTES.login,
+                to: '/'
+            }
+            dispatch('postAuthData', info)
+        }
     },
 }
 
