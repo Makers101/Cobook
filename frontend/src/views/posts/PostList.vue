@@ -19,7 +19,11 @@
       </div>
     </div>
     <div class="col-12 col-md-8 mt-3">
-      <div class="post mb-5">
+      <div
+        class="post mb-5"
+        v-for="post in posts"
+        :key="`post-${post.id}`"
+        >
         <div class="post-header d-flex justify-content-between mb-2">
           <div>
             <span class="rounded-circle"><img class="img-fluid feed-profile-img" src="@/assets/anonymous user.png" alt="유저 프로필 사진"></span>
@@ -27,57 +31,29 @@
             <span class="badge bg-green">Club</span>
           </div>
           <div class="color-beige small-text">
-            <i class="fas fa-heart mr-2"></i><small class="mr-3">609</small>
-            <i class="fas fa-comments mr-2"></i><small class="mr-3">120 </small>
+            <i class="fas fa-heart mr-2"></i><small class="mr-3">{{ post.likeUsers.length }}</small>
+            <i class="fas fa-comments mr-2"></i><small class="mr-3">{{ 23 }}</small>
             <i class="fas fa-bookmark"></i>
           </div>
         </div>
-        <div class="post-content bg-light-beige row pointer" @click="postDetail(1)">
+        <div class="post-content bg-light-beige row pointer" @click="postDetail(post.id)">
           <div class="col-4 my-5">
-            <img style="height: 30vh;" src="@/assets/미움받을 용기.png" alt="책 이미지">
+            <img style="height: 30vh;" :src="post.book.bookImg" alt="책 이미지">
           </div>
           <div class="col-8 d-flex align-items-center">
             <div class="w-100 color-black">
               <div class="large-text text-left"><i class="fas fa-quote-left"></i></div>
-              <div class="mr-5 mb-2">한줄 평은 이렇습니다.</div>
+              <div class="mr-5 mb-2">{{ post.onelineReview }}</div>
               <div class="ml-5">두줄 평은 이렇습니다.</div>
               <div class="large-text text-right"><i class="fas fa-quote-right"></i></div>
             </div>
           </div>
         </div>
-        <div class="post-footer text-left mt-2">
-          <span class="badge bg-green rounded-pill px-3 py-2 mr-2">태그1</span>
-          <span class="badge bg-green rounded-pill px-3 py-2">태그2</span>
-        </div>
-      </div>
-      <div class="post mb-5">
-        <div class="post-header d-flex justify-content-between mb-2">
-          <div>
-            <span class="rounded-circle"><img class="img-fluid feed-profile-img" src="@/assets/anonymous user.png" alt="유저 프로필 사진"></span>
-            username1
-          </div>
-          <div class="color-beige small-text">
-            <i class="fas fa-heart mr-2"></i><small class="mr-3">609</small>
-            <i class="fas fa-comments mr-2"></i><small class="mr-3">120 </small>
-            <i class="fas fa-bookmark"></i>
-          </div>
-        </div>
-        <div class="post-content bg-light-beige row">
-          <div class="col-4 my-5">
-            <img style="height: 30vh;" src="@/assets/미움받을 용기.png" alt="책 이미지">
-          </div>
-          <div class="col-8 d-flex align-items-center">
-            <div class="w-100 color-black">
-              <div class="large-text text-left"><i class="fas fa-quote-left"></i></div>
-              <div class="mr-5 mb-2">한줄 평은 이렇습니다.</div>
-              <div class="ml-5">두줄 평은 이렇습니다.</div>
-              <div class="large-text text-right"><i class="fas fa-quote-right"></i></div>
-            </div>
-          </div>
-        </div>
-        <div class="post-footer text-left mt-2">
-          <span class="badge bg-green rounded-pill px-3 py-2 mr-2">태그1</span>
-          <span class="badge bg-green rounded-pill px-3 py-2">태그2</span>
+        <div
+          class="post-footer text-left mt-2"
+          v-for="tag in post.tags"
+          :key="`tag-${tag.id}`">
+          <span class="badge bg-green rounded-pill px-3 py-2 mr-2">{{ tag.name }}</span>
         </div>
       </div>
     </div>
@@ -111,12 +87,21 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
   name: 'PostList',
+  computed: {
+    ...mapState('postStore', ['posts']),
+  },
   methods: {
+    ...mapActions('postStore', ['fetchPosts']),
     postDetail(postId) {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
     }
+  },
+  created() {
+    this.fetchPosts()
   }
   
 
