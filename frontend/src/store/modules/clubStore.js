@@ -74,7 +74,8 @@ const clubStore = {
             id: 600,
             name: '예술'
           }
-        ]
+        ],
+        genres: null
     },
     getters: {
     },
@@ -87,6 +88,9 @@ const clubStore = {
       },
       SET_SELECTED_READING(state, reading) {
         state.selectedReading = reading
+      },
+      SET_GENRES(state, genres) {
+        state.genres = genres
       }
     },
     actions: {
@@ -112,6 +116,15 @@ const clubStore = {
           .catch(err => {
             console.log(err.response.data)
             commit('SET_SELECTED_READING', readingSample)
+          })
+      },
+      fetchGenres({ commit }) {
+        axios.get(SERVER.URL + SERVER.ROUTES.genres)
+          .then(res => {
+            commit('SET_GENRES', res.data)
+          })
+          .catch(err => {
+            console.log(err.response.data)
           })
       }
     },
