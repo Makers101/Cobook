@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="d-none d-lg-block col-2">
+    <div class="d-none custom-d-md-block col-2">
       <div class="myclub border rounded">
         <div class="myclub-header font-weight-extrabold mt-3">내 클럽</div>
         <hr>
@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-8 col-12 mt-3">
+    <div class="col-12 col-md-8 mt-3">
       <div class="post mb-5">
         <div class="post-header d-flex justify-content-between mb-2">
           <div>
@@ -81,7 +81,7 @@
         </div>
       </div>
     </div>
-    <div class="d-none d-lg-block col-2">
+    <div class="d-none custom-d-md-block col-2">
       <div class="recommend border rounded">
         <div class="recommend-header font-weight-extrabold mt-3">추천하는 책</div>
         <hr>
@@ -148,6 +148,12 @@ export default {
   top: 200px;
   right: 1%;
   width: 14%;
+}
+
+@media (min-width: 960px) {
+  .custom-d-md-block {
+      display: block!important;
+  }
 }
 
 </style>
