@@ -5,8 +5,8 @@
 
       <div class="input-with-label">
         <input 
-          v-model="nickName"
-          v-bind:class="{error: error.nickName, complete:!error.nickName&&nickName.length!==0}"
+          v-model="signupData.nickName"
+          v-bind:class="{error: error.nickName, complete:!error.nickName&&signupData.nickName.length!==0}"
           class="inputs"
           id="nickName"
           placeholder="닉네임" 
@@ -21,8 +21,8 @@
 
       <div class="input-with-label">
         <input 
-          v-model="email" 
-          v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}"
+          v-model="signupData.email" 
+          v-bind:class="{error : error.email, complete:!error.email&&signupData.email.length!==0}"
           class="inputs"
           id="email" 
           placeholder="이메일" 
@@ -38,9 +38,9 @@
 
       <div class="input-with-label">
         <input 
-          v-model="password" 
+          v-model="signupData.password" 
           
-          v-bind:class="{error : error.password, complete:!error.password&&password.length!==0}"
+          v-bind:class="{error : error.password, complete:!error.password&&signupData.password.length!==0}"
           class="inputs"
           id="password" 
           type="password"
@@ -53,11 +53,11 @@
 
       <div class="input-with-label">
         <input
-          v-model="passwordConfirm"
+          v-model="signupData.passwordConfirm"
           
           type="password"
           id="password-confirm"
-          v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&passwordConfirm.length!==0}"
+          v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&signupData.passwordConfirm.length!==0}"
           placeholder="비밀번호를 다시 입력해주세요."
           class="inputs"
           required
@@ -95,14 +95,16 @@ export default {
 
   data() {
     return {
-      email: "",
-      password: "",
-      passwordConfirm: "",
-      nickName: "",
+      signupData: {
+        email: "",
+        password: "",
+        passwordConfirm: "",
+        nickName: "",
+      },
       error: {
         email: false,
-        password: false,
         nickName: false,
+        password: false,
         passwordConfirm: false,
       },
       isSubmit: false,
@@ -112,28 +114,26 @@ export default {
     this.component = this;
   },
   watch: {
-    nickName() {
-      this.checknickNameForm();
-    },
-    email() {
-      this.checkEmailForm();
-    },
-    password() {
-      this.checkPasswordForm();
-    },
-    passwordConfirm() {
-      this.checkPasswordConfirmationForm();
+    signupData: {
+      deep: true,
+
+      handler() {
+        this.checknickNameForm();
+        this.checkEmailForm();
+        this.checkPasswordForm();
+        this.checkPasswordConfirmationForm();
+      }
     }
   },
   methods: {
     checknickNameForm() {
-      if ( this.nickName.length > 0) {
+      if ( this.signupData.nickName.length > 0) {
         this.error.nickName = false;
       }
       else this.error.nickName="닉네임을 입력해주세요."
     },
     checkEmailForm() {
-      if ( this.email.length > 0 && !this.validEmail(this.email) ) {
+      if ( this.signupData.email.length > 0 && !this.validEmail(this.signupData.email) ) {
         this.error.email = "올바른 이메일 형식이 아니에요"   
       }
       else this.error.email = false;
@@ -144,9 +144,9 @@ export default {
       return re.test(email);
     },
     checkPasswordForm() {
-      if (this.password.length > 0 && this.password.length < 8) {
+      if (this.signupData.password.length > 0 && this.signupData.password.length < 8) {
           this.error.password = "비밀번호가 너무 짧아요"
-        } else if ( this.password.length >= 8 && !this.validPassword(this.password) ) {
+        } else if ( this.signupData.password.length >= 8 && !this.validPassword(this.signupData.password) ) {
           this.error.password = "영문, 숫자 포함 8 자리 이상이어야 해요.";
         } else this.error.password = false;
     },
@@ -155,16 +155,21 @@ export default {
       return va.test(password);
     },
     checkPasswordConfirmationForm() {
-      if (this.password !== this.passwordConfirm )
+      if (this.signupData.password.length >= 8 && this.validPassword(this.signupData.password)) {
+         if (this.signupData.password !== this.signupData.passwordConfirm )
         this.error.passwordConfirm = "비밀번호가 일치하지 않아요."
       else this.error.passwordConfirm = false;
+      }
       
-      // 버튼 활성화 코드 (다 통과 했을 때 넘어갈 수 있도록 생성 )
-      let isSubmit = true;
-      Object.values(this.error).map(v => {
-        if (v) isSubmit = false;
-      });
-      this.isSubmit = isSubmit;
+      // 버튼 활성화
+      if (this.signupData.nickName.length > 0 && this.signupData.email.length > 0 && this.signupData.password.length > 0 && this.signupData.passwordConfirm.length > 0){
+        let isSubmit = true;
+        Object.values(this.error).map(v => {
+          if (v) isSubmit = false;
+        });
+        this.isSubmit = isSubmit;
+      }
+     
     },
     clickSignup() {
       if (this.isSubmit){
@@ -206,6 +211,8 @@ h3 {
 .divide {
   width: 10%;
   border-top: 1px solid #88A498;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
