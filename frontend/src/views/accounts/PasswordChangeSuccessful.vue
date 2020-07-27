@@ -1,9 +1,11 @@
 <template>
-  <div class="container py-5 mt-5 bg-light-ivory">
-    <h5 class="mt-3">비밀번호 변경이 완료되었습니다.<br>
-    로그인해주세요.</h5>
-    <div class="buttons mt-5">
-      <button class="btn login-button" @click="clickLogin" >로그인하기</button>
+  <div class="background">
+    <div class="container py-5 mt-5 bg-light-ivory formatting">
+      <h5 class="mt-3">비밀번호 변경이 완료되었습니다.<br>
+      로그인해주세요.</h5>
+      <div class="buttons mt-5">
+        <button class="btn login-button" @click="clickLogin" >로그인하기</button>
+      </div>
     </div>
   </div>
 </template>
@@ -36,5 +38,22 @@ h5 {
   /* font-size: 10px; */
 }
 
+.background::after {
+  content:"";
+  background-image: url('../..//assets/books.jpg');
+  opacity: 0.5;
+  top: 0;
+  left:0;
+  bottom:0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  filter: brightness(0.7);
+}
 
+.formatting {
+  opacity: 0.9;
+}
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="container py-5 mt-5 bg-light-ivory">
+  <div class="background">
+    <div class="container py-5 mt-5 bg-light-ivory formatting">
       <h5 class="mt-3">비밀번호 변경 메일이 발송되었습니다.</h5>
       <h5>이메일을 확인해주세요.</h5>
       <h5 class="bold">co-book@cobook.com</h5>
@@ -50,5 +50,25 @@ button {
 
 .bold {
   font-weight: 600;
+}
+
+
+.background::after {
+  content:"";
+  background-image: url('../..//assets/books.jpg');
+  opacity: 0.5;
+  top: 0;
+  left:0;
+  bottom:0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  filter: brightness(0.7);
+}
+
+.formatting {
+  opacity: 0.9;
 }
 </style>

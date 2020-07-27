@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="container p-3 mt-5 bg-light-ivory">
+  <div class="background">
+    <div class="container p-3 mt-5 bg-light-ivory formatting">
       <h3>비밀번호 변경하기</h3>
       <div class="input-with-label">
         <input 
@@ -150,5 +150,24 @@ input[type="password"] {
 .disabled, .disabled:hover {
   background-color: rgb(136, 154, 152, 0.25);
   color: #F8F8F8;
+}
+
+.background::after {
+  content:"";
+  background-image: url('../..//assets/books.jpg');
+  opacity: 0.5;
+  top: 0;
+  left:0;
+  bottom:0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  filter: brightness(0.7);
+}
+
+.formatting {
+  opacity: 0.9;
 }
 </style>
