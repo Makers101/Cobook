@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 public class ClubMemberResponseDto {
 
     private Long id;
-    private String userName;
+    private String nickName;
     private String profileImg;
 
     public ClubMemberResponseDto(User user) {
         this.id = user.getId();
-        this.userName = user.getUserName();
+        this.nickName = user.getNickName();
         this.profileImg = user.getProfileImg();
     }
 }

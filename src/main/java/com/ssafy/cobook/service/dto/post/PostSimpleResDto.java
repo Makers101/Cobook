@@ -21,7 +21,7 @@ public class PostSimpleResDto {
     private Integer postCommentsCount;
     private List<String> postTags;
     private Long userId;
-    private String userName;
+    private String nickName;
     private Long bookId;
     private String bookImage;
     private String bookTitle;
@@ -37,7 +37,7 @@ public class PostSimpleResDto {
                 .map(Tag::getTagName)
                 .collect(Collectors.toList());
         this.userId = post.getUser().getId();
-        this.userName = post.getUser().getUserName();
+        this.nickName = post.getUser().getNickName();
         this.bookId = post.getBook().getId();
         this.bookImage = post.getBook().getBookImg();
         this.bookTitle = post.getBook().getTitle();
