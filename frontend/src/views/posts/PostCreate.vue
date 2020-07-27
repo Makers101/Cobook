@@ -52,7 +52,7 @@
               <span class="badge bg-green rounded-pill px-3 py-2">태그2</span>
             </div>
             <div v-if="detailReview">
-              <input type="text">
+              <div id="summernote"></div>
             </div>
 
             <div class="text-right">
@@ -84,6 +84,13 @@ export default {
     createDetailReview() {
       this.detailReview = !this.detailReview
     }
+  },
+  mounted() {
+    window.$('#summernote').summernote({
+      placeholder: '내용을 작성해주세요 :)',
+      height: 300,
+    });
+    window.$('#summernote').summernote('justifyLeft');
   }
 
 
