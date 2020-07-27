@@ -1,117 +1,60 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <nav class="navbar navbar-expand-md navbar-light navbar-bg-color">
-        <router-link class="navbar-brand" to="/">
-          <img 
-            class="img-fluid logo-img" 
-            src="@/assets/logo.png" 
-            alt="로고 이미지"
-          ><span class="ml-2 logo-text">Co-Book</span>
-        </router-link>
-        <button 
-          class="navbar-toggler" 
-          type="button" 
-          data-toggle="collapse" 
-          data-target="#navbarSupportedContent" 
-          aria-controls="navbarSupportedContent" 
-          aria-expanded="false" 
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
+  <v-app>
+    <v-app-bar
+      app
+      color="primary"
+      dark
+    >
+      <div class="d-flex align-center">
+        <v-img
+          alt="Vuetify Logo"
+          class="shrink mr-2"
+          contain
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          transition="scale-transition"
+          width="40"
+        />
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          </form>
-          <ul class="navbar-nav mr-auto row w-100">
-            <li class="nav-item col-3">
-              <router-link class="nav-link" :to="{ name: 'PostList' }">
-                <i class="fas fa-home color-green"></i>
-                Feed
-              </router-link>
-            </li>
-            <li class="nav-item col-3">
-              <router-link class="nav-link" :to="{ name: 'ClubList' }">
-                <i class="fas fa-users color-green"></i>
-                Club
-              </router-link>
-            </li>
-            <li class="nav-item col-3">
-              <router-link class="nav-link" to="/">
-                <img class="img-fluid club-img" src="@/assets/meetup.png" alt="클럽 이미지">
-                Meetup
-              </router-link>
-            </li>
-            <li class="nav-item col-1">
-              <router-link class="nav-link" to="/">
-                <i class="fas fa-bell color-green"></i>
-              </router-link>
-            </li>
-            <li class="nav-item col-1">
-              <router-link class="nav-link" :to="{ name: 'PostCreate' }">
-                <i class="fas fa-plus-circle color-green"></i>
-              </router-link>
-            </li>
-            <li class="nav-item dropdown col-1">
-              <router-link 
-                class="nav-link dropdown-toggle" 
-                to="/" 
-                id="navbarDropdown" 
-                role="button" 
-                data-toggle="dropdown" 
-                aria-haspopup="true" 
-                aria-expanded="false"
-              >
-                <i class="fas fa-user color-green"></i>
-              </router-link>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <router-link class="dropdown-item" to="/profile">프로필</router-link>
-                <router-link class="dropdown-item" to="/">프로필 수정</router-link>
-                <div class="dropdown-divider"></div>
-                <router-link class="dropdown-item" to="/">로그아웃</router-link>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </div>
-    <router-view/>
-  </div>
+        <v-img
+          alt="Vuetify Name"
+          class="shrink mt-1 hidden-sm-and-down"
+          contain
+          min-width="100"
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
+          width="100"
+        />
+      </div>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
+        href="https://github.com/vuetifyjs/vuetify/releases/latest"
+        target="_blank"
+        text
+      >
+        <span class="mr-2">Latest Release</span>
+        <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-main>
+      <HelloWorld/>
+    </v-main>
+  </v-app>
 </template>
 
-<style scoped>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import HelloWorld from './components/HelloWorld';
 
-#nav a {
-  font-size: 1.1rem;
-  font-weight: 900;
-  color: #3A2F15;
-}
+export default {
+  name: 'App',
 
-.navbar-bg-color {
-  background: #D6CBBD;
-  height: 65px;
-}
+  components: {
+    HelloWorld,
+  },
 
-.logo-img {
-  height: 58px;
-}
-
-.logo-text {
-  font-size: 1.5rem;
-  padding: 0;
-}
-
-.club-img {
-  height: 23px;
-}
-
-</style>
+  data: () => ({
+    //
+  }),
+};
+</script>
