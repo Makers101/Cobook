@@ -82,6 +82,23 @@
   </div>
 </template>
 
+<script>
+import { mapState, mapActions } from 'vuex'
+
+export default {
+  name: 'App',
+  computed: {
+    ...mapState('clubStore', ['genres'])
+  },
+  methods: {
+    ...mapActions('clubStore', ['fetchGenres'])
+  },
+  created() {
+    this.fetchGenres()
+  }
+}
+</script>
+
 <style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
