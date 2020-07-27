@@ -51,7 +51,7 @@
     <!-- Reading & Meetups -->
     <h5 class="text-left font-weight-bold">Reading & Meetup</h5>
     <div class="row rows-cols-1 row-cols-sm-3">
-      <div class="col mb-4 col-12 col-4" v-for="reading in readings" :key="reading.id">
+      <div class="col mb-4 col-12 col-sm-4" v-for="reading in readings" :key="reading.id">
         <div class="card h-100">
           <div class="row no-gutters">
             <div class="col-6">
