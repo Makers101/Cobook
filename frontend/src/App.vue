@@ -82,6 +82,20 @@
   </div>
 </template>
 
+<script>
+import { mapActions } from 'vuex'
+
+export default {
+  name: 'App',
+  methods: {
+    ...mapActions('clubStore', ['fetchGenres'])
+  },
+  created() {
+    this.fetchGenres()
+  }
+}
+</script>
+
 <style scoped>
 #app {
   -webkit-font-smoothing: antialiased;

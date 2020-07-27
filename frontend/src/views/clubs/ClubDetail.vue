@@ -1,104 +1,102 @@
 <template>
-  <div class="row my-3">
-    <div class="offset-lg-2 col-lg-8 col-12">
-      <!-- club-header -->
-      <div class="row">
-        <img class="club-image col-4" :src="selectedClub.clubImg" alt="" v-if="selectedClub.clubImg">
-        <img class="club-image col-4" src="http://placehold.jp/300x200.png?text=sample" alt="" v-else>
-        <div class="col-8 py-2 d-flex flex-column justify-content-between">
-          <div>
-            <div class="d-flex justify-content-between">
-              <h3 class="mb-0 font-weight-bold">{{ selectedClub.name }}</h3>
-              <div class="d-flex align-items-center">
-                <p class="mb-0">{{ selectedClub.followerCnt }} FOLLOW</p>
-                <button class="btn btn-green ml-2">팔로우</button>
-              </div>
-            </div>
-            <p class="text-left">{{ selectedClub.onelineDescription }}</p>
-          </div>
-          
-          <div>
-            <p class="color-black text-left">주로 <span class="color-black font-weight-bold">{{ selectedClub.residence }}</span>에서 만남 :)</p>
-            <div class="d-flex justify-content-between">
-              <div>
-                <button class="btn btn-green mr-2" v-for="genre in selectedClub.genres" :key="genre.id">#{{ genre.name }}</button>
-              </div>
-              <div>
-                <button class="btn btn-secondary mr-2">클럽 설정</button>
-                <button class="btn btn-warning mr">가입 신청</button>
-              </div>
+  <div class="custom-container">
+    <!-- club-header -->
+    <div class="row">
+      <img class="club-image col-4" :src="selectedClub.clubImg" alt="" v-if="selectedClub.clubImg">
+      <img class="club-image col-4" src="http://placehold.jp/300x200.png?text=sample" alt="" v-else>
+      <div class="col-8 py-2 d-flex flex-column justify-content-between">
+        <div>
+          <div class="d-flex justify-content-between">
+            <h3 class="mb-0 font-weight-bold">{{ selectedClub.name }}</h3>
+            <div class="d-flex align-items-center">
+              <p class="mb-0">{{ selectedClub.followerCnt }} FOLLOW</p>
+              <button class="btn btn-green ml-2">팔로우</button>
             </div>
           </div>
-
+          <p class="text-left">{{ selectedClub.onelineDescription }}</p>
         </div>
-      </div>
-
-      <hr>
-
-      <!-- club-members -->
-      <div>
-        <h4 class="text-left font-weight-bold mb-3">클럽 멤버({{ selectedClub.memberCnt }})</h4>
-        <div class="d-flex justify-content-start">
-          <div class="profile-container pointer" v-for="member in selectedClub.members" :key="member.id">
-            <img class="rounded-circle image" :src="member.proflieImg" alt="" v-if="member.profileImg">
-            <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
-            <div class="overlay rounded-circle">
-              <div class="text">{{ member.userName }}</div>
+        
+        <div>
+          <p class="color-black text-left">주로 <span class="color-black font-weight-bold">{{ selectedClub.residence }}</span>에서 만남 :)</p>
+          <div class="d-flex justify-content-between">
+            <div>
+              <button class="btn btn-green mr-2" v-for="genre in selectedClub.genres" :key="genre.id">#{{ genre.name }}</button>
+            </div>
+            <div>
+              <button class="btn btn-secondary mr-2">클럽 설정</button>
+              <button class="btn btn-warning mr">가입 신청</button>
             </div>
           </div>
         </div>
+
       </div>
+    </div>
 
-      <hr>
+    <hr>
 
-      <!-- club-description -->
-      <div>
-        <h4 class="text-left font-weight-bold mb-3">클럽 설명</h4>
-        <p class="text-left px-2">{{ selectedClub.description }}</p>
+    <!-- club-members -->
+    <div>
+      <h4 class="text-left font-weight-bold mb-3">클럽 멤버({{ selectedClub.memberCnt }})</h4>
+      <div class="d-flex justify-content-start">
+        <div class="profile-container pointer" v-for="member in selectedClub.members" :key="member.id">
+          <img class="rounded-circle image" :src="member.proflieImg" alt="" v-if="member.profileImg">
+          <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
+          <div class="overlay rounded-circle">
+            <div class="text">{{ member.userName }}</div>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <hr>
+    <hr>
 
-      <!-- club-readings -->
-      <div>
-        <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 리딩</h4>
-        <div class="row rows-cols-1 row-cols-sm-3">
-          <div class="mb-2 col-12 col-sm-4 pointer" v-for="reading in selectedClub.readings" :key="reading.id" @click="selectReading(reading.id)">
-            <div class="card h-100">
-              <div class="row no-gutters">
-                <div class="col-6 reading-left">
-                  <img class="bg-image" :src="reading.book.bookImage" width="100%">
-                  <span class="badge mb-0 reading-closed-true" v-if="reading.recruit">종료</span>
-                  <span class="badge mb-0 reading-closed-false" v-else>예정</span>
-                </div>
-                <div class="col-6 text-left d-flex flex-column p-2">
-                  <p class="color-light-black book-title" lt="book">{{ reading.book.bookTitle }}</p>
-                  <small>{{ reading.name }}</small>
-                  <div class="mt-auto">
-                    <div class="d-flex justify-content-between">
-                      <span><small><i class="fas fa-users"></i> {{ reading.participantCnt}}</small></span>
-                      <span><small><i class="fas fa-map-marker-alt"></i> {{ reading.place }}</small></span>
-                    </div>
-                    <span><small>{{ reading.datetime.slice(0, 10) }}</small></span>
+    <!-- club-description -->
+    <div>
+      <h4 class="text-left font-weight-bold mb-3">클럽 설명</h4>
+      <p class="text-left px-2">{{ selectedClub.description }}</p>
+    </div>
+
+    <hr>
+
+    <!-- club-readings -->
+    <div>
+      <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 리딩</h4>
+      <div class="row rows-cols-1 row-cols-sm-3">
+        <div class="mb-2 col-12 col-sm-4 pointer" v-for="reading in selectedClub.readings" :key="reading.id" @click="selectReading(reading.id)">
+          <div class="card h-100">
+            <div class="row no-gutters">
+              <div class="col-6 reading-left">
+                <img class="bg-image" :src="reading.book.bookImage" width="100%">
+                <span class="badge mb-0 reading-closed-true" v-if="reading.recruit">종료</span>
+                <span class="badge mb-0 reading-closed-false" v-else>예정</span>
+              </div>
+              <div class="col-6 text-left d-flex flex-column p-2">
+                <p class="color-light-black book-title" lt="book">{{ reading.book.bookTitle }}</p>
+                <small>{{ reading.name }}</small>
+                <div class="mt-auto">
+                  <div class="d-flex justify-content-between">
+                    <span><small><i class="fas fa-users"></i> {{ reading.participantCnt}}</small></span>
+                    <span><small><i class="fas fa-map-marker-alt"></i> {{ reading.place }}</small></span>
                   </div>
+                  <span><small>{{ reading.datetime.slice(0, 10) }}</small></span>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="no-content d-flex justify-content-center align-items-center" v-if="!selectedClub.readings">
-          <p class="mb-0">아직 {{ selectedClub.name }}의 리딩이 없습니다 ㄴ(°0°)ㄱ</p>
-        </div>
-      </div>  
-      <hr>
+      <div class="no-content d-flex justify-content-center align-items-center" v-if="!selectedClub.readings">
+        <p class="mb-0">아직 {{ selectedClub.name }}의 리딩이 없습니다 ㄴ(°0°)ㄱ</p>
+      </div>
+    </div>  
+    <hr>
 
-      <!-- club-posts -->
-      <div>
-        <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}의 게시물</h4>
-        <div class="no-content d-flex justify-content-center align-items-center" v-if="!selectedClub.posts">
-          <p class="mb-0">아직 {{ selectedClub.name }}의 게시물이 없습니다 ㄴ(°0°)ㄱ</p>
-        </div>
+    <!-- club-posts -->
+    <div>
+      <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}의 게시물</h4>
+      <div class="no-content d-flex justify-content-center align-items-center" v-if="!selectedClub.posts">
+        <p class="mb-0">아직 {{ selectedClub.name }}의 게시물이 없습니다 ㄴ(°0°)ㄱ</p>
       </div>
     </div>
   </div>
