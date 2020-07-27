@@ -14,6 +14,7 @@ import ProfileFeed from '@/views/profile/ProfileFeed'
 import ProfileClub from '@/views/profile/ProfileClub'
 import ProfileBookmark from '@/views/profile/ProfileBookmark'
 import ProfileOverview from '@/views/profile/ProfileOverview'
+import ProfileUpdate from '@/views/profile/ProfileUpdate'
 // posts
 import PostList from '@/views/posts/PostList'
 import PostCreate from '@/views/posts/PostCreate'
@@ -85,6 +86,11 @@ Vue.use(VueRouter)
         component: ProfileOverview
       },
     ]
+  },
+  {
+    path: '/profile/update',
+    name: 'ProfileUpdate',
+    component: ProfileUpdate
   },
 
   // posts
