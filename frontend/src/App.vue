@@ -22,8 +22,8 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <form id="search-bar">
+            <input type="search" placeholder="Search">
           </form>
           <ul class="navbar-nav mr-auto row w-100">
             <li class="nav-item col-3">
@@ -83,13 +83,10 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
-  computed: {
-    ...mapState('clubStore', ['genres'])
-  },
   methods: {
     ...mapActions('clubStore', ['fetchGenres'])
   },
@@ -101,7 +98,6 @@ export default {
 
 <style scoped>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -137,4 +133,73 @@ export default {
   left: -70px;
 }
 
+/* Search bar */
+input {
+	outline: none;
+}
+input[type=search] {
+	-webkit-appearance: textfield;
+	-webkit-box-sizing: content-box;
+	font-size: 100%;
+}
+input::-webkit-search-decoration,
+input::-webkit-search-cancel-button {
+	display: none; 
+}
+
+
+input[type=search] {
+	background: #ededed url(https://static.tumblr.com/ftv85bp/MIXmud4tx/search-icon.png) no-repeat 9px center;
+	border: solid 1px #ccc;
+	padding: 9px 10px 9px 32px;
+	width: 55px;
+	
+	-webkit-border-radius: 10em;
+	-moz-border-radius: 10em;
+	border-radius: 10em;
+	
+	-webkit-transition: all .5s;
+	-moz-transition: all .5s;
+	transition: all .5s;
+}
+input[type=search]:focus {
+	width: 130px;
+	background-color: #fff;
+	border-color: #88A498;
+	
+	-webkit-box-shadow: 0 0 5px #88A498;
+	-moz-box-shadow: 0 0 5px #88A498;
+	box-shadow: 0 0 5px #88A498;
+}
+
+
+input:-moz-placeholder {
+	color: #999;
+}
+input::-webkit-input-placeholder {
+	color: #999;
+}
+
+#search-bar input[type=search] {
+	width: 15px;
+	padding-left: 10px;
+	color: transparent;
+	cursor: pointer;
+}
+#search-bar input[type=search]:hover {
+	background-color: #fff;
+}
+#search-bar input[type=search]:focus {
+	width: 130px;
+	padding-left: 32px;
+	color: #000;
+	background-color: #fff;
+	cursor: auto;
+}
+#search-bar input:-moz-placeholder {
+	color: transparent;
+}
+#search-bar input::-webkit-input-placeholder {
+	color: transparent;
+}
 </style>

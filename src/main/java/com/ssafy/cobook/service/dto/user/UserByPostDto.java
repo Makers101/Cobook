@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 public class UserByPostDto {
 
     private Long id;
-    private String userName;
+    private String nickName;
     private String profileImg;
 
     public UserByPostDto(User user) {
         this.id = user.getId();
-        this.userName = user.getUserName();
+        this.nickName = user.getNickName();
         this.profileImg = user.getProfileImg();
     }
 }

@@ -1,103 +1,100 @@
 <template>
-  <div class="row">
-    <div class="offset-lg-2 col-lg-8 col-12">
-
-      <!-- clubs-banner -->
-      <div class="club-banner">
-        <img
-          class="club-banner-img"
-          src="@/assets/club_banner.jpg" 
-          alt="">
-        <div class="club-banner-text">
-          <h3 class="font-weight-bold">Club</h3>
-          <p class="mb-0">
-            클럽은 정기적으로 함께 책을 읽는 사람들의 모임입니다.
-            <br>
-            취향이 맞는 클럽에 참여하여 함께 읽는 즐거움을 경험해보세요.
-          </p>
-        </div>
+  <div class="custom-container">
+    <!-- clubs-banner -->
+    <div class="club-banner">
+      <img
+        class="club-banner-img"
+        src="@/assets/club_banner.jpg" 
+        alt="">
+      <div class="club-banner-text">
+        <h3 class="font-weight-bold">클럽</h3>
+        <p class="mb-0">
+          클럽은 정기적으로 함께 책을 읽는 사람들의 모임입니다.
+          <br>
+          취향이 맞는 클럽에 참여하여 함께 읽는 즐거움을 경험해보세요.
+        </p>
       </div>
+    </div>
 
-      <!-- clubs-menubar -->
-      <div class="club-menubar my-3 d-flex justify-content-between">
-        <div class="club-toggle">
-          <!-- <button class="btn btn-toggle-false mx-1" @click="selectFilter('popular')" v-show="popular_filter">#인기</button>
-          <button class="btn btn-toggle-true mx-1" @click="selectFilter('popular')" v-show="!popular_filter">#인기</button> -->
+    <!-- clubs-menubar -->
+    <div class="club-menubar my-3 d-flex justify-content-between">
+      <div class="club-toggle">
+        <!-- <button class="btn btn-toggle-false mx-1" @click="selectFilter('popular')" v-show="popular_filter">#인기</button>
+        <button class="btn btn-toggle-true mx-1" @click="selectFilter('popular')" v-show="!popular_filter">#인기</button> -->
 
-          <button class="btn btn-toggle-false mx-1" @click="selectFilter('open')" v-show="open_filter">#모집중</button>
-          <button class="btn btn-toggle-true mx-1" @click="selectFilter('open')" v-show="!open_filter">#모집중</button>
+        <button class="btn btn-toggle-false mx-1" @click="selectFilter('open')" v-show="open_filter">#모집중</button>
+        <button class="btn btn-toggle-true mx-1" @click="selectFilter('open')" v-show="!open_filter">#모집중</button>
 
-          <span             
-            v-for="genre in userGenres"
-            :key="`userGenres_${genre.id}`"
+        <span             
+          v-for="genre in userGenres"
+          :key="`userGenres_${genre.id}`"
+        >
+          <button 
+            class="btn btn btn-toggle-false mx-1"
+            @click="selectFilter(genre.name)"
+            v-show="genre_filter.has(genre.name)"
           >
-            <button 
-              class="btn btn btn-toggle-false mx-1"
-              @click="selectFilter(genre.name)"
-              v-show="genre_filter.has(genre.name)"
-            >
-              #{{ genre.name }}
-            </button>
-            <button 
-              class="btn btn btn-toggle-true mx-1"
-              @click="selectFilter(genre.name)"
-              v-show="!genre_filter.has(genre.name)"
-            >
-              #{{ genre.name }}
-            </button>
-          </span>
-        </div>
-        <button class="btn btn-green mx-1">클럽 생성</button>
+            #{{ genre.name }}
+          </button>
+          <button 
+            class="btn btn btn-toggle-true mx-1"
+            @click="selectFilter(genre.name)"
+            v-show="!genre_filter.has(genre.name)"
+          >
+            #{{ genre.name }}
+          </button>
+        </span>
       </div>
-      <hr class="my-0">
+      <button class="btn btn-green mx-1" @click="toClubCreate">클럽 생성</button>
+    </div>
+    <hr class="my-0">
 
-      <!-- clubs-list -->
-      <div class="club-list my-2 row">
-        <div 
-          class="col-sm-4 col-12 p-3"
-          v-for="club in clubs"
-          :key="`club_${club.id}`">
-          <div class="card">
-            <div class="card-head">
-              <img
-                class="card-img-top to-detail"
-                :src="club.clubImg"
-                :alt="club.name"
-                @click="selectClub(club.id)"
-                v-if="club.clubImg"
-              >
-              <img
-                class="card-img-top to-detail"
-                src="http://placehold.jp/300x200.png?text=sample"
-                :alt="club.name"
-                @click="selectClub(club.id)"
-                v-else
-              >
-              <span class="badge mb-0 club-open" v-if="club.recruit">모집중</span>
-            </div>        
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="card-title font-weight-bold mb-0 club-name to-detail" @click="selectClub(club.id)">{{ club.name }}</h4>
-                <small class="color-green font-weight-bold club-followers">{{ club.followerCnt }} FOLLOW</small>
-              </div>
-              <p class="card-text text-left club-oneline">{{ club.onelineDescription }}</p>
-              <div class="d-flex justify-content-start my-3">
-                <span
-                  class="badge badge-genre mr-2"
-                  v-for="genre in club.genres"
-                  :key="`club_genre_${genre.id}`">
-                  #{{ genre.name }}
-                </span>
-              </div>
-              <div class="d-flex justify-content-between">
-                <p class="card-text mb-0">
-                  <small class="color-black">주로 <span class="color-black font-weight-bold">{{ club.residence }}</span>에서 만남 :)</small>
+    <!-- clubs-list -->
+    <div class="club-list my-2 row">
+      <div 
+        class="col-sm-4 col-12 p-3"
+        v-for="club in clubs"
+        :key="`club_${club.id}`">
+        <div class="card">
+          <div class="card-head">
+            <img
+              class="card-img-top to-detail"
+              :src="club.clubImg"
+              :alt="club.name"
+              @click="selectClub(club.id)"
+              v-if="club.clubImg"
+            >
+            <img
+              class="card-img-top to-detail"
+              src="http://placehold.jp/300x200.png?text=sample"
+              :alt="club.name"
+              @click="selectClub(club.id)"
+              v-else
+            >
+            <span class="badge mb-0 club-open" v-if="club.recruit">모집중</span>
+          </div>        
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="card-title font-weight-bold mb-0 club-name to-detail" @click="selectClub(club.id)">{{ club.name }}</h4>
+              <small class="color-green font-weight-bold club-followers">{{ club.followerCnt }} FOLLOW</small>
+            </div>
+            <p class="card-text text-left club-oneline">{{ club.onelineDescription }}</p>
+            <div class="d-flex justify-content-start my-3">
+              <span
+                class="badge badge-genre mr-2"
+                v-for="genre in club.genres"
+                :key="`club_genre_${genre.id}`">
+                #{{ genre.name }}
+              </span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <p class="card-text mb-0">
+                <small class="color-black">주로 <span class="color-black font-weight-bold">{{ club.residence }}</span>에서 만남 :)</small>
+              </p>
+              <div class="d-flex">
+                <p class="card-text mb-0 mr-2">
+                  <small class="color-black"><i class="fas fa-users"></i> {{ club.memberCnt }}</small>
                 </p>
-                <div class="d-flex">
-                  <p class="card-text mb-0 mr-2">
-                    <small class="color-black"><i class="fas fa-users"></i> {{ club.memberCnt }}</small>
-                  </p>
-                </div>
               </div>
             </div>
           </div>
@@ -127,6 +124,9 @@ export default {
     ...mapActions('clubStore', ['fetchClubs', 'findClub']),
     selectClub(clubId) {
       router.push({ name: 'ClubDetail', params: { clubId: clubId }})
+    },
+    toClubCreate() {
+      router.push({ name: 'ClubCreate' })
     },
     // filterClubs() {
     //   let new_clubs = []
@@ -188,9 +188,11 @@ export default {
 
   .club-banner-img {
     width: 100%;
+    height: 200px;
     vertical-align: middle;
     filter: brightness(0.7)
   }
+
   .club-banner-text {
     color: #F8F8F8;
     text-align: center;

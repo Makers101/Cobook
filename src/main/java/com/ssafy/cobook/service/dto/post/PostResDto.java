@@ -43,7 +43,7 @@ public class PostResDto {
                 .bookImage(post.getBook().getBookImg())
                 .bookTitle(post.getBook().getTitle())
                 .onelineReview(post.getOnelineReview())
-                .userName(post.getUser().getUserName())
+                .userName(post.getUser().getNickName())
 //                .tags(post.getTags())
                 .commentsCount(post.getComments().size())
                 .likeCount(post.getPostLikes().size())

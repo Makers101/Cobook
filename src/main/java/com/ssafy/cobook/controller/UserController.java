@@ -1,8 +1,9 @@
 package com.ssafy.cobook.controller;
 
+import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.UserService;
-import com.ssafy.cobook.service.dto.TokenResponse;
 import com.ssafy.cobook.service.dto.user.*;
+import com.ssafy.cobook.util.JwtTokenProvider;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +21,10 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 
-//http:/.localhost:8080/swagger-ui.html
 public class UserController {
-    private final UserService userService; // 유저 서비스에 로직
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class); // 로그찍기
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @ApiOperation(value = "이메일, 패스워드, 유저명을 받아서 회원가입한다.", response = UserResponseDto.class)
     @PostMapping("/signup")
@@ -33,13 +34,13 @@ public class UserController {
     }
 
 
-    @ApiOperation(value = "이메일, 패스워드를 받아서 로그인하여 토큰을 반환한다", response = TokenResponse.class)
+    @ApiOperation(value = "이메일, 패스워드를 받아서 로그인하여 토큰을 반환한다")
     @PostMapping("/signin")
-    public TokenResponse login(@RequestBody UserLoginRequestDto userLoginRequestDto){
-        String token = userService.createToken(userLoginRequestDto);
-        Long userId = userService.login(userLoginRequestDto);
-        return new TokenResponse(token, userId);
+    public ResponseEntity<String> signin(@RequestBody final UserLoginRequestDto userLoginRequestDto){
+        User user = userService.login(userLoginRequestDto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(jwtTokenProvider.createToken(user.getId(), user.getRoles()));
     }
+
 
     @ApiOperation(value = "이메일을 받아서 인증코드를 보낸다.", response = String.class)
     @PostMapping("/checkEmail")

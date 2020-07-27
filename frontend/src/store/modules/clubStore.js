@@ -75,7 +75,29 @@ const clubStore = {
             name: '예술'
           }
         ],
-        genres: null
+        genres: null,
+        users: [
+          {
+            id: 0,
+            userName: '사용자1'
+          },
+          {
+            id: 1,
+            userName: '사용자2'
+          },
+          {
+            id: 2,
+            userName: '사용자3'
+          },
+          {
+            id: 3,
+            userName: '사용자4'
+          },
+          {
+            id: 4,
+            userName: '사용자5'
+          }
+        ] 
     },
     getters: {
     },
@@ -102,14 +124,14 @@ const clubStore = {
           .catch(err => console.log(err.response.data))
       },
       findClub({ commit }, clubId) {
-        axios.get(SERVER.URL + SERVER.ROUTES.clubs + clubId)
+        axios.get(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId)
           .then(res => {
             commit('SET_SELECTED_CLUB', res.data)
           })
           .catch(err => console.log(err.response.data))
       },
       findReading({ commit }, params) {
-        axios.get(SERVER.URL + SERVER.ROUTES.clubs + params.clubId + '/readings/' + params.readingId)
+        axios.get(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/readings/' + params.readingId)
           .then(res => {
             commit('SET_SELECTED_READING', res.data)
           })
