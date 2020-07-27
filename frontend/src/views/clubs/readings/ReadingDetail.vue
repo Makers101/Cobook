@@ -60,7 +60,7 @@
       <!-- reading-question -->
       <div>
         <h4 class="text-left font-weight-bold mb-3">질문지</h4>
-        <ul>
+        <ul class="ml-4">
           <li class="text-left" v-for="question in selectedReading.questions" :key="question.id">{{ question.question }}</li>
         </ul>
       </div>
