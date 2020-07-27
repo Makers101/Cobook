@@ -43,6 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity httpSecurity) throws Exception {
         // csrf().disable() 처리는 추후에 front에서 하는걸로 변경할 필요 있음 => 보안상 좋다고 함 "jin"
         httpSecurity
+                .headers().frameOptions().disable()
+                .and()
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -56,7 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui.html", "/webjars/**", "/swagger/**")
                 .permitAll()
                 .antMatchers("/google").hasAuthority(GOOGLE.getRoleType())
-                .anyRequest().hasRole("USER")
+//                .anyRequest().hasRole("USER")
+                .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login()
