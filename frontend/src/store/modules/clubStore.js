@@ -75,7 +75,6 @@ const clubStore = {
             name: '예술'
           }
         ],
-        genres: null,
         users: [
           {
             id: 0,
@@ -110,9 +109,6 @@ const clubStore = {
       },
       SET_SELECTED_READING(state, reading) {
         state.selectedReading = reading
-      },
-      SET_GENRES(state, genres) {
-        state.genres = genres
       }
     },
     actions: {
@@ -140,14 +136,22 @@ const clubStore = {
             commit('SET_SELECTED_READING', readingSample)
           })
       },
-      fetchGenres({ commit }) {
-        axios.get(SERVER.URL + SERVER.ROUTES.genres)
-          .then(res => {
-            commit('SET_GENRES', res.data)
-          })
-          .catch(err => {
-            console.log(err.response.data)
-          })
+      createClub({ state }, formData) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs, formData,
+          { 
+            headers: { 
+              'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1Iiwicm9sZXMiOltdLCJpYXQiOjE1OTU4NjIwMjQsImV4cCI6MTU5NTg2NTYyNH0.igHgYbItRIEJEiePM1_iHYe2CQ65YAaglzaDyfJ5BMQ',
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+          )
+            .then(res => {
+              console.log(res.data)
+              console.log(state.selectedClub)
+            })
+            .catch(err => {
+              console.log(err.response.data)
+            })
       }
     },
 }
