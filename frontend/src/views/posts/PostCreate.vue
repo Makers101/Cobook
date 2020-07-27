@@ -28,16 +28,19 @@
                   <div class="large-text text-left"><i class="fas fa-quote-left"></i></div>
                   <input
                     class="content-input mb-2 bg-light-beige"
+                    id="line1"
                     :class="{ 'mr-5' : !oneline }"
                     @keydown.enter="makeTwoline"
                     type="text" 
-                    placeholder="책 리뷰를 입력해주세요."
+                    placeholder="한줄 평을 입력해주세요."
                   >
+                  <br>
                   <input
-                    class="content-input ml-5 bg-light-beige" 
+                    class="content-input ml-5 bg-light-beige"
+                    id="line2"
                     :class="{ 'd-none' : oneline, active : oneline}"
                     type="text" 
-                    placeholder="책 리뷰를 입력해주세요."
+                    placeholder="한줄 평을 입력해주세요."
                   >
                   <div class="large-text text-right"><i class="fas fa-quote-right"></i></div>
                   <p class="detail-review-button mt-5" @click="createDetailReview">상세 리뷰 작성</p>

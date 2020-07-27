@@ -32,7 +32,7 @@
             <i class="fas fa-bookmark"></i>
           </div>
         </div>
-        <div class="post-content bg-light-beige row">
+        <div class="post-content bg-light-beige row pointer" @click="postDetail(1)">
           <div class="col-4 my-5">
             <img style="height: 30vh;" src="@/assets/미움받을 용기.png" alt="책 이미지">
           </div>
@@ -113,6 +113,11 @@
 <script>
 export default {
   name: 'PostList',
+  methods: {
+    postDetail(postId) {
+      this.$router.push({ name: 'PostDetail', params: { postId: postId }})
+    }
+  }
   
 
 }
