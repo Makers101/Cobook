@@ -63,7 +63,7 @@
       <div>
         <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 리딩</h4>
         <div class="row rows-cols-1 row-cols-sm-3">
-          <div class="col mb-2 col-12 col-4 pointer" v-for="reading in selectedClub.readings" :key="reading.id" @click="selectReading(reading.id)">
+          <div class="mb-2 col-12 col-sm-4 pointer" v-for="reading in selectedClub.readings" :key="reading.id" @click="selectReading(reading.id)">
             <div class="card h-100">
               <div class="row no-gutters">
                 <div class="col-6 reading-left">
