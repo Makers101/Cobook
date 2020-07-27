@@ -16,8 +16,10 @@ import ProfileOverview from '@/views/profile/ProfileOverview'
 // posts
 import PostList from '@/views/posts/PostList'
 import PostCreate from '@/views/posts/PostCreate'
-
+// clubs
 import ClubList from '@/views/clubs/ClubList.vue'
+import ClubDetail from '@/views/clubs/ClubDetail.vue'
+import ReadingDetail from '@/views/clubs/readings/ReadingDetail.vue'
 
 Vue.use(VueRouter)
 
@@ -97,6 +99,17 @@ Vue.use(VueRouter)
     name: 'ClubList',
     component: ClubList
   },
+  {
+    path: '/clubs/:clubId',
+    name: 'ClubDetail',
+    component: ClubDetail
+  },
+  {
+    path: '/clubs/:clubId/readings/:readingId',
+    name: 'ReadingDetail',
+    component: ReadingDetail
+  }
+
   
 ]
 
