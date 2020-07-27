@@ -9,5 +9,9 @@ export default {
 
       // posts
       posts: '/posts',
+
+      // accounts
+      signup: '/users/signup',
+      login: '/users/signin',
     }
   }
