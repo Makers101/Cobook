@@ -5,7 +5,7 @@
     <div class="club-banner">
       <img
         class="club-banner-img"
-        src="@/assets/club_create_banner.jpg" 
+        src="@/assets/club_create_banner.jpg"
         alt="">
       <div class="club-banner-text">
         <h3 class="font-weight-bold">클럽 만들기</h3>
@@ -49,6 +49,7 @@
               <v-col cols="12">
                 <v-file-input
                   v-model="clubCreateData.clubImg"
+                  enctype="multipart/form-data"
                   accept="image/png, image/jpeg, image/bmp"
                   label="프로필 이미지"
                   show-size
@@ -81,7 +82,7 @@
                 ></v-text-field>
               </v-col>
 
-              <v-col cols="12">
+              <!-- <v-col cols="12">
                 <v-autocomplete
                   v-model="clubCreateData.members"
                   :items="users"
@@ -104,9 +105,9 @@
                       @click="data.select"
                       @click:close="remove(clubCreateData.members, data.item)"
                     >
-                      <!-- <v-avatar left>
+                      <v-avatar left>
                         <v-img :src="data.item.avatar"></v-img>
-                      </v-avatar> -->
+                      </v-avatar>
                       {{ data.item.userName }}
                     </v-chip>
                   </template>
@@ -115,16 +116,16 @@
                       <v-list-item-content v-text="data.item"></v-list-item-content>
                     </template>
                     <template v-else>
-                      <!-- <v-list-item-avatar>
+                      <v-list-item-avatar>
                         <img :src="data.item.avatar">
-                      </v-list-item-avatar> -->
+                      </v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title v-html="data.item.userName"></v-list-item-title>
                       </v-list-item-content>
                     </template>
                   </template>
                 </v-autocomplete>
-              </v-col>
+              </v-col> -->
 
               <v-col
                 cols="12"
@@ -216,7 +217,7 @@
             <v-btn
               :disabled="!valid"
               class="button btn-green"
-              @click="createClub"
+              @click="clickCreate"
             >
               클럽 생성
             </v-btn>
@@ -228,7 +229,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'ClubCreate',
   data() {
@@ -239,7 +240,7 @@ export default {
         onelineDescription: null,
         description: null,
         residence: null,
-        members: [],
+        // members: [],
         genres: [],
       },
       leader: {
@@ -253,9 +254,11 @@ export default {
     }
   },
   computed: {
-    ...mapState('clubStore', ['genres', 'users'])
+    ...mapState('clubStore', ['users']),
+    ...mapState(['genres'])
   },
   methods: {
+    ...mapActions('clubStore', ['createClub']),
     remove (data, item) {
       const index = data.indexOf(item.id)
       if (index >= 0) data.splice(index, 1)
@@ -273,6 +276,16 @@ export default {
     validate() {
       this.$refs.form.validate()
     },
+    clickCreate() {
+      const formData = new FormData()
+      formData.append('name', this.clubCreateData.name)
+      formData.append('clubImg', this.clubCreateData.clubImg)
+      formData.append('onelineDescription', this.clubCreateData.onelineDescription)
+      formData.append('description', this.clubCreateData.description)
+      formData.append('residence', this.clubCreateData.residence)
+      formData.append('genres', this.clubCreateData.genres)
+      this.createClub(formData)
+    }
   }
 }
 </script>
