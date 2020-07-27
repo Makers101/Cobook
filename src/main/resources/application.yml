@@ -3,6 +3,8 @@ spring:
     active: local
 
 ---
+jwt:
+  secret:cobook@$&
 
 spring:
   profiles: local
