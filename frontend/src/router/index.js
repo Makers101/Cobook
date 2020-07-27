@@ -18,6 +18,7 @@ import ProfileUpdate from '@/views/profile/ProfileUpdate'
 // posts
 import PostList from '@/views/posts/PostList'
 import PostCreate from '@/views/posts/PostCreate'
+import PostDetail from '@/views/posts/PostDetail'
 
 import ClubList from '@/views/clubs/ClubList.vue'
 
@@ -102,6 +103,11 @@ Vue.use(VueRouter)
     path: '/posts/create',
     name: 'PostCreate',
     component: PostCreate
+  },
+  {
+    path: '/posts/:postId',
+    name: 'PostDetail',
+    component: PostDetail
   },
 
   // clubs
