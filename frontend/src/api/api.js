@@ -3,5 +3,11 @@ export default {
     ROUTES: {
       // clubs
       clubs: '/clubs/',
+
+      // posts
+      posts: '/posts',
+
+      // genres
+      genres: '/gerne'
     }
   }

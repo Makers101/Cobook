@@ -82,6 +82,23 @@
   </div>
 </template>
 
+<script>
+import { mapState, mapActions } from 'vuex'
+
+export default {
+  name: 'App',
+  computed: {
+    ...mapState(['genres'])
+  },
+  methods: {
+    ...mapActions(['fetchGenres'])
+  },
+  created() {
+    this.fetchGenres()
+  }
+}
+</script>
+
 <style scoped>
 #app {
   -webkit-font-smoothing: antialiased;
