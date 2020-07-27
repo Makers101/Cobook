@@ -83,12 +83,15 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'App',
+  computed: {
+    ...mapState(['genres'])
+  },
   methods: {
-    ...mapActions('clubStore', ['fetchGenres'])
+    ...mapActions(['fetchGenres'])
   },
   created() {
     this.fetchGenres()

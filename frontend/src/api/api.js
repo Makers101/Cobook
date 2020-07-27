@@ -6,5 +6,8 @@ export default {
 
       // clubs
       clubs: '/clubs',
+
+      // posts
+      posts: '/posts',
     }
   }
