@@ -1,7 +1,7 @@
 <template>
   <div class="mt-3">
     <div class="row rows-cols-1 row-cols-md-3">
-      <div class="col mb-4" v-for="book in books" :key="book.id">
+      <div class="col-12 col-sm-4 mb-4" v-for="book in books" :key="book.id">
         <div class="card h-100">
            <div style="max-height:70px;overflow:hidden;">
             <!--  style="position:absolute; clip:rect(0px, 100px, 100px, 0px)" -->
