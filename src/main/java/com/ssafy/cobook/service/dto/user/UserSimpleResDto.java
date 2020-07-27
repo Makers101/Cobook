@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 public class UserSimpleResDto {
 
     private Long userId;
-    private String userName;
+    private String nickName;
     private MemberRole role;
 
     public UserSimpleResDto(User user, MemberRole role) {
         this.userId = user.getId();
-        this.userName = user.getUserName();
+        this.nickName = user.getNickName();
         this.role = role;
     }
 }

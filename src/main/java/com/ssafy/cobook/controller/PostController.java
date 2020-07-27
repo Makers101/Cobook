@@ -1,5 +1,6 @@
 package com.ssafy.cobook.controller;
 
+import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.PostService;
 import com.ssafy.cobook.service.dto.post.PostDetailResDto;
 import com.ssafy.cobook.service.dto.post.PostResponseDto;
@@ -45,7 +46,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<PostSaveResDto> savePosts(@ApiIgnore final Authentication authentication,
                                                     @RequestBody final PostSaveReqDto requestDto) {
-        Long userId = Long.parseLong((String) authentication.getPrincipal());
+        Long userId = ((User) authentication.getPrincipal()).getId();
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.savePosts(requestDto, userId));
     }
 
@@ -66,7 +67,7 @@ public class PostController {
     @PostMapping("/likes")
     public ResponseEntity<Void> likePosts(@ApiIgnore final Authentication authentication,
                                           @RequestBody final PostLikeReqDto reqDto) {
-        Long userId = Long.parseLong((String) authentication.getPrincipal());
+        Long userId =  ((User) authentication.getPrincipal()).getId();
         postService.likePosts(reqDto, userId);
         return ResponseEntity.ok().build();
     }
@@ -76,7 +77,7 @@ public class PostController {
     @PostMapping("/bookmarks")
     public ResponseEntity<Void> bookMarks(@ApiIgnore final Authentication authentication,
                                           @RequestBody final PostBookMarkReqDto reqDto) {
-        Long userId = Long.parseLong((String) authentication.getPrincipal());
+        Long userId =  ((User) authentication.getPrincipal()).getId();
         postService.bookMarks(reqDto, userId);
         return ResponseEntity.ok().build();
     }
@@ -94,7 +95,7 @@ public class PostController {
     public ResponseEntity<Void> addComments(@ApiIgnore final Authentication authentication,
                                             @PathVariable("postId") final Long postId,
                                             @RequestBody final CommentsReqDto dto) {
-        Long userId = Long.parseLong((String) authentication.getPrincipal());
+        Long userId = ((User) authentication.getPrincipal()).getId();
         postService.addComments(userId, postId, dto);
         return ResponseEntity.ok().build();
     }

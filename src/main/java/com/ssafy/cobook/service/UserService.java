@@ -9,7 +9,6 @@ import com.ssafy.cobook.service.dto.user.UserResponseDto;
 import com.ssafy.cobook.service.dto.user.UserSaveRequestDto;
 import com.ssafy.cobook.service.dto.user.UserUpdatePwdDto;
 import com.ssafy.cobook.util.JwtTokenProvider;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -37,6 +36,7 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
+
     @Transactional
     public UserResponseDto saveUser(UserSaveRequestDto userSaveRequestDto) {
         if (userRepository.findByEmail(userSaveRequestDto.getEmail()).isPresent()) {
@@ -52,27 +52,13 @@ public class UserService {
         return new UserResponseDto(user.getId());
     }
 
-    @Transactional
-    public String createToken(UserLoginRequestDto userLoginRequestDto) {
-        String email = userLoginRequestDto.getEmail();
-        User user = getUser(email);
-        passwordEncoder = new BCryptPasswordEncoder();
-
-        String encodePassword = user.getPassword();
-        String rawPassword = userLoginRequestDto.getPassword();
-
-        if (!passwordEncoder.matches(rawPassword,encodePassword)) {
-            throw new UserException("잘못된 비밀번호입니다.", ErrorCode.WRONG_PASSWORD);
-        }
-        return jwtTokenProvider.createToken(userLoginRequestDto.getEmail());
-    }
 
     private User getUser(final String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException(String.format("%s는(은) 가입되지 않은 이메일입니다.", email), ErrorCode.UNSIGNED));
     }
 
-    public Long login(UserLoginRequestDto userLoginRequestDto) {
+    public User login(UserLoginRequestDto userLoginRequestDto) {
 
         User user = getUser(userLoginRequestDto.getEmail());
 
@@ -83,8 +69,9 @@ public class UserService {
             throw new UserException("잘못된 비밀번호입니다.", ErrorCode.WRONG_PASSWORD);
         }
 
-        return user.getId();
+        return user;
     }
+
 
     @Transactional
     public UserResponseDto preparedAndSend(String recipient, HttpServletRequest httpServletRequest) {

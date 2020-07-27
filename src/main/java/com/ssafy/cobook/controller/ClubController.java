@@ -1,5 +1,6 @@
 package com.ssafy.cobook.controller;
 
+import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.ClubService;
 import com.ssafy.cobook.service.PostService;
 import com.ssafy.cobook.service.ReadingService;
@@ -44,7 +45,7 @@ public class ClubController {
     public ResponseEntity<ClubCreateResDto> createClub(@ApiIgnore final Authentication authentication,
                                                        @RequestParam MultipartFile clubImg,
                                                        @RequestBody final ClubCreateReqDto reqDto) throws IOException {
-        Long userId = Long.parseLong((String) authentication.getPrincipal());
+        Long userId =  ((User) authentication.getPrincipal()).getId();
         ClubCreateResDto resDto = clubService.create(userId, reqDto, clubImg);
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
