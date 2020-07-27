@@ -5,8 +5,8 @@
     
       <div class="input-with-label">
         <input 
-          v-model="email" 
-          v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}"
+          v-model="loginData.email" 
+          v-bind:class="{error : error.email, complete:!error.email&&loginData.email.length!==0}"
           class="inputs"
           id="email" 
           placeholder="이메일" 
@@ -21,9 +21,9 @@
       </div>
       <div class="input-with-label">
         <input 
-          v-model="password" 
+          v-model="loginData.password" 
           
-          v-bind:class="{error : error.password, complete:!error.password&&password.length!==0}"
+          v-bind:class="{error : error.password, complete:!error.password&&loginData.password.length!==0}"
           class="inputs"
           id="password" 
           type="password"
@@ -62,8 +62,10 @@ export default {
   name: 'Login',
   data() {
     return {
-      email: "",
-      password: "",
+      loginData: {
+        email: "",
+        password: "",
+      },
       error: {
         email: false,
         password: false,
@@ -75,16 +77,18 @@ export default {
     this.component = this;
   },
   watch: {
-    email() {
-      this.checkEmailForm();
-    },
-    password() {
-      this.checkPasswordForm();
+    loginData: {
+      deep: true,
+
+      handler() {
+        this.checkEmailForm();
+        this.checkPasswordForm();
+      }
     },
   },
   methods: {
     checkEmailForm() {
-      if ( this.email.length > 0 && !this.validEmail(this.email) ) {
+      if ( this.loginData.email.length > 0 && !this.validEmail(this.loginData.email) ) {
         this.error.email = "올바른 이메일 형식이 아니에요"   
       }
       else this.error.email = false;
@@ -95,17 +99,20 @@ export default {
       return re.test(email);
     },
     checkPasswordForm() {
-      if (this.password.length > 0 && this.password.length < 8) {
+      if (this.loginData.password.length > 0 && this.loginData.password.length < 8) {
           this.error.password = "비밀번호가 너무 짧아요"
-        } else if ( this.password.length >= 8 && !this.validPassword(this.password) ) {
+        } else if ( this.loginData.password.length >= 8 && !this.validPassword(this.loginData.password) ) {
           this.error.password = "영문, 숫자 포함 8 자리 이상이어야 해요.";
         } else this.error.password = false;
       
-      let isSubmit = true;
-      Object.values(this.error).map(v => {
-        if (v) isSubmit = false;
-      });
-      this.isSubmit = isSubmit;
+      if (this.loginData.password.length > 0 && this.loginData.email.length > 0){
+        let isSubmit = true;
+        Object.values(this.error).map(v => {
+          if (v) isSubmit = false;
+        });
+        this.isSubmit = isSubmit;
+      }
+      
     },
     validPassword(password) {
       var va = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z]{8,}$/;
@@ -152,9 +159,12 @@ h3 {
   width: 70%;
 }
 
+
 .divide {
   width: 10%;
   border-top: 1px solid #88A498;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
@@ -179,6 +189,7 @@ h3 {
 input[type="password"] {
   font-family:sans-serif;
 }
+
 .error, .error:focus {
   border-bottom: 2px solid rgb(250, 25, 59, 0.7); 
 }
