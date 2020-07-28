@@ -18,6 +18,7 @@ export default new Vuex.Store({
     authToken: cookies.get('auth-token'),
     genres: null,
     myaccount: null,
+    books: null,
   },
   getters: {
     config: state => ({ headers: { jwt : state.authToken}}),
@@ -25,7 +26,6 @@ export default new Vuex.Store({
   mutations: {
     SET_TOKEN(state, token) {
       state.authToken = token
-      console.log(state.authToken)
       cookies.set('auth-token', token)
     },
     SET_GENRES(state, genres) {
@@ -34,6 +34,9 @@ export default new Vuex.Store({
     SET_MY_ACCOUNT(state, user) {
       state.myaccount = user
     },
+    SET_BOOKS(state, books) {
+      state.books = books
+    }
   },
   actions: {
     fetchGenres({ commit }) {
@@ -47,10 +50,17 @@ export default new Vuex.Store({
     },
     findMyAccount({ rootGetters, commit}) {
       axios.post(SERVER.URL + SERVER.ROUTES.myaccount, null, rootGetters.config)
-          .then(res => {
-              commit('SET_MY_ACCOUNT', res.data)
-          })
-          .catch(err => console.log(err.response.data))
+        .then(res => {
+            commit('SET_MY_ACCOUNT', res.data)
+        })
+        .catch(err => console.log(err.response.data))
+    },
+    fetchBooks({ commit }) {
+      axios.get(SERVER.URL + SERVER.ROUTES.books)
+        .then(res => {
+          commit('SET_BOOKS', res.data)
+        })
+        .catch(err => console.log(err.response.books))
     },
       
   },

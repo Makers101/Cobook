@@ -1,28 +1,27 @@
 export default {
-    URL: 'http://i3a111.p.ssafy.io:8080/api',
-    ROUTES: {
-      // genres
-      genres: '/genres',
+  URL: 'http://i3a111.p.ssafy.io:8080/api',
+  ROUTES: {
+    // books
+    books: '/books',
 
-      // clubs
-      clubs: '/clubs',
+    // genres
+    genres: '/genres',
 
-      // posts
-      posts: '/posts',
-      comments: '/comments',
+    // clubs
+    clubs: '/clubs',
 
-      // accounts
-      myaccount: '/users',
-      signup: '/users/signup',
-      login: '/users/signin',
-      password: '/users/password',
+    // posts
+    posts: '/posts',
+    comments: '/comments',
+
+    // accounts
+    myaccount: '/users',
+    signup: '/users/signup',
+    login: '/users/signin',
+    password: '/users/password',
 
 
-
-      // profile 
-      profile: '/profile/',
-      feeds: '/feeds/',
-      clubs: '/clubs/',
-      bookmarks: '/bookmarks/'
-    }
+    // profile 
+    profile: '/profile',
   }
+}

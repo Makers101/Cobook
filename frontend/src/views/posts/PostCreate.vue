@@ -1,94 +1,208 @@
 <template>
-  <div class="custom-container">
-    <h2 class="font-weight-extrabold">게시글 작성</h2>
-    <div class="row">
-      <div class="search-bar col-3">
-        <input v-model="inputValue" @keypress.enter="fetchVideos" class="w-100 customcard" placeholder="책을 검색하세요." autofocus>
-        <hr>
-        <!-- <div @click="setVideoPath(video)" class="select-video d-flex border p-2" v-for="video in videos" :key="video.etag"> -->
-        <div class="row">
-          <div class="col-4 book-img">
-            <img class="img-fluid" src="@/assets/미움받을 용기.png" alt="">
-          </div>
-          <div class="col-8">
-            <p class="font-weight-bold">미움 받을 용기</p>
-          </div>
-        </div>
-        <!-- </div> -->
-      </div>
-      <div class="col-9">
-        <div class="post mb-5">
-          <div class="post-content bg-light-beige row">
-            <div class="col-4 my-5">
-              <img style="height: 30vh;" src="@/assets/미움받을 용기.png" alt="책 이미지">
-            </div>
-            <div class="col-8 d-flex align-items-center">
-              <div class="w-100 color-black">
-                <div class="large-text text-left"><i class="fas fa-quote-left"></i></div>
-                <input
-                  class="content-input mb-2 bg-light-beige"
-                  id="line1"
-                  :class="{ 'mr-5' : !oneline }"
-                  @keydown.enter="makeTwoline"
-                  type="text" 
-                  placeholder="한줄 평을 입력해주세요."
-                >
-                <br>
-                <input
-                  class="content-input ml-5 bg-light-beige"
-                  id="line2"
-                  :class="{ 'd-none' : oneline, active : oneline}"
-                  type="text" 
-                  placeholder="한줄 평을 입력해주세요."
-                >
-                <div class="large-text text-right"><i class="fas fa-quote-right"></i></div>
-                <p class="detail-review-button mt-5" @click="createDetailReview">상세 리뷰 작성</p>
-              </div>
-            </div>
-          </div>
-          <div class="post-footer text-left mt-2">
-            <span class="badge bg-green rounded-pill px-3 py-2 mr-2">태그1</span>
-            <span class="badge bg-green rounded-pill px-3 py-2">태그2</span>
-          </div>
-          <div v-if="detailReview">
-            <div id="summernote"></div>
-          </div>
+  <div class="custom-container mb-5">
 
-          <div class="text-right">
-            <div class="btn btn-outline-green rounded">작성 완료</div>
-          </div>
-        </div>
+    <!-- post-create_banner -->
+    <div class="post-banner">
+      <img
+        class="post-banner-img"
+        src="@/assets/post_create_banner.jpg"
+        alt="">
+      <div class="post-banner-text">
+        <h3 class="font-weight-bold">게시물 만들기</h3>
+        <p class="mb-0">
+          멋진 리뷰를 작성해주세요. :)
+        </p>
       </div>
     </div>
+
+    <!-- post-create-form -->
+    <v-app>
+      <v-card>
+        <template v-slot:progress>
+          <v-progress-linear
+            absolute
+            color="green lighten-3"
+            height="4"
+            indeterminate
+          ></v-progress-linear>
+        </template>
+
+        <v-form
+          v-model="valid"
+          :lazy-validation="lazy"
+        >
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-autocomplete
+                  v-model="postCreateData.bookId"
+                  v-if="books"
+                  :items="books"
+                  hide-selected
+                  color="blue-grey lighten-2"
+                  :rules="[
+                    v => (v.length !== 0) || '필수항목입니다.'
+                  ]"
+                  label="책 검색"
+                  item-text="title"
+                  item-value="id"
+                  :search-input.sync="searchBook"
+                  @change="isBookNull()"
+                  @keypress.enter="isBookNull()"
+                >
+                  <template v-slot:selection="data">
+                    {{ data.item.title }}
+                  </template>
+                  <template v-slot:item="data">
+                    <template v-if="typeof data.item !== 'object'">
+                      <v-list-item-content v-text="data.item"></v-list-item-content>
+                    </template>
+                    <template v-else class="row">
+                      <v-list-item-content class="col-3">
+                        <img :src="data.item.bookImg">
+                      </v-list-item-content>
+                      <v-list-item-content class="col-9">
+                        <v-list-item-title v-text="data.item.title"></v-list-item-title>
+                      </v-list-item-content>
+                    </template>
+                  </template>
+                </v-autocomplete>
+              </v-col>
+
+              <v-col
+                cols="12"
+              >
+                <v-text-field
+                  v-model="postCreateData.onelineReview"
+                  color="blue-grey lighten-2"
+                  counter
+                  maxlength="30"
+                  :rules="[v => !!v || '필수항목입니다.']"
+                  label="한 줄 평"
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12">
+                <v-subheader class="pl-0">평점</v-subheader>
+                <v-slider
+                  v-model="postCreateData.rank"
+                  :tick-labels="rankArray"
+                  ticks="always"
+                  :thumb-size="30"
+                  thumb-label="always"
+                  min="1"
+                  max="5"
+                  track-color="#88A498"
+                  color="#3c755a"
+                >
+                  <template v-slot:thumb-label="{ value }">
+                    {{ satisfactionEmojis[value-1] }}
+                  </template>
+                </v-slider>
+              </v-col>
+
+              <v-col v-if="tags" cols="12">
+                <v-combobox
+                  v-model="postCreateData.tags"
+                  :items="tags"
+                  :search-input.sync="searchTag"
+                  hide-selected
+                  :rules="[
+                    v => (v.length < 6) || '최대 5개 관심 장르를 고를 수 있습니다.'
+                  ]"
+                  color="blue-grey lighten-2"
+                  hint="최대 5개"
+                  label="태그"
+                  multiple
+                  item-text="tagName"
+                  item-value="id"
+                  persistent-hint
+                  small-chips
+                >
+                  <template v-slot:no-data>
+                    <v-list-item>
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          No results matching "<strong>{{ searchTag }}</strong>". Press <kbd>enter</kbd> to create a new one
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </template>
+                </v-combobox>
+              </v-col>
+            </v-row>
+          </v-container>
+
+          <v-card-actions class="d-flex justify-content-end">
+            <v-btn
+              :disabled="!valid"
+              class="button btn-green"
+            >
+              게시글 생성
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-app>
+
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
   name: 'PostCreate',
   data() {
     return {
+      postCreateData: {
+        bookId: null,
+        onelineReview: null,
+        open: true,
+        rank: 3,
+        review: null,
+        tags: []
+      },
       oneline: true,
       detailReview: false,
-      postData: {
-        tags: []
-      }
+      valid: true,
+      lazy:false,
+      searchBook: null,
+      searchTag: null,
+      rankArray: [1, 2, 3, 4, 5],
+      satisfactionEmojis: ['😭', '😢', '😊', '😄', '😍'],
     }
   },
+  computed: {
+    ...mapState(['books']),
+    ...mapState('postStore', ['tags'])
+  },
   methods: {
+    ...mapActions('postStore', ['fetchTags']),
     makeTwoline() {
       this.oneline = false
     },
     createDetailReview() {
       this.detailReview = !this.detailReview
-    }
+    },
+    isBookNull() {
+      this.$nextTick(() => {
+        this.searchBook = null
+      })
+    },
+    validate() {
+      this.$refs.form.validate()
+    },
+  },
+  created() {
+    this.fetchTags()
   },
   mounted() {
-    window.$('#summernote').summernote({
-      placeholder: '내용을 작성해주세요 :)',
-      height: 300,
-    });
-    window.$('#summernote').summernote('justifyLeft');
+    // window.$('#summernote').summernote({
+    //   placeholder: '내용을 작성해주세요 :)',
+    //   height: 300,
+    // });
+    // window.$('#summernote').summernote('justifyLeft');
   }
 
 
@@ -96,44 +210,25 @@ export default {
 </script>
 
 <style scoped>
-.customcard {
+.post-banner {
   position: relative;
-  display: flex;
-  min-width: 0;
-  word-wrap: break-word;
-  background-color: #fff;
-  background-clip: border-box;
-  border: 1px solid rgba(0,0,0,.125);
-  border-radius: .25rem;
-  padding: 0.5rem;
 }
 
-.feed-profile-img {
-  height: 25px;
+.post-banner-img {
+  width: 100%;
+  height: 200px;
+  vertical-align: middle;
+  filter: brightness(0.7)
 }
 
-.small-text {
-  font-size: 0.8rem;
+.post-banner-text {
+  color: #F8F8F8;
+  text-align: center;
+  text-shadow: 2px 2px 2px rgb(100, 100, 100);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate( -50%, -50% );
 }
 
-.large-text {
-  font-size: 1.3rem;
-}
-
-.content-input {
-  border: none;
-}
-
-.content-input:focus {
-  outline: none;
-}
-
-.detail-review-button {
-  color: #6C757d
-}
-
-.detail-review-button:hover {
-  cursor: pointer;
-  color: black
-}
 </style>
