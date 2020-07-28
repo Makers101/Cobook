@@ -6,27 +6,23 @@
         <hr>
         <div class="myclub-content">
           <div
-            class="mb-3"
+            class="mb-3 pointer"
             v-for="club in myaccount.myClubs"
             :key="`club-${club.id}`"
+            @click="clubDetail(club.id)"
           >
             <div class="row">
-              <span class="border rounded-circle col-4"><img class="img-fluid feed-profile-img" :src="club.clubImg" alt="클럽 프로필 사진"></span>
-              <div class="col-8">
-                {{ club.name }}
-                <span
-                  class="badge bg-green rounded-pill mr-2"
-                  v-for="genre in club.genres"
-                  :key="`genre-${genre.id}`"
-                >
-                {{ genre.name }}</span>
+              <img class="offset-1 col-3 p-2 border rounded-circle img-fluid" :src="club.clubImg" alt="클럽 프로필 사진">
+              <div class="col-8 font-weight-bold text-left">
+                <p class="mb-0">{{ club.name }}</p>
               </div>
             </div>
+            <hr>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-12 col-md-8 mt-3">
+    <div class="col-12 custom-offset-sm-2 col-sm-8 custom-offset-lg-0 col-lg-8 mt-3">
       <div
         class="post mb-5"
         v-for="post in posts"
@@ -67,8 +63,7 @@
           <div class="col-8 d-flex align-items-center">
             <div class="w-100 color-black">
               <div class="large-text text-left"><i class="fas fa-quote-left"></i></div>
-              <div class="mr-5 mb-2">{{ post.onelineReview }}</div>
-              <div class="ml-5">두줄 평은 이렇습니다.</div>
+              <div class="d-flex justify-content-center"><p class="my-2 w-50">{{ post.onelineReview }}</p></div>
               <div class="large-text text-right"><i class="fas fa-quote-right"></i></div>
             </div>
           </div>
@@ -123,6 +118,9 @@ export default {
   },
   methods: {
     ...mapActions('postStore', ['fetchPosts', 'createLike', 'createBookmark']),
+    clubDetail(clubId) {
+      this.$router.push({ name: 'ClubDetail', params: { clubId: clubId }})
+    },
     postDetail(postId) {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
     },
@@ -180,10 +178,21 @@ export default {
   width: 14%;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 1264px) {
   .custom-d-md-block {
       display: block!important;
   }
 }
 
+@media (min-width: 1264px) {
+  .custom-offset-lg-0 {
+      margin-left: 0 !important;
+  }
+}
+
+@media (min-width: 600px) {
+  .custom-offset-sm-2 {
+      margin-left: 16.666667%;
+  }
+}
 </style>
