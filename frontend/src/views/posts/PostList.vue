@@ -28,8 +28,8 @@
         v-for="post in posts"
         :key="`post-${post.id}`"
         >
-        <div class="post-header d-flex justify-content-between mb-2">
-          <div>
+        <div class="post-header d-flex justify-content-between py-2">
+          <div class="ml-3">
             <span class="rounded-circle">
               <img
                 v-if="!post.user.profileImg"
@@ -56,23 +56,24 @@
             </span>
           </div>
         </div>
-        <div class="post-content bg-light-beige row pointer" @click="postDetail(post.id)">
-          <div class="col-4 my-5">
+        <div class="post-content bg-light-beige row no-gutters pointer d-flex justify-content-around" @click="postDetail(post.id)">
+          <div class="my-5">
             <img style="height: 30vh;" :src="post.book.bookImg" alt="책 이미지">
           </div>
-          <div class="col-8 d-flex align-items-center">
-            <div class="w-100 color-black">
+          <div class="d-flex align-items-center justify-content-center w-50">
+            <div class="w-75 color-black">
               <div class="large-text text-left"><i class="fas fa-quote-left"></i></div>
               <div class="d-flex justify-content-center"><p class="my-2 w-50">{{ post.onelineReview }}</p></div>
               <div class="large-text text-right"><i class="fas fa-quote-right"></i></div>
             </div>
           </div>
         </div>
-        <div class="post-footer text-left mt-2">
+        <div class="post-footer text-left pl-3 py-2">
           <span
-            class="badge bg-green rounded-pill px-3 py-2 mr-2"
+            class="badge rounded-pill px-3 py-2 mr-2"
             v-for="tag in post.tags"
             :key="`tag-${tag.id}`"
+            style="background-color:#907a62; color: white;"
           >
           {{ tag.name }}</span>
         </div>
@@ -152,6 +153,10 @@ export default {
 </script>
 
 <style scoped>
+.post-header, .post-footer {
+  border: 1px solid #D6CBBD ;
+}
+
 .feed-profile-img {
   height: 25px;
 }
@@ -168,29 +173,29 @@ export default {
   position: fixed;
   top: 200px;
   left: 1%;
-  width: 14%;
 }
 
 .recommend {
   position: fixed;
   top: 200px;
   right: 1%;
-  width: 14%;
 }
 
-@media (min-width: 1264px) {
-  .custom-d-md-block {
-      display: block!important;
-  }
-}
-
-@media (min-width: 1264px) {
+@media screen and (min-width: 1264px) {
   .custom-offset-lg-0 {
-      margin-left: 0 !important;
+      /* margin-left: 6% !important; */
+      max-width: 823.46px;
+      margin-left: auto !important;
+      margin-right: auto !important;
+  }
+  .custom-d-md-block {
+    display: inline-block!important;
+    max-width: 174.6px;
+    /* width: 15% */
   }
 }
 
-@media (min-width: 600px) {
+@media screen and (min-width: 600px) {
   .custom-offset-sm-2 {
       margin-left: 16.666667%;
   }
