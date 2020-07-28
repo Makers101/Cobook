@@ -7,6 +7,7 @@ const postStore = {
     posts: null,
     selectedPost: null,
     comments: null,
+    tags: null,
   },
   getters: {
   },
@@ -19,6 +20,9 @@ const postStore = {
     },
     SET_COMMENTS(state, comments) {
       state.comments = comments
+    },
+    SET_TAGS(state, tags) {
+      state.tags = tags
     }
   },
   actions: {
@@ -50,7 +54,6 @@ const postStore = {
         })
     },
     createComment({ dispatch, rootGetters }, commentData) {
-      console.log(rootGetters.config)
       axios.post(SERVER.URL + SERVER.ROUTES.posts + '/' + commentData.postId + SERVER.ROUTES.comments, commentData, rootGetters.config)
         .then(() => {
           dispatch('fetchComments', commentData.postId)
@@ -59,6 +62,15 @@ const postStore = {
           console.log(err.response.data)
         })
     },
+    fetchTags({ commit }) {
+      axios.get(SERVER.URL + SERVER.ROUTES.posts + '/tags')
+        .then(res => {
+          commit('SET_TAGS', res.data)
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    }
   },
 }
 

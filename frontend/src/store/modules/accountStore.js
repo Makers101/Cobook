@@ -10,6 +10,8 @@ const accountStore = {
     state: {
     },
     getters: {
+        config: state => 
+        ({headers: { Authorization: `Token ${state.authToken}`}}),
     },
     mutations: {
         
