@@ -1,5 +1,6 @@
 import axios from 'axios'
 import SERVER from '@/api/api'
+import router from '@/router'
 
 const readingSample = {
   id: 1,
@@ -136,18 +137,33 @@ const clubStore = {
             commit('SET_SELECTED_READING', readingSample)
           })
       },
-      createClub({ state }, formData) {
-        axios.post(SERVER.URL + SERVER.ROUTES.clubs, formData,
+      createClub({ state }, clubCreateData) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs, clubCreateData.basicData,
           { 
             headers: { 
-              'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1Iiwicm9sZXMiOltdLCJpYXQiOjE1OTU4NjIwMjQsImV4cCI6MTU5NTg2NTYyNH0.igHgYbItRIEJEiePM1_iHYe2CQ65YAaglzaDyfJ5BMQ',
-              'Content-Type': 'multipart/form-data'
+              'jwt': 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1Iiwicm9sZXMiOltdLCJpYXQiOjE1OTU4NjIwMjQsImV4cCI6MTU5NTg2NTYyNH0.igHgYbItRIEJEiePM1_iHYe2CQ65YAaglzaDyfJ5BMQ'
             }
           }
           )
             .then(res => {
               console.log(res.data)
               console.log(state.selectedClub)
+              const newClubId = res.data
+              axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + newClubId + '/images', clubCreateData.clubImgFormData, 
+                {
+                  headers: {
+                    'jwt': 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1Iiwicm9sZXMiOltdLCJpYXQiOjE1OTU4NjIwMjQsImV4cCI6MTU5NTg2NTYyNH0.igHgYbItRIEJEiePM1_iHYe2CQ65YAaglzaDyfJ5BMQ',
+                    'Content-Type': 'multipart/form-data'
+                  }
+                })
+                .then(res => {
+                  console.log(res.data)
+                  router.push({ name: 'ClubDetail', params: { clubId: newClubId }})
+                })
+                .catch(err => {
+                  console.log(err.response.data)
+                })
+
             })
             .catch(err => {
               console.log(err.response.data)

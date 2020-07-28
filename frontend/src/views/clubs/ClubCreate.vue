@@ -37,7 +37,7 @@
                 cols="12"
               >
                 <v-text-field
-                  v-model="clubCreateData.name"
+                  v-model="clubCreateData.basicData.name"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="30"
@@ -48,7 +48,7 @@
               
               <v-col cols="12">
                 <v-file-input
-                  v-model="clubCreateData.clubImg"
+                  v-model="clubImg"
                   enctype="multipart/form-data"
                   accept="image/png, image/jpeg, image/bmp"
                   label="프로필 이미지"
@@ -132,7 +132,7 @@
                 md="12"
               >
                 <v-text-field
-                  v-model="clubCreateData.onelineDescription"
+                  v-model="clubCreateData.basicData.onelineDescription"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="30"
@@ -145,7 +145,7 @@
                 md="12"
               >
                 <v-textarea
-                  v-model="clubCreateData.description"
+                  v-model="clubCreateData.basicData.description"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="100"
@@ -156,7 +156,7 @@
 
               <v-col cols="12">
                 <v-autocomplete
-                  v-model="clubCreateData.genres"
+                  v-model="clubCreateData.basicData.genres"
                   v-if="genres"
                   :items="genres"
                   chips
@@ -181,7 +181,7 @@
                       :input-value="data.selected"
                       close
                       @click="data.select"
-                      @click:close="remove(clubCreateData.genres, data.item)"
+                      @click:close="remove(clubCreateData.basicData.genres, data.item)"
                     >
                       {{ data.item.name }}
                     </v-chip>
@@ -204,7 +204,7 @@
                 md="12"
               >
                 <v-text-field
-                  v-model="clubCreateData.residence"
+                  v-model="clubCreateData.basicData.residence"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="10"
@@ -231,20 +231,26 @@
 </template>
 
 <script>
+const clubImgFormData = new FormData()
+
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'ClubCreate',
   data() {
     return {
       clubCreateData: {
-        name: null,
-        clubImg: null,
-        onelineDescription: null,
-        description: null,
-        residence: null,
-        // members: [],
-        genres: [],
+        basicData: {
+          name: null,
+          onelineDescription: null,
+          description: null,
+          residence: null,
+          // members: [],
+          genres: [],
+          clubImg: null        
+        },
+        clubImgFormData: clubImgFormData
       },
+      clubImg: null,
       leader: {
         id: 6,
         userName: "T-Leader"
@@ -279,14 +285,15 @@ export default {
       this.$refs.form.validate()
     },
     clickCreate() {
-      const formData = new FormData()
-      formData.append('name', this.clubCreateData.name)
-      formData.append('clubImg', this.clubCreateData.clubImg)
-      formData.append('onelineDescription', this.clubCreateData.onelineDescription)
-      formData.append('description', this.clubCreateData.description)
-      formData.append('residence', this.clubCreateData.residence)
-      formData.append('genres', this.clubCreateData.genres)
-      this.createClub(formData)
+      // const formData = new FormData()
+      // formData.append('name', this.clubCreateData.name)
+      this.clubCreateData.clubImgFormData.append('clubImg', this.clubImg)
+      // console.log(typeof(this.clubCreateData.clubImg))
+      // formData.append('onelineDescription', this.clubCreateData.onelineDescription)
+      // formData.append('description', this.clubCreateData.description)
+      // formData.append('residence', this.clubCreateData.residence)
+      // formData.append('genres', this.clubCreateData.genres)
+      this.createClub(this.clubCreateData)
     }
   }
 }
