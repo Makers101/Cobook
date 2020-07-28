@@ -1,19 +1,15 @@
 package com.ssafy.cobook.service;
 
+import com.ssafy.cobook.domain.clubmember.ClubMember;
+import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
-import com.ssafy.cobook.service.dto.UserUpdateDto;
-import com.ssafy.cobook.service.dto.book.BookResponseDto;
-import com.ssafy.cobook.service.dto.post.PostSaveReqDto;
-import com.ssafy.cobook.service.dto.post.PostSaveResDto;
+import com.ssafy.cobook.service.dto.club.ClubResDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.*;
 import com.ssafy.cobook.util.JwtTokenProvider;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -37,9 +33,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final JwtTokenProvider jwtTokenProvider;
     private final JavaMailSender emailSender;
     private final PasswordEncoder passwordEncoder;
+    private final ClubMemberRepository clubMemberRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -87,7 +83,11 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException("존재 하지 않는 회원 입니다.",ErrorCode.UNEXPECTED_USER));
 
-        ProfileResponseDto profileResponseDto = new ProfileResponseDto(user);
+        List<ClubResDto> clubList = clubMemberRepository.findAllByUser(user).stream()
+                .map(ClubMember::getClub)
+                .map(ClubResDto::new)
+                .collect(Collectors.toList());
+        ProfileResponseDto profileResponseDto = new ProfileResponseDto(user, clubList);
         return profileResponseDto;
     }
 

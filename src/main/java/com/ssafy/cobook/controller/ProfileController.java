@@ -1,11 +1,8 @@
 package com.ssafy.cobook.controller;
 
 
-import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.ProfileService;
-import com.ssafy.cobook.service.dto.UserUpdateDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
-import com.ssafy.cobook.service.dto.user.UserResponseIdDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,4 +30,16 @@ public class ProfileController {
     public ResponseEntity<ProfileResponseDto> getUserInfo(@PathVariable("userId") final Long userId) {
         return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserInfo(userId));
     }
+
+//    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+//    @PostMapping("/{postId}/comments")
+//    public ResponseEntity<Void> addComments(@ApiIgnore final Authentication authentication,
+//                                            @PathVariable("postId") final Long postId,
+//                                            @RequestBody final CommentsReqDto dto) {
+
+//        @ApiOperation(value = "팔로우하기")
+//    @GetMapping("/follow")
+//    public ResponseEntity<Integer> follwUses(@RequestBody ProfileFollowUserDto profileFollowUserDto){
+//
+//    }
 }

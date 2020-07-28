@@ -1,4 +1,4 @@
-package com.ssafy.cobook.service.dto;
+package com.ssafy.cobook.service.dto.user;
 
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
