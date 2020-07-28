@@ -129,10 +129,13 @@ public class ClubController {
     }
 
     @ApiOperation(value = "리딩을 생성한다.", response = ReadingSaveResDto.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/{clubId}/readings")
-    public ResponseEntity<ReadingSaveResDto> makeReading(@PathVariable("clubId") final Long clubId,
+    public ResponseEntity<ReadingSaveResDto> makeReading(@ApiIgnore final Authentication authentication,
+                                                         @PathVariable("clubId") final Long clubId,
                                                          @RequestBody final ReadingSaveReqDto reqDto) {
-        ReadingSaveResDto resDto = readingService.makeReading(clubId, reqDto);
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        ReadingSaveResDto resDto = readingService.makeReading(userId, clubId, reqDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
 

@@ -66,4 +66,8 @@ public class Reading {
     public void enrollQuestion(List<ReadingQuestion> questions) {
         this.questions = questions;
     }
+
+    public void addMember(ReadingMember readingMember) {
+        this.members.add(readingMember);
+    }
 }
