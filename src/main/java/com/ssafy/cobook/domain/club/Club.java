@@ -46,7 +46,6 @@ public class Club extends BaseTimeEntity {
     private String description;
     private String residence;
     private String clubImg;
-    private Integer participantCount;
     private Boolean recruit;
 
     @Builder
@@ -55,14 +54,12 @@ public class Club extends BaseTimeEntity {
         this.onelineDescription = onelineDescription;
         this.description = description;
         this.residence = residence;
-        participantCount = 0;
         recruit = false;
     }
 
     public void enrolls(ClubMember member) {
         members.add(member);
         member.enroll(this);
-        this.participantCount += 1;
     }
 
     public void setGenres(List<ClubGenre> genres) {

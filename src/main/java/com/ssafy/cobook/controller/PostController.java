@@ -10,6 +10,7 @@ import com.ssafy.cobook.service.dto.postbookmark.PostBookMarkReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.postlike.PostLikeReqDto;
+import com.ssafy.cobook.service.dto.tag.TagResponseDto;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -95,8 +96,16 @@ public class PostController {
     public ResponseEntity<Void> addComments(@ApiIgnore final Authentication authentication,
                                             @PathVariable("postId") final Long postId,
                                             @RequestBody final CommentsReqDto dto) {
+        System.out.println(authentication.toString());
+        System.out.println(authentication.getPrincipal().toString());
         Long userId = ((User) authentication.getPrincipal()).getId();
         postService.addComments(userId, postId, dto);
         return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "게시글의 태그 전체를 반환한다")
+    @GetMapping("/tags")
+    public ResponseEntity<List<TagResponseDto>> getAllTags() {
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getAllTags());
     }
 }

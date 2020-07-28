@@ -26,8 +26,8 @@ public class BookDetailsDto {
         this.author = book.getAuthor();
         this.translators = book.getTranslators();
         this.publisher = book.getPublisher();
-        this.contents = book.getContents();
+        this.contents = book.getContent();
         this.url = book.getUrl();
-        this.pubDate = book.getPublishDates().toString();
+        this.pubDate = book.getPubDate().toString();
     }
 }

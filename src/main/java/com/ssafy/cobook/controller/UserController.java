@@ -2,10 +2,13 @@ package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.UserService;
-import com.ssafy.cobook.service.dto.UserUpdateDto;
-import com.ssafy.cobook.service.dto.book.BookResponseDto;
+import com.ssafy.cobook.service.dto.post.PostSaveReqDto;
+import com.ssafy.cobook.service.dto.post.PostSaveResDto;
+import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.*;
 import com.ssafy.cobook.util.JwtTokenProvider;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,11 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.xml.ws.Response;
 import java.util.List;
 
 @Slf4j
@@ -51,10 +55,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(jwtTokenProvider.createToken(user.getId(), user.getRoles()));
     }
 
-    @ApiOperation(value = "회원정보를 수정한다")
-    @PostMapping("/modify")
-    public ResponseEntity<UserResponseIdDto> signin(@RequestBody final UserUpdateDto userUpdateDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUserInfo(userUpdateDto));
+
+    @ApiOperation(value = "자기 자신의 정보를 가져온다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PostMapping
+    public ResponseEntity<ProfileResponseDto> getMyInfo(@ApiIgnore final Authentication authentication) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.getMyInfo(userId));
     }
 
     @ApiOperation(value = "이메일을 받아서 인증코드를 보낸다.", response = String.class)

@@ -1,6 +1,7 @@
 package com.ssafy.cobook.service.dto.club;
 
 import com.ssafy.cobook.domain.club.Club;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,8 @@ public class ClubCreateReqDto {
     private String residence;
     @ApiModelProperty(position = 5)
     private List<Long> genres;
+    @ApiModelProperty(position = 6)
+    private List<Long> members;
 
     public Club toEntity() {
         return Club.builder()

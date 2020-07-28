@@ -80,7 +80,7 @@ public class Post extends BaseEntity {
 
     public void setTags(List<PostTag> tags) {
         this.tags = tags;
-        for( PostTag p : tags) {
+        for (PostTag p : tags) {
             p.ofPost(this);
         }
     }
@@ -91,5 +91,9 @@ public class Post extends BaseEntity {
 
     public void addComments(PostComment postComment) {
         this.comments.add(postComment);
+    }
+
+    public void setUsers() {
+        this.isClub = false;
     }
 }

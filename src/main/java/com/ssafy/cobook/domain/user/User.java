@@ -2,6 +2,7 @@ package com.ssafy.cobook.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.cobook.domain.booklike.BookLike;
+import com.ssafy.cobook.domain.clubgenre.ClubGenre;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.meetupmember.MeetUpMember;
 import com.ssafy.cobook.domain.post.Post;
@@ -11,6 +12,7 @@ import com.ssafy.cobook.domain.postlike.PostLike;
 import com.ssafy.cobook.domain.readingmember.ReadingMember;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
 import com.ssafy.cobook.service.dto.UserUpdateDto;
+import com.ssafy.cobook.service.dto.genre.GenreResponseDto;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -78,7 +80,7 @@ public class User implements UserDetails {
     private List<MeetUpMember> meetUpMembers = new ArrayList<>();
 
     @Builder
-    public User(String email, String password, String nickName, PlatformType platformType, List<String> roles){
+    public User(String email, String password, String nickName, PlatformType platformType, List<String> roles) {
         this.email = email;
         this.password = password;
         this.nickName = nickName;
@@ -86,7 +88,7 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public void changePassword(String password){
+    public void changePassword(String password) {
         this.password = password;
     }
 
@@ -103,12 +105,11 @@ public class User implements UserDetails {
     }
 
 
-    public void updateUserInfo(UserUpdateDto userUpdateDto) {
-        this.email = userUpdateDto.getEmail();
-        this.password = userUpdateDto.getEmail();
+    public void updateUserInfo(UserUpdateDto userUpdateDto, List<UserGenre> userGenres) {
         this.nickName = userUpdateDto.getNickName();
         this.description = userUpdateDto.getDescription();
         this.profileImg = userUpdateDto.getProfileImg();
+        this.userGenres = userGenres;
     }
 
     @Override

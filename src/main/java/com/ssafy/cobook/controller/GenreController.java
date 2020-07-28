@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/gerne")
+@RequestMapping("/api/genres")
 @RequiredArgsConstructor
 public class GenreController {
 

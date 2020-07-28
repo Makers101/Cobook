@@ -33,8 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClubService {
 
-    private final String IMAGE_DIR = "./images/club/";
-
+    private final String IMAGE_DIR = "/home/ubuntu/images/club/";
     private final ClubRepository clubRepository;
     private final UserRepository userRepository;
     private final ClubMemberRepository clubMemberRepository;
@@ -42,13 +41,24 @@ public class ClubService {
     private final ClubGenreRepository clubGenreRepository;
 
     @Transactional
-    public ClubCreateResDto create(Long userId, ClubCreateReqDto reqDto, MultipartFile clubImg) throws IOException {
+    public ClubCreateResDto create(Long userId, ClubCreateReqDto reqDto) throws IOException {
         if (clubRepository.findByName(reqDto.getName()).isPresent()) {
             throw new BaseException(ErrorCode.EXIST_CLUB_NAME);
         }
         User user = getUser(userId);
         Club club = clubRepository.save(reqDto.toEntity());
         ClubMember leader = clubMemberRepository.save(new ClubMember(user, club, MemberRole.LEADER));
+        if (!reqDto.getMembers().isEmpty()) {
+            List<User> users = reqDto.getMembers().stream()
+                    .map(this::getUser)
+                    .collect(Collectors.toList());
+            List<ClubMember> members = users.stream()
+                    .map(u -> clubMemberRepository.save(new ClubMember(u, club, MemberRole.MEMBER)))
+                    .collect(Collectors.toList());
+            for (ClubMember c : members) {
+                club.enrolls(c);
+            }
+        }
         club.enrolls(leader);
         List<Genre> genres = reqDto.getGenres().stream()
                 .map(this::getGenre)
@@ -57,7 +67,6 @@ public class ClubService {
                 .map(g -> clubGenreRepository.save(new ClubGenre(club, g)))
                 .collect(Collectors.toList());
         club.setGenres(clubGenres);
-        club.setProfile(uploadFile(clubImg));
         return new ClubCreateResDto(club.getId());
     }
 
@@ -109,5 +118,17 @@ public class ClubService {
                 .map(ReadingSimpleResDto::new)
                 .collect(Collectors.toList());
         return new ClubDetailResDto(club);
+    }
+
+    @Transactional
+    public void fileSave(Long clubId, MultipartFile clubImg) throws IOException {
+        uploadFile(clubImg);
+        Club club = getClub(clubId);
+        club.setProfile("http://i3a111.p.ssafy.io:8080/api/clubs/images/club/" + clubImg.getOriginalFilename());
+    }
+
+    public String getFilePath(Long id) {
+        Club club = getClub(id);
+        return club.getClubImg().replace("http://i3a111.p.ssafy.io:8080/api/clubs/images/", "");
     }
 }

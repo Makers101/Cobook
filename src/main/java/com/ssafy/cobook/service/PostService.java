@@ -28,6 +28,7 @@ import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.postlike.PostLikeReqDto;
 import com.ssafy.cobook.service.dto.posttag.PostTagDto;
+import com.ssafy.cobook.service.dto.tag.TagResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,7 @@ public class PostService {
     @Transactional
     public PostSaveResDto savePosts(PostSaveReqDto reqDto, Long userId) {
         Post post = reqDto.toEntity();
+        post.setUsers();
         User user = getUserById(userId);
         post.of(user);
         Book book = getBook(reqDto.getBookId());
@@ -155,7 +157,7 @@ public class PostService {
     public void addComments(Long userId, Long postId, CommentsReqDto dto) {
         User user = getUserById(userId);
         Post post = getPostById(postId);
-        PostComment postComment = postCommentRepository.save(new PostComment(post, user, dto.getContents()));
+        PostComment postComment = postCommentRepository.save(new PostComment(post, user, dto.getContent()));
         user.addComments(postComment);
         post.addComments(postComment);
     }
@@ -191,5 +193,11 @@ public class PostService {
     private Club getClub(Long clubId) {
         return clubRepository.findById(clubId)
                 .orElseThrow(()-> new BaseException(ErrorCode.UNEXPECTED_CLUB));
+    }
+
+    public List<TagResponseDto> getAllTags() {
+        return tagRepository.findAll().stream()
+                .map(TagResponseDto::new)
+                .collect(Collectors.toList());
     }
 }

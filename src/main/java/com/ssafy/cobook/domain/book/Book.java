@@ -30,9 +30,9 @@ public class Book {
     private String author;
     private String translators;
     private String publisher;
-    private String contents;
+    private String content;
     private String url;
-    private LocalDateTime publishDates;
+    private LocalDateTime pubDate;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();

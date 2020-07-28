@@ -16,7 +16,6 @@ public class PostSaveReqDto {
     private Integer rank;
     private Boolean open;
     private String review;
-    private Boolean isClub;
     private List<String> tags;
 
     public Post toEntity() {
@@ -25,11 +24,6 @@ public class PostSaveReqDto {
                 .review(review)
                 .rank(rank)
                 .open(open)
-                .isClub(isClub)
                 .build();
-    }
-
-    public boolean isClub() {
-        return isClub;
     }
 }
