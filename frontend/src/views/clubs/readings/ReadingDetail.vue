@@ -40,7 +40,7 @@
           <img class="rounded-circle image" :src="member.proflieImg" alt="" v-if="member.profileImg">
           <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
           <div class="overlay rounded-circle">
-            <div class="text">{{ member.userName }}</div>
+            <div class="text">{{ member.nickName }}</div>
           </div>
         </div>
       </div>
