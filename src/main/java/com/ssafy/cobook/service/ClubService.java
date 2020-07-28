@@ -119,6 +119,7 @@ public class ClubService {
         return new ClubDetailResDto(club);
     }
 
+    @Transactional
     public void fileSave(Long clubId, MultipartFile clubImg) throws IOException {
         String filePath = uploadFile(clubImg);
         Club club = getClub(clubId);

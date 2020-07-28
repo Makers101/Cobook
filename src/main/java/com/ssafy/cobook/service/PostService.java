@@ -28,6 +28,7 @@ import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.postlike.PostLikeReqDto;
 import com.ssafy.cobook.service.dto.posttag.PostTagDto;
+import com.ssafy.cobook.service.dto.tag.TagResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -192,5 +193,11 @@ public class PostService {
     private Club getClub(Long clubId) {
         return clubRepository.findById(clubId)
                 .orElseThrow(()-> new BaseException(ErrorCode.UNEXPECTED_CLUB));
+    }
+
+    public List<TagResponseDto> getAllTags() {
+        return tagRepository.findAll().stream()
+                .map(TagResponseDto::new)
+                .collect(Collectors.toList());
     }
 }
