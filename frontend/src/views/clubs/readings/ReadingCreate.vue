@@ -46,6 +46,42 @@
                 ></v-text-field>
               </v-col>
 
+              <v-col cols="12">
+                <v-autocomplete
+                  v-model="readingCreateData.bookId"
+                  v-if="books"
+                  :items="books"
+                  hide-selected
+                  color="blue-grey lighten-2"
+                  :rules="[
+                    v => (v.length !== 0) || '필수항목입니다.'
+                  ]"
+                  label="책 검색"
+                  item-text="title"
+                  item-value="id"
+                  :search-input.sync="searchBook"
+                  @change="isBookNull()"
+                  @keypress.enter="isBookNull()"
+                >
+                  <template v-slot:selection="data">
+                    {{ data.item.title }}
+                  </template>
+                  <template v-slot:item="data">
+                    <template v-if="typeof data.item !== 'object'">
+                      <v-list-item-content v-text="data.item"></v-list-item-content>
+                    </template>
+                    <template v-else class="row">
+                      <v-list-item-content class="offset-1 col-1">
+                        <img class="w-100" :src="data.item.bookImg">
+                      </v-list-item-content>
+                      <v-list-item-content class="col-10">
+                        <v-list-item-title v-text="data.item.title"></v-list-item-title>
+                      </v-list-item-content>
+                    </template>
+                  </template>
+                </v-autocomplete>
+              </v-col>
+
               <v-col
                 cols="12"
                 md="12"
@@ -85,7 +121,7 @@
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                      v-model="readingCreateData.date"
+                      v-model="date"
                       color="blue-grey lighten-2"
                       label="날짜"
                       :rules="[v => !!v || '필수항목입니다.']"
@@ -96,7 +132,7 @@
                     ></v-text-field>
                   </template>
                   <v-date-picker
-                    v-model="readingCreateData.date"
+                    v-model="date"
                     @input="menu1 = false"
                     color="blue-grey lighten-2"
                   >
@@ -110,7 +146,7 @@
                   color="blue-grey lighten-2"
                   :close-on-content-click="false"
                   :nudge-right="40"
-                  :return-value.sync="readingCreateData.time"
+                  :return-value.sync="time"
                   transition="scale-transition"
                   offset-y
                   max-width="290px"
@@ -118,7 +154,7 @@
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                      v-model="readingCreateData.time"
+                      v-model="time"
                       color="blue-grey lighten-2"
                       label="시간"
                       :rules="[v => !!v || '필수항목입니다.']"
@@ -131,15 +167,15 @@
                   <v-time-picker
                     v-if="menu2"
                     color="blue-grey lighten-2"
-                    v-model="readingCreateData.time"
+                    v-model="time"
                     full-width
-                    @click:minute="$refs.menu.save(readingCreateData.time)"
+                    @click:minute="$refs.menu.save(time)"
                   ></v-time-picker>
                 </v-menu>
               </v-col>
               <v-col>
                 <v-combobox
-                  v-model="model"
+                  v-model="readingCreateData.questions"
                   color="blue-grey lighten-2"
                   label="질문지"
                   multiple
@@ -176,8 +212,7 @@
 </template>
 
 <script>
-// const temp = new Date().toISOString().substr(12, 14)
-// console.log(temp)
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'ReadingCreate',
   data() {
@@ -186,15 +221,15 @@ export default {
         name: null,
         description: null,
         place: null,
-        date: new Date().toISOString().substr(0, 10),
-        time: '00:00',
+        datetime: null,
         bookId: null,
         questions: []
       },
+      date: new Date().toISOString().substr(0, 10),
+      time: '00:00',
       valid: true,
       lazy:false,
-      searchMember: null,
-      searchGenre: null,
+      searchBook: null,
       
       menu1: false,
       // modal: false,
@@ -202,24 +237,41 @@ export default {
       menu2: false,
       // modal2: false,
       // items: ['Gaming', 'Programming', 'Vue', 'Vuetify'],
-      model: [],
       search: null,
     }
   },
-  watch: {
-    model (val) {
-      if (val.length > 5) {
-        this.$nextTick(() => this.model.pop())
-      }
-    },
+  // watch: {
+  //   model (val) {
+  //     if (val.length > 5) {
+  //       this.$nextTick(() => this.model.pop())
+  //     }
+  //   },
+  // },
+  computed: {
+    ...mapState(['books']),
   },
   methods: {
+    ...mapActions('clubStore', ['createReading']),
     remove (data, item) {
       const index = data.indexOf(item.id)
       if (index >= 0) data.splice(index, 1)
     },
+    isBookNull() {
+      this.$nextTick(() => {
+        this.searchBook = null
+      })
+    },
     validate() {
       this.$refs.form.validate()
+    },
+    clickCreate() {
+      this.readingCreateData.datetime = this.date + 'T' + this.time
+      const dataContainer = {
+        readingCreateData: this.readingCreateData,
+        clubId: this.$route.params.clubId
+      }
+      console.log(dataContainer)
+      this.createReading(dataContainer)
     }
   }
 }

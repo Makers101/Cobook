@@ -134,13 +134,8 @@ Vue.use(VueRouter)
     name: 'ClubDetail',
     component: ClubDetail
   },
-  // {
-  //   path: '/clubs/:clubId/readings/create',
-  //   name: 'ReadingCreate',
-  //   component: ReadingCreate
-  // },
   {
-    path: '/clubs/readings/create',
+    path: '/clubs/:clubId/readings/create',
     name: 'ReadingCreate',
     component: ReadingCreate
   },

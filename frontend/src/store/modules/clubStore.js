@@ -69,8 +69,18 @@ const clubStore = {
           .catch(err => {
             console.log(err.response.data)
           })
+      },
+      createReading({ rootGetters }, dataContainer) {
+        console.log(dataContainer)
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + dataContainer.clubId + '/readings', dataContainer.readingCreateData, rootGetters.config)
+          .then(res => {
+            router.push({ name: 'ReadingDetail', params: { clubId: dataContainer.clubId, readingId: res.data.id }})
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
       }
-    },
+    }
 }
 
 export default clubStore
