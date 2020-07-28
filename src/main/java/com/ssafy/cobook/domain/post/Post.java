@@ -96,4 +96,20 @@ public class Post extends BaseEntity {
     public void setUsers() {
         this.isClub = false;
     }
+
+    public void deleteLike(PostLike postLike) {
+        this.postLikes.remove(postLike);
+    }
+
+    public void addLikes(PostLike postLike) {
+        this.postLikes.add(postLike);
+    }
+
+    public void deleteBookMark(PostBookMark postBookMark) {
+        this.bookMarks.remove(postBookMark);
+    }
+
+    public void addBookMarks(PostBookMark postBookMark) {
+        this.bookMarks.add(postBookMark);
+    }
 }

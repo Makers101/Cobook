@@ -122,16 +122,32 @@ public class PostService {
     public void likePosts(Long postId, Long userId) {
         Post post = getPostById(postId);
         User user = getUserById(userId);
-        PostLike postLike = new PostLike(post, user);
-        postLikeRepository.save(postLike);
+        if( postLikeRepository.findByUserAndPost(user, post).isPresent()) {
+            PostLike postLike = postLikeRepository.findByUserAndPost(user,post).get();
+            post.deleteLike(postLike);
+            user.deleteLike(postLike);
+            postLikeRepository.delete(postLike);
+        } else {
+            PostLike postLike = postLikeRepository.save(new PostLike(post, user);
+            user.addLikes(postLike);
+            post.addLikes(postLike);
+        }
     }
 
     @Transactional
     public void bookMarks(Long postId, Long userId) {
         Post post = getPostById(postId);
         User user = getUserById(userId);
-        PostBookMark postBookMark = new PostBookMark(post, user);
-        postBookMarkRepository.save(postBookMark);
+        if( postBookMarkRepository.findByUserAndPost(user, post).isPresent()) {
+            PostBookMark postBookMark = postBookMarkRepository.findByUserAndPost(user,post).get();
+            post.deleteBookMark(postBookMark);
+            user.deleteBookMark(postBookMark);
+            postBookMarkRepository.delete(postBookMark);
+        } else {
+            PostBookMark postBookMark = postBookMarkRepository.save(new PostLike(post, user);
+            user.addBookMarks(postBookMark);
+            post.addBookMarks(postBookMark);
+        }
     }
 
     private Post getPostById(Long postId) {
