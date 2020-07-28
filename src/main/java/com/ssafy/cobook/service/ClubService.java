@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClubService {
 
-    private final String IMAGE_DIR = "/images/club/";
+    private final String IMAGE_DIR = "/home/ubuntu/images/club/";
 
     private final ClubRepository clubRepository;
     private final UserRepository userRepository;
