@@ -65,8 +65,8 @@
                 md="6"
               >
                 <v-text-field
-                  v-if="leader"
-                  v-model="leader.userName"
+                  v-if="myaccount"
+                  v-model="myaccount.nickName"
                   disabled
                   color="blue-grey lighten-2"
                   :rules="[v => !!v || '필수항목입니다.']"
@@ -74,7 +74,7 @@
                 ></v-text-field>
                 <v-text-field
                   v-else
-                  v-model="leader"
+                  v-model="myaccount.nickName"
                   disabled
                   color="blue-grey lighten-2"
                   :rules="[v => !!v || '필수항목입니다.']"
@@ -251,10 +251,6 @@ export default {
         clubImgFormData: clubImgFormData
       },
       clubImg: null,
-      leader: {
-        id: 6,
-        userName: "T-Leader"
-      },
       valid: true,
       lazy:false,
       searchMember: null,
@@ -263,7 +259,7 @@ export default {
   },
   computed: {
     ...mapState('clubStore', ['users']),
-    ...mapState(['genres'])
+    ...mapState(['genres', 'myaccount'])
   },
   methods: {
     ...mapActions('clubStore', ['createClub']),
