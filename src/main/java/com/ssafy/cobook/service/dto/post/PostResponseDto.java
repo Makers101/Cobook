@@ -32,6 +32,7 @@ public class PostResponseDto {
     private List<Long> likeUsers;
     private List<Long> bookmarkUsers;
     private List<TagByPostDto> tags;
+    private Integer commentCnt;
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
@@ -58,5 +59,6 @@ public class PostResponseDto {
                 .map(PostTag::getTag)
                 .map(TagByPostDto::new)
                 .collect(Collectors.toList());
+        this.commentCnt = post.getComments().size();
     }
 }

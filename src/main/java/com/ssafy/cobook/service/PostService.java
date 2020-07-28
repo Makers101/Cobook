@@ -23,11 +23,8 @@ import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.service.dto.post.*;
-import com.ssafy.cobook.service.dto.postbookmark.PostBookMarkReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
-import com.ssafy.cobook.service.dto.postlike.PostLikeReqDto;
-import com.ssafy.cobook.service.dto.posttag.PostTagDto;
 import com.ssafy.cobook.service.dto.tag.TagResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -122,16 +119,16 @@ public class PostService {
     }
 
     @Transactional
-    public void likePosts(PostLikeReqDto reqDto, Long userId) {
-        Post post = getPostById(reqDto.getPostId());
+    public void likePosts(Long postId, Long userId) {
+        Post post = getPostById(postId);
         User user = getUserById(userId);
         PostLike postLike = new PostLike(post, user);
         postLikeRepository.save(postLike);
     }
 
     @Transactional
-    public void bookMarks(PostBookMarkReqDto reqDto, Long userId) {
-        Post post = getPostById(reqDto.getPostId());
+    public void bookMarks(Long postId, Long userId) {
+        Post post = getPostById(postId);
         User user = getUserById(userId);
         PostBookMark postBookMark = new PostBookMark(post, user);
         postBookMarkRepository.save(postBookMark);
@@ -172,7 +169,7 @@ public class PostService {
     public List<PostByClubResponseDto> getClubPosts(Long clubId) {
         return postRepository.findAll().stream()
                 .filter(Post::getOpen)
-                .filter(p->p.getClub().getId().equals(clubId))
+                .filter(p -> p.getClub().getId().equals(clubId))
                 .map(PostByClubResponseDto::new)
                 .collect(Collectors.toList());
     }
@@ -192,7 +189,7 @@ public class PostService {
 
     private Club getClub(Long clubId) {
         return clubRepository.findById(clubId)
-                .orElseThrow(()-> new BaseException(ErrorCode.UNEXPECTED_CLUB));
+                .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_CLUB));
     }
 
     public List<TagResponseDto> getAllTags() {
