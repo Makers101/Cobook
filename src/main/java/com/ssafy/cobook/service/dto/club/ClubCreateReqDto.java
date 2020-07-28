@@ -24,7 +24,7 @@ public class ClubCreateReqDto {
     @ApiModelProperty(position = 5)
     private List<Long> genres;
     @ApiModelProperty(position = 6)
-    private MultipartFile clubImg;
+    private List<Long> members;
 
     public Club toEntity() {
         return Club.builder()
