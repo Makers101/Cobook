@@ -21,8 +21,8 @@
           </div>
         </div>
       </div>
-      <FollowerForm v-if="showFollowerForm" v-model="showFollowerForm"/>
-      <FollowingForm v-if="showFollowingForm" v-model="showFollowingForm"/>
+      <FollowerForm v-if="showFollowerForm" v-model="showFollowerForm" :profile="this.profile"/>
+      <FollowingForm v-if="showFollowingForm" v-model="showFollowingForm" :profile="this.profile"/>
 
       <!-- routers -->
       <div class="d-flex justify-content-between mt-4">
