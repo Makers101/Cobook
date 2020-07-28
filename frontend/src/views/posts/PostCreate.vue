@@ -58,10 +58,10 @@
                       <v-list-item-content v-text="data.item"></v-list-item-content>
                     </template>
                     <template v-else class="row">
-                      <v-list-item-content class="col-3">
-                        <img :src="data.item.bookImg">
+                      <v-list-item-content class="offset-1 col-1">
+                        <img class="w-100" :src="data.item.bookImg">
                       </v-list-item-content>
-                      <v-list-item-content class="col-9">
+                      <v-list-item-content class="col-10">
                         <v-list-item-title v-text="data.item.title"></v-list-item-title>
                       </v-list-item-content>
                     </template>
