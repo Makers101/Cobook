@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 let user = {
     userName: 'userName1',
     description: '책을 좋아하는 사람입니다.특히 SF에 관심이 많습니다. 좋은 사람들과 club에서 함께하기 위해 참여했습니다.',
@@ -64,6 +65,9 @@ export default {
     return {
       user: user,
     }
+  },
+  methods: {
+    ...mapActions(['findProfile']),
   }
 }
 </script>

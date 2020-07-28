@@ -35,7 +35,7 @@
     </div>
     <p class="my-3"><span class="items" @click="clickSignup">회원가입하기</span>ㆍ<span class="items" @click="clickPasswordFind">비밀번호 찾기</span></p>
     <div class="buttons mt-3">
-      <button class="btn login-button" :class="{disabled: !isSubmit}" @click="login(loginData)" >로그인하기</button>
+      <button class="btn login-button" :class="{disabled: !isSubmit}" @click="isSubmit && login(loginData)" >로그인하기</button>
     </div>
 
     <hr class="divide">
@@ -209,6 +209,7 @@ input[type="password"] {
 .disabled, .disabled:hover {
   background-color: rgb(136, 154, 152, 0.25);
   color: #F8F8F8;
+  cursor: inherit;
 }
 
 .items:hover {

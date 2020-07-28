@@ -46,7 +46,22 @@ const accountStore = {
                 to: '/'
             }
             dispatch('postAuthData', info)
-        }
+        },
+        findPassword(email) {
+            console.log('여기')
+            console.log(email)
+            axios.post(SERVER.URL + SERVER.ROUTES.password, email)
+                .then (res => {
+                    console.log(res)
+                    console.log(email)
+                    router.push({ name: 'PasswordFindEmail'})
+                })
+                .catch (err =>{
+                    console.log(err.response)
+                    console.log(email)
+                })
+        },
+        
     },
 }
 

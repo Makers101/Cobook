@@ -13,5 +13,9 @@ export default {
       // accounts
       signup: '/users/signup',
       login: '/users/signin',
+      password: '/users/password',
+
+      // profile 
+      profile: '/profile/',
     }
   }
