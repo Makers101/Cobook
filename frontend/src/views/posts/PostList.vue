@@ -5,15 +5,23 @@
         <div class="myclub-header font-weight-extrabold mt-3">내 클럽</div>
         <hr>
         <div class="myclub-content">
-          <div class="mb-3">
-            <span class="rounded-circle"><img class="img-fluid feed-profile-img" src="@/assets/anonymous user.png" alt="유저 프로필 사진"></span>
-            clubname1
-            <span class="badge bg-green">Club</span>
-          </div>
-          <div class="mb-3">
-            <span class="rounded-circle"><img class="img-fluid feed-profile-img" src="@/assets/anonymous user.png" alt="유저 프로필 사진"></span>
-            clubname1
-            <span class="badge bg-green">Club</span>
+          <div
+            class="mb-3"
+            v-for="club in myaccount.myClubs"
+            :key="`club-${club.id}`"
+          >
+            <div class="row">
+              <span class="border rounded-circle col-4"><img class="img-fluid feed-profile-img" :src="club.clubImg" alt="클럽 프로필 사진"></span>
+              <div class="col-8">
+                {{ club.name }}
+                <span
+                  class="badge bg-green rounded-pill mr-2"
+                  v-for="genre in club.genres"
+                  :key="`genre-${genre.id}`"
+                >
+                {{ genre.name }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -26,14 +34,30 @@
         >
         <div class="post-header d-flex justify-content-between mb-2">
           <div>
-            <span class="rounded-circle"><img class="img-fluid feed-profile-img" src="@/assets/anonymous user.png" alt="유저 프로필 사진"></span>
-            clubname1
-            <span class="badge bg-green">Club</span>
+            <span class="rounded-circle">
+              <img
+                v-if="!post.user.profileImg"
+                class="img-fluid feed-profile-img" 
+                src="@/assets/anonymous user.png" 
+                alt="유저 프로필 사진">
+              <img 
+                v-else
+                class="img-fluid feed-profile-img" 
+                :src="post.user.profileImg" alt="작성자 프로필 사진">
+            </span>
+            {{ post.user.nickName }}
+            <span v-if="post.isClub" class="badge bg-green">Club</span>
           </div>
           <div class="color-beige small-text">
-            <i class="fas fa-heart mr-2"></i><small class="mr-3">{{ post.likeUsers.length }}</small>
-            <i class="fas fa-comments mr-2"></i><small class="mr-3">{{ 23 }}</small>
-            <i class="fas fa-bookmark"></i>
+            <span class="pointer" @click="clickLike(post)">
+              <i class="fas fa-heart mr-2"></i><small class="mr-3">{{ post.likeUsers.length }}</small>
+            </span>
+            <span class="pointer" @click="postDetail(post.id)">
+              <i class="fas fa-comments mr-2"></i><small class="mr-3">{{ post.commentCnt }}</small>
+            </span>
+            <span class="pointer" @click="clickBookmark(post)">
+              <i class="fas fa-bookmark mr-2"></i><small class="mr-3">{{ post.bookmarkUsers.length }}</small>
+            </span>
           </div>
         </div>
         <div class="post-content bg-light-beige row pointer" @click="postDetail(post.id)">
@@ -94,12 +118,31 @@ import { mapState, mapActions } from 'vuex'
 export default {
   name: 'PostList',
   computed: {
+    ...mapState(['myaccount']),
     ...mapState('postStore', ['posts']),
   },
   methods: {
-    ...mapActions('postStore', ['fetchPosts']),
+    ...mapActions('postStore', ['fetchPosts', 'createLike', 'createBookmark']),
     postDetail(postId) {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
+    },
+    clickLike(post) {
+      this.createLike(post.id)
+      if (post.likeUsers.includes(this.myaccount.id)) {
+        const idx = post.likeUsers.indexOf(this.myaccount.id)
+        if (idx > -1) post.likeUsers.splice(idx, 1)
+      } else {
+        post.likeUsers.push(this.myaccount.id)
+      }
+    },
+    clickBookmark(post) {
+      this.createBookmark(post.id)
+      if (post.bookmarkUsers.includes(this.myaccount.id)) {
+        const idx = post.bookmarkUsers.indexOf(this.myaccount.id)
+        if (idx > -1) post.bookmarkUsers.splice(idx, 1)
+      } else {
+        post.bookmarkUsers.push(this.myaccount.id)
+      }
     }
   },
   created() {
