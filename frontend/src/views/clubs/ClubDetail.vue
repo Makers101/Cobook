@@ -23,7 +23,20 @@
               <button class="btn btn-green mr-2" v-for="genre in selectedClub.genres" :key="genre.id">#{{ genre.name }}</button>
             </div>
             <div>
-              <button class="btn btn-secondary mr-2">클럽 설정</button>
+              <button
+                class="btn btn-secondary dropdown-toggle mr-2"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                클럽 설정
+              </button>
+              <div class="dropdown-menu">
+                <router-link class="dropdown-item text-center" :to="{ name: 'ReadingCreate' }">리딩 생성</router-link>
+                <a class="dropdown-item text-center">멤버 모집</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item text-center">정보 수정</a>
+              </div>
               <button class="btn btn-warning mr">가입 신청</button>
             </div>
           </div>
