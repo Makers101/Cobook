@@ -144,4 +144,24 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public void enrollReading(ReadingMember readingMember) {
+        this.readingMembers.add(readingMember);
+    }
+
+    public void deleteLike(PostLike postLike) {
+        this.postLikes.remove(postLike);
+    }
+
+    public void addLikes(PostLike postLike) {
+        this.postLikes.add(postLike);
+    }
+
+    public void deleteBookMark(PostBookMark postBookMark) {
+        this.bookMarks.remove(postBookMark);
+    }
+
+    public void addBookMarks(PostBookMark postBookMark) {
+        this.bookMarks.add(postBookMark);
+    }
 }
