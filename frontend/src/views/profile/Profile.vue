@@ -14,10 +14,15 @@
               <button class="btn bg-green px-4">팔로우</button>
             </div>
             <p class="">{{ profile.description }}</p>
-            <p class="color-light-black font-weight-bold" v-if="profile.follower"><span>{{ profile.follower.length }} FOLLOWER</span> <span v-if="profile.following">{{ profile.following.length }} FOLLOWING</span></p>        
+            <p class="color-light-black font-weight-bold">
+              <span v-if="profile.follower">{{ profile.follower.length }}</span> <span @click.stop="showFollowerForm=true"> FOLLOWER</span> 
+              <span v-if="profile.following">{{ profile.following.length }}</span><span @click.stop="showFollowingForm=true"> FOLLOWING</span>
+            </p>        
           </div>
         </div>
       </div>
+      <FollowerForm v-if="showFollowerForm" v-model="showFollowerForm"/>
+      <FollowingForm v-if="showFollowingForm" v-model="showFollowingForm"/>
 
       <!-- routers -->
       <div class="d-flex justify-content-between mt-4">
@@ -35,6 +40,8 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import FollowerForm from './FollowerForm'
+import FollowingForm from './FollowingForm'
 export default {
   name: 'Profile',
   computed: {
@@ -42,7 +49,13 @@ export default {
   },
   data() {
     return {
+      showFollowerForm: false,
+      showFollowingForm: false,
     }
+  },
+  components: {
+    FollowerForm,
+    FollowingForm
   },
 
   methods: {
@@ -78,7 +91,7 @@ export default {
 }
 
 .router-link-active {
-  background-color: #88A498;
+  background-color: #88A498 !important;
 }
 
 </style>

@@ -7,7 +7,8 @@ const profileStore = {
     genres: null,
     profile: null,
     feeds: null,
-    bookmarks: null
+    bookmarks: null,
+    clubs: null
   },
   getters: {
   },
@@ -23,6 +24,9 @@ const profileStore = {
     },
     SET_BOOKMARKS(state, bookmarks) {
       state.bookmarks = bookmarks
+    },
+    SET_CLUBS(state, clubs) {
+      state.clubs = clubs
     }
   },
   actions: {
@@ -36,7 +40,7 @@ const profileStore = {
         })
     },
     findProfile({ commit }, userId) {
-      axios.get(SERVER.URL + SERVER.ROUTES.profile + userId)
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId)
         .then(res => {
           console.log(res)
           commit('SET_PROFILE', res.data)
@@ -46,7 +50,7 @@ const profileStore = {
         })
     },
     fetchFeeds({ commit }, userId) {
-      axios.get(SERVER.URL + SERVER.ROUTES.profile + userId + '/' + SERVER.ROUTES.feeds)
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/' + SERVER.ROUTES.feeds)
       .then(res => {
         console.log(res)
         commit('SET_FEEDS', res.data)
@@ -56,7 +60,7 @@ const profileStore = {
       })
     },
     fetchBookmarks({ commit }, userId) {
-      axios.get(SERVER.URL + SERVER.ROUTES.profile + userId + '/' + SERVER.ROUTES.bookmarks)
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/' + SERVER.ROUTES.bookmarks)
         .then(res => {
           console.log(res)
           commit('SET_BOOKMARKS', res.data)
@@ -66,10 +70,10 @@ const profileStore = {
         })
     },
     fetchClubs({ commit }, userId) {
-      axios.get(SERVER.URL + SERVER.ROUTES.profile + userId + '/' + SERVER.ROUTES.clubs)
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/' + SERVER.ROUTES.clubs)
         .then(res => {
           console.log(res)
-          commit('SET_BOOKMARKS', res.data)
+          commit('SET_CLUBS', res.data)
         })
         .catch(err => {
           console.log(err.response.data)

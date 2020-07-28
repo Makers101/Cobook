@@ -17,7 +17,8 @@ const accountStore = {
         
     },
     actions: {
-        postAuthData({ dispatch, commit }, info) {
+        // Signup
+        postAuthData1({ dispatch, commit }, info) {
             axios.post(SERVER.URL + info.location, info.data)
                 .then(res => {
                     console.log("SUCCESS")
@@ -29,13 +30,26 @@ const accountStore = {
                     console.log(err.response.data)
                 })
         },
+        // Login
+        postAuthData2({ dispatch, commit }, info) {
+            axios.post(SERVER.URL + info.location, info.data)
+                .then(res => {
+                    console.log("SUCCESS")
+                    commit('SET_TOKEN', res.data, { root: true })
+                    dispatch('findMyAccount', null, { root: true })
+                    router.push('/')
+                })
+                .catch(err => {
+                    console.log(err.response.data)
+                })
+        },
         signup({ dispatch }, signupData) {
             const info = {
                 data: signupData,
                 location: SERVER.ROUTES.signup,
                 to: '/password/email'
             }
-            dispatch('postAuthData', info)
+            dispatch('postAuthData1', info)
         },
         login({ dispatch }, loginData) {
             const info = {
@@ -43,7 +57,7 @@ const accountStore = {
                 location: SERVER.ROUTES.login,
                 to: '/'
             }
-            dispatch('postAuthData', info)
+            dispatch('postAuthData2', info)
         },
         
         findPassword(email) {
