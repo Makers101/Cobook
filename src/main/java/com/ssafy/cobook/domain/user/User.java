@@ -2,7 +2,6 @@ package com.ssafy.cobook.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.cobook.domain.booklike.BookLike;
-import com.ssafy.cobook.domain.clubgenre.ClubGenre;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.meetupmember.MeetUpMember;
 import com.ssafy.cobook.domain.post.Post;
@@ -11,8 +10,7 @@ import com.ssafy.cobook.domain.postcomment.PostComment;
 import com.ssafy.cobook.domain.postlike.PostLike;
 import com.ssafy.cobook.domain.readingmember.ReadingMember;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
-import com.ssafy.cobook.service.dto.UserUpdateDto;
-import com.ssafy.cobook.service.dto.genre.GenreResponseDto;
+import com.ssafy.cobook.service.dto.user.UserUpdateDto;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

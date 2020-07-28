@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container">
+  <div class="custom-container my-2">
     <!-- club-header -->
     <div class="row">
       <img class="club-image col-4" :src="selectedClub.clubImg" alt="" v-if="selectedClub.clubImg">
@@ -55,7 +55,7 @@
           <img class="rounded-circle image" :src="member.proflieImg" alt="" v-if="member.profileImg">
           <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
           <div class="overlay rounded-circle">
-            <div class="text">{{ member.userName }}</div>
+            <div class="text">{{ member.nickName }}</div>
           </div>
         </div>
       </div>
