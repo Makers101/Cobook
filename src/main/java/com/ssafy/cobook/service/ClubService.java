@@ -47,8 +47,9 @@ public class ClubService {
             throw new BaseException(ErrorCode.EXIST_CLUB_NAME);
         }
         User user = getUser(userId);
-        Club club = clubRepository.save(reqDto.toEntity());ClubMember leader = clubMemberRepository.save(new ClubMember(user, club, MemberRole.LEADER));
-        if( reqDto.getMembers().size() > 0) {
+        Club club = clubRepository.save(reqDto.toEntity());
+        ClubMember leader = clubMemberRepository.save(new ClubMember(user, club, MemberRole.LEADER));
+        if (reqDto.getMembers().size() > 0) {
             List<User> users = reqDto.getMembers().stream()
                     .map(this::getUser)
                     .collect(Collectors.toList());
@@ -122,8 +123,13 @@ public class ClubService {
 
     @Transactional
     public void fileSave(Long clubId, MultipartFile clubImg) throws IOException {
-        String filePath = uploadFile(clubImg);
+        uploadFile(clubImg);
         Club club = getClub(clubId);
-        club.setProfile(filePath);
+        club.setProfile("http://i3a111.p.ssafy.io.8080/api/clubs/images/" + clubId);
+    }
+
+    public String getFilePath(Long id) {
+        Club club = getClub(id);
+        return club.getClubImg().replace("http://i3a111.p.ssafy.io:8080/api/clubs/images/", "");
     }
 }
