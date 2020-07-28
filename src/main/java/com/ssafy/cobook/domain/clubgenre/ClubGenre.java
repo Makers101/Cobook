@@ -25,4 +25,9 @@ public class ClubGenre {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id")
     private Genre genre;
+
+    public ClubGenre(Club club, Genre genre) {
+        this.club = club;
+        this.genre = genre;
+    }
 }

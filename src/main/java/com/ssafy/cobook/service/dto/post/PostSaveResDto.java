@@ -9,9 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostSaveResDto {
 
-    private Long postId;
+    private Long id;
 
     public PostSaveResDto(Post post) {
-        this.postId = post.getId();
+        this.id = post.getId();
+    }
+
+    public PostSaveResDto(Long id) {
+        this.id = id;
     }
 }

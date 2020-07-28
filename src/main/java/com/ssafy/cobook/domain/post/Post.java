@@ -74,6 +74,10 @@ public class Post extends BaseEntity {
         this.club = club;
     }
 
+    public void ofBook(Book book) {
+        this.book = book;
+    }
+
     public void setTags(List<PostTag> tags) {
         this.tags = tags;
         for( PostTag p : tags) {
@@ -83,5 +87,9 @@ public class Post extends BaseEntity {
 
     public boolean ofClub() {
         return this.isClub;
+    }
+
+    public void addComments(PostComment postComment) {
+        this.comments.add(postComment);
     }
 }

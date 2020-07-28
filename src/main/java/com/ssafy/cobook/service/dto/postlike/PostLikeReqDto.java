@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostLikeReqDto {
 
-    private Long userId;
     private Long postId;
 }

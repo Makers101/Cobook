@@ -22,4 +22,9 @@ public class ReadingQuestion {
     private Reading reading;
 
     private String question;
+
+    public ReadingQuestion(Reading reading, String question) {
+        this.reading = reading;
+        this.question = question;
+    }
 }

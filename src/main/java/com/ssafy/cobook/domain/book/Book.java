@@ -4,7 +4,7 @@ import com.ssafy.cobook.domain.booklike.BookLike;
 import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.meetup.MeetUp;
 import com.ssafy.cobook.domain.post.Post;
-import com.ssafy.cobook.domain.readingbook.ReadingBook;
+import com.ssafy.cobook.domain.reading.Reading;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +24,7 @@ public class Book {
     @Column(name = "book_id")
     private Long id;
 
+    private String isbn;
     private String bookImg;
     private String title;
     private String author;
@@ -40,7 +41,7 @@ public class Book {
     private List<BookLike> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-    private List<ReadingBook> readingBooks = new ArrayList<>();
+    private List<Reading> readingBooks = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<MeetUp> meetUps = new ArrayList<>();
@@ -48,4 +49,12 @@ public class Book {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id")
     private Genre genre;
+
+    public void enrollReading(Reading reading) {
+        this.readingBooks.add(reading);
+    }
+
+    public void connetPost(Post post) {
+        this.posts.add(post);
+    }
 }

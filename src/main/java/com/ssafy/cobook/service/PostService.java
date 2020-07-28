@@ -1,5 +1,7 @@
 package com.ssafy.cobook.service;
 
+import com.ssafy.cobook.domain.book.Book;
+import com.ssafy.cobook.domain.book.BookRepository;
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.club.ClubRepository;
 import com.ssafy.cobook.domain.follow.Follow;
@@ -8,6 +10,7 @@ import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
 import com.ssafy.cobook.domain.postbookmark.PostBookMark;
 import com.ssafy.cobook.domain.postbookmark.PostBookMarkRepository;
+import com.ssafy.cobook.domain.postcomment.PostComment;
 import com.ssafy.cobook.domain.postcomment.PostCommentRepository;
 import com.ssafy.cobook.domain.postlike.PostLike;
 import com.ssafy.cobook.domain.postlike.PostLikeRepository;
@@ -19,13 +22,12 @@ import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
-import com.ssafy.cobook.service.dto.post.PostDetailResDto;
-import com.ssafy.cobook.service.dto.post.PostResDto;
-import com.ssafy.cobook.service.dto.post.PostSaveReqDto;
-import com.ssafy.cobook.service.dto.post.PostSaveResDto;
+import com.ssafy.cobook.service.dto.post.*;
 import com.ssafy.cobook.service.dto.postbookmark.PostBookMarkReqDto;
+import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.postlike.PostLikeReqDto;
+import com.ssafy.cobook.service.dto.posttag.PostTagDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,32 +51,33 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
     private final PostBookMarkRepository postBookMarkRepository;
     private final PostCommentRepository postCommentRepository;
+    private final BookRepository bookRepository;
 
     @Transactional
-    public PostSaveResDto savePosts(PostSaveReqDto reqDto) {
-        Post post = postRepository.save(reqDto.toEntity());
-        if (reqDto.isClub()) {
-            Club club = clubRepository.findById(reqDto.getClubId())
-                    .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_CLUB));
-            post.of(club);
-        } else {
-            post.of(getUserById(reqDto.getUserId()));
-        }
+    public PostSaveResDto savePosts(PostSaveReqDto reqDto, Long userId) {
+        Post post = reqDto.toEntity();
+        User user = getUserById(userId);
+        post.of(user);
+        Book book = getBook(reqDto.getBookId());
+        post.ofBook(book);
         post = postRepository.save(post);
+        user.addPosts(post);
+        book.connetPost(post);
         List<Tag> tags = reqDto.getTags().stream()
                 .map(this::saveTag)
                 .collect(Collectors.toList());
         Post finalPost = post;
         List<PostTag> postTags = tags.stream()
-                .map(t-> new PostTag(finalPost, t))
+                .map(t -> new PostTag(finalPost, t))
                 .map(postTagRepository::save)
                 .collect(Collectors.toList());
         post.setTags(postTags);
         return new PostSaveResDto(post);
     }
 
-    private Tag saveTag(String tagName) {
-        if( tagRepository.findByTagName(tagName).isPresent()) {
+    @Transactional
+    public Tag saveTag(String tagName) {
+        if (tagRepository.findByTagName(tagName).isPresent()) {
             tagRepository.findByTagName(tagName);
         }
         return tagRepository.save(new Tag(tagName));
@@ -116,16 +119,18 @@ public class PostService {
         return new PostDetailResDto(post);
     }
 
-    public void likePosts(PostLikeReqDto reqDto) {
+    @Transactional
+    public void likePosts(PostLikeReqDto reqDto, Long userId) {
         Post post = getPostById(reqDto.getPostId());
-        User user = getUserById(reqDto.getUserId());
+        User user = getUserById(userId);
         PostLike postLike = new PostLike(post, user);
         postLikeRepository.save(postLike);
     }
 
-    public void bookMarks(PostBookMarkReqDto reqDto) {
+    @Transactional
+    public void bookMarks(PostBookMarkReqDto reqDto, Long userId) {
         Post post = getPostById(reqDto.getPostId());
-        User user = getUserById(reqDto.getUserId());
+        User user = getUserById(userId);
         PostBookMark postBookMark = new PostBookMark(post, user);
         postBookMarkRepository.save(postBookMark);
     }
@@ -140,5 +145,51 @@ public class PostService {
         return postCommentRepository.findAllByPost(post).stream()
                 .map(CommentsResDto::new)
                 .collect(Collectors.toList());
+    }
+
+    private Book getBook(Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_BOOK));
+    }
+
+    public void addComments(Long userId, Long postId, CommentsReqDto dto) {
+        User user = getUserById(userId);
+        Post post = getPostById(postId);
+        PostComment postComment = postCommentRepository.save(new PostComment(post, user, dto.getContents()));
+        user.addComments(postComment);
+        post.addComments(postComment);
+    }
+
+    public List<PostResponseDto> getAllPosts() {
+        return postRepository.findAll().stream()
+                .filter(Post::getOpen)
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<PostByClubResponseDto> getClubPosts(Long clubId) {
+        return postRepository.findAll().stream()
+                .filter(Post::getOpen)
+                .filter(p->p.getClub().getId().equals(clubId))
+                .map(PostByClubResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public PostSaveResDto saveClubPosts(PostSaveByClubReqDto requsetDto, Long clubId) {
+        Post post = requsetDto.toEntity();
+        Club club = getClub(clubId);
+        post.of(club);
+        Book book = getBook(requsetDto.getBookId());
+        post.ofBook(book);
+        post = postRepository.save(post);
+        club.addPosts(post);
+        book.connetPost(post);
+        return new PostSaveResDto(post.getId());
+    }
+
+    private Club getClub(Long clubId) {
+        return clubRepository.findById(clubId)
+                .orElseThrow(()-> new BaseException(ErrorCode.UNEXPECTED_CLUB));
     }
 }
