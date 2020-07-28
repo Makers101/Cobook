@@ -26,7 +26,7 @@
         <button class="btn btn-toggle-true mx-1" @click="selectFilter('open')" v-show="!open_filter">#모집중</button>
 
         <span             
-          v-for="genre in userGenres"
+          v-for="genre in myaccount.likeGenres"
           :key="`userGenres_${genre.id}`"
         >
           <button 
@@ -118,7 +118,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('clubStore', ['clubs', 'userGenres']),
+    ...mapState(['myaccount']),
+    ...mapState('clubStore', ['clubs']),
   },
   methods: {
     ...mapActions('clubStore', ['fetchClubs', 'findClub']),
