@@ -95,6 +95,8 @@ public class PostController {
     public ResponseEntity<Void> addComments(@ApiIgnore final Authentication authentication,
                                             @PathVariable("postId") final Long postId,
                                             @RequestBody final CommentsReqDto dto) {
+        System.out.println(authentication.toString());
+        System.out.println(authentication.getPrincipal().toString());
         Long userId = ((User) authentication.getPrincipal()).getId();
         postService.addComments(userId, postId, dto);
         return ResponseEntity.ok().build();

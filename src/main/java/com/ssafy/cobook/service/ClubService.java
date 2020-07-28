@@ -42,7 +42,7 @@ public class ClubService {
     private final ClubGenreRepository clubGenreRepository;
 
     @Transactional
-    public ClubCreateResDto create(Long userId, ClubCreateReqDto reqDto, MultipartFile clubImg) throws IOException {
+    public ClubCreateResDto create(Long userId, ClubCreateReqDto reqDto) throws IOException {
         if (clubRepository.findByName(reqDto.getName()).isPresent()) {
             throw new BaseException(ErrorCode.EXIST_CLUB_NAME);
         }
@@ -57,7 +57,7 @@ public class ClubService {
                 .map(g -> clubGenreRepository.save(new ClubGenre(club, g)))
                 .collect(Collectors.toList());
         club.setGenres(clubGenres);
-        club.setProfile(uploadFile(clubImg));
+        club.setProfile(uploadFile(reqDto.getClubImg()));
         return new ClubCreateResDto(club.getId());
     }
 

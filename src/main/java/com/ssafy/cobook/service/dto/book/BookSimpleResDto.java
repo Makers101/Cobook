@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookSimpleResDto {
 
-    private Long bookId;
-    private String bookTitle;
-    private String bookImage;
+    private Long id;
+    private String title;
+    private String bookImg;
 
     public BookSimpleResDto(Book book) {
-        this.bookId = book.getId();
-        this.bookTitle = book.getTitle();
-        this.bookImage = book.getBookImg();
+        this.id = book.getId();
+        this.title = book.getTitle();
+        this.bookImg = book.getBookImg();
     }
 }

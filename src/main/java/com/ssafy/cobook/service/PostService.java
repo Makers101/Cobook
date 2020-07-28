@@ -56,6 +56,7 @@ public class PostService {
     @Transactional
     public PostSaveResDto savePosts(PostSaveReqDto reqDto, Long userId) {
         Post post = reqDto.toEntity();
+        post.setUsers();
         User user = getUserById(userId);
         post.of(user);
         Book book = getBook(reqDto.getBookId());
@@ -155,7 +156,7 @@ public class PostService {
     public void addComments(Long userId, Long postId, CommentsReqDto dto) {
         User user = getUserById(userId);
         Post post = getPostById(postId);
-        PostComment postComment = postCommentRepository.save(new PostComment(post, user, dto.getContents()));
+        PostComment postComment = postCommentRepository.save(new PostComment(post, user, dto.getContent()));
         user.addComments(postComment);
         post.addComments(postComment);
     }

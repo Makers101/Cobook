@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -41,12 +42,11 @@ public class ClubController {
 
     @ApiOperation(value = "클럽을 생성한다", response = ClubCreateResDto.class)
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ClubCreateResDto> createClub(@ApiIgnore final Authentication authentication,
-                                                       @RequestParam MultipartFile clubImg,
-                                                       @RequestBody final ClubCreateReqDto reqDto) throws IOException {
+                                                       @RequestParam ClubCreateReqDto reqDto) throws IOException {
         Long userId =  ((User) authentication.getPrincipal()).getId();
-        ClubCreateResDto resDto = clubService.create(userId, reqDto, clubImg);
+        ClubCreateResDto resDto = clubService.create(userId, reqDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
 
@@ -64,14 +64,14 @@ public class ClubController {
         return ResponseEntity.status(HttpStatus.OK).body(resDto);
     }
 
-    @ApiOperation(value = "모집중인 클럽 조회", response = ClubResDto.class)
-    @GetMapping("/recruit")
-    public ResponseEntity<List<ClubResDto>> getRecruitClub() {
-        List<ClubResDto> resDtos = clubService.getClubList().stream()
-                .filter(ClubResDto::getRecruit)
-                .collect(Collectors.toList());
-        return ResponseEntity.status(HttpStatus.OK).body(resDtos);
-    }
+//    @ApiOperation(value = "모집중인 클럽 조회", response = ClubResDto.class)
+//    @GetMapping("/recruit")
+//    public ResponseEntity<List<ClubResDto>> getRecruitClub() {
+//        List<ClubResDto> resDtos = clubService.getClubList().stream()
+//                .filter(ClubResDto::getRecruit)
+//                .collect(Collectors.toList());
+//        return ResponseEntity.status(HttpStatus.OK).body(resDtos);
+//    }
 
     @ApiOperation(value = "클럽 상세 조회", response = ClubDetailResDto.class)
     @GetMapping("/{clubId}")

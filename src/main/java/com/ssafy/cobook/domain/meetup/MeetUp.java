@@ -37,5 +37,6 @@ public class MeetUp {
     private String place;
     private String description;
     private String onelineDescription;
-    private Integer participantCount;
+    private Boolean closed;
+    private Integer capacity;
 }
