@@ -9,6 +9,7 @@ import router from '@/router'
 const accountStore = {
     namespaced: true,
     state: {
+        authToken: null,
     },
     getters: {
     },
@@ -22,7 +23,7 @@ const accountStore = {
         postAuthData({ commit }, info) {
             axios.post(SERVER.URL + info.location, info.data)
                 .then(res => {
-                    commit('SET_TOKEN', res.data.key)
+                    commit('SET_TOKEN', res.data)
                     // dispatch('getMyAccount')
                     router.push({ name: 'SignupEmail' })
                 })
