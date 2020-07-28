@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 public class ProfileResponseDto {
+    private Long id;
     private String email;
     private String password;
     private String nickName;
@@ -20,6 +21,7 @@ public class ProfileResponseDto {
     private List<GenreResponseDto> userGenres;
 
     public ProfileResponseDto(User user){
+        this.id = user.getId();
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.nickName = user.getNickName();
