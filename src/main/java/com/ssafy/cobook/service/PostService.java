@@ -128,7 +128,7 @@ public class PostService {
             user.deleteLike(postLike);
             postLikeRepository.delete(postLike);
         } else {
-            PostLike postLike = postLikeRepository.save(new PostLike(post, user);
+            PostLike postLike = postLikeRepository.save(new PostLike(post, user));
             user.addLikes(postLike);
             post.addLikes(postLike);
         }
@@ -144,7 +144,7 @@ public class PostService {
             user.deleteBookMark(postBookMark);
             postBookMarkRepository.delete(postBookMark);
         } else {
-            PostBookMark postBookMark = postBookMarkRepository.save(new PostLike(post, user);
+            PostBookMark postBookMark = postBookMarkRepository.save(new PostBookMark(post, user));
             user.addBookMarks(postBookMark);
             post.addBookMarks(postBookMark);
         }
