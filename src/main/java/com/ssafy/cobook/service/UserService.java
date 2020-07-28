@@ -5,10 +5,8 @@ import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.UserUpdateDto;
-import com.ssafy.cobook.service.dto.user.UserLoginRequestDto;
-import com.ssafy.cobook.service.dto.user.UserResponseDto;
-import com.ssafy.cobook.service.dto.user.UserSaveRequestDto;
-import com.ssafy.cobook.service.dto.user.UserUpdatePwdDto;
+import com.ssafy.cobook.service.dto.book.BookResponseDto;
+import com.ssafy.cobook.service.dto.user.*;
 import com.ssafy.cobook.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,9 +37,15 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
+    @Transactional
+    public List<UserResponseDto> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(UserResponseDto::new)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
-    public UserResponseDto saveUser(UserSaveRequestDto userSaveRequestDto) {
+    public UserResponseIdDto saveUser(UserSaveRequestDto userSaveRequestDto) {
         if (userRepository.findByEmail(userSaveRequestDto.getEmail()).isPresent()) {
             throw new UserException("이미 가입된 메일입니다", ErrorCode.MEMBER_DUPLICATED_EMAIL);
         }
@@ -50,7 +56,7 @@ public class UserService {
         User user = userSaveRequestDto.toEntity();
         user.changePassword(encodePassword);
         user = userRepository.save(user);
-        return new UserResponseDto(user.getId());
+        return new UserResponseIdDto(user.getId());
     }
 
 
@@ -75,7 +81,7 @@ public class UserService {
 
 
     @Transactional
-    public UserResponseDto preparedAndSend(String recipient, HttpServletRequest httpServletRequest) {
+    public UserResponseIdDto preparedAndSend(String recipient, HttpServletRequest httpServletRequest) {
         logger.info(recipient+ "da!!");
         User user = getUser(recipient);
 
@@ -99,7 +105,7 @@ public class UserService {
             messageHelper.setText(content, true);
         };
         emailSender.send(messagePreparator);
-        return new UserResponseDto(user.getId());
+        return new UserResponseIdDto(user.getId());
     }
 
     @Transactional
@@ -114,24 +120,24 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto updatePassword(UserUpdatePwdDto userUpdatePwdDto){
+    public UserResponseIdDto updatePassword(UserUpdatePwdDto userUpdatePwdDto){
         passwordEncoder = new BCryptPasswordEncoder(10);
 
         User user = userRepository.findByEmail(userUpdatePwdDto.getEmail())
                 .orElseThrow(()-> new UserException(ErrorCode.UNSIGNED));
         String encodePassword = passwordEncoder.encode(userUpdatePwdDto.getPassword());
         user.changePassword(encodePassword);
-        return new UserResponseDto(user.getId());
+        return new UserResponseIdDto(user.getId());
     }
 
     @Transactional
-    public UserResponseDto updateUserInfo(UserUpdateDto userUpdateDto){
+    public UserResponseIdDto updateUserInfo(UserUpdateDto userUpdateDto){
         User user = userRepository.findByEmail(userUpdateDto.getEmail())
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
         String encodePassword = passwordEncoder.encode(userUpdateDto.getPassword());
         userUpdateDto.setPassword(encodePassword);
         user.updateUserInfo(userUpdateDto);
-        return new UserResponseDto(user.getId());
+        return new UserResponseIdDto(user.getId());
     }
 }
