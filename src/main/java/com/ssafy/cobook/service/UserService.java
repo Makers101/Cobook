@@ -6,8 +6,14 @@ import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.UserUpdateDto;
 import com.ssafy.cobook.service.dto.book.BookResponseDto;
+import com.ssafy.cobook.service.dto.post.PostSaveReqDto;
+import com.ssafy.cobook.service.dto.post.PostSaveResDto;
+import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.*;
 import com.ssafy.cobook.util.JwtTokenProvider;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -15,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,6 +83,13 @@ public class UserService {
         return user;
     }
 
+    public ProfileResponseDto getMyInfo(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException("존재 하지 않는 회원 입니다.",ErrorCode.UNEXPECTED_USER));
+
+        ProfileResponseDto profileResponseDto = new ProfileResponseDto(user);
+        return profileResponseDto;
+    }
 
     @Transactional
     public UserResponseIdDto preparedAndSend(String recipient, HttpServletRequest httpServletRequest) {
@@ -126,14 +138,4 @@ public class UserService {
         return new UserResponseIdDto(user.getId());
     }
 
-    @Transactional
-    public UserResponseIdDto updateUserInfo(UserUpdateDto userUpdateDto) {
-        User user = userRepository.findByEmail(userUpdateDto.getEmail())
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
-
-        String encodePassword = passwordEncoder.encode(userUpdateDto.getPassword());
-        userUpdateDto.setPassword(encodePassword);
-        user.updateUserInfo(userUpdateDto);
-        return new UserResponseIdDto(user.getId());
-    }
 }
