@@ -10,6 +10,7 @@ import com.ssafy.cobook.domain.postcomment.PostComment;
 import com.ssafy.cobook.domain.postlike.PostLike;
 import com.ssafy.cobook.domain.readingmember.ReadingMember;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
+import com.ssafy.cobook.service.dto.UserUpdateDto;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -99,6 +100,15 @@ public class User implements UserDetails {
 
     public void addPosts(Post post) {
         this.posts.add(post);
+    }
+
+
+    public void updateUserInfo(UserUpdateDto userUpdateDto) {
+        this.email = userUpdateDto.getEmail();
+        this.password = userUpdateDto.getEmail();
+        this.nickName = userUpdateDto.getNickName();
+        this.description = userUpdateDto.getDescription();
+        this.profileImg = userUpdateDto.getProfileImg();
     }
 
     @Override

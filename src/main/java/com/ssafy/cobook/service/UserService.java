@@ -4,6 +4,7 @@ import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
+import com.ssafy.cobook.service.dto.UserUpdateDto;
 import com.ssafy.cobook.service.dto.user.UserLoginRequestDto;
 import com.ssafy.cobook.service.dto.user.UserResponseDto;
 import com.ssafy.cobook.service.dto.user.UserSaveRequestDto;
@@ -120,6 +121,17 @@ public class UserService {
                 .orElseThrow(()-> new UserException(ErrorCode.UNSIGNED));
         String encodePassword = passwordEncoder.encode(userUpdatePwdDto.getPassword());
         user.changePassword(encodePassword);
+        return new UserResponseDto(user.getId());
+    }
+
+    @Transactional
+    public UserResponseDto updateUserInfo(UserUpdateDto userUpdateDto){
+        User user = userRepository.findByEmail(userUpdateDto.getEmail())
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        String encodePassword = passwordEncoder.encode(userUpdateDto.getPassword());
+        userUpdateDto.setPassword(encodePassword);
+        user.updateUserInfo(userUpdateDto);
         return new UserResponseDto(user.getId());
     }
 }
