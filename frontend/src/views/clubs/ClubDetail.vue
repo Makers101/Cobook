@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container my-2">
+  <div class="custom-container my-3">
     <!-- club-header -->
     <div class="row">
       <img class="club-image col-4" :src="selectedClub.clubImg" alt="" v-if="selectedClub.clubImg">
@@ -79,12 +79,12 @@
           <div class="card h-100">
             <div class="row no-gutters">
               <div class="col-6 reading-left">
-                <img class="bg-image" :src="reading.book.bookImage" width="100%">
+                <img class="bg-image" :src="reading.book.bookImg" width="100%">
                 <span class="badge mb-0 reading-closed-true" v-if="reading.recruit">종료</span>
                 <span class="badge mb-0 reading-closed-false" v-else>예정</span>
               </div>
               <div class="col-6 text-left d-flex flex-column p-2">
-                <p class="color-light-black book-title" lt="book">{{ reading.book.bookTitle }}</p>
+                <p class="color-light-black book-title" lt="book">{{ reading.book.title }}</p>
                 <small>{{ reading.name }}</small>
                 <div class="mt-auto">
                   <div class="d-flex justify-content-between">
