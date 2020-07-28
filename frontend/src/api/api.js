@@ -12,9 +12,12 @@ export default {
       comments: '/comments',
 
       // accounts
+      myaccount: '/users',
       signup: '/users/signup',
       login: '/users/signin',
       password: '/users/password',
+
+
 
       // profile 
       profile: '/profile/',
