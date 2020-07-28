@@ -206,6 +206,8 @@
                 <v-text-field
                   v-model="clubCreateData.residence"
                   color="blue-grey lighten-2"
+                  counter
+                  maxlength="10"
                   :rules="[v => !!v || '필수항목입니다.']"
                   label="주 모임지역"
                 ></v-text-field>
