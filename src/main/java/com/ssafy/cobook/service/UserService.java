@@ -16,6 +16,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final JavaMailSender emailSender;
-    private BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -49,8 +50,6 @@ public class UserService {
         if (userRepository.findByEmail(userSaveRequestDto.getEmail()).isPresent()) {
             throw new UserException("이미 가입된 메일입니다", ErrorCode.MEMBER_DUPLICATED_EMAIL);
         }
-        passwordEncoder = new BCryptPasswordEncoder();
-        logger.info(userSaveRequestDto.getPassword());
         String encodePassword = passwordEncoder.encode(userSaveRequestDto.getPassword());
 
         User user = userSaveRequestDto.toEntity();
@@ -72,7 +71,7 @@ public class UserService {
         String encodePassword = user.getPassword();
         String rawPassword = userLoginRequestDto.getPassword();
 
-        if (!passwordEncoder.matches(rawPassword,encodePassword)) {
+        if (!passwordEncoder.matches(rawPassword, encodePassword)) {
             throw new UserException("잘못된 비밀번호입니다.", ErrorCode.WRONG_PASSWORD);
         }
 
@@ -82,7 +81,6 @@ public class UserService {
 
     @Transactional
     public UserResponseIdDto preparedAndSend(String recipient, HttpServletRequest httpServletRequest) {
-        logger.info(recipient+ "da!!");
         User user = getUser(recipient);
 
         MimeMessagePreparator messagePreparator = mimeMessage -> {
@@ -109,29 +107,27 @@ public class UserService {
     }
 
     @Transactional
-    public String checkEmailAuth(int inputAuthCode, HttpSession httpSession){
-        String originalCode = (String)httpSession.getAttribute("authCode");
+    public String checkEmailAuth(int inputAuthCode, HttpSession httpSession) {
+        String originalCode = (String) httpSession.getAttribute("authCode");
         String randomCode = String.valueOf(inputAuthCode);
 
-        if(!originalCode.equals(randomCode)){
+        if (!originalCode.equals(randomCode)) {
             throw new UserException(ErrorCode.WRONG_EMAIL_CHECK_AUTH_CODE);
         }
         return "Check Ok";
     }
 
     @Transactional
-    public UserResponseIdDto updatePassword(UserUpdatePwdDto userUpdatePwdDto){
-        passwordEncoder = new BCryptPasswordEncoder(10);
-
+    public UserResponseIdDto updatePassword(UserUpdatePwdDto userUpdatePwdDto) {
         User user = userRepository.findByEmail(userUpdatePwdDto.getEmail())
-                .orElseThrow(()-> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
         String encodePassword = passwordEncoder.encode(userUpdatePwdDto.getPassword());
         user.changePassword(encodePassword);
         return new UserResponseIdDto(user.getId());
     }
 
     @Transactional
-    public UserResponseIdDto updateUserInfo(UserUpdateDto userUpdateDto){
+    public UserResponseIdDto updateUserInfo(UserUpdateDto userUpdateDto) {
         User user = userRepository.findByEmail(userUpdateDto.getEmail())
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
