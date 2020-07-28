@@ -21,8 +21,7 @@ export default {
     password: '/users/password',
 
 
-
     // profile 
-    profile: '/profile/',
+    profile: '/profile',
   }
 }
