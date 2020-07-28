@@ -15,12 +15,14 @@
             </div>
             <p class="">{{ profile.description }}</p>
             <p class="color-light-black font-weight-bold">
-              <span v-if="profile.follower">{{ profile.follower.length }}</span> <span> FOLLOWER</span> 
-              <span v-if="profile.following">{{ profile.following.length }}</span><span> FOLLOWING</span>
+              <span v-if="profile.follower">{{ profile.follower.length }}</span> <span @click.stop="showFollowerForm=true"> FOLLOWER</span> 
+              <span v-if="profile.following">{{ profile.following.length }}</span><span @click.stop="showFollowingForm=true"> FOLLOWING</span>
             </p>        
           </div>
         </div>
       </div>
+      <FollowerForm v-if="showFollowerForm" v-model="showFollowerForm"/>
+      <FollowingForm v-if="showFollowingForm" v-model="showFollowingForm"/>
 
       <!-- routers -->
       <div class="d-flex justify-content-between mt-4">
@@ -38,6 +40,8 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import FollowerForm from './FollowerForm'
+import FollowingForm from './FollowingForm'
 export default {
   name: 'Profile',
   computed: {
@@ -45,7 +49,13 @@ export default {
   },
   data() {
     return {
+      showFollowerForm: false,
+      showFollowingForm: false,
     }
+  },
+  components: {
+    FollowerForm,
+    FollowingForm
   },
 
   methods: {
