@@ -10,15 +10,18 @@ const accountStore = {
     state: {
     },
     getters: {
+        config: state => 
+        ({headers: { Authorization: `Token ${state.authToken}`}}),
     },
     mutations: {
+        
     },
     actions: {
-        postAuthData({ commit }, info) {
+        postAuthData({ dispatch, commit }, info) {
             axios.post(SERVER.URL + info.location, info.data)
                 .then(res => {
                     commit('SET_TOKEN', res.data, { root: true })
-                    // dispatch('getMyAccount')
+                    dispatch('findMyAccount', null, { root: true })
                     router.push({ name: 'SignupEmail' })
                 })
                 .catch(err => {
@@ -41,6 +44,7 @@ const accountStore = {
             }
             dispatch('postAuthData', info)
         },
+        
         findPassword(email) {
             console.log('여기')
             console.log(email)

@@ -88,13 +88,14 @@ import { mapState, mapActions } from 'vuex'
 export default {
   name: 'App',
   computed: {
-    ...mapState(['genres'])
+    ...mapState(['genres', 'books'])
   },
   methods: {
-    ...mapActions(['fetchGenres'])
+    ...mapActions(['fetchGenres', 'fetchBooks'])
   },
   created() {
     this.fetchGenres()
+    this.fetchBooks()
   }
 }
 </script>
