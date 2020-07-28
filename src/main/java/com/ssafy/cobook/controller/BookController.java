@@ -23,7 +23,7 @@ public class BookController {
 
     @ApiOperation(value = "책 데이터 전체 조회하기")
     @GetMapping
-    public ResponseEntity<List<BookResponseDto>> getAllGenres() {
+    public ResponseEntity<List<BookResponseDto>> getAllBooks() {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.getAllBooks());
     }
 }
