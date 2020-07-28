@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 public class ClubService {
 
     private final String IMAGE_DIR = "/home/ubuntu/images/club/";
-
     private final ClubRepository clubRepository;
     private final UserRepository userRepository;
     private final ClubMemberRepository clubMemberRepository;
@@ -49,7 +48,7 @@ public class ClubService {
         User user = getUser(userId);
         Club club = clubRepository.save(reqDto.toEntity());
         ClubMember leader = clubMemberRepository.save(new ClubMember(user, club, MemberRole.LEADER));
-        if (reqDto.getMembers().size() > 0) {
+        if (!reqDto.getMembers().isEmpty()) {
             List<User> users = reqDto.getMembers().stream()
                     .map(this::getUser)
                     .collect(Collectors.toList());
@@ -125,7 +124,7 @@ public class ClubService {
     public void fileSave(Long clubId, MultipartFile clubImg) throws IOException {
         uploadFile(clubImg);
         Club club = getClub(clubId);
-        club.setProfile("http://i3a111.p.ssafy.io.8080/api/clubs/images/" + clubId);
+        club.setProfile("http://i3a111.p.ssafy.io:8080/api/clubs/images/club/" + clubImg.getOriginalFilename());
     }
 
     public String getFilePath(Long id) {
