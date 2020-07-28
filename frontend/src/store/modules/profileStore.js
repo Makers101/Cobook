@@ -15,6 +15,7 @@ const profileStore = {
     },
     SET_PROFILE(state, profile) {
       state.profile = profile
+      console.log(profile)
     }
   },
   actions: {

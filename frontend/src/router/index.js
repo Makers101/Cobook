@@ -75,19 +75,23 @@ Vue.use(VueRouter)
     children: [
       {
         path: 'feed',
-        component: ProfileFeed
+        component: ProfileFeed,
+        name: 'ProfileFeed'
       },
       {
         path: 'club',
-        component: ProfileClub
+        component: ProfileClub,
+        name: 'ProfileClub'
       },
       {
         path: 'bookmark',
-        component: ProfileBookmark
+        component: ProfileBookmark,
+        name: 'ProfileBookmark'
       },
       {
         path: 'overview',
-        component: ProfileOverview
+        component: ProfileOverview,
+        name: 'ProfileOverview'
       },
     ]
   },
