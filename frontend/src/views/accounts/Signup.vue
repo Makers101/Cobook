@@ -67,7 +67,7 @@
       </div>
 
       <div class="buttons mt-3">
-        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="signup(signupData)" >가입하기</button>
+        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="isSubmit && signup(signupData)" >가입하기</button>
       </div>
 
       <hr class="divide">
@@ -257,6 +257,7 @@ input[type="password"] {
 .disabled, .disabled:hover {
   background-color: rgb(136, 154, 152, 0.25);
   color: #F8F8F8;
+  cursor: inherit;
 }
 
 .background::after {
