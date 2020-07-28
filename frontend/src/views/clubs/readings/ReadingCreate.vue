@@ -73,63 +73,93 @@
                   label="리딩 장소"
                 ></v-text-field>
               </v-col>
+
+              <v-col cols="6">
+                <v-menu
+                  v-model="menu1"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="readingCreateData.date"
+                      color="blue-grey lighten-2"
+                      label="날짜"
+                      :rules="[v => !!v || '필수항목입니다.']"
+                      prepend-icon=""
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="readingCreateData.date"
+                    @input="menu1 = false"
+                    color="blue-grey lighten-2"
+                  >
+                  </v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col cols="6">
+                <v-menu
+                  ref="menu"
+                  v-model="menu2"
+                  color="blue-grey lighten-2"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  :return-value.sync="readingCreateData.time"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="readingCreateData.time"
+                      color="blue-grey lighten-2"
+                      label="시간"
+                      :rules="[v => !!v || '필수항목입니다.']"
+                      prepend-icon=""
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-time-picker
+                    v-if="menu2"
+                    color="blue-grey lighten-2"
+                    v-model="readingCreateData.time"
+                    full-width
+                    @click:minute="$refs.menu.save(readingCreateData.time)"
+                  ></v-time-picker>
+                </v-menu>
+              </v-col>
+              <v-col>
+                <v-combobox
+                  v-model="model"
+                  color="blue-grey lighten-2"
+                  label="질문지"
+                  multiple
+                  chips
+                >
+                  <!-- <template v-slot:no-data>
+                    <v-list-item>
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          질문을 작성해주세요!
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </template> -->
+                </v-combobox>
+              </v-col>
+              
             </v-row>
           </v-container>
           
-          <v-col cols="6">
-            <v-menu
-              v-model="menu1"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="readingCreateData.date"
-                  label="날짜"
-                  prepend-icon=""
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker v-model="readingCreateData.date" @input="menu1 = false"></v-date-picker>
-            </v-menu>
-          </v-col>
-
-          <v-col cols="6">
-            <v-menu
-              ref="menu"
-              v-model="menu2"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              :return-value.sync="readingCreateData.time"
-              transition="scale-transition"
-              offset-y
-              max-width="290px"
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="readingCreateData.time"
-                  label="시간"
-                  prepend-icon=""
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-time-picker
-                v-if="menu2"
-                v-model="readingCreateData.time"
-                full-width
-                @click:minute="$refs.menu.save(readingCreateData.time)"
-              ></v-time-picker>
-            </v-menu>
-          </v-col>
-
           <v-card-actions class="d-flex justify-content-end">
             <v-btn
               :disabled="!valid"
@@ -146,6 +176,8 @@
 </template>
 
 <script>
+// const temp = new Date().toISOString().substr(12, 14)
+// console.log(temp)
 export default {
   name: 'ReadingCreate',
   data() {
@@ -155,8 +187,9 @@ export default {
         description: null,
         place: null,
         date: new Date().toISOString().substr(0, 10),
-        time: null,
-        bookId: null
+        time: '00:00',
+        bookId: null,
+        questions: []
       },
       valid: true,
       lazy:false,
@@ -168,22 +201,22 @@ export default {
 
       menu2: false,
       // modal2: false,
+      // items: ['Gaming', 'Programming', 'Vue', 'Vuetify'],
+      model: [],
+      search: null,
     }
+  },
+  watch: {
+    model (val) {
+      if (val.length > 5) {
+        this.$nextTick(() => this.model.pop())
+      }
+    },
   },
   methods: {
     remove (data, item) {
       const index = data.indexOf(item.id)
       if (index >= 0) data.splice(index, 1)
-    },
-    isMemberNull() {
-      this.$nextTick(() => {
-        this.searchMember = null
-      })
-    },
-    isGenreNull() {
-      this.$nextTick(() => {
-        this.searchGenre = null
-      })
     },
     validate() {
       this.$refs.form.validate()

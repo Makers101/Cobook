@@ -82,7 +82,7 @@
                 ></v-text-field>
               </v-col>
 
-              <!-- <v-col cols="12">
+              <v-col cols="12">
                 <v-autocomplete
                   v-model="clubCreateData.members"
                   :items="users"
@@ -125,7 +125,7 @@
                     </template>
                   </template>
                 </v-autocomplete>
-              </v-col> -->
+              </v-col>
 
               <v-col
                 cols="12"
@@ -244,7 +244,7 @@ export default {
           onelineDescription: null,
           description: null,
           residence: null,
-          // members: [],
+          members: [],
           genres: [],
           clubImg: null        
         },

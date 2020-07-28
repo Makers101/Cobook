@@ -288,4 +288,8 @@ export default {
     cursor: pointer;
     color: #88A498
   }
+
+  .card-img-top {
+    height: 200px;
+  }
 </style>
