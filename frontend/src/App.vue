@@ -68,8 +68,8 @@
                 <i class="fas fa-user color-green"></i>
               </router-link>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <router-link class="dropdown-item" :to="{ name: 'Profile' }">프로필</router-link>
-                <router-link class="dropdown-item" :to="{ name: 'ProfileUpdate'}">프로필 수정</router-link>
+                <router-link v-if="myaccount" class="dropdown-item" :to="{ name: 'Profile', params: {userId: myaccount.id} }">프로필</router-link>
+                <router-link v-if="myaccount" class="dropdown-item" :to="{ name: 'ProfileUpdate'}">프로필 수정</router-link>
                 <div class="dropdown-divider"></div>
                 <router-link class="dropdown-item" to="/">로그아웃</router-link>
               </div>
@@ -88,13 +88,15 @@ import { mapState, mapActions } from 'vuex'
 export default {
   name: 'App',
   computed: {
-    ...mapState(['genres'])
+    ...mapState(['genres', 'myaccount', 'books'])
   },
   methods: {
-    ...mapActions(['fetchGenres'])
+    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks'])
   },
   created() {
     this.fetchGenres()
+    this.findMyAccount()
+    this.fetchBooks()
   }
 }
 </script>

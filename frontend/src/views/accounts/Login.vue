@@ -46,11 +46,11 @@
         <span class="justify-content-center">카카오 아이디 로그인</span>
       </button>
     </div>
-    <div class="buttons mt-2 d-flex justify-content-center">
-      <button class="btn google d-flex align-items-center justify-content-center row">
+    <div class="buttons mt-2 d-flex justify-content-center mx-auto px-0" style="width: 70%">
+      <button class="btn google d-flex align-items-center justify-content-center" style="width:100%!important">
         <!-- <i class="fab fa-google-plus-g"></i> -->
         <img class="google-logo" src="@/assets/google.png" width="32px" height="32px" >
-        <span class="justify-content-center col-">구글 아이디 로그인</span>
+        <span class="justify-content-center">구글 아이디 로그인</span>
       </button>
     </div>
   </div>
@@ -115,7 +115,7 @@ export default {
       }
     },
     validPassword(password) {
-      var va = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z]{8,}$/;
+      var va = /^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/;
       return va.test(password);
     },
     clickSignup() {
@@ -178,7 +178,7 @@ h3 {
 .google {
   background-color:  #FFFFFF;
   border-radius: 5px;
-  width: 70%;
+  width: 70% !important;
 }
 
 .inputs:focus {

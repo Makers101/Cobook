@@ -33,8 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClubService {
 
-    private final String IMAGE_DIR = "./images/club/";
-
+    private final String IMAGE_DIR = "/home/ubuntu/images/club/";
     private final ClubRepository clubRepository;
     private final UserRepository userRepository;
     private final ClubMemberRepository clubMemberRepository;
@@ -48,15 +47,17 @@ public class ClubService {
         }
         User user = getUser(userId);
         Club club = clubRepository.save(reqDto.toEntity());
-        List<User> users = reqDto.getMembers().stream()
-                .map(this::getUser)
-                .collect(Collectors.toList());
         ClubMember leader = clubMemberRepository.save(new ClubMember(user, club, MemberRole.LEADER));
-        List<ClubMember> members = users.stream()
-                .map(u-> clubMemberRepository.save(new ClubMember(u, club, MemberRole.MEMBER)))
-                .collect(Collectors.toList());
-        for(ClubMember c : members) {
-            club.enrolls(c);
+        if (!reqDto.getMembers().isEmpty()) {
+            List<User> users = reqDto.getMembers().stream()
+                    .map(this::getUser)
+                    .collect(Collectors.toList());
+            List<ClubMember> members = users.stream()
+                    .map(u -> clubMemberRepository.save(new ClubMember(u, club, MemberRole.MEMBER)))
+                    .collect(Collectors.toList());
+            for (ClubMember c : members) {
+                club.enrolls(c);
+            }
         }
         club.enrolls(leader);
         List<Genre> genres = reqDto.getGenres().stream()
@@ -121,8 +122,13 @@ public class ClubService {
 
     @Transactional
     public void fileSave(Long clubId, MultipartFile clubImg) throws IOException {
-        String filePath = uploadFile(clubImg);
+        uploadFile(clubImg);
         Club club = getClub(clubId);
-        club.setProfile(filePath);
+        club.setProfile("http://i3a111.p.ssafy.io:8080/api/clubs/images/club/" + clubImg.getOriginalFilename());
+    }
+
+    public String getFilePath(Long id) {
+        Club club = getClub(id);
+        return club.getClubImg().replace("http://i3a111.p.ssafy.io:8080/api/clubs/images/", "");
     }
 }
