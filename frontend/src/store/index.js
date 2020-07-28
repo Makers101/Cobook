@@ -10,15 +10,23 @@ import postStore from '@/store/modules/postStore'
 import profileStore from '@/store/modules/profileStore'
 
 import axios from 'axios'
+import cookies from 'vue-cookies'
 import SERVER from '@/api/api'
 
 export default new Vuex.Store({
   state: {
+    authToken: cookies.get('auth-token'),
     genres: null
   },
   getters: {
+    config: state => ({ headers: { jwt : state.authToken}}),
   },
   mutations: {
+    SET_TOKEN(state, token) {
+      state.authToken = token
+      console.log(state.authToken)
+      cookies.set('auth-token', token)
+  },
     SET_GENRES(state, genres) {
       state.genres = genres
     }

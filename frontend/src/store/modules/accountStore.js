@@ -1,6 +1,5 @@
 import SERVER from '@/api/api'
 
-import cookies from 'vue-cookies'
 import axios from 'axios'
 
 import router from '@/router'
@@ -9,21 +8,16 @@ import router from '@/router'
 const accountStore = {
     namespaced: true,
     state: {
-        authToken: null,
     },
     getters: {
     },
     mutations: {
-        SET_TOKEN(state, token) {
-            state.authToken = token
-            cookies.set('auth-token', token)
-        }
     },
     actions: {
         postAuthData({ commit }, info) {
             axios.post(SERVER.URL + info.location, info.data)
                 .then(res => {
-                    commit('SET_TOKEN', res.data)
+                    commit('SET_TOKEN', res.data, { root: true })
                     // dispatch('getMyAccount')
                     router.push({ name: 'SignupEmail' })
                 })

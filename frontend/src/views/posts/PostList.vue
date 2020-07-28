@@ -49,11 +49,13 @@
             </div>
           </div>
         </div>
-        <div
-          class="post-footer text-left mt-2"
-          v-for="tag in post.tags"
-          :key="`tag-${tag.id}`">
-          <span class="badge bg-green rounded-pill px-3 py-2 mr-2">{{ tag.name }}</span>
+        <div class="post-footer text-left mt-2">
+          <span
+            class="badge bg-green rounded-pill px-3 py-2 mr-2"
+            v-for="tag in post.tags"
+            :key="`tag-${tag.id}`"
+          >
+          {{ tag.name }}</span>
         </div>
       </div>
     </div>
