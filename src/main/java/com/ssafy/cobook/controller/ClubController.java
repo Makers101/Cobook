@@ -42,12 +42,19 @@ public class ClubController {
 
     @ApiOperation(value = "클럽을 생성한다", response = ClubCreateResDto.class)
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     public ResponseEntity<ClubCreateResDto> createClub(@ApiIgnore final Authentication authentication,
-                                                       @RequestParam ClubCreateReqDto reqDto) throws IOException {
+                                                       @RequestBody ClubCreateReqDto reqDto) throws IOException {
         Long userId =  ((User) authentication.getPrincipal()).getId();
         ClubCreateResDto resDto = clubService.create(userId, reqDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
+    }
+
+    @ApiOperation(value = "클럽 이미지를 저장한다.")
+    @PostMapping("/{clubId}/images")
+    public ResponseEntity<Void> savefiles(@PathVariable("clubId") final Long clubId, @RequestParam MultipartFile clubImg) throws IOException {
+        clubService.fileSave(clubId, clubImg);
+        return ResponseEntity.ok().build();
     }
 
     @ApiOperation(value = "클럽에 가입한다.")

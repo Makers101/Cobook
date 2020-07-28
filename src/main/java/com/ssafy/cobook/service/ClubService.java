@@ -48,7 +48,16 @@ public class ClubService {
         }
         User user = getUser(userId);
         Club club = clubRepository.save(reqDto.toEntity());
+        List<User> users = reqDto.getMembers().stream()
+                .map(this::getUser)
+                .collect(Collectors.toList());
         ClubMember leader = clubMemberRepository.save(new ClubMember(user, club, MemberRole.LEADER));
+        List<ClubMember> members = users.stream()
+                .map(u-> clubMemberRepository.save(new ClubMember(u, club, MemberRole.MEMBER)))
+                .collect(Collectors.toList());
+        for(ClubMember c : members) {
+            club.enrolls(c);
+        }
         club.enrolls(leader);
         List<Genre> genres = reqDto.getGenres().stream()
                 .map(this::getGenre)
@@ -57,7 +66,6 @@ public class ClubService {
                 .map(g -> clubGenreRepository.save(new ClubGenre(club, g)))
                 .collect(Collectors.toList());
         club.setGenres(clubGenres);
-        club.setProfile(uploadFile(reqDto.getClubImg()));
         return new ClubCreateResDto(club.getId());
     }
 
@@ -109,5 +117,11 @@ public class ClubService {
                 .map(ReadingSimpleResDto::new)
                 .collect(Collectors.toList());
         return new ClubDetailResDto(club);
+    }
+
+    public void fileSave(Long clubId, MultipartFile clubImg) throws IOException {
+        String filePath = uploadFile(clubImg);
+        Club club = getClub(clubId);
+        club.setProfile(filePath);
     }
 }
