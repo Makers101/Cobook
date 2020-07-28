@@ -51,6 +51,9 @@ export default {
   created() {
     console.log(this.$route.params.userId)
     this.findProfile(this.$route.params.userId)
+  },
+  mounted() {
+    this.$router.push({ name: 'ProfileFeed',  params: { userId:this.$route.params.userId }})
   }
 }
 </script>

@@ -21,5 +21,8 @@ export default {
 
       // profile 
       profile: '/profile/',
+      feeds: '/feeds/',
+      clubs: '/clubs/',
+      bookmarks: '/bookmarks/'
     }
   }
