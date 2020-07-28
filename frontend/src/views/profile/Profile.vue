@@ -14,7 +14,10 @@
               <button class="btn bg-green px-4">팔로우</button>
             </div>
             <p class="">{{ profile.description }}</p>
-            <p class="color-light-black font-weight-bold" v-if="profile.follower"><span>{{ profile.follower.length }} FOLLOWER</span> <span v-if="profile.following">{{ profile.following.length }} FOLLOWING</span></p>        
+            <p class="color-light-black font-weight-bold">
+              <span v-if="profile.follower">{{ profile.follower.length }}</span> <span> FOLLOWER</span> 
+              <span v-if="profile.following">{{ profile.following.length }}</span><span> FOLLOWING</span>
+            </p>        
           </div>
         </div>
       </div>

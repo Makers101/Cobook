@@ -96,7 +96,7 @@ Vue.use(VueRouter)
     ]
   },
   {
-    path: '/profile/update',
+    path: '/profile/:userId/update',
     name: 'ProfileUpdate',
     component: ProfileUpdate
   },

@@ -1,5 +1,6 @@
 <template>
   <div class="custom-container mb-5">
+    
     <div class="profile-banner">
       <img class="profile-banner-img"
       src = "@/assets/night.jpg"
@@ -95,6 +96,7 @@
                   </v-autocomplete>
                 </v-col>
                 <!-- 프로필 사진 첨부 -->
+                <!-- :rules="[v => !!v || '필수항목입니다.', v => !v || v.size < 2000000 || '이미지 크기는 최대 2MB 입니다.' ]" -->
                 <v-col cols="12">
                   <v-file-input
                     v-model="accountUpdateData.profileImg"
@@ -102,7 +104,7 @@
                     label="프로필 이미지"
                     prepend-icon=""
                     chips
-                    :rules="[v => !!v || '필수항목입니다.', v => !v || v.size < 2000000 || '이미지 크기는 최대 2MB 입니다.' ]"
+                    :rules="[v => !v || v.size < 2000000 || '이미지 크기는 최대 2MB 입니다.' ]"
                   >
                   </v-file-input>
                 </v-col>
@@ -149,7 +151,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('profileStore', ['genres'])
+    ...mapState('profileStore', ['genres', 'profile'])
   },
   methods: {
     remove (data, item) {
@@ -164,18 +166,22 @@ export default {
     validate() {
       this.$refs.form.validate()
     },
-    ...mapActions('profileStore', ['fetchGenres'])
+    updateProfile() {
+      this.$router.push('/')
+    },
+    ...mapActions('profileStore', ['fetchGenres', 'findProfile'])
   },
   created() {
     this.fetchGenres()
+    this.findProfile(this.$route.params.userId)
   },
   mounted() {
-    this.accountUpdateData.nickName = this.account.nickName;
-    this.accountUpdateData.description = this.account.description;
-    if (this.account.genre.length) {
-      this.accountUpdateData.genres = this.account.genres;
+    this.accountUpdateData.nickName = this.profile.nickName;
+    this.accountUpdateData.description = this.profile.description;
+    if (this.profile.genres.length) {
+      this.accountUpdateData.genres = this.profile.genres;
     }
-    this.accountUpdateData.profileImg = this.account.profileImg
+    this.accountUpdateData.profileImg = this.profile.profileImg
   }
 }
 </script>
