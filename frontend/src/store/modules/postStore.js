@@ -6,6 +6,7 @@ const postStore = {
   state: {
     posts: null,
     selectedPost: null,
+    comments: null,
   },
   getters: {
   },
@@ -15,6 +16,9 @@ const postStore = {
     },
     SET_SELECTED_POST(state, post) {
       state.selectedPost = post
+    },
+    SET_COMMENTS(state, comments) {
+      state.comments = comments
     }
   },
   actions: {
@@ -26,7 +30,35 @@ const postStore = {
         .catch(err => {
           console.log(err.response.data)
         })
-    }
+    },
+    findPost({ commit }, postId) {
+      axios.get(SERVER.URL + SERVER.ROUTES.posts + '/' + postId)
+        .then(res => {
+          commit('SET_SELECTED_POST', res.data)
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
+    fetchComments({ commit }, postId) {
+      axios.get(SERVER.URL + SERVER.ROUTES.posts + '/' + postId + SERVER.ROUTES.comments)
+        .then(res => {
+          commit('SET_COMMENTS', res.data)
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
+    createComment({ dispatch, rootGetters }, commentData) {
+      console.log(rootGetters.config)
+      axios.post(SERVER.URL + SERVER.ROUTES.posts + '/' + commentData.postId + SERVER.ROUTES.comments, commentData, rootGetters.config)
+        .then(() => {
+          dispatch('fetchComments', commentData.postId)
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
   },
 }
 
