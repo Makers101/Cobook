@@ -23,7 +23,7 @@ const postStore = {
     },
     SET_TAGS(state, tags) {
       state.tags = tags
-    }
+    },
   },
   actions: {
     fetchPosts({ commit }) {
@@ -70,7 +70,19 @@ const postStore = {
         .catch(err => {
           console.log(err.response.data)
         })
-    }
+    },
+    createLike({ rootGetters }, postId) {
+      axios.post(SERVER.URL + SERVER.ROUTES.posts + '/' + postId + '/likes', {postId: postId}, rootGetters.config)
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
+    createBookmark({ rootGetters }, postId) {
+      axios.post(SERVER.URL + SERVER.ROUTES.posts + '/' + postId + '/bookmarks', {postId: postId}, rootGetters.config)
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
   },
 }
 
