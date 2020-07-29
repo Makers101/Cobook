@@ -23,5 +23,6 @@ export default {
 
     // profile 
     profile: '/profile',
+    follow: '/follow',
   }
 }

@@ -39,14 +39,20 @@ const profileStore = {
           console.log(err.response.data)
         })
     },
-    findProfile({ commit }, userId) {
-      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId)
+    findProfile({ rootGetters, commit }, userId) {
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId, rootGetters.config)
         .then(res => {
           console.log(res)
           commit('SET_PROFILE', res.data)
         })
         .catch(err => {
           console.log(err.response.data)
+        })
+    },
+    clickFollow({ rootGetters}, userId){
+      axios.post(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.follow, null, rootGetters.config)
+        .catch(err => {
+          console.log(err.response)
         })
     },
     fetchFeeds({ commit }, userId) {
