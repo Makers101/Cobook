@@ -106,12 +106,23 @@ public class PostController {
 
     @ApiOperation(value = "사용자가 게시글을 수정", response = PostSaveResDto.class)
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PutMapping("{/postId}")
+    @PutMapping("/{postId}")
     public ResponseEntity<Void> updatePost(@ApiIgnore final Authentication authentication,
                                            @PathVariable("postId") final Long postId,
                                            @RequestBody final PostUpdateReqDto requestDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         postService.updatePost(postId, userId, requestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "댓글을 삭제한다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @DeleteMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<Void> deleteComments(@ApiIgnore final Authentication authentication,
+                                               @PathVariable("postId") final Long postId,
+                                               @PathVariable("commentId") final Long commentId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        postService.deleteComment(userId, postId, commentId);
         return ResponseEntity.ok().build();
     }
 }
