@@ -32,7 +32,7 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="accountUpdateData.nickName"
+                    v-model="profileUpdateData.basicData.nickName"
                     color="blue-grey lighten-2"
                     :rules="[v => !!v || '필수항목입니다.']"
                     label="닉네임"
@@ -44,7 +44,7 @@
                   md="12"
                 >
                   <v-textarea
-                    v-model="accountUpdateData.description"
+                    v-model="profileUpdateData.basicData.description"
                     color="blue-grey lighten-2"
                     :rules="[v => !!v || '필수항목입니다.']"
                     label="소개"
@@ -53,7 +53,7 @@
                 <!-- 장르란 -->
                 <v-col cols="12">
                   <v-autocomplete
-                    v-model="accountUpdateData.genres"
+                    v-model="profileUpdateData.basicData.genres"
                     v-if="genres"
                     :items="genres"
                     chips
@@ -78,7 +78,7 @@
                         :input-value="data.selected"
                         close
                         @click="data.select"
-                        @click:close="remove(accountUpdateData.genres, data.item)"
+                        @click:close="remove(profileUpdateData.basicData.genres, data.item)"
                       >
                         {{ data.item.name }}
                       </v-chip>
@@ -95,11 +95,12 @@
                     </template>
                   </v-autocomplete>
                 </v-col>
+
                 <!-- 프로필 사진 첨부 -->
-                <!-- :rules="[v => !!v || '필수항목입니다.', v => !v || v.size < 2000000 || '이미지 크기는 최대 2MB 입니다.' ]" -->
                 <v-col cols="12">
                   <v-file-input
-                    v-model="accountUpdateData.profileImg"
+                    v-model="profileImg"
+                    enctype="multipart/form-data"
                     accept="image/png, image/jpeg, image/bmp"
                     label="프로필 이미지"
                     prepend-icon=""
@@ -115,7 +116,7 @@
                 <v-btn
                   :disabled="!valid"
                   class="btn btn-green"
-                  @click="updateProfile"
+                  @click="clickUpdate"
                 >
                   프로필 수정
                 </v-btn>
@@ -129,21 +130,19 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-let account = {
-  nickName : 'nickname1',
-  description: '책을 좋아하는 사람입니다.특히 SF에 관심이 많습니다. 좋은 사람들과 club에서 함께하기 위해 참여했습니다.',
-  genres: [110, 120, 310, 410],
-}
 
 export default {
   name: 'ProfileUpdate',
   data () {
     return {
-      account: account,
-      accountUpdateData: {
-        nickName: null,
-        description: null,
-        genres: null,
+      profileImg: null,
+      profileUpdateData: {
+        basicData: {
+          nickName: null,
+          description: null,
+          genres: null,
+        },
+        profileImgFormData: new FormData()
       },
       valid: true,
       lazy: false,
@@ -151,9 +150,10 @@ export default {
     }
   },
   computed: {
-    ...mapState('profileStore', ['genres', 'profile'])
+    ...mapState(['myaccount', 'genres']),
   },
   methods: {
+    ...mapActions('profileStore', ['updateProfile']),
     remove (data, item) {
       const index = data.indexOf(item.id)
       if (index >= 0) data.splice(index, 1)
@@ -166,22 +166,21 @@ export default {
     validate() {
       this.$refs.form.validate()
     },
-    updateProfile() {
-      this.$router.push('/')
+    clickUpdate() {
+      this.profileUpdateData.profileImgFormData.append('profileImg', this.profileImg)
+      this.updateProfile(this.profileUpdateData)
     },
-    ...mapActions('profileStore', ['fetchGenres', 'findProfile'])
   },
   created() {
-    this.fetchGenres()
-    this.findProfile(this.$route.params.userId)
   },
   mounted() {
-    this.accountUpdateData.nickName = this.profile.nickName;
-    this.accountUpdateData.description = this.profile.description;
-    if (this.profile.genres.length) {
-      this.accountUpdateData.genres = this.profile.genres;
-    }
-    this.accountUpdateData.profileImg = this.profile.profileImg
+    this.profileUpdateData.basicData.nickName = this.myaccount.nickName;
+    this.profileUpdateData.basicData.description = this.myaccount.description;
+    const tempGenres = []
+    this.myaccount.likeGenres.forEach(genre => {
+      tempGenres.push(genre.id)
+    });
+    this.profileUpdateData.basicData.genres = tempGenres;
   }
 }
 </script>

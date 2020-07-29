@@ -1,5 +1,6 @@
 import axios from 'axios'
 import SERVER from '@/api/api'
+import router from '@/router'
 
 const profileStore = {
   namespaced: true,
@@ -112,7 +113,28 @@ const profileStore = {
         .catch(err => {
           console.log(err.response.data)
         })
-      }
+    },
+    updateProfile({ rootState, rootGetters, dispatch }, profileUpdateData) {
+      axios.put(SERVER.URL + SERVER.ROUTES.profile, profileUpdateData.basicData, rootGetters.config )
+        .then(res => {
+          const userId = res.data.id
+          axios.post(SERVER.URL + SERVER.ROUTES.profile + '/images', profileUpdateData.profileImgFormData,
+            {
+              'jwt': rootState.authToken,
+              'Content-Type': 'multipart/form-data'
+            })
+              .then(() => {
+                dispatch('findMyAccount', null, { root: true })
+                router.push({ name: 'Profile', params: { userId: userId }})
+              })
+              .catch(err => {
+                console.log(err.response.data)
+              })
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    }
    },
    
 }
