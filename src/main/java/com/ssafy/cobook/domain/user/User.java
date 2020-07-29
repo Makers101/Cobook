@@ -10,7 +10,6 @@ import com.ssafy.cobook.domain.postcomment.PostComment;
 import com.ssafy.cobook.domain.postlike.PostLike;
 import com.ssafy.cobook.domain.readingmember.ReadingMember;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
-import com.ssafy.cobook.service.dto.user.UserUpdateDto;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -102,14 +101,6 @@ public class User implements UserDetails {
         this.posts.add(post);
     }
 
-
-    public void updateUserInfo(UserUpdateDto userUpdateDto, List<UserGenre> userGenres) {
-        this.nickName = userUpdateDto.getNickName();
-        this.description = userUpdateDto.getDescription();
-        this.profileImg = userUpdateDto.getProfileImg();
-        this.userGenres = userGenres;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
@@ -163,5 +154,25 @@ public class User implements UserDetails {
 
     public void addBookMarks(PostBookMark postBookMark) {
         this.bookMarks.add(postBookMark);
+    }
+
+    private void updateNickName(String nicnName) {
+    }
+
+    public void removeGenre(UserGenre userGenre) {
+        this.userGenres.remove(userGenre);
+    }
+
+    public void addGenres(UserGenre userGenre) {
+        this.userGenres.add(userGenre);
+    }
+
+    public void updateInfo(String nicnName, String description) {
+        this.nickName = nicnName;
+        this.description = description;
+    }
+
+    public void setProfile(String profileImg) {
+        this.profileImg = profileImg;
     }
 }

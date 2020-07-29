@@ -25,5 +25,10 @@ public class UserGenre {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id")
     private Genre genre;
+
+    public UserGenre(User user, Genre genre) {
+        this.user = user;
+        this.genre = genre;
+    }
 }
 

@@ -66,7 +66,6 @@ public class ClubController {
     @GetMapping("/images/{clubId}")
     public ResponseEntity<Resource> getImages(@PathVariable("clubId") final Long id, HttpServletRequest request) {
         String path = clubService.getFilePath(id);
-        System.out.println(path);
         Resource resource = fileService.loadFileAsResource(path);
         String contentType = null;
         try {

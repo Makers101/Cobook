@@ -16,6 +16,6 @@ public class UserByPostDto {
     public UserByPostDto(User user) {
         this.id = user.getId();
         this.nickName = user.getNickName();
-        this.profileImg = user.getProfileImg();
+        this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.id;
     }
 }

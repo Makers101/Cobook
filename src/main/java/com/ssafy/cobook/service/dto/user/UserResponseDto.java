@@ -22,7 +22,7 @@ public class UserResponseDto {
         password = user.getPassword();
         nickName = user.getNickName();
         description = user.getDescription();
-        profileImg = user.getProfileImg();
+        profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + id;
         platformType = user.getPlatformType();
         platformId = user.getPlatformId();
     }

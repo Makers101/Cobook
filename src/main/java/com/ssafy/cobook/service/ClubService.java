@@ -75,12 +75,10 @@ public class ClubService {
                 .orElseThrow(() -> new BaseException(ErrorCode.INVALID_GENRE));
     }
 
-    @Transactional
-    public String uploadFile(MultipartFile file) throws IOException {
+    private void uploadFile(MultipartFile file) throws IOException {
         String originName = file.getOriginalFilename();
         File dest = new File(IMAGE_DIR + originName);
         file.transferTo(dest);
-        return dest.getCanonicalPath();
     }
 
     @Transactional
