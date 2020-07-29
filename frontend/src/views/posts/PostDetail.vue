@@ -51,8 +51,8 @@
           </div>
           <hr>
           <div class="col-12 my-5">
-            <div class="w-100 color-black">
-              <p class="text-left">{{ selectedPost.review }}</p>
+            <div class="w-100">
+              <div v-html="selectedPost.review"></div>
             </div>
           </div>
         </div>
@@ -173,8 +173,6 @@ export default {
     this.findPost(this.commentCreateData.postId)
     this.fetchComments(this.commentCreateData.postId)
   }
-
-
 }
 </script>
 
