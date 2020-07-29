@@ -19,6 +19,7 @@ export default new Vuex.Store({
     genres: null,
     myaccount: null,
     books: null,
+    users: null,
   },
   getters: {
     config: state => ({ headers: { jwt : state.authToken}}),
@@ -36,6 +37,9 @@ export default new Vuex.Store({
     },
     SET_BOOKS(state, books) {
       state.books = books
+    },
+    SET_USERS(state, users) {
+      state.users = users
     }
   },
   actions: {
@@ -60,9 +64,15 @@ export default new Vuex.Store({
         .then(res => {
           commit('SET_BOOKS', res.data)
         })
-        .catch(err => console.log(err.response.books))
+        .catch(err => console.log(err.response.data))
     },
-      
+    fetchUsers({ commit }) {
+      axios.get(SERVER.URL + '/users/')
+        .then(res => {
+          commit('SET_USERS', res.data)
+        })
+        .catch(err => console.log(err.response.data))
+    }
   },
 
   modules: {

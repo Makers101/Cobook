@@ -36,7 +36,7 @@
     <div>
       <h4 class="text-left font-weight-bold mb-3">리딩 멤버({{ selectedReading.participantCnt }})</h4>
       <div class="d-flex justify-content-start">
-        <div class="profile-container pointer" v-for="member in selectedReading.members" :key="member.id">
+        <div class="profile-container pointer" v-for="member in selectedReading.members" :key="member.id" @click="selectUser(member.id)">
           <img class="rounded-circle image" :src="member.proflieImg" alt="" v-if="member.profileImg">
           <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
           <div class="overlay rounded-circle">
@@ -114,6 +114,7 @@
 </template>
 
 <script>
+import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'ReadingDetail',
@@ -129,7 +130,10 @@ export default {
     ...mapState('clubStore', ['selectedReading'])
   },
   methods: {
-    ...mapActions('clubStore', ['findReading'])
+    ...mapActions('clubStore', ['findReading']),
+    selectUser(userId) {
+      router.push({ name: 'Profile', params: { userId: userId }})
+    }
   },
   created() {
     this.findReading(this.params)

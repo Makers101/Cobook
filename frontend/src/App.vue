@@ -91,12 +91,13 @@ export default {
     ...mapState(['genres', 'myaccount', 'books'])
   },
   methods: {
-    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks'])
+    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers'])
   },
   created() {
     this.fetchGenres()
     this.findMyAccount()
     this.fetchBooks()
+    this.fetchUsers()
   }
 }
 </script>

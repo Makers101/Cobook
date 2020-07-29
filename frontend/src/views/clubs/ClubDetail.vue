@@ -51,7 +51,7 @@
     <div>
       <h4 class="text-left font-weight-bold mb-3">클럽 멤버({{ selectedClub.memberCnt }})</h4>
       <div class="d-flex justify-content-start">
-        <div class="profile-container pointer" v-for="member in selectedClub.members" :key="member.id">
+        <div class="profile-container pointer" v-for="member in selectedClub.members" :key="member.id" @click="selectUser(member.id)">
           <img class="rounded-circle image" :src="member.proflieImg" alt="" v-if="member.profileImg">
           <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
           <div class="overlay rounded-circle">
@@ -132,6 +132,9 @@ export default {
     selectReading(readingId) {
       router.push({ name: 'ReadingDetail', params: { clubId: this.$route.params.clubId, readingId: readingId }})
     },
+    selectUser(userId) {
+      router.push({ name: 'Profile', params: { userId: userId }})
+    }
   },
   created() {
     this.findClub(this.$route.params.clubId)

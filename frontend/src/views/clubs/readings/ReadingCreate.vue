@@ -270,7 +270,6 @@ export default {
         readingCreateData: this.readingCreateData,
         clubId: this.$route.params.clubId
       }
-      console.log(dataContainer)
       this.createReading(dataContainer)
     }
   }

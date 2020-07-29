@@ -10,7 +10,7 @@
       <div class="post-banner-text">
         <h3 class="font-weight-bold">게시물 만들기</h3>
         <p class="mb-0">
-          멋진 리뷰를 작성해주세요. :)
+          멋진 책 리뷰를 작성해주세요. :)
         </p>
       </div>
     </div>
@@ -130,6 +130,12 @@
                   </template>
                 </v-combobox>
               </v-col>
+              
+              <v-col cols="12">
+                <div id="summernote"></div>
+              </v-col>
+
+
             </v-row>
           </v-container>
 
@@ -202,6 +208,21 @@ export default {
     //   placeholder: '내용을 작성해주세요 :)',
     //   height: 300,
     // });
+    // window.$('#summernote').summernote('justifyLeft');
+    window.$('#summernote').summernote({
+      placeholder: '상세 리뷰를 작성해주세요 :)',
+      tabsize: 2,
+      height: 200,
+      toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'underline', 'clear']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['table', ['table']],
+        ['insert', ['link', 'picture', 'video']],
+        ['view', ['fullscreen', 'codeview', 'help']]
+      ]
+    });
     // window.$('#summernote').summernote('justifyLeft');
   }
 
