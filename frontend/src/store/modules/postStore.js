@@ -1,5 +1,6 @@
 import axios from 'axios'
 import SERVER from '@/api/api'
+import router from '@/router'
 
 const postStore = {
   namespaced: true,
@@ -39,6 +40,15 @@ const postStore = {
       axios.get(SERVER.URL + SERVER.ROUTES.posts + '/' + postId)
         .then(res => {
           commit('SET_SELECTED_POST', res.data)
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
+    createPost({ rootGetters }, postCreateData) {
+      axios.post(SERVER.URL + SERVER.ROUTES.posts, postCreateData, rootGetters.config)
+        .then(res => {
+          router.push({ name: 'PostDetail', params: { postId: res.data.id }})
         })
         .catch(err => {
           console.log(err.response.data)

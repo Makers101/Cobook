@@ -67,8 +67,7 @@ public class PostService {
                 .collect(Collectors.toList());
         Post finalPost = post;
         List<PostTag> postTags = tags.stream()
-                .map(t -> new PostTag(finalPost, t))
-                .map(postTagRepository::save)
+                .map(t -> saveTag(finalPost, t))
                 .collect(Collectors.toList());
         post.setTags(postTags);
         return new PostSaveResDto(post);
@@ -77,25 +76,9 @@ public class PostService {
     @Transactional
     public Tag saveTag(String tagName) {
         if (tagRepository.findByTagName(tagName).isPresent()) {
-            tagRepository.findByTagName(tagName);
+            return tagRepository.findByTagName(tagName).get();
         }
         return tagRepository.save(new Tag(tagName));
-    }
-
-    public List<PostResDto> getFollowPosts(Long userId) {
-        User user = getUserById(userId);
-        List<Follow> followings = followRepository.findAllByFromUser(user);
-        List<PostResDto> posts = followings.stream()
-                .filter(Follow::getIsClub)
-                .map(f -> getPostByClub(f.getClub()))
-                .map(PostResDto::ofClub)
-                .collect(Collectors.toList());
-        posts.addAll(followings.stream()
-                .filter(f -> !f.getIsClub())
-                .map(f -> getPostByUser(f.getToUser()))
-                .map(PostResDto::ofUser)
-                .collect(Collectors.toList()));
-        return posts;
     }
 
     private Post getPostByUser(User toUser) {
@@ -122,8 +105,8 @@ public class PostService {
     public void likePosts(Long postId, Long userId) {
         Post post = getPostById(postId);
         User user = getUserById(userId);
-        if( postLikeRepository.findByUserAndPost(user, post).isPresent()) {
-            PostLike postLike = postLikeRepository.findByUserAndPost(user,post).get();
+        if (postLikeRepository.findByUserAndPost(user, post).isPresent()) {
+            PostLike postLike = postLikeRepository.findByUserAndPost(user, post).get();
             post.deleteLike(postLike);
             user.deleteLike(postLike);
             postLikeRepository.delete(postLike);
@@ -138,8 +121,8 @@ public class PostService {
     public void bookMarks(Long postId, Long userId) {
         Post post = getPostById(postId);
         User user = getUserById(userId);
-        if( postBookMarkRepository.findByUserAndPost(user, post).isPresent()) {
-            PostBookMark postBookMark = postBookMarkRepository.findByUserAndPost(user,post).get();
+        if (postBookMarkRepository.findByUserAndPost(user, post).isPresent()) {
+            PostBookMark postBookMark = postBookMarkRepository.findByUserAndPost(user, post).get();
             post.deleteBookMark(postBookMark);
             user.deleteBookMark(postBookMark);
             postBookMarkRepository.delete(postBookMark);
@@ -200,6 +183,14 @@ public class PostService {
         post = postRepository.save(post);
         club.addPosts(post);
         book.connetPost(post);
+        List<Tag> tags = requsetDto.getTags().stream()
+                .map(this::saveTag)
+                .collect(Collectors.toList());
+        Post finalPost = post;
+        List<PostTag> postTags = tags.stream()
+                .map(t -> saveTag(finalPost, t))
+                .collect(Collectors.toList());
+        post.setTags(postTags);
         return new PostSaveResDto(post.getId());
     }
 
@@ -212,5 +203,61 @@ public class PostService {
         return tagRepository.findAll().stream()
                 .map(TagResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updatePost(Long postId, Long userId, PostUpdateReqDto requestDto) {
+        User user = getUserById(userId);
+        Post post = getPostById(postId);
+        if (post.getUser() == null || !post.getUser().equals(user)) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_POST);
+        }
+        List<PostTag> originTags = post.getTags();
+        List<Tag> tags = requestDto.getTags().stream()
+                .map(this::saveTag)
+                .collect(Collectors.toList());
+        for (PostTag tag : originTags) {
+            Tag temp = tag.getTag();
+            if (!tags.contains(temp)) {
+                Tag delete = tagRepository.findById(temp.getId()).get();
+                delete.removePostTag(tag);
+                post.deleteTags(tag);
+            }
+        }
+        List<PostTag> postTags = tags.stream()
+                .map(t -> saveTag(post, t))
+                .collect(Collectors.toList());
+        post.updatePost(requestDto);
+        post.setTags(postTags);
+    }
+
+    private PostTag saveTag(Post post, Tag tag) {
+        if (postTagRepository.findByPostAndTag(post, tag).isPresent()) {
+            return postTagRepository.findByPostAndTag(post, tag).get();
+        }
+        return postTagRepository.save(new PostTag(post, tag));
+    }
+
+    @Transactional
+    public void updateClubPosts(PostUpdateByClubReqDto requestDto, Long clubId, Long postId) {
+        Post post = getPostById(postId);
+        Club club = getClub(clubId);
+        List<PostTag> originTags = post.getTags();
+        List<Tag> tags = requestDto.getTags().stream()
+                .map(this::saveTag)
+                .collect(Collectors.toList());
+        for (PostTag tag : originTags) {
+            Tag temp = tag.getTag();
+            if (!tags.contains(temp)) {
+                Tag delete = tagRepository.findById(temp.getId()).get();
+                delete.removePostTag(tag);
+                post.deleteTags(tag);
+            }
+        }
+        List<PostTag> postTags = tags.stream()
+                .map(t -> saveTag(post, t))
+                .collect(Collectors.toList());
+        post.updatePost(requestDto);
+        post.setTags(postTags);
     }
 }

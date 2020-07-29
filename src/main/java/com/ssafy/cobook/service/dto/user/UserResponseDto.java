@@ -17,13 +17,15 @@ public class UserResponseDto {
     private String platformId;
 
     public UserResponseDto(User user) {
-        id = user.getId();
-        email = user.getEmail();
-        password = user.getPassword();
-        nickName = user.getNickName();
-        description = user.getDescription();
-        profileImg = user.getProfileImg();
-        platformType = user.getPlatformType();
-        platformId = user.getPlatformId();
+        this.id = user.getId();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.nickName = user.getNickName();
+        this.description = user.getDescription();
+        if (user.getProfileImg() != null) {
+            this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.id;
+        }
+        this.platformType = user.getPlatformType();
+        this.platformId = user.getPlatformId();
     }
 }

@@ -101,21 +101,23 @@
                 </v-slider>
               </v-col>
 
-              <v-col v-if="tags" cols="12">
+              <v-col cols="12">
                 <v-combobox
+                  v-if="tags"
                   v-model="postCreateData.tags"
                   :items="tags"
                   :search-input.sync="searchTag"
                   hide-selected
+                  counter="5"
                   :rules="[
-                    v => (v.length < 6) || '최대 5개 관심 장르를 고를 수 있습니다.'
+                    v => (v.length < 6) || '최대 5개의 태그를 고를 수 있습니다.'
                   ]"
                   color="blue-grey lighten-2"
-                  hint="최대 5개"
                   label="태그"
                   multiple
                   item-text="tagName"
-                  item-value="id"
+                  item-value="tagName"
+                  :return-object="false"
                   persistent-hint
                   small-chips
                 >
@@ -123,7 +125,7 @@
                     <v-list-item>
                       <v-list-item-content>
                         <v-list-item-title>
-                          No results matching "<strong>{{ searchTag }}</strong>". Press <kbd>enter</kbd> to create a new one
+                          "<strong>{{ searchTag }}</strong>"를 찾을 수 없습니다. <kbd>enter</kbd>를 눌러 새로운 태그를 만들어보세요. 
                         </v-list-item-title>
                       </v-list-item-content>
                     </v-list-item>
@@ -132,7 +134,26 @@
               </v-col>
               
               <v-col cols="12">
-                <div id="summernote"></div>
+                <!-- <v-expansion-panels
+                  v-model="panel"
+                  flat
+                >
+                  <v-expansion-panel class="px-0" @click="activateDetailReview">
+                    <v-expansion-panel-header>상세 리뷰</v-expansion-panel-header>
+                    <v-expansion-panel-content class="px-0">
+                      <div class="px-0" id="summernote"></div>
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-expansion-panels> -->
+                <v-card-actions class="d-flex justify-content-start px-0">
+                  <v-btn
+                    class="button btn-outline-green"
+                    @click="activateDetailReview"
+                  >
+                    상세 리뷰(선택)
+                  </v-btn>
+                </v-card-actions>
+                <div id="summernote" v-show="activatedDetail"></div>
               </v-col>
 
 
@@ -143,6 +164,7 @@
             <v-btn
               :disabled="!valid"
               class="button btn-green"
+              @click="clickCreate"
             >
               게시글 생성
             </v-btn>
@@ -177,6 +199,7 @@ export default {
       searchTag: null,
       rankArray: [1, 2, 3, 4, 5],
       satisfactionEmojis: ['😭', '😢', '😊', '😄', '😍'],
+      activatedDetail: false,
     }
   },
   computed: {
@@ -184,7 +207,7 @@ export default {
     ...mapState('postStore', ['tags'])
   },
   methods: {
-    ...mapActions('postStore', ['fetchTags']),
+    ...mapActions('postStore', ['fetchTags', 'createPost']),
     makeTwoline() {
       this.oneline = false
     },
@@ -199,34 +222,36 @@ export default {
     validate() {
       this.$refs.form.validate()
     },
+    activateDetailReview() {
+      if (!this.activatedDetail) {
+        this.activatedDetail = true
+        window.$('#summernote').summernote({
+          placeholder: '상세 리뷰를 작성해주세요 :)',
+          tabsize: 2,
+          height: 200,
+          toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['hr', 'link', 'picture', 'video']],
+            ['view', ['undo', 'redo', 'help']]
+          ]
+        })
+        window.$('#summernote').summernote('justifyLeft');
+      }
+    },
+    clickCreate() {
+      if (window.$('#summernote').summernote('code') !== '<p><br></p>') {
+        this.postCreateData.review = window.$('#summernote').summernote('code')
+      }
+      this.createPost(this.postCreateData)
+    }
   },
   created() {
     this.fetchTags()
-  },
-  mounted() {
-    // window.$('#summernote').summernote({
-    //   placeholder: '내용을 작성해주세요 :)',
-    //   height: 300,
-    // });
-    // window.$('#summernote').summernote('justifyLeft');
-    window.$('#summernote').summernote({
-      placeholder: '상세 리뷰를 작성해주세요 :)',
-      tabsize: 2,
-      height: 200,
-      toolbar: [
-        ['style', ['style']],
-        ['font', ['bold', 'underline', 'clear']],
-        ['color', ['color']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['table', ['table']],
-        ['insert', ['link', 'picture', 'video']],
-        ['view', ['fullscreen', 'codeview', 'help']]
-      ]
-    });
-    // window.$('#summernote').summernote('justifyLeft');
   }
-
-
 }
 </script>
 
@@ -250,6 +275,10 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate( -50%, -50% );
+}
+
+.card-header {
+  background-color: white;
 }
 
 </style>

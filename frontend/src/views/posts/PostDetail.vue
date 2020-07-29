@@ -48,10 +48,9 @@
               <div class="large-text text-right"><i class="fas fa-quote-right"></i></div>
             </div>
           </div>
-          
           <div class="col-12 my-5 px-5">
             <div class="w-100 color-black">
-              <p class="text-left review">{{ selectedPost.review }}</p>
+              <div class="review" v-html="selectedPost.review"></div>
             </div>
           </div>
         </div>
@@ -193,7 +192,6 @@ export default {
     this.findPost(this.commentCreateData.postId)
     this.fetchComments(this.commentCreateData.postId)
   },
-
 }
 </script>
 
