@@ -1,7 +1,7 @@
 <template>
   <div class="custom-container mt-3">
     <div class="post mb-5">
-      <div class="post-header d-flex justify-content-between mb-2">
+      <div class="post-header d-flex justify-content-between p-2 pl-3">
         <div>
           <span class="rounded-circle">
             <img
@@ -18,23 +18,22 @@
           <span v-if="selectedPost.isClub" class="badge bg-green">Club</span>
         </div>
         <div class="color-beige small-text">
-          <span class="pointer" @click="clickLike(selectedPost)">
-            <i class="fas fa-heart mr-2"></i><small class="mr-3">{{ selectedPost.likeUsers.length }}</small>
-          </span>
+          <span class="mr-3 color-black">{{ selectedPost.createdAt | moment("from", "now") }}</span>
           <!-- <span>
             <i class="fas fa-comments mr-2"></i><small class="mr-3">{{ selectedPost.commentCnt }}</small>
           </span> -->
           <span class="pointer" @click="clickBookmark(selectedPost)">
-            <i class="fas fa-bookmark mr-2"></i><small class="mr-3">{{ selectedPost.bookmarkUsers.length }}</small>
+            <span v-if="checkBookmark(selectedPost)"><i class="fas fa-bookmark mr-2 color-green" id="bookmark"></i><small class="mr-3">{{ selectedPost.bookmarkUsers.length }}</small></span>
+            <span v-else><i class="fas fa-bookmark mr-2" id="bookmark"></i><small class="mr-3">{{ selectedPost.bookmarkUsers.length }}</small></span>
           </span>
         </div>
       </div>
       <div class="post-content">
-        <div class="row bg-light-beige">
+        <div class="row no-gutters bg-light-beige">
           <div class="col-3 my-5">
             <img style="height: 20vh;" :src="selectedPost.book.bookImg" alt="책 이미지">
           </div>
-          <div class="col-9 my-5 text-left">
+          <div class="col-9 my-5 text-left pr-3 wrapping">
             <h5 class="font-weight-bold">{{ selectedPost.book.title }}</h5>
             <p>- {{ selectedPost.book.author }} -</p>
             <p>{{ selectedPost.book.publisher }}</p>
@@ -42,34 +41,45 @@
           </div>
         </div>
         <div>
-          <div class="col-12 mt-3">
+          <div class="offset-2 col-8 mt-3">
             <div class="w-100 color-black">
               <div class="large-text text-left"><i class="fas fa-quote-left"></i></div>
               <div class="d-flex justify-content-center"><p class="my-2 w-50">{{ selectedPost.onelineReview }}</p></div>
               <div class="large-text text-right"><i class="fas fa-quote-right"></i></div>
             </div>
           </div>
-          <hr>
-          <div class="col-12 my-5">
+          
+          <div class="col-12 my-5 px-5">
             <div class="w-100 color-black">
-              <p class="text-left">{{ selectedPost.review }}</p>
+              <p class="text-left review">{{ selectedPost.review }}</p>
             </div>
           </div>
         </div>
       </div>
-      <hr>
-      <div class="post-footer text-right mt-2">
-        <span
+      <div class="post-footer text-right py-2 d-flex justify-content-between">
+        <span class="pointer ml-3" @click="clickLike(selectedPost)">
+          <span v-if="checkHeart(selectedPost)"><i class="fas fa-heart mr-2 heartselected"></i>
+            <small class="mr-3"><span>{{ myaccount.nickName}}님</span>
+            <span v-if="selectedPost.likeUsers.length -1 > 0"> 외 {{ selectedPost.likeUsers.length - 1}}명이 좋아합니다.</span>
+            <span v-else>이 좋아합니다.</span>
+            </small>
+          </span>
+          <span v-else><i class="fas fa-heart mr-2"></i><small class="mr-3">{{ selectedPost.likeUsers.length }}명이 좋아합니다.</small></span>
+        </span>
+        <div>
+          <span
           class="badge bg-green rounded-pill px-3 py-2 mr-2"
           v-for="tag in selectedPost.tags"
           :key="`tag-${tag.id}`"
           >#{{ tag.name }}</span>
+        </div>
+        
       </div>
     </div>
     <hr>
-    <div class="comment mb-5">
+    <div class="comment mb-5" id="comment">
       <h5 class="text-left">댓글</h5>
-      <div class="input-group row mb-5">
+      <div class="input-group row no-gutters mb-5 commentSection">
         <textarea
           class="col-11" 
           @keyup.enter="clickComment" 
@@ -166,19 +176,32 @@ export default {
       } else {
         this.btnActive = false
       }
-    }
+    },
+    checkHeart(post){
+      if (post.likeUsers.includes(this.myaccount.id)) {
+        return true;
+      }
+    },
+    checkBookmark(post) {
+      if (post.bookmarkUsers.includes(this.myaccount.id)) {
+        return true;
+      }
+    },
   },
   created() {
     this.commentCreateData.postId = this.$route.params['postId']
     this.findPost(this.commentCreateData.postId)
     this.fetchComments(this.commentCreateData.postId)
-  }
-
+  },
 
 }
 </script>
 
 <style>
+.post-header, .post-content, .post-footer{
+  border: 1px solid #D6CBBD ;
+}
+
 .feed-profile-img {
   height: 25px;
 }
@@ -203,5 +226,23 @@ export default {
   top: 200px;
   right: 1%;
   width: 14%;
+}
+
+.wrapping {
+  word-break: keep-all;
+}
+
+.heartselected {
+  color: red !important;
+}
+
+/* .bookmarkselected {
+  color: #907a62 !important;
+} */
+
+.commentSection {
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 5px;
 }
 </style>
