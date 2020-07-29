@@ -1,18 +1,24 @@
 package com.ssafy.cobook.service;
 
+import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
 import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.genre.GenreRepository;
+import com.ssafy.cobook.domain.post.Post;
+import com.ssafy.cobook.domain.post.PostRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.domain.usergenre.UserGenreRepository;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
+import com.ssafy.cobook.service.dto.post.PostResponseDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
+import com.ssafy.cobook.service.dto.reading.ReadingDetailResDto;
+import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
 import com.ssafy.cobook.exception.BaseException;
@@ -42,7 +48,8 @@ public class ProfileService {
     private final FollowRepository followRepository;
     private final GenreRepository genreRepository;
     private final UserGenreRepository userGenreRepository;
-    
+    private final PostRepository postRepository;
+
     public ProfileResponseDto getUserInfo(Long fromUserId, Long toUserId) {
         User toUser = userRepository.findById(toUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
@@ -207,5 +214,44 @@ public class ProfileService {
     public String getFilePath(Long userId) {
         User user = getUserById(userId);
         return user.getProfileImg().replace("http://i3a111.p.ssafy.io:8080/api/profile/images/", "");
+    }
+
+    public List<PostResponseDto> getUserFeed(Long userId){
+        User user = getUserById(userId);
+        return postRepository.findAllByUser(user)
+                .stream()
+                .filter(Post::getOpen)
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<ClubResDto> getUserClub(Long userId) {
+        User user = getUserById(userId);
+        return clubMemberRepository.findAllByUser(user)
+                .stream()
+                .map(ClubMember::getClub)
+                .map(ClubResDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<ReadingSimpleResDto> getUserReading(Long userId) {
+        User user = getUserById(userId);
+
+        // 그 유저가 포함된 클럽들
+        List<Club> clubList = clubMemberRepository.findAllByUser(user)
+                .stream()
+                .map(ClubMember::getClub)
+                .collect(Collectors.toList());
+
+        List<ReadingSimpleResDto> readingList = new ArrayList<>();
+
+        for (Club c : clubList){
+            List<ReadingSimpleResDto> readings = c.getReadingList().stream()
+                    .map(ReadingSimpleResDto::new)
+                    .collect(Collectors.toList());
+            readingList.addAll(0, readings);
+        }
+
+        return readingList;
     }
 }
