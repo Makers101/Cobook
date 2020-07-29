@@ -14,7 +14,9 @@
               class="img-fluid feed-profile-img" 
               :src="selectedPost.user.profileImg" alt="작성자 프로필 사진">
           </span>
-          {{ selectedPost.user.nickName }}
+          <span @click="selectUser(selectedPost.user.id)">
+             {{ selectedPost.user.nickName }}
+          </span>
           <span v-if="selectedPost.isClub" class="badge bg-green">Club</span>
         </div>
         <div class="d-flex justify-center align-items-center">
@@ -121,7 +123,7 @@
               class="img-fluid feed-profile-img" 
               :src="comment.user.profileImg" alt="작성자 프로필 사진">
           </span>
-          {{ comment.user.nickName }}
+          <span @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
           <span v-if="comment.isClub" class="badge bg-green">Club</span>
         </div>
         <div class="col-12 text-left wrapping">
@@ -135,7 +137,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-
+import router from '@/router'
 export default {
   name: 'PostDetail',
   data() {
@@ -194,6 +196,9 @@ export default {
       if (post.bookmarkUsers.includes(this.myaccount.id)) {
         return true;
       }
+    },
+    selectUser(userId) {
+      router.push({ name: 'Profile', params: { userId: userId }})
     },
   },
   created() {
