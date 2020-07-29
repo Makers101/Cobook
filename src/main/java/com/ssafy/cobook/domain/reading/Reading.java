@@ -68,6 +68,10 @@ public class Reading {
     }
 
     public void addMember(ReadingMember readingMember) {
+        if( this.members.contains(readingMember)) {
+            this.members.remove(readingMember);
+            return;
+        }
         this.members.add(readingMember);
     }
 }

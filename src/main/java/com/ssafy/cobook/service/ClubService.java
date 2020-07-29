@@ -170,4 +170,6 @@ public class ClubService {
         }
         waiting.chageRole(MemberRole.REJECT);
     }
+
+
 }

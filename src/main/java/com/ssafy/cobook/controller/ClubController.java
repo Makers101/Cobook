@@ -10,6 +10,7 @@ import com.ssafy.cobook.service.dto.reading.ReadingDetailResDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSaveReqDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSaveResDto;
 import com.ssafy.cobook.util.FileUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -106,8 +107,8 @@ public class ClubController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/{clubId}/apply/{clubMemberId}/reject")
     public ResponseEntity<Void> processReject(@ApiIgnore final Authentication authentication,
-                                             @PathVariable("clubId") final Long clubId,
-                                             @PathVariable("clubMemberId") final Long clubMemberId) {
+                                              @PathVariable("clubId") final Long clubId,
+                                              @PathVariable("clubMemberId") final Long clubMemberId) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         clubService.reject(clubId, clubMemberId, userId);
         return ResponseEntity.ok().build();
@@ -119,15 +120,6 @@ public class ClubController {
         List<ClubResDto> resDto = clubService.getClubList();
         return ResponseEntity.status(HttpStatus.OK).body(resDto);
     }
-
-//    @ApiOperation(value = "모집중인 클럽 조회", response = ClubResDto.class)
-//    @GetMapping("/recruit")
-//    public ResponseEntity<List<ClubResDto>> getRecruitClub() {
-//        List<ClubResDto> resDtos = clubService.getClubList().stream()
-//                .filter(ClubResDto::getRecruit)
-//                .collect(Collectors.toList());
-//        return ResponseEntity.status(HttpStatus.OK).body(resDtos);
-//    }
 
     @ApiOperation(value = "클럽 상세 조회", response = ClubDetailResDto.class)
     @GetMapping("/{clubId}")
@@ -162,11 +154,23 @@ public class ClubController {
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
 
-    @ApiOperation(value = "리딩의 상세정보를 조회한다")
+    @ApiOperation(value = "리딩의 상세정보를 조회한다", response = ReadingDetailResDto.class)
     @GetMapping("/{clubId}/readings/{readingId}")
     public ResponseEntity<ReadingDetailResDto> getReadingDetail(@PathVariable("clubId") final Long clubId,
                                                                 @PathVariable("readingId") final Long readingId) {
         ReadingDetailResDto resDto = readingService.getDetails(clubId, readingId);
         return ResponseEntity.status(HttpStatus.OK).body(resDto);
     }
+
+    @ApiOperation(value = "리딩에 가입한다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PostMapping("/{clubId}/readings/{readingId}/apply")
+    public ResponseEntity<Void> applyReading(@ApiIgnore final Authentication authentication,
+                                             @PathVariable("clubId") final Long clubId,
+                                             @PathVariable("readingId") final Long readingId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        readingService.applyReading(readingId, clubId, userId);
+        return ResponseEntity.ok().build();
+    }
+
 }

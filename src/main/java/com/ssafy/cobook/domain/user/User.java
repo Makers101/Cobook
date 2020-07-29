@@ -137,6 +137,10 @@ public class User implements UserDetails {
     }
 
     public void enrollReading(ReadingMember readingMember) {
+        if(this.readingMembers.contains(readingMember)) {
+            readingMembers.remove(readingMember);
+            return;
+        }
         this.readingMembers.add(readingMember);
     }
 
