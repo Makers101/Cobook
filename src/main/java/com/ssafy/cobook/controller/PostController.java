@@ -2,10 +2,7 @@ package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.PostService;
-import com.ssafy.cobook.service.dto.post.PostDetailResDto;
-import com.ssafy.cobook.service.dto.post.PostResponseDto;
-import com.ssafy.cobook.service.dto.post.PostSaveReqDto;
-import com.ssafy.cobook.service.dto.post.PostSaveResDto;
+import com.ssafy.cobook.service.dto.post.*;
 import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.tag.TagResponseDto;
@@ -105,5 +102,16 @@ public class PostController {
     @GetMapping("/tags")
     public ResponseEntity<List<TagResponseDto>> getAllTags() {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getAllTags());
+    }
+
+    @ApiOperation(value = "사용자가 게시글을 수정", response = PostSaveResDto.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PutMapping("{/postId}")
+    public ResponseEntity<Void> updatePost(@ApiIgnore final Authentication authentication,
+                                           @PathVariable("postId") final Long postId,
+                                           @RequestBody final PostUpdateReqDto requestDto) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        postService.updatePost(postId, userId, requestDto);
+        return ResponseEntity.ok().build();
     }
 }

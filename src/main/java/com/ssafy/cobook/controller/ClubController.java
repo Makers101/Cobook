@@ -181,4 +181,13 @@ public class ClubController {
         Long userId = ((User) authentication.getPrincipal()).getId();
         return ResponseEntity.status(HttpStatus.OK).body(clubService.changeRecruit(clubId, userId));
     }
+
+    @ApiOperation(value = "클럽 게시글 수정", response = PostSaveResDto.class)
+    @PutMapping("/{clubId}/posts/{postId}")
+    public ResponseEntity<Void> updateClubPosts(@PathVariable("clubId") final Long clubId,
+                                                        @PathVariable("postId") final Long postId,
+                                                        @RequestBody final PostUpdateByClubReqDto requestDto) {
+        postService.updateClubPosts(requestDto, clubId, postId);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -27,4 +27,8 @@ public class Tag {
     public Tag(String tagName) {
         this.tagName = tagName;
     }
+
+    public void removePostTag(PostTag tag) {
+        this.postTags.remove(tag);
+    }
 }

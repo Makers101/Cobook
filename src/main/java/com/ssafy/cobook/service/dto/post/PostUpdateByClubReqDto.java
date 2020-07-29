@@ -10,21 +10,19 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostSaveByClubReqDto {
+public class PostUpdateByClubReqDto {
 
     @ApiModelProperty(position = 1)
-    private Long bookId;
-    @ApiModelProperty(position = 2)
     private String onelineReview;
-    @ApiModelProperty(position = 3)
+    @ApiModelProperty(position = 2)
     private Integer rank;
-    @ApiModelProperty(position = 4)
+    @ApiModelProperty(position = 3)
     private Boolean open;
-    @ApiModelProperty(position = 5)
+    @ApiModelProperty(position = 4)
     private String review;
-    @ApiModelProperty(position = 6)
+    @ApiModelProperty(position = 5)
     private Boolean isClub;
-    @ApiModelProperty(position = 7)
+    @ApiModelProperty(position = 6)
     private List<String> tags;
 
     public Post toEntity() {
