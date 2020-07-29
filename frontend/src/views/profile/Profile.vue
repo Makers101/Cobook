@@ -11,7 +11,11 @@
           <div class="text-left ml-3">
             <div class="d-flex justify-content-between mt-auto">
               <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>
-              <button v-if="myaccount.id !== profile.id" class="btn bg-green px-4" @click="clickFollow(profile.id)">팔로우</button>
+              <span v-if="myaccount.id !== profile.id">
+                <button v-if="checkFollow()" class="btn px-4 bg-light-black" @click="clickedFollow(profile)">팔로잉</button>
+                <button v-else class="btn bg-green px-4" @click="clickedFollow(profile)">팔로우</button>
+              </span>
+              
             </div>
             <p class="">{{ profile.description }}</p>
             <p class="color-light-black font-weight-bold">
@@ -21,8 +25,17 @@
           </div>
         </div>
       </div>
-      <FollowerForm v-if="showFollowerForm" v-model="showFollowerForm" :profile="this.profile"/>
-      <FollowingForm v-if="showFollowingForm" v-model="showFollowingForm" :profile="this.profile"/>
+      <FollowerForm 
+        v-if="showFollowerForm" 
+        v-model="showFollowerForm" 
+        :profile="this.profile" 
+        id="followerModal"
+      />
+      <FollowingForm 
+      v-if="showFollowingForm" 
+      v-model="showFollowingForm" 
+      :profile="this.profile"
+      id="followingModal"/>
 
       <!-- routers -->
       <div class="d-flex justify-content-between mt-4">
@@ -60,15 +73,72 @@ export default {
   },
 
   methods: {
-    ...mapActions('profileStore', ['findProfile', 'clickFollow']),
+    ...mapActions('profileStore', ['findProfile', 'clickFollow', 'fetchFollowerList']),
+    clickedFollow(profile) {
+      this.clickFollow(profile.id)
+      if (profile.followerList.length === 0){
+          var temp = {
+            isFollow: true,
+            nickname: this.myaccount.nickName,
+            profileImg: this.myaccount.profileImg,
+            toUserId: this.myaccount.id
+          }
+          profile.followerList.push(temp)
+        }
+      else {
+        for (let [index, key] of profile.followerList.entries()) {
+          console.log(index, key)
+          var obj = key;
+          // 일치하는 id가 있다면 followerList에서 제거
+          if (obj.toUserId === this.myaccount.id){
+            profile.followerList.splice(index, 1);
+            break;
+          }
+          if (index === profile.followerList.length - 1) {
+             temp = {
+              isFollow: true,
+              nickname: this.myaccount.nickName,
+              profileImg: this.myaccount.profileImg,
+              toUserId: this.myaccount.id
+            }
+            profile.followerList.push(temp)
+          }
+        }
+      }
+    },
+    checkFollow() {
+      for (let [index] in this.profile.followerList) {
+        var obj = this.profile.followerList[index];
+        if (obj.toUserId === this.myaccount.id){
+          return true
+        }
+        if (index === this.profile.followeList.length -1) {
+          return false
+        }
+      }
+
+    },
+    closeDialog: function() {
+      this.showFollowerDialog = false
+      this.showFollowingDIalog = false
+    }
   },
   created() {
     console.log(this.$route.params.userId)
     this.findProfile(this.$route.params.userId)
   },
+
   mounted() {
     this.$router.push({ name: 'ProfileFeed',  params: { userId:this.$route.params.userId }})
-  }
+  },
+
+  beforeRouteUpdate (to, from, next) {
+    this.findProfile(to.params.userId)
+    this.showFollowerForm = false
+    this.showFollowingForm = false
+
+    next();
+  },
 }
 </script>
 
@@ -94,5 +164,10 @@ export default {
 .router-link-active {
   background-color: #88A498 !important;
 }
+
+.following {
+  background-color: #F9F9F9;
+}
+
 
 </style>

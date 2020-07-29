@@ -32,6 +32,9 @@ const profileStore = {
     },
     SET_FOLLOWINGLIST(state, followingList) {
       state.followingList = followingList
+    },
+    SET_FOLLOWERLIST(state, followerList) {
+      state.followerList = followerList
     }
   },
   actions: {
@@ -66,6 +69,15 @@ const profileStore = {
       axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.following, rootGetters.config)
       .then(res => {
         commit('SET_FOLLOWINGLIST', res.data)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
+     },
+     fetchFollowerList({ rootGetters, commit }, userId) {
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.follower, rootGetters.config)
+      .then(res => {
+        commit('SET_FOLLOWERLIST', res.data)
       })
       .catch(err => {
         console.log(err.response)
