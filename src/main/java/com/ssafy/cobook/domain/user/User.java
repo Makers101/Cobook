@@ -179,4 +179,8 @@ public class User implements UserDetails {
     public void setProfile(String profileImg) {
         this.profileImg = profileImg;
     }
+
+    public void removeComment(PostComment postComment) {
+        this.comments.remove(postComment);
+    }
 }

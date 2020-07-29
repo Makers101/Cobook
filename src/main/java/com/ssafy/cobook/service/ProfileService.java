@@ -181,7 +181,7 @@ public class ProfileService {
         for (Genre genre : updateGenres) {
             updateUserGenres(user, genre);
         }
-        user.updateInfo(requestDto.getNicnName(), requestDto.getDescription());
+        user.updateInfo(requestDto.getNickName(), requestDto.getDescription());
         return new UserResponseIdDto(user.getId());
     }
 

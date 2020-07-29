@@ -3,6 +3,7 @@ package com.ssafy.cobook.service.dto.club;
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.clubgenre.ClubGenre;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
+import com.ssafy.cobook.domain.clubmember.MemberRole;
 import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.service.dto.clubmember.ClubMemberResponseDto;
 import com.ssafy.cobook.service.dto.genre.GenreResponseDto;
@@ -52,7 +53,7 @@ public class ClubDetailResDto {
                 .map(GenreResponseDto::new)
                 .collect(Collectors.toList());
         this.members = club.getMembers().stream()
-                .map(ClubMember::getUser)
+                .filter(m->m.getRole().equals(MemberRole.LEADER) || m.getRole().equals(MemberRole.MEMBER))
                 .map(ClubMemberResponseDto::new)
                 .collect(Collectors.toList());
         this.readings = club.getReadingList().stream()

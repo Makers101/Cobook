@@ -260,4 +260,18 @@ public class PostService {
         post.updatePost(requestDto);
         post.setTags(postTags);
     }
+
+    @Transactional
+    public void deleteComment(Long userId, Long postId, Long commentId) {
+        User user = getUserById(userId);
+        Post post = getPostById(postId);
+        PostComment postComment = postCommentRepository.findById(commentId)
+                .orElseThrow(()->new BaseException(ErrorCode.UNEXPECTED_COMMENTS));
+        if( !postComment.getUser().equals(user)) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_COMMENT);
+        }
+        user.removeComment(postComment);
+        post.removeComment(postComment);
+        postCommentRepository.delete(postComment);
+    }
 }
