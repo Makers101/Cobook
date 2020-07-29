@@ -3,6 +3,7 @@ package com.ssafy.cobook.domain.follow;
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.user.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,4 +32,19 @@ public class Follow {
     private Club club;
 
     private Boolean isClub;
+
+    @Builder
+    public Follow(User fromUser, User toUser, boolean isClub){
+        this.fromUser = fromUser;
+        this.toUser = toUser;
+        this.isClub = isClub;
+    }
+
+    @Builder
+    public Follow(User fromUser, Club club, boolean isClub){
+        this.fromUser = fromUser;
+        this.club = club;
+        this.isClub = isClub;
+    }
+
 }

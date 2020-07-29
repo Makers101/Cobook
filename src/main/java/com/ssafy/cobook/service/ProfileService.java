@@ -1,21 +1,19 @@
 package com.ssafy.cobook.service;
 
-import com.ssafy.cobook.domain.club.Club;
-import com.ssafy.cobook.domain.club.ClubRepository;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
-import com.ssafy.cobook.domain.genre.Genre;
+import com.ssafy.cobook.domain.follow.Follow;
+import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.genre.GenreRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
-import com.ssafy.cobook.domain.usergenre.UserGenre;
-import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
-import com.ssafy.cobook.service.dto.book.BookResponseDto;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
-import com.ssafy.cobook.service.dto.clubmember.ClubMemberDto;
+import com.ssafy.cobook.service.dto.profile.FollowResponseData;
+import com.ssafy.cobook.service.dto.profile.ProfileFollowUserDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
+import com.ssafy.cobook.service.dto.user.UserByFollowDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,27 +31,8 @@ import java.util.stream.Collectors;
 
 public class ProfileService {
     private final UserRepository userRepository;
-    //    private final PasswordEncoder passwordEncoder;
-    private final GenreRepository genreRepository;
     private final ClubMemberRepository clubMemberRepository;
-    private final ClubRepository clubRepository;
-//    @Transactional
-//    public UserResponseIdDto updateUserInfo(Long userid, UserUpdateDto userUpdateDto) {
-//        User user = userRepository.findById(userid)
-//                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
-//
-//        List<UserGenre> userGenreList = userUpdateDto.getGenreList().stream()
-//                .map(s -> getGenres(s.getId()))
-//                .map(g -> new UserGenre(user, g))
-//                .collect(Collectors.toList());
-//        user.updateUserInfo(userUpdateDto, userGenreList);
-//        return new UserResponseIdDto(user.getId());
-//    }
-
-//    public Genre getGenres(Long genreId) {
-//        return genreRepository.findById(genreId)
-//                .orElseThrow(() -> new BaseException(ErrorCode.INVALID_GENRE));
-//    }
+    private final FollowRepository followRepository;
 
     public ProfileResponseDto getUserInfo(Long id) {
         User user = getUserById(id);
@@ -71,5 +51,82 @@ public class ProfileService {
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
     }
 
+    // 팔로잉 - 눌러져있지 않으면 디비에 추가한다
+    public void addFollow(ProfileFollowUserDto profileFollowUserDto) {
+        User toUser = userRepository.findById(profileFollowUserDto.getToUser().getUserId())
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        User fromUser = userRepository.findById(profileFollowUserDto.getFromUser().getUserId())
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        if(followRepository.findByToUser(fromUser, toUser).isPresent()){
+            followRepository.deleteByUser(fromUser.getId(), toUser.getId());
+            return;
+        } else{
+            followRepository.save(new Follow(fromUser, toUser, false));
+        }
+    }
+
+    // 팔로잉 리스트를 가져온다
+    public List<UserByFollowDto> getFollowingList(ProfileFollowUserDto profileFollowUserDto) {
+        User toUser = userRepository.findById(profileFollowUserDto.getToUser().getUserId())
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        User fromUser = userRepository.findById(profileFollowUserDto.getFromUser().getUserId())
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        // 1. isFollow인 애 찾기
+        List<UserByFollowDto> followList = followRepository.findAllByFollowing(toUser.getId(), fromUser.getId())
+                .stream()
+                .map(Follow::getToUser)
+                .map(UserByFollowDto::new)
+                .collect(Collectors.toList());
+
+        followList.forEach(userByFollowDto -> userByFollowDto.setIsFollow(true));
+
+        // 2. isNotFollow 애 찾기
+        List<UserByFollowDto> notFollowList = followRepository.findAllByNotFollowing(toUser.getId(), fromUser.getId())
+                .stream()
+                .map(Follow::getToUser)
+                .map(UserByFollowDto::new)
+                .collect(Collectors.toList());
+
+        List<UserByFollowDto> followingList = new ArrayList<>();
+        followingList.addAll(0, followList);
+        followingList.addAll(followingList.size(),notFollowList);
+
+        return followingList;
+    }
+
+    // 팔로워 리스트 가져오기 (fromUser의 아이디가 들어오면 toUser가 fromUser의 값인 애들을 뽑아야함)
+    public List<UserByFollowDto> getFollowerList(ProfileFollowUserDto profileFollowUserDto) {
+        User toUser = userRepository.findById(profileFollowUserDto.getToUser().getUserId())
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        User fromUser = userRepository.findById(profileFollowUserDto.getFromUser().getUserId())
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        // 1. isFollow인 애 찾기
+        List<UserByFollowDto> followList = followRepository.findAllByFollower(toUser.getId(), fromUser.getId())
+                .stream()
+                .map(Follow::getFromUser)
+                .map(UserByFollowDto::new)
+                .collect(Collectors.toList());
+
+        followList.forEach(userByFollowDto -> userByFollowDto.setIsFollow(true));
+
+        // 2. isNotFollow 애 찾기
+        List<UserByFollowDto> notFollowList = followRepository.findAllByNotFollower(toUser.getId(), fromUser.getId())
+                .stream()
+                .map(Follow::getFromUser)
+                .map(UserByFollowDto::new)
+                .collect(Collectors.toList());
+
+        List<UserByFollowDto> followerList = new ArrayList<>();
+        followerList.addAll(0, followList);
+        followerList.addAll(followerList.size(),notFollowList);
+
+        return followerList;
+    }
 }
 
