@@ -18,6 +18,7 @@ import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
 import com.ssafy.cobook.service.dto.user.UserSimpleResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -82,12 +83,18 @@ public class ClubService {
     }
 
     @Transactional
-    public void joinClub(ClubEnrollReqDto reqDto) {
-        User user = getUser(reqDto.getUserId());
-        Club club = getClub(reqDto.getClubId());
-        ClubMember clubMember = clubMemberRepository.save(new ClubMember(user, club, MemberRole.MEMBER));
+    public void joinClub(Long userId, Long clubId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        if (clubMemberRepository.findByUserAndClub(user, club).isPresent()) {
+            throw new BaseException(ErrorCode.ALREADY_APPLY_USER);
+        }
+        ClubMember clubMember = clubMemberRepository.save(new ClubMember(user, club, MemberRole.WAITING));
         user.enrollClub(clubMember);
         club.enrolls(clubMember);
+        /*
+        club의 Leader에게 알람 보내기
+         */
     }
 
     private User getUser(Long userId) {
@@ -128,5 +135,39 @@ public class ClubService {
     public String getFilePath(Long id) {
         Club club = getClub(id);
         return club.getClubImg().replace("http://i3a111.p.ssafy.io:8080/api/clubs/images/", "");
+    }
+
+    @Transactional
+    public void approve(Long clubId, Long clubMemberId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if (leader.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+        ClubMember waiting = clubMemberRepository.findById(clubMemberId)
+                .orElseThrow(()->new BaseException(ErrorCode.ALREADY_PROCESS));
+        if( !waiting.onWait()) {
+            throw new BaseException(ErrorCode.ALREADY_PROCESS);
+        }
+        waiting.chageRole(MemberRole.MEMBER);
+    }
+
+    @Transactional
+    public void reject(Long clubId, Long clubMemberId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if (leader.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+        ClubMember waiting = clubMemberRepository.findById(clubMemberId)
+                .orElseThrow(()->new BaseException(ErrorCode.ALREADY_PROCESS));
+        if( !waiting.onWait()) {
+            throw new BaseException(ErrorCode.ALREADY_PROCESS);
+        }
+        waiting.chageRole(MemberRole.REJECT);
     }
 }

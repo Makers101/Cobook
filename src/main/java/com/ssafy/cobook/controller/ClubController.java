@@ -30,7 +30,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -83,9 +82,34 @@ public class ClubController {
     }
 
     @ApiOperation(value = "클럽에 가입한다.")
-    @PostMapping("/enroll")
-    public ResponseEntity<Void> enrollClub(@RequestBody final ClubEnrollReqDto reqDto) {
-        clubService.joinClub(reqDto);
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PostMapping("/{clubId}/apply")
+    public ResponseEntity<Void> enrollClub(@ApiIgnore final Authentication authentication,
+                                           @PathVariable("clubId") final Long clubId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        clubService.joinClub(userId, clubId);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "클럽 가입 신청을 승인한다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PostMapping("/{clubId}/apply/{clubMemberId}/approve")
+    public ResponseEntity<Void> processApply(@ApiIgnore final Authentication authentication,
+                                             @PathVariable("clubId") final Long clubId,
+                                             @PathVariable("clubMemberId") final Long clubMemberId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        clubService.approve(clubId, clubMemberId, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "클럽 가입 신청을 거절한다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PostMapping("/{clubId}/apply/{clubMemberId}/reject")
+    public ResponseEntity<Void> processReject(@ApiIgnore final Authentication authentication,
+                                             @PathVariable("clubId") final Long clubId,
+                                             @PathVariable("clubMemberId") final Long clubMemberId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        clubService.reject(clubId, clubMemberId, userId);
         return ResponseEntity.ok().build();
     }
 
