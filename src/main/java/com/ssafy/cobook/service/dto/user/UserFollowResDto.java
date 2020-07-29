@@ -10,4 +10,8 @@ public class UserFollowResDto {
     private Long userId;
     private String nickName;
 
+    public UserFollowResDto(Long userId, String nickName){
+        this.userId = userId;
+        this.nickName = nickName;
+    }
 }

@@ -1,16 +1,22 @@
 package com.ssafy.cobook.controller;
 
 
+import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.ProfileService;
+import com.ssafy.cobook.service.dto.postbookmark.PostBookMarkReqDto;
 import com.ssafy.cobook.service.dto.profile.ProfileFollowUserDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -19,14 +25,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/profile")
 @RequiredArgsConstructor
-
 public class ProfileController {
     private final ProfileService profileService;
 
     @ApiOperation(value = "특정 회원의 정보를 가져온다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/{userId}")
-    public ResponseEntity<ProfileResponseDto> getUserInfo(@PathVariable("userId") final Long userId) {
-        return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserInfo(userId));
+    public ResponseEntity<ProfileResponseDto> getUserInfo(@ApiIgnore Authentication authentication, @PathVariable("userId") Long toUserId) {
+        Long fromUserId =  ((User) authentication.getPrincipal()).getId();
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserInfo(fromUserId, toUserId));
     }
 
     @ApiOperation(value = "팔로우 버튼을 누른다")

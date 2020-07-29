@@ -4,16 +4,15 @@ import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
 import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.follow.FollowRepository;
-import com.ssafy.cobook.domain.genre.GenreRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
-import com.ssafy.cobook.service.dto.profile.FollowResponseData;
 import com.ssafy.cobook.service.dto.profile.ProfileFollowUserDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
+import com.ssafy.cobook.service.dto.user.UserFollowResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,13 +32,28 @@ public class ProfileService {
     private final ClubMemberRepository clubMemberRepository;
     private final FollowRepository followRepository;
 
-    public ProfileResponseDto getUserInfo(Long id) {
-        User user = getUserById(id);
-        List<ClubResDto> clubList = clubMemberRepository.findAllByUser(user).stream()
+    public ProfileResponseDto getUserInfo(Long fromUserId, Long toUserId) {
+        User toUser = userRepository.findById(toUserId)
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        User fromUser = userRepository.findById(fromUserId)
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        List<ClubResDto> clubList = clubMemberRepository.findAllByUser(toUser).stream()
                 .map(ClubMember::getClub)
                 .map(ClubResDto::new)
                 .collect(Collectors.toList());
-        ProfileResponseDto profileResponseDto = new ProfileResponseDto(user, clubList);
+
+        UserFollowResDto to = new UserFollowResDto(toUser.getId(), toUser.getNickName());
+        UserFollowResDto from = new UserFollowResDto(fromUser.getId(), fromUser.getNickName());
+
+
+        ProfileFollowUserDto profileFollowUserDto = new ProfileFollowUserDto(to, from, false);
+
+        List<UserByFollowDto> followerList = getFollowerList(profileFollowUserDto);
+        List<UserByFollowDto> followingList = getFollowingList(profileFollowUserDto);
+
+        ProfileResponseDto profileResponseDto = new ProfileResponseDto(toUser, clubList, followerList, followingList);
 
         return profileResponseDto;
     }
