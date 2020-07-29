@@ -12,6 +12,7 @@ public enum ErrorCode {
     ILLEGAL_ACCESS_CLUB(2300, "권한이 없습니다"),
     ALREADY_PROCESS(2400, "이미 처리 되었거나 잘못된 정보입니다"),
     UNEXPECTED_POST(3000, "존재하지 않는 게시물입니다."),
+    ILLEGAL_ACCESS_POST(3100, "잘못된 접근입니다"),
     INVALID_GENRE(5000, "존재하지 않는 장르입니다"),
     UNEXPECTED_BOOK(6000, "존재하지 않는 책 정보입니다"),
     UNEXPECTED_READING(7000, "존재하지 않는 이벤트 정보입니다"),

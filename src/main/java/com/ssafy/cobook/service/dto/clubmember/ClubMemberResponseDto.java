@@ -15,6 +15,8 @@ public class ClubMemberResponseDto {
     public ClubMemberResponseDto(User user) {
         this.id = user.getId();
         this.nickName = user.getNickName();
-        this.profileImg = user.getProfileImg();
+        if (user.getProfileImg() != null) {
+            this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.id;
+        }
     }
 }
