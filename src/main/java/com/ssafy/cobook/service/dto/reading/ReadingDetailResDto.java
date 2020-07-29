@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReadingDetailResDto {
 
+    private Long id;
     private String name;
     private String description;
     private LocalDateTime dateTime;
@@ -35,6 +36,7 @@ public class ReadingDetailResDto {
     private List<PostByMembersResDto> memberPosts;
 
     public ReadingDetailResDto(Reading reading, List<PostByMembersResDto> memberPosts) {
+        this.id = reading.getId();
         this.name = reading.getTitle();
         this.dateTime = reading.getDateTime();
         this.place = reading.getPlace();

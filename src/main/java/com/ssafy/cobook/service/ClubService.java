@@ -18,6 +18,7 @@ import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
 import com.ssafy.cobook.service.dto.user.UserSimpleResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,8 +34,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClubService {
 
-    private final String IMAGE_DIR = "./images/club/";
-
+    private final String IMAGE_DIR = "/home/ubuntu/images/club/";
     private final ClubRepository clubRepository;
     private final UserRepository userRepository;
     private final ClubMemberRepository clubMemberRepository;
@@ -48,15 +48,17 @@ public class ClubService {
         }
         User user = getUser(userId);
         Club club = clubRepository.save(reqDto.toEntity());
-        List<User> users = reqDto.getMembers().stream()
-                .map(this::getUser)
-                .collect(Collectors.toList());
         ClubMember leader = clubMemberRepository.save(new ClubMember(user, club, MemberRole.LEADER));
-        List<ClubMember> members = users.stream()
-                .map(u-> clubMemberRepository.save(new ClubMember(u, club, MemberRole.MEMBER)))
-                .collect(Collectors.toList());
-        for(ClubMember c : members) {
-            club.enrolls(c);
+        if (!reqDto.getMembers().isEmpty()) {
+            List<User> users = reqDto.getMembers().stream()
+                    .map(this::getUser)
+                    .collect(Collectors.toList());
+            List<ClubMember> members = users.stream()
+                    .map(u -> clubMemberRepository.save(new ClubMember(u, club, MemberRole.MEMBER)))
+                    .collect(Collectors.toList());
+            for (ClubMember c : members) {
+                club.enrolls(c);
+            }
         }
         club.enrolls(leader);
         List<Genre> genres = reqDto.getGenres().stream()
@@ -74,21 +76,25 @@ public class ClubService {
                 .orElseThrow(() -> new BaseException(ErrorCode.INVALID_GENRE));
     }
 
-    @Transactional
-    public String uploadFile(MultipartFile file) throws IOException {
+    private void uploadFile(MultipartFile file) throws IOException {
         String originName = file.getOriginalFilename();
         File dest = new File(IMAGE_DIR + originName);
         file.transferTo(dest);
-        return dest.getCanonicalPath();
     }
 
     @Transactional
-    public void joinClub(ClubEnrollReqDto reqDto) {
-        User user = getUser(reqDto.getUserId());
-        Club club = getClub(reqDto.getClubId());
-        ClubMember clubMember = clubMemberRepository.save(new ClubMember(user, club, MemberRole.MEMBER));
+    public void joinClub(Long userId, Long clubId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        if (clubMemberRepository.findByUserAndClub(user, club).isPresent()) {
+            throw new BaseException(ErrorCode.ALREADY_APPLY_USER);
+        }
+        ClubMember clubMember = clubMemberRepository.save(new ClubMember(user, club, MemberRole.WAITING));
         user.enrollClub(clubMember);
         club.enrolls(clubMember);
+        /*
+        club의 Leader에게 알람 보내기
+         */
     }
 
     private User getUser(Long userId) {
@@ -121,8 +127,60 @@ public class ClubService {
 
     @Transactional
     public void fileSave(Long clubId, MultipartFile clubImg) throws IOException {
-        String filePath = uploadFile(clubImg);
+        uploadFile(clubImg);
         Club club = getClub(clubId);
-        club.setProfile(filePath);
+        club.setProfile("http://i3a111.p.ssafy.io:8080/api/clubs/images/club/" + clubImg.getOriginalFilename());
+    }
+
+    public String getFilePath(Long id) {
+        Club club = getClub(id);
+        return club.getClubImg().replace("http://i3a111.p.ssafy.io:8080/api/clubs/images/", "");
+    }
+
+    @Transactional
+    public void approve(Long clubId, Long clubMemberId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if (leader.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+        ClubMember waiting = clubMemberRepository.findById(clubMemberId)
+                .orElseThrow(()->new BaseException(ErrorCode.ALREADY_PROCESS));
+        if( !waiting.onWait()) {
+            throw new BaseException(ErrorCode.ALREADY_PROCESS);
+        }
+        waiting.chageRole(MemberRole.MEMBER);
+    }
+
+    @Transactional
+    public void reject(Long clubId, Long clubMemberId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if (leader.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+        ClubMember waiting = clubMemberRepository.findById(clubMemberId)
+                .orElseThrow(()->new BaseException(ErrorCode.ALREADY_PROCESS));
+        if( !waiting.onWait()) {
+            throw new BaseException(ErrorCode.ALREADY_PROCESS);
+        }
+        waiting.chageRole(MemberRole.REJECT);
+    }
+
+
+    public ClubRecruitResponseDto changeRecruit(Long clubId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if( leader.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+        club.changeRecruit();
+        return new ClubRecruitResponseDto(club.getRecruit());
     }
 }

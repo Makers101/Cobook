@@ -1,8 +1,8 @@
 <template>
-  <div class="custom-container">
+  <div class="custom-container my-3">
     <!-- reading-header -->
     <div class="row">
-      <img class="book-image col-2" :src="selectedReading.book.bookImage" alt="" v-if="selectedReading.book.bookImage">
+      <img class="book-image col-2" :src="selectedReading.book.bookImg" alt="" v-if="selectedReading.book.bookImg">
       <img class="book-image col-2" src="http://placehold.jp/300x200.png?text=sample" alt="" v-else>
       <div class="col-10 py-2 d-flex flex-column justify-content-between">
         <div>
@@ -11,7 +11,7 @@
             <span class="badge mb-0 ml-2 reading-closed-true" v-if="selectedReading.closed">종료</span>
             <span class="badge mb-0 ml-2 reading-closed-false" v-else>예정</span>
           </div>
-          <p class="text-left">{{ selectedReading.book.bookTitle }}</p>
+          <p class="text-left">{{ selectedReading.book.title }}</p>
         </div>
         
         <div>
@@ -36,11 +36,11 @@
     <div>
       <h4 class="text-left font-weight-bold mb-3">리딩 멤버({{ selectedReading.participantCnt }})</h4>
       <div class="d-flex justify-content-start">
-        <div class="profile-container pointer" v-for="member in selectedReading.members" :key="member.id">
+        <div class="profile-container pointer" v-for="member in selectedReading.members" :key="member.id" @click="selectUser(member.id)">
           <img class="rounded-circle image" :src="member.proflieImg" alt="" v-if="member.profileImg">
           <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
           <div class="overlay rounded-circle">
-            <div class="text">{{ member.userName }}</div>
+            <div class="text">{{ member.nickName }}</div>
           </div>
         </div>
       </div>
@@ -73,7 +73,7 @@
         <div class="col-12 col-sm-4 mb-4 pointer" v-for="post in selectedReading.memberPosts" :key="post.id">
           <div class="card h-100">
             <div style="max-height:70px;overflow:hidden;">
-              <img class="bg-image" :src="`${ selectedReading.book.bookImage }`" v-if="selectedReading.book.bookImage">
+              <img class="bg-image" :src="`${ selectedReading.book.bookImg }`" v-if="selectedReading.book.bookImg">
               <h5 
                 class="card-img-top color-light-black px-5 post-user" 
                 alt="book"
@@ -114,6 +114,7 @@
 </template>
 
 <script>
+import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'ReadingDetail',
@@ -129,7 +130,10 @@ export default {
     ...mapState('clubStore', ['selectedReading'])
   },
   methods: {
-    ...mapActions('clubStore', ['findReading'])
+    ...mapActions('clubStore', ['findReading']),
+    selectUser(userId) {
+      router.push({ name: 'Profile', params: { userId: userId }})
+    }
   },
   created() {
     this.findReading(this.params)

@@ -65,8 +65,8 @@
                 md="6"
               >
                 <v-text-field
-                  v-if="leader"
-                  v-model="leader.userName"
+                  v-if="myaccount"
+                  v-model="myaccount.nickName"
                   disabled
                   color="blue-grey lighten-2"
                   :rules="[v => !!v || '필수항목입니다.']"
@@ -74,7 +74,7 @@
                 ></v-text-field>
                 <v-text-field
                   v-else
-                  v-model="leader"
+                  v-model="myaccount.nickName"
                   disabled
                   color="blue-grey lighten-2"
                   :rules="[v => !!v || '필수항목입니다.']"
@@ -82,7 +82,7 @@
                 ></v-text-field>
               </v-col>
 
-              <!-- <v-col cols="12">
+              <v-col cols="12">
                 <v-autocomplete
                   v-model="clubCreateData.members"
                   :items="users"
@@ -90,7 +90,7 @@
                   hide-selected
                   color="blue-grey lighten-2"
                   label="클럽 멤버"
-                  item-text="userName"
+                  item-text="nickName"
                   item-value="id"
                   multiple
                   :search-input.sync="searchMember"
@@ -105,10 +105,10 @@
                       @click="data.select"
                       @click:close="remove(clubCreateData.members, data.item)"
                     >
-                      <v-avatar left>
+                      <!-- <v-avatar left>
                         <v-img :src="data.item.avatar"></v-img>
-                      </v-avatar>
-                      {{ data.item.userName }}
+                      </v-avatar> -->
+                      {{ data.item.nickName }}
                     </v-chip>
                   </template>
                   <template v-slot:item="data">
@@ -116,16 +116,16 @@
                       <v-list-item-content v-text="data.item"></v-list-item-content>
                     </template>
                     <template v-else>
-                      <v-list-item-avatar>
+                      <!-- <v-list-item-avatar>
                         <img :src="data.item.avatar">
-                      </v-list-item-avatar>
+                      </v-list-item-avatar> -->
                       <v-list-item-content>
-                        <v-list-item-title v-html="data.item.userName"></v-list-item-title>
+                        <v-list-item-title v-html="data.item.nickName"></v-list-item-title>
                       </v-list-item-content>
                     </template>
                   </template>
                 </v-autocomplete>
-              </v-col> -->
+              </v-col>
 
               <v-col
                 cols="12"
@@ -165,7 +165,7 @@
                   counter="5"
                   :rules="[
                     v => (v.length !== 0) || '필수항목입니다.',
-                    v => (v.length < 6) || '최대 5개 관심 장르를 고를 수 있습니다.'
+                    v => (v.length < 6) || '최대 5개의 관심 장르를 고를 수 있습니다.'
                   ]"
                   label="관심 장르"
                   item-text="name"
@@ -244,17 +244,13 @@ export default {
           onelineDescription: null,
           description: null,
           residence: null,
-          // members: [],
+          members: [],
           genres: [],
           clubImg: null        
         },
         clubImgFormData: clubImgFormData
       },
       clubImg: null,
-      leader: {
-        id: 6,
-        userName: "T-Leader"
-      },
       valid: true,
       lazy:false,
       searchMember: null,
@@ -263,7 +259,7 @@ export default {
   },
   computed: {
     ...mapState('clubStore', ['users']),
-    ...mapState(['genres'])
+    ...mapState(['genres', 'myaccount', 'users'])
   },
   methods: {
     ...mapActions('clubStore', ['createClub']),

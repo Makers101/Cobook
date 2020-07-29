@@ -2,14 +2,9 @@ package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.PostService;
-import com.ssafy.cobook.service.dto.post.PostDetailResDto;
-import com.ssafy.cobook.service.dto.post.PostResponseDto;
-import com.ssafy.cobook.service.dto.post.PostSaveReqDto;
-import com.ssafy.cobook.service.dto.post.PostSaveResDto;
-import com.ssafy.cobook.service.dto.postbookmark.PostBookMarkReqDto;
+import com.ssafy.cobook.service.dto.post.*;
 import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
-import com.ssafy.cobook.service.dto.postlike.PostLikeReqDto;
 import com.ssafy.cobook.service.dto.tag.TagResponseDto;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -65,21 +60,21 @@ public class PostController {
 
     @ApiOperation(value = "게시글의 좋아요를 누른다")
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/likes")
+    @PostMapping("/{postId}/likes")
     public ResponseEntity<Void> likePosts(@ApiIgnore final Authentication authentication,
-                                          @RequestBody final PostLikeReqDto reqDto) {
-        Long userId =  ((User) authentication.getPrincipal()).getId();
-        postService.likePosts(reqDto, userId);
+                                          @PathVariable("postId") final Long postId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        postService.likePosts(postId, userId);
         return ResponseEntity.ok().build();
     }
 
     @ApiOperation(value = "게시글을 북마크한다")
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/bookmarks")
+    @PostMapping("/{postId}/bookmarks")
     public ResponseEntity<Void> bookMarks(@ApiIgnore final Authentication authentication,
-                                          @RequestBody final PostBookMarkReqDto reqDto) {
-        Long userId =  ((User) authentication.getPrincipal()).getId();
-        postService.bookMarks(reqDto, userId);
+                                          @PathVariable("postId") final Long postId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        postService.bookMarks(postId, userId);
         return ResponseEntity.ok().build();
     }
 
@@ -107,5 +102,16 @@ public class PostController {
     @GetMapping("/tags")
     public ResponseEntity<List<TagResponseDto>> getAllTags() {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getAllTags());
+    }
+
+    @ApiOperation(value = "사용자가 게시글을 수정", response = PostSaveResDto.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PutMapping("{/postId}")
+    public ResponseEntity<Void> updatePost(@ApiIgnore final Authentication authentication,
+                                           @PathVariable("postId") final Long postId,
+                                           @RequestBody final PostUpdateReqDto requestDto) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        postService.updatePost(postId, userId, requestDto);
+        return ResponseEntity.ok().build();
     }
 }

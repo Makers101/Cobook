@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container">
+  <div class="custom-container my-3">
     <!-- club-header -->
     <div class="row">
       <img class="club-image col-4" :src="selectedClub.clubImg" alt="" v-if="selectedClub.clubImg">
@@ -51,11 +51,11 @@
     <div>
       <h4 class="text-left font-weight-bold mb-3">클럽 멤버({{ selectedClub.memberCnt }})</h4>
       <div class="d-flex justify-content-start">
-        <div class="profile-container pointer" v-for="member in selectedClub.members" :key="member.id">
+        <div class="profile-container pointer" v-for="member in selectedClub.members" :key="member.id" @click="selectUser(member.id)">
           <img class="rounded-circle image" :src="member.proflieImg" alt="" v-if="member.profileImg">
           <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
           <div class="overlay rounded-circle">
-            <div class="text">{{ member.userName }}</div>
+            <div class="text">{{ member.nickName }}</div>
           </div>
         </div>
       </div>
@@ -79,12 +79,12 @@
           <div class="card h-100">
             <div class="row no-gutters">
               <div class="col-6 reading-left">
-                <img class="bg-image" :src="reading.book.bookImage" width="100%">
+                <img class="bg-image" :src="reading.book.bookImg" width="100%">
                 <span class="badge mb-0 reading-closed-true" v-if="reading.recruit">종료</span>
                 <span class="badge mb-0 reading-closed-false" v-else>예정</span>
               </div>
               <div class="col-6 text-left d-flex flex-column p-2">
-                <p class="color-light-black book-title" lt="book">{{ reading.book.bookTitle }}</p>
+                <p class="color-light-black book-title" lt="book">{{ reading.book.title }}</p>
                 <small>{{ reading.name }}</small>
                 <div class="mt-auto">
                   <div class="d-flex justify-content-between">
@@ -132,6 +132,9 @@ export default {
     selectReading(readingId) {
       router.push({ name: 'ReadingDetail', params: { clubId: this.$route.params.clubId, readingId: readingId }})
     },
+    selectUser(userId) {
+      router.push({ name: 'Profile', params: { userId: userId }})
+    }
   },
   created() {
     this.findClub(this.$route.params.clubId)

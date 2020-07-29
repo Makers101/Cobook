@@ -2,7 +2,7 @@ package com.ssafy.cobook.domain.clubmember;
 
 public enum MemberRole {
 
-    LEADER("leader"), MEMBER("member");
+    LEADER("leader"), MEMBER("member"), WAITING("waiting"), REJECT("reject");
 
     private String name;
 

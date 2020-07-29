@@ -10,16 +10,34 @@ const accountStore = {
     state: {
     },
     getters: {
+        config: state => 
+        ({headers: { Authorization: `Token ${state.authToken}`}}),
     },
     mutations: {
+        
     },
     actions: {
-        postAuthData({ commit }, info) {
+        // Signup
+        postAuthData1({ dispatch, commit }, info) {
             axios.post(SERVER.URL + info.location, info.data)
                 .then(res => {
+                    console.log("SUCCESS")
                     commit('SET_TOKEN', res.data, { root: true })
-                    // dispatch('getMyAccount')
+                    dispatch('findMyAccount', null, { root: true })
                     router.push({ name: 'SignupEmail' })
+                })
+                .catch(err => {
+                    console.log(err.response.data)
+                })
+        },
+        // Login
+        postAuthData2({ dispatch, commit }, info) {
+            axios.post(SERVER.URL + info.location, info.data)
+                .then(res => {
+                    console.log("SUCCESS")
+                    commit('SET_TOKEN', res.data, { root: true })
+                    dispatch('findMyAccount', null, { root: true })
+                    router.push('/')
                 })
                 .catch(err => {
                     console.log(err.response.data)
@@ -31,7 +49,7 @@ const accountStore = {
                 location: SERVER.ROUTES.signup,
                 to: '/password/email'
             }
-            dispatch('postAuthData', info)
+            dispatch('postAuthData1', info)
         },
         login({ dispatch }, loginData) {
             const info = {
@@ -39,20 +57,17 @@ const accountStore = {
                 location: SERVER.ROUTES.login,
                 to: '/'
             }
-            dispatch('postAuthData', info)
+            dispatch('postAuthData2', info)
         },
+        
         findPassword(email) {
-            console.log('여기')
-            console.log(email)
             axios.post(SERVER.URL + SERVER.ROUTES.password, email)
                 .then (res => {
                     console.log(res)
-                    console.log(email)
                     router.push({ name: 'PasswordFindEmail'})
                 })
                 .catch (err =>{
                     console.log(err.response)
-                    console.log(email)
                 })
         },
         

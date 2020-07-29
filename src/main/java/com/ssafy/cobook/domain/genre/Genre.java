@@ -31,4 +31,12 @@ public class Genre {
     private List<Book> bookList = new ArrayList<>();
 
     private String genreName;
+
+    public void removeUser(UserGenre user) {
+        this.userList.remove(user);
+    }
+
+    public void addUser(UserGenre userGenre) {
+        this.userList.add(userGenre);
+    }
 }
