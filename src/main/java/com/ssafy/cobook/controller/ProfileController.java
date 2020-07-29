@@ -3,7 +3,6 @@ package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.ProfileService;
-import com.ssafy.cobook.service.dto.postbookmark.PostBookMarkReqDto;
 import com.ssafy.cobook.service.dto.profile.ProfileFollowUserDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
