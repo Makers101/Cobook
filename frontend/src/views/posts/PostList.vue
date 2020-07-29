@@ -172,13 +172,13 @@ export default {
 .myclub {
   position: fixed;
   top: 200px;
-  left: 1%;
+  left: 3.5%;
 }
 
 .recommend {
   position: fixed;
   top: 200px;
-  right: 1%;
+  right: 3.5%;
 }
 
 @media screen and (min-width: 1264px) {
