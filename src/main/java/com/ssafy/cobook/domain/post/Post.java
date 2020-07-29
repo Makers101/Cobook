@@ -42,6 +42,7 @@ public class Post extends BaseEntity {
     private Club club;
 
     private String onelineReview;
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String review;
     private Integer rank;
     private Boolean open;
@@ -131,5 +132,9 @@ public class Post extends BaseEntity {
         this.open = requestDto.getOpen();
         this.rank = requestDto.getRank();
         this.review = requestDto.getReview();
+    }
+
+    public void removeComment(PostComment postComment) {
+        this.comments.remove(postComment);
     }
 }
