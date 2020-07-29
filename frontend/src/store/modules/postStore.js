@@ -54,7 +54,6 @@ const postStore = {
         })
     },
     createComment({ dispatch, rootGetters }, commentData) {
-      console.log(commentData)
       axios.post(SERVER.URL + SERVER.ROUTES.posts + '/' + commentData.postId + SERVER.ROUTES.comments, commentData, rootGetters.config)
         .then(() => {
           dispatch('fetchComments', commentData.postId)
