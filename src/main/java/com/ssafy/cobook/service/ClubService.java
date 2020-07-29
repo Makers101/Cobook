@@ -172,4 +172,15 @@ public class ClubService {
     }
 
 
+    public ClubRecruitResponseDto changeRecruit(Long clubId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if( leader.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+        club.changeRecruit();
+        return new ClubRecruitResponseDto(club.getRecruit());
+    }
 }

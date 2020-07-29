@@ -173,4 +173,12 @@ public class ClubController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiOperation(value = "클럽 모집 활성화 및 비활성화")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PostMapping("/{clubId}/recruit")
+    public ResponseEntity<ClubRecruitResponseDto> changeStatus(@ApiIgnore final Authentication authentication,
+                                                               @PathVariable("clubId") final Long clubId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        return ResponseEntity.status(HttpStatus.OK).body(clubService.changeRecruit(clubId, userId));
+    }
 }
