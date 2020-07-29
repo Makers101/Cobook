@@ -45,20 +45,19 @@
             <span v-if="post.isClub" class="badge bg-green">Club</span>
           </div>
           <div class="color-beige small-text">
-            <span class="pointer" @click="clickLike(post)">
-              <i class="fas fa-heart mr-2"></i><small class="mr-3">{{ post.likeUsers.length }}</small>
-            </span>
+            
             <span class="pointer" @click="postDetail(post.id)">
-              <i class="fas fa-comments mr-2"></i><small class="mr-3">{{ post.commentCnt }}</small>
+              <i class="fas fa-comments mr-2" id="heart"></i><small class="mr-3">{{ post.commentCnt }}</small>
             </span>
             <span class="pointer" @click="clickBookmark(post)">
-              <i class="fas fa-bookmark mr-2"></i><small class="mr-3">{{ post.bookmarkUsers.length }}</small>
+              <span v-if="checkBookmark(post)"><i class="fas fa-bookmark mr-2 color-green" id="bookmark"></i><small class="mr-3">{{ post.bookmarkUsers.length }}</small></span>
+              <span v-else><i class="fas fa-bookmark mr-2" id="bookmark"></i><small class="mr-3">{{ post.bookmarkUsers.length }}</small></span>
             </span>
           </div>
         </div>
         <div class="post-content bg-light-beige row no-gutters pointer d-flex justify-content-around" @click="postDetail(post.id)">
           <div class="my-5">
-            <img style="height: 30vh;" :src="post.book.bookImg" alt="책 이미지">
+            <img style="height: 30vh;" :src="post.book.bookImg" alt="책 이미지" class="rounded">
           </div>
           <div class="d-flex align-items-center justify-content-center w-50">
             <div class="w-75 color-black">
@@ -68,14 +67,26 @@
             </div>
           </div>
         </div>
-        <div class="post-footer text-left pl-3 py-2">
-          <span
-            class="badge rounded-pill px-3 py-2 mr-2"
+        <div class="post-footer text-left pl-3 py-2 d-flex justify-content-between">
+          <span class="pointer" @click="clickLike(post)">
+            <span v-if="checkHeart(post)"><i class="fas fa-heart mr-2 heartselected"></i>
+              <small class="mr-3"><span>{{ myaccount.nickName}}님</span>
+              <span v-if="post.likeUsers.length -1 > 0"> 외 {{ post.likeUsers.length - 1}}명이 좋아합니다.</span>
+              <span v-else>이 좋아합니다.</span>
+              </small>
+            </span>
+            <span v-else><i class="fas fa-heart mr-2"></i><small class="mr-3">{{ post.likeUsers.length }}명이 좋아합니다.</small></span>
+          </span>
+          <div>
+            <span
+            class="badge rounded-pill px-3 py-2 mr-2 bg-green"
             v-for="tag in post.tags"
             :key="`tag-${tag.id}`"
             style="background-color:#907a62; color: white;"
           >
-          {{ tag.name }}</span>
+          #{{ tag.name }}</span>
+          </div>
+          
         </div>
       </div>
     </div>
@@ -125,6 +136,9 @@ export default {
     postDetail(postId) {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
     },
+    // postDetailComment(postId) {
+    //   this.$router.push('/posts/' + postId + '#comment')
+    // },
     clickLike(post) {
       this.createLike(post.id)
       if (post.likeUsers.includes(this.myaccount.id)) {
@@ -142,12 +156,22 @@ export default {
       } else {
         post.bookmarkUsers.push(this.myaccount.id)
       }
+    },
+    checkHeart(post){
+      if (post.likeUsers.includes(this.myaccount.id)) {
+        return true;
+      }
+    },
+    checkBookmark(post) {
+      if (post.bookmarkUsers.includes(this.myaccount.id)) {
+        return true;
+      }
     }
+      
   },
   created() {
     this.fetchPosts()
-  }
-  
+  },
 
 }
 </script>
@@ -200,4 +224,12 @@ export default {
       margin-left: 16.666667%;
   }
 }
+
+.heartselected {
+  color: red !important;
+}
+
+/* .bookmarkselected {
+  color: #907a62 !important;
+} */
 </style>
