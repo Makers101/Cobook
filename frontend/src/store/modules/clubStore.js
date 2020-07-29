@@ -113,6 +113,25 @@ const clubStore = {
           .catch(err => {
             console.log(err.response.data)
           })
+      },
+      updateRecruit({ rootGetters }, clubId) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId + '/recruit', null, rootGetters.config)
+        .then((res) => {
+          console.log(res.data)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      applyClub({ rootGetters }, clubId) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId + '/apply', null, rootGetters.config)
+          .then(() => {
+            alert('가입을 신청했습니다. 설레는 마음으로 승인을 기다려주세요 :)')
+          })
+          .catch(err => {
+            console.log(err.response.data)
+            alert(err.response.data.message)
+          })
       }
     }
 }

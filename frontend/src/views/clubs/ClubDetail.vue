@@ -7,7 +7,10 @@
       <div class="col-8 py-2 d-flex flex-column justify-content-between">
         <div>
           <div class="d-flex justify-content-between">
-            <h3 class="mb-0 font-weight-bold">{{ selectedClub.name }}</h3>
+            <div class="d-flex justify-content-start align-items-center">
+              <h3 class="mb-0 font-weight-bold">{{ selectedClub.name }}</h3>
+              <span class="badge mb-0 ml-2 club-recruit" v-if="selectedClub.recruit">모집중</span>
+            </div>
             <div class="d-flex align-items-center">
               <p class="mb-0">{{ selectedClub.followerCnt }} FOLLOW</p>
               <button class="btn btn-green ml-2">팔로우</button>
@@ -34,11 +37,13 @@
               </button>
               <div class="dropdown-menu">
                 <router-link class="dropdown-item text-center" :to="{ name: 'ReadingCreate' }">리딩 생성</router-link>
-                <a class="dropdown-item text-center">멤버 모집</a>
+                <a class="dropdown-item text-center pointer" @click="clickUpdateRecruit" v-if="!selectedClub.recruit">멤버 모집</a>
+                <a class="dropdown-item text-center pointer" @click="clickUpdateRecruit" v-if="selectedClub.recruit">모집 취소</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item text-center">정보 수정</a>
               </div>
-              <button class="btn btn-warning mr" v-if="selectedClub.recruit && !isMembers">가입 신청</button>
+              <button class="btn btn-warning mr" v-if="selectedClub.recruit && !isMembers" @click="clickApplyClub">가입 신청</button>
+              <button class="btn btn-warning mr" v-if="isMembers && !isLeader">클럽 탈퇴</button>
             </div>
           </div>
         </div>
@@ -146,12 +151,19 @@ export default {
     }
   },
   methods: {
-    ...mapActions('clubStore', ['findClub']),
+    ...mapActions('clubStore', ['findClub', 'updateRecruit', 'applyClub']),
     selectReading(readingId) {
       router.push({ name: 'ReadingDetail', params: { clubId: this.$route.params.clubId, readingId: readingId }})
     },
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
+    },
+    clickUpdateRecruit() {
+      this.updateRecruit(this.$route.params.clubId)
+      this.selectedClub.recruit = !this.selectedClub.recruit
+    },
+    clickApplyClub() {
+      this.applyClub(this.$route.params.clubId)
     }
   },
   created() {
@@ -240,5 +252,14 @@ export default {
 
   .book-title {
     word-break: keep-all;
+  }
+
+  .club-recruit {
+    /* background-color: #b68145; */
+    /* background-color: #907a62; */
+    background-color: rgba(221, 118, 0, 0.8); 
+    color: #F8F8F8;
+    text-align: center;
+    padding: 6px;
   }
 </style>
