@@ -1,13 +1,13 @@
 <template>
-  <v-app>
+  <v-app id="followers">
     <v-dialog v-model="show" max-width="500px">
     <v-card>
       <v-card-text class="">
         <div class="display-1 pt-3">팔로우</div>
-        <p class="mb-0 text--primary">{{ profile.nickName }}님이 팔로우 하는 유저입니다.</p>
+        <p class="mb-0 text--primary">{{ profile.nickName }}님을 팔로우 하는 유저입니다.</p>
       </v-card-text>
       <v-divider class="m-0"></v-divider>
-      <v-virtual-scroll :itemHeight="50" height="300" :items="followers">
+      <v-virtual-scroll :itemHeight="50" height="300" :items="followerList">
         <template v-slot="{item}">
           <v-list-item>
             <v-list-item-avatar>
@@ -16,8 +16,8 @@
                 <img v-else src="http://placehold.jp/200x200.png">
               </v-avatar>
             </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.nickName }}</v-list-item-title>
+            <v-list-item-content class="text-left">
+              <v-list-item-title @click="selectUser(item.toUserId)">{{ item.nickname }}</v-list-item-title>
             </v-list-item-content>
             <v-list-item-action>
               <v-btn small dark color="grey lighten-1" v-if="item.isFollow">팔로잉</v-btn>
@@ -37,68 +37,12 @@
   </v-app>
 </template>
 
-
 <script>
-let followers = [
-  {
-    id: 1,
-    nickName: 'Hoon',
-    profileImg: 'http://i3a111.p.ssafy.io:8080/api/clubs/images/17',
-    isFollow: true
-  },
-  {
-    id: 2,
-    nickName: 'Jin',
-    profileImg: '',
-    isFollow: false
-  },
-  {
-    id: 3,
-    nickName: 'Soom',
-    profileImg: 'http://i3a111.p.ssafy.io:8080/api/clubs/images/16',
-    isFollow: false
-  },
-  {
-    id: 4,
-    nickName: 'Sun',
-    profileImg: 'http://i3a111.p.ssafy.io:8080/api/clubs/images/8',
-    isFollow: false
-  },
-  {
-    id: 5,
-    nickName: 'Lin',
-    profileImg: '',
-    isFollow: false
-  },
-  {
-    id: 6,
-    nickName: 'Lin',
-    profileImg: '',
-    isFollow: false
-  },
-  {
-    id: 7,
-    nickName: 'Lin',
-    profileImg: '',
-    isFollow: false
-  },
-  {
-    id: 8,
-    nickName: 'Lin',
-    profileImg: '',
-    isFollow: false
-  },
-  {
-    id: 9,
-    nickName: 'Lin',
-    profileImg: '',
-    isFollow: false
-  },
-]
+import { mapState, mapActions } from 'vuex'
+import router from '@/router'
 export default {
   data() {
     return {
-      'followers': followers
     }
   },
   props: {
@@ -114,7 +58,16 @@ export default {
          this.$emit('input', value)
       }
     },
-    
+    ...mapState('profileStore', ['followerList']), 
+  },
+  methods: {
+    ...mapActions('profileStore', ['fetchFollowerList']),
+    selectUser(userId) {
+      router.push({ name: 'Profile', params: { userId: userId }})
+    }
+  },
+  created() {
+    this.fetchFollowerList(this.$route.params.userId)
   }
 }
 </script>
