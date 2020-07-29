@@ -19,6 +19,7 @@ import com.ssafy.cobook.service.dto.user.UserFollowResDto;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.service.dto.user.UserResponseIdDto;
+import com.ssafy.cobook.service.dto.user.UserUpdateReqDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -117,7 +118,7 @@ public class ProfileService {
 
         List<UserByFollowDto> followingList = new ArrayList<>();
         followingList.addAll(0, followList);
-        followingList.addAll(followingList.size(), notFollowList);
+        followingList.addAll(0, notFollowList);
 
         return followingList;
     }
@@ -148,7 +149,7 @@ public class ProfileService {
 
         List<UserByFollowDto> followerList = new ArrayList<>();
         followerList.addAll(0, followList);
-        followerList.addAll(followerList.size(), notFollowList);
+        followerList.addAll(0, notFollowList);
 
         return followerList;
     }
