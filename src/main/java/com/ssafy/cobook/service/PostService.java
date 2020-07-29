@@ -76,7 +76,7 @@ public class PostService {
     @Transactional
     public Tag saveTag(String tagName) {
         if (tagRepository.findByTagName(tagName).isPresent()) {
-            tagRepository.findByTagName(tagName);
+            return tagRepository.findByTagName(tagName).get();
         }
         return tagRepository.save(new Tag(tagName));
     }
