@@ -165,7 +165,7 @@
                   counter="5"
                   :rules="[
                     v => (v.length !== 0) || '필수항목입니다.',
-                    v => (v.length < 6) || '최대 5개 관심 장르를 고를 수 있습니다.'
+                    v => (v.length < 6) || '최대 5개의 관심 장르를 고를 수 있습니다.'
                   ]"
                   label="관심 장르"
                   item-text="name"
