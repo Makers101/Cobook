@@ -12,10 +12,8 @@ import com.ssafy.cobook.domain.usergenre.UserGenreRepository;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
-import com.ssafy.cobook.service.dto.profile.ProfileFollowUserDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
-import com.ssafy.cobook.service.dto.user.UserFollowResDto;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.service.dto.user.UserResponseIdDto;
@@ -57,14 +55,8 @@ public class ProfileService {
                 .map(ClubResDto::new)
                 .collect(Collectors.toList());
 
-        UserFollowResDto to = new UserFollowResDto(toUser.getId(), toUser.getNickName());
-        UserFollowResDto from = new UserFollowResDto(fromUser.getId(), fromUser.getNickName());
-
-
-        ProfileFollowUserDto profileFollowUserDto = new ProfileFollowUserDto(to, from, false);
-
-        List<UserByFollowDto> followerList = getFollowerList(profileFollowUserDto);
-        List<UserByFollowDto> followingList = getFollowingList(profileFollowUserDto);
+        List<UserByFollowDto> followerList = getFollowerList(fromUserId, toUserId);
+        List<UserByFollowDto> followingList = getFollowingList(fromUserId, toUserId);
 
         ProfileResponseDto profileResponseDto = new ProfileResponseDto(toUser, clubList, followerList, followingList);
 
@@ -77,12 +69,13 @@ public class ProfileService {
     }
 
     // 팔로잉 - 눌러져있지 않으면 디비에 추가한다
-    public void addFollow(ProfileFollowUserDto profileFollowUserDto) {
-        User toUser = userRepository.findById(profileFollowUserDto.getToUser().getUserId())
+    public void addFollow(Long fromUserId, Long toUserId) {
+        User toUser = userRepository.findById(toUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
-        User fromUser = userRepository.findById(profileFollowUserDto.getFromUser().getUserId())
+        User fromUser = userRepository.findById(fromUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
 
         if (followRepository.findByToUser(fromUser, toUser).isPresent()) {
             followRepository.deleteByUser(fromUser.getId(), toUser.getId());
@@ -93,11 +86,13 @@ public class ProfileService {
     }
 
     // 팔로잉 리스트를 가져온다
-    public List<UserByFollowDto> getFollowingList(ProfileFollowUserDto profileFollowUserDto) {
-        User toUser = userRepository.findById(profileFollowUserDto.getToUser().getUserId())
+    public List<UserByFollowDto> getFollowingList(Long fromUserId, Long toUserId) {
+
+
+        User toUser = userRepository.findById(toUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
-        User fromUser = userRepository.findById(profileFollowUserDto.getFromUser().getUserId())
+        User fromUser = userRepository.findById(fromUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
         // 1. isFollow인 애 찾기
@@ -124,11 +119,11 @@ public class ProfileService {
     }
 
     // 팔로워 리스트 가져오기 (fromUser의 아이디가 들어오면 toUser가 fromUser의 값인 애들을 뽑아야함)
-    public List<UserByFollowDto> getFollowerList(ProfileFollowUserDto profileFollowUserDto) {
-        User toUser = userRepository.findById(profileFollowUserDto.getToUser().getUserId())
+    public List<UserByFollowDto> getFollowerList(Long fromUserId, Long toUserId) {
+        User toUser = userRepository.findById(toUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
-        User fromUser = userRepository.findById(profileFollowUserDto.getFromUser().getUserId())
+        User fromUser = userRepository.findById(fromUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
         // 1. isFollow인 애 찾기
