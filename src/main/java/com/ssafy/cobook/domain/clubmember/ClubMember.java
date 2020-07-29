@@ -38,4 +38,16 @@ public class ClubMember {
     public void enroll(Club club) {
         this.club = club;
     }
+
+    public boolean isNotLeader() {
+        return !this.role.equals(MemberRole.LEADER);
+    }
+
+    public boolean onWait() {
+        return this.role.equals(MemberRole.WAITING);
+    }
+
+    public void chageRole(MemberRole role) {
+        this.role = role;
+    }
 }

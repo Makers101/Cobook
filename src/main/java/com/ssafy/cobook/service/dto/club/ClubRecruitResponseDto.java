@@ -6,8 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ClubEnrollReqDto {
+public class ClubRecruitResponseDto {
 
-    private Long userId;
-    private Long clubId;
+    private boolean recruit;
+
+    public ClubRecruitResponseDto(Boolean recruit) {
+        this.recruit = recruit;
+    }
 }
