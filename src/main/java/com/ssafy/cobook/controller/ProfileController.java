@@ -3,7 +3,10 @@ package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.ProfileService;
+import com.ssafy.cobook.service.dto.postbookmark.PostBookMarkReqDto;
+import com.ssafy.cobook.service.dto.profile.ProfileFollowUserDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
+import com.ssafy.cobook.service.dto.user.UserByFollowDto;
 import com.ssafy.cobook.service.dto.user.UserResponseIdDto;
 import com.ssafy.cobook.service.dto.user.UserUpdateReqDto;
 import com.ssafy.cobook.util.FileUtil;
@@ -12,24 +15,26 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 
 @Slf4j
 @RestController
 @RequestMapping("/api/profile")
 @RequiredArgsConstructor
-
 public class ProfileController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
@@ -76,22 +81,31 @@ public class ProfileController {
                 .body(resource);
     }
 
-
     @ApiOperation(value = "특정 회원의 정보를 가져온다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/{userId}")
-    public ResponseEntity<ProfileResponseDto> getUserInfo(@PathVariable("userId") final Long userId) {
-        return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserInfo(userId));
+    public ResponseEntity<ProfileResponseDto> getUserInfo(@ApiIgnore Authentication authentication, @PathVariable("userId") Long toUserId) {
+        Long fromUserId =  ((User) authentication.getPrincipal()).getId();
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserInfo(fromUserId, toUserId));
     }
 
-//    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-//    @PostMapping("/{postId}/comments")
-//    public ResponseEntity<Void> addComments(@ApiIgnore final Authentication authentication,
-//                                            @PathVariable("postId") final Long postId,
-//                                            @RequestBody final CommentsReqDto dto) {
+    @ApiOperation(value = "팔로우 버튼을 누른다")
+    @PostMapping("/follow")
+    public ResponseEntity<Void> followUser(@RequestBody ProfileFollowUserDto profileFollowUserDto){
+        profileService.addFollow(profileFollowUserDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
-//        @ApiOperation(value = "팔로우하기")
-//    @GetMapping("/follow")
-//    public ResponseEntity<Integer> follwUses(@RequestBody ProfileFollowUserDto profileFollowUserDto){
-//
-//    }
+    @ApiOperation(value = "팔로잉한 사람들의 리스트 가져오기")
+    @PostMapping("/following")
+    public ResponseEntity<List<UserByFollowDto>>getFollowingList(@RequestBody ProfileFollowUserDto profileFollowUserDto){
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getFollowingList(profileFollowUserDto));
+    }
+
+
+    @ApiOperation(value = "팔로우한 사람들의 리스트가져오기")
+    @PostMapping("/follower")
+    public ResponseEntity<List<UserByFollowDto>>getFollowerList(@RequestBody ProfileFollowUserDto profileFollowUserDto){
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getFollowerList(profileFollowUserDto));
+    }
 }

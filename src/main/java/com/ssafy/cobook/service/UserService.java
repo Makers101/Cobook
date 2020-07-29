@@ -7,6 +7,7 @@ import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
+import com.ssafy.cobook.service.dto.profile.ProfileFollowUserDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.*;
 import com.ssafy.cobook.util.JwtTokenProvider;
@@ -36,6 +37,7 @@ public class UserService {
     private final JavaMailSender emailSender;
     private final PasswordEncoder passwordEncoder;
     private final ClubMemberRepository clubMemberRepository;
+    private final ProfileService profileService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -87,7 +89,14 @@ public class UserService {
                 .map(ClubMember::getClub)
                 .map(ClubResDto::new)
                 .collect(Collectors.toList());
-        ProfileResponseDto profileResponseDto = new ProfileResponseDto(user, clubList);
+
+        UserFollowResDto userFollowResDto  = new UserFollowResDto(user.getId(), user.getNickName());
+        ProfileFollowUserDto profileFollowUserDto = new ProfileFollowUserDto(userFollowResDto, userFollowResDto, false);
+
+        List<UserByFollowDto> followerList = profileService.getFollowerList(profileFollowUserDto);
+        List<UserByFollowDto> followingList = profileService.getFollowingList(profileFollowUserDto);
+
+        ProfileResponseDto profileResponseDto = new ProfileResponseDto(user, clubList, followerList, followingList);
         return profileResponseDto;
     }
 
