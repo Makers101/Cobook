@@ -22,9 +22,27 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <form id="search-bar">
-            <input type="search" placeholder="Search">
-          </form>
+          <div class="autocomplete" id="search-bar">
+            <input 
+              type="search" 
+              v-model="keyword" 
+              @input="searchUser"
+              @blur="isKeywordNull"
+              >
+            <ul 
+              class="autocomplete-results"
+              v-show="searchedUsers"
+              >
+              <li
+                class="autocomplete-result"
+                v-for="user in searchedUsers"
+                :key="`search-${user.id}`"
+              >
+              <img :src="user.profileImg" alt="">
+              {{ user.nickName }}
+              </li>
+            </ul>
+          </div>
           <ul class="navbar-nav mr-auto row w-100">
             <li class="nav-item col-3">
               <router-link class="nav-link" :to="{ name: 'PostList' }">
@@ -87,11 +105,36 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'App',
+  data() {
+    return {
+      keyword: null,
+      isActive:null,
+      searchedUsers: null,
+    }
+  },
   computed: {
-    ...mapState(['genres', 'myaccount', 'books'])
+    ...mapState(['genres', 'myaccount', 'books', 'users'])
   },
   methods: {
-    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers'])
+    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers']),
+    searchUser() {
+      if (!this.keyword) {
+        this.isActive = false
+        this.searchedUsers = null
+      } else {
+        this.isActive = true
+        this.searchedUsers = this.users.filter((user) => {
+          return user.nickName.match(this.keyword)
+        })
+        if (this.searchedUsers.length < 1) {
+          this.searchedUsers = null
+        }
+      }
+    },
+    isKeywordNull() {
+      this.keyword = null
+      this.searchedUsers = null
+    }
   },
   created() {
     this.fetchGenres()
@@ -207,5 +250,66 @@ input::-webkit-input-placeholder {
 }
 #search-bar input::-webkit-input-placeholder {
 	color: transparent;
+}
+
+
+/* autocomplete */
+.autocomplete {
+  position: relative;
+  width: 130px;
+}
+
+.autocomplete-results {
+  position: fixed;
+  top: 65px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #eeeeee;
+  background: #F7F4F2;
+  height: 120px;
+  overflow: auto;
+  z-index: 1;
+}
+
+.autocomplete-results{
+  overflow: hidden;
+  
+}
+.autocomplete-results::-webkit-scrollbar {
+  width: 8px; height: 8px; border: 3px solid white; 
+  } 
+.autocomplete-results::-webkit-scrollbar-button,.autocomplete-results::-webkit-scrollbar-button:END {
+  background-color: white;
+}
+.autocomplete-results::-webkit-scrollbar-button:start:decrement{
+}
+.autocomplete-results::-webkit-scrollbar-track {
+  background: white; 
+  -webkit-border-radius: 10px white; 
+  border-radius:10px white;
+  /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.2) */
+  }
+.autocomplete-results::-webkit-scrollbar-thumb {
+  height: 10px; 
+  width: 50px; 
+  background: #88A498; 
+  -webkit-border-radius: 15px; border-radius: 15px; 
+  /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
+  }
+.autocomplete-results:hover{
+  overflow-y: scroll;
+}
+
+.autocomplete-result {
+  list-style: none;
+  text-align: left;
+  padding: 4px 2px;
+  cursor: pointer;
+	width: 180px;
+}
+
+.autocomplete-result:hover {
+  background-color: #707070;
+  color: white;
 }
 </style>
