@@ -41,7 +41,7 @@
                 class="img-fluid feed-profile-img" 
                 :src="post.user.profileImg" alt="작성자 프로필 사진">
             </span>
-            {{ post.user.nickName }}
+            <span @click="selectUser(post.user.id)">{{ post.user.nickName }}</span>
             <span v-if="post.isClub" class="badge bg-green">Club</span>
           </div>
           <div class="color-beige small-text">
@@ -121,6 +121,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import router from '@/router'
 
 export default {
   name: 'PostList',
@@ -166,6 +167,9 @@ export default {
       if (post.bookmarkUsers.includes(this.myaccount.id)) {
         return true;
       }
+    },
+    selectUser(userId) {
+      router.push({ name: 'Profile', params: { userId: userId }})
     }
       
   },
