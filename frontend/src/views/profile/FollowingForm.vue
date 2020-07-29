@@ -17,8 +17,8 @@
                 <img v-else src="http://placehold.jp/200x200.png">
               </v-avatar>
             </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.nickname }}</v-list-item-title>
+            <v-list-item-content class="text-left">
+              <v-list-item-title @click="selectUser(item.toUserId)">{{ item.nickname }}</v-list-item-title>
             </v-list-item-content>
             <v-list-item-action>
               <v-btn small dark color="grey lighten-1" v-if="item.isFollow">팔로잉</v-btn>
@@ -40,7 +40,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-
+import router from '@/router'
 export default {
   data() {
     return {
@@ -63,8 +63,11 @@ export default {
   },
   methods: {
     ...mapActions('profileStore', ['fetchFollowingList']),
+    selectUser(userId) {
+      router.push({ name: 'Profile', params: { userId: userId }})
+    }
   },
-  mounted() {
+  created() {
     this.fetchFollowingList(this.$route.params.userId)
   }
 }
