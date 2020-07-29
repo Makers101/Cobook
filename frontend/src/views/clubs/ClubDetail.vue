@@ -28,6 +28,7 @@
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
+                v-if="isLeader"
               >
                 클럽 설정
               </button>
@@ -37,7 +38,7 @@
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item text-center">정보 수정</a>
               </div>
-              <button class="btn btn-warning mr">가입 신청</button>
+              <button class="btn btn-warning mr" v-if="selectedClub.recruit && !isMembers">가입 신청</button>
             </div>
           </div>
         </div>
@@ -125,7 +126,24 @@ export default {
     }
   },
   computed: {
-    ...mapState('clubStore', ['selectedClub'])
+    ...mapState(['myaccount']),
+    ...mapState('clubStore', ['selectedClub']),
+    isMembers: function() {
+      let result = false
+      this.selectedClub.members.forEach(member => {
+        if (member.id === this.myaccount.id) {
+          result = true
+        }
+      });
+      return result
+    },
+    isLeader: function() {
+      if (this.selectedClub.members[0].id === this.myaccount.id) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     ...mapActions('clubStore', ['findClub']),
@@ -217,6 +235,7 @@ export default {
   .club-image {
     border-radius: 25px;
     padding: 8px;
+    max-height: 300px;
   }
 
   .book-title {
