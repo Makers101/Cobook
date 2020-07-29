@@ -11,7 +11,7 @@
           <div class="text-left ml-3">
             <div class="d-flex justify-content-between mt-auto">
               <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>
-              <button v-if="myaccount.id !== profile.id" class="btn bg-green px-4" @click="clickFollow()">팔로우</button>
+              <button v-if="myaccount.id !== profile.id" class="btn bg-green px-4" @click="clickFollow(profile.id)">팔로우</button>
             </div>
             <p class="">{{ profile.description }}</p>
             <p class="color-light-black font-weight-bold">
