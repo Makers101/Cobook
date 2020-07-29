@@ -24,5 +24,7 @@ export default {
     // profile 
     profile: '/profile',
     follow: '/follow',
+    follower: '/follower',
+    following: '/following'
   }
 }
