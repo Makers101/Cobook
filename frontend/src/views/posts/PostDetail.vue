@@ -73,6 +73,7 @@
         <textarea
           class="col-11" 
           @keyup.enter="clickComment" 
+          @input="activeBtn"
           v-model="commentCreateData.content" 
           type="content" 
           placeholder="댓글을 작성하세요 :)" 
@@ -132,19 +133,6 @@ export default {
     ...mapState(['myaccount']),
     ...mapState('postStore', ['selectedPost', 'comments']),
   },
-  // watch: {
-  //   commentCreateData: {
-  //     deep: true,
-
-  //     handler() {
-  //       if (this.commentCreateData.content) {
-  //         this.btnActive = true
-  //       } else {
-  //         this.btnActive = false
-  //       }
-  //     }
-  //   },
-  // },
   methods: {
     ...mapActions('postStore', ['findPost', 'fetchComments', 'createComment', 'createLike', 'createBookmark']),
     clickLike(post) {
@@ -166,12 +154,18 @@ export default {
       }
     },
     clickComment() {
-      console.log(this.commentCreateData)
       this.createComment(this.commentCreateData)
         .then(() => {
           this.commentCreateData.content = null
-          console.log(this.commentCreateData)
+          this.btnActive = false
         })
+    },
+    activeBtn() {
+      if (this.commentCreateData.content) {
+        this.btnActive = true
+      } else {
+        this.btnActive = false
+      }
     }
   },
   created() {
