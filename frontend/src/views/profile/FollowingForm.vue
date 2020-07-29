@@ -8,7 +8,7 @@
       </v-card-text>
       <v-divider class="m-0"></v-divider>
       
-      <v-virtual-scroll :itemHeight="50" height="300" :items="followers">
+      <v-virtual-scroll :itemHeight="50" height="300" :items="followingList">
         <template v-slot="{item}">
           <v-list-item>
             <v-list-item-avatar>
@@ -17,8 +17,8 @@
                 <img v-else src="http://placehold.jp/200x200.png">
               </v-avatar>
             </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.nickName }}</v-list-item-title>
+            <v-list-item-content class="text-left">
+              <v-list-item-title @click="selectUser(item.toUserId)">{{ item.nickname }}</v-list-item-title>
             </v-list-item-content>
             <v-list-item-action>
               <v-btn small dark color="grey lighten-1" v-if="item.isFollow">팔로잉</v-btn>
@@ -39,66 +39,11 @@
 </template>
 
 <script>
-let followers = [
-  {
-    id: 1,
-    nickName: 'Hoon',
-    profileImg: 'http://i3a111.p.ssafy.io:8080/api/clubs/images/17',
-    isFollow: true
-  },
-  {
-    id: 2,
-    nickName: 'Jin',
-    profileImg: '',
-    isFollow: false
-  },
-  {
-    id: 3,
-    nickName: 'Soom',
-    profileImg: 'http://i3a111.p.ssafy.io:8080/api/clubs/images/16',
-    isFollow: false
-  },
-  {
-    id: 4,
-    nickName: 'Sun',
-    profileImg: 'http://i3a111.p.ssafy.io:8080/api/clubs/images/8',
-    isFollow: false
-  },
-  {
-    id: 5,
-    nickName: 'Lin',
-    profileImg: '',
-    isFollow: false
-  },
-  {
-    id: 6,
-    nickName: 'Lin',
-    profileImg: '',
-    isFollow: false
-  },
-  {
-    id: 7,
-    nickName: 'Lin',
-    profileImg: '',
-    isFollow: false
-  },
-  {
-    id: 8,
-    nickName: 'Lin',
-    profileImg: '',
-    isFollow: false
-  },
-  {
-    id: 9,
-    nickName: 'Lin',
-    profileImg: '',
-    isFollow: false
-  },
-]
+import { mapState, mapActions } from 'vuex'
+import router from '@/router'
 export default {
   data() {
     return {
-      'followers': followers
     }
   },
   props: {
@@ -114,7 +59,16 @@ export default {
          this.$emit('input', value)
       }
     },
-    
+    ...mapState('profileStore', ['followingList']), 
+  },
+  methods: {
+    ...mapActions('profileStore', ['fetchFollowingList']),
+    selectUser(userId) {
+      router.push({ name: 'Profile', params: { userId: userId }})
+    }
+  },
+  created() {
+    this.fetchFollowingList(this.$route.params.userId)
   }
 }
 </script>

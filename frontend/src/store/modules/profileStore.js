@@ -8,7 +8,9 @@ const profileStore = {
     profile: null,
     feeds: null,
     bookmarks: null,
-    clubs: null
+    clubs: null,
+    followingList: null,
+    followerlist: null,
   },
   getters: {
   },
@@ -27,6 +29,12 @@ const profileStore = {
     },
     SET_CLUBS(state, clubs) {
       state.clubs = clubs
+    },
+    SET_FOLLOWINGLIST(state, followingList) {
+      state.followingList = followingList
+    },
+    SET_FOLLOWERLIST(state, followerList) {
+      state.followerList = followerList
     }
   },
   actions: {
@@ -39,16 +47,42 @@ const profileStore = {
           console.log(err.response.data)
         })
     },
-    findProfile({ commit }, userId) {
-      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId)
+    findProfile({ rootGetters, commit }, userId) {
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId, rootGetters.config)
         .then(res => {
-          console.log(res)
           commit('SET_PROFILE', res.data)
         })
         .catch(err => {
           console.log(err.response.data)
         })
     },
+    clickFollow({ rootGetters}, userId){
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.follow, rootGetters.config)
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err.response)
+        })
+    },
+    fetchFollowingList({ rootGetters, commit }, userId) {
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.following, rootGetters.config)
+      .then(res => {
+        commit('SET_FOLLOWINGLIST', res.data)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
+     },
+     fetchFollowerList({ rootGetters, commit }, userId) {
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.follower, rootGetters.config)
+      .then(res => {
+        commit('SET_FOLLOWERLIST', res.data)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
+     },
     fetchFeeds({ commit }, userId) {
       axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/' + SERVER.ROUTES.feeds)
       .then(res => {
@@ -80,6 +114,7 @@ const profileStore = {
         })
       }
    },
+   
 }
 
 export default profileStore
