@@ -52,7 +52,7 @@ public class ProfileController {
 
     @ApiOperation(value = "사용자의 이미지를 저장한다")
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/imagse")
+    @PostMapping("/images")
     public ResponseEntity<Void> updateUserPicture(@ApiIgnore final Authentication authentication,
                                                   @RequestParam final MultipartFile profileImg) throws IOException {
         Long userId = ((User) authentication.getPrincipal()).getId();

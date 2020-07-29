@@ -1,6 +1,7 @@
 package com.ssafy.cobook.service.dto.reading;
 
 import com.ssafy.cobook.domain.book.Book;
+import com.ssafy.cobook.domain.clubmember.MemberRole;
 import com.ssafy.cobook.domain.reading.Reading;
 import com.ssafy.cobook.domain.readingmember.ReadingMember;
 import com.ssafy.cobook.domain.user.User;
@@ -32,7 +33,7 @@ public class ReadingDetailResDto {
     private Boolean closed;
     private BookSimpleResDto book;
     private List<QuestionResDto> questions;
-    private List<UserByPostDto> members;
+    private List<ReadingMemberResponseDto> members;
     private List<PostByMembersResDto> memberPosts;
 
     public ReadingDetailResDto(Reading reading, List<PostByMembersResDto> memberPosts) {
@@ -48,8 +49,8 @@ public class ReadingDetailResDto {
                 .map(QuestionResDto::new)
                 .collect(Collectors.toList());
         this.members = reading.getMembers().stream()
-                .map(ReadingMember::getUser)
-                .map(UserByPostDto::new)
+                .filter(m->m.getRole().equals(MemberRole.MEMBER) || m.getRole().equals(MemberRole.LEADER))
+                .map(ReadingMemberResponseDto::new)
                 .collect(Collectors.toList());
         this.memberPosts = memberPosts;
     }

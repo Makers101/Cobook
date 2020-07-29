@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserUpdateReqDto {
 
-    private String nicnName;
+    private String nickName;
     private String description;
     private List<Long> genres;
 }
