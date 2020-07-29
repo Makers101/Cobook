@@ -90,7 +90,7 @@
                   hide-selected
                   color="blue-grey lighten-2"
                   label="클럽 멤버"
-                  item-text="userName"
+                  item-text="nickName"
                   item-value="id"
                   multiple
                   :search-input.sync="searchMember"
@@ -105,10 +105,10 @@
                       @click="data.select"
                       @click:close="remove(clubCreateData.members, data.item)"
                     >
-                      <v-avatar left>
+                      <!-- <v-avatar left>
                         <v-img :src="data.item.avatar"></v-img>
-                      </v-avatar>
-                      {{ data.item.userName }}
+                      </v-avatar> -->
+                      {{ data.item.nickName }}
                     </v-chip>
                   </template>
                   <template v-slot:item="data">
@@ -116,11 +116,11 @@
                       <v-list-item-content v-text="data.item"></v-list-item-content>
                     </template>
                     <template v-else>
-                      <v-list-item-avatar>
+                      <!-- <v-list-item-avatar>
                         <img :src="data.item.avatar">
-                      </v-list-item-avatar>
+                      </v-list-item-avatar> -->
                       <v-list-item-content>
-                        <v-list-item-title v-html="data.item.userName"></v-list-item-title>
+                        <v-list-item-title v-html="data.item.nickName"></v-list-item-title>
                       </v-list-item-content>
                     </template>
                   </template>
@@ -259,7 +259,7 @@ export default {
   },
   computed: {
     ...mapState('clubStore', ['users']),
-    ...mapState(['genres', 'myaccount'])
+    ...mapState(['genres', 'myaccount', 'users'])
   },
   methods: {
     ...mapActions('clubStore', ['createClub']),

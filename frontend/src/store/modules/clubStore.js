@@ -46,7 +46,7 @@ const clubStore = {
             console.log(err.response.data)
           })
       },
-      createClub({ rootState, rootGetters }, clubCreateData) {
+      createClub({ rootState, rootGetters, dispatch }, clubCreateData) {
         // console.log(rootGetters.config)
         axios.post(SERVER.URL + SERVER.ROUTES.clubs, clubCreateData.basicData, rootGetters.config)
           .then(res => {
@@ -60,6 +60,7 @@ const clubStore = {
                 }
               })
               .then(() => {
+                dispatch('findMyAccount', null, { root: true })
                 router.push({ name: 'ClubDetail', params: { clubId: newClubId }})
               })
               .catch(err => {
@@ -71,7 +72,6 @@ const clubStore = {
           })
       },
       createReading({ rootGetters }, dataContainer) {
-        console.log(dataContainer)
         axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + dataContainer.clubId + '/readings', dataContainer.readingCreateData, rootGetters.config)
           .then(res => {
             router.push({ name: 'ReadingDetail', params: { clubId: dataContainer.clubId, readingId: res.data.id }})
