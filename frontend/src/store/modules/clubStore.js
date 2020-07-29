@@ -6,6 +6,7 @@ const clubStore = {
     namespaced: true,
     state: {
         clubs: null,
+        filteredClubs: null,
         selectedClub: null,
         selectedReading: null,
     },
@@ -14,6 +15,9 @@ const clubStore = {
     mutations: {
       SET_CLUBS(state, clubs) {
         state.clubs = clubs
+      },
+      SET_FILTERED_CLUBS(state, clubs) {
+        state.filteredClubs = clubs
       },
       SET_SELECTED_CLUB(state, club) {
         state.selectedClub = club
@@ -27,8 +31,38 @@ const clubStore = {
         axios.get(SERVER.URL + SERVER.ROUTES.clubs)
           .then(res => {
             commit('SET_CLUBS', res.data)
+            commit('SET_FILTERED_CLUBS', res.data)
           })
           .catch(err => console.log(err.response.data))
+      },
+      filterClubs({ state }, filters) {
+        let new_clubs1 = []
+        if (filters.recruit_filter) {
+          state.clubs.forEach(club => {
+            if (club.recruit) {
+              new_clubs1.push(club)
+            }
+          })
+        } else {
+          new_clubs1 = state.clubs
+        }
+        if (filters.genre_filter.size !== 0) {
+          let new_clubs2 = new Set()
+          new_clubs1.forEach(club => {
+            let temp = 0
+            club.genres.forEach(genre => {
+              if (filters.genre_filter.has(genre.id)) {
+                temp = temp + 1
+              }
+            })
+            if (filters.genre_filter.size === temp) {
+              new_clubs2.add(club)
+            }
+          })
+          state.filteredClubs = new_clubs2
+        } else {
+          state.filteredClubs = new_clubs1
+        }
       },
       findClub({ commit }, clubId) {
         axios.get(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId)
