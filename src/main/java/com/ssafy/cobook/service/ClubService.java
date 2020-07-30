@@ -21,7 +21,6 @@ import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
 import com.ssafy.cobook.service.dto.user.UserSimpleResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -80,12 +79,13 @@ public class ClubService {
         User user = getUser(userId);
         Club club = getClub(clubId);
         if (clubMemberRepository.findByUserAndClub(user, club).isPresent()) {
-            throw new BaseException(ErrorCode.ALREADY_APPLY_USER);
+            ClubMember clubMember = clubMemberRepository.findByUserAndClub(user, club).get();
+            if (clubMember.getRole().equals(MemberRole.WAITING)) {
+                clubMemberRepository.delete(clubMemberRepository.findByUserAndClub(user, club).get());
+            }
+            return;
         }
-        ClubMember clubMember = clubMemberRepository.save(new ClubMember(user, club, MemberRole.WAITING));
-        /*
-        club의 Leader에게 알람 보내기
-         */
+        clubMemberRepository.save(new ClubMember(user, club, MemberRole.WAITING));
     }
 
     private User getUser(Long userId) {
@@ -181,8 +181,7 @@ public class ClubService {
 
     private Long getClubFollow(Club club) {
         List<Follow> list = followRepository.findAllByClub(club);
-        Long userCount = Long.valueOf(list.size());
-        return userCount;
+        return Long.valueOf(list.size());
     }
 
     public ClubByFollowSimpleDto addFollow(Long userId, Long clubId) {
@@ -203,8 +202,7 @@ public class ClubService {
 
         Long userCount = getClubFollow(club);
 
-        ClubByFollowSimpleDto clubByFollowSimpleDto = new ClubByFollowSimpleDto(userId, isFollow, userCount);
-        return clubByFollowSimpleDto;
+        return new ClubByFollowSimpleDto(userId, isFollow, userCount);
     }
 
     public List<ClubCandidatesResponseDto> getCandidates(Long clubId, Long userId) {
@@ -216,8 +214,19 @@ public class ClubService {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
         }
         return club.getMembers().stream()
-                .filter(m->m.getRole().onWait())
+                .filter(m -> m.getRole().onWait())
                 .map(ClubCandidatesResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void signOutClub(Long clubId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember clubMember = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        user.removeClub(clubMember);
+        club.removeMember(clubMember);
+        clubMemberRepository.delete(clubMember);
     }
 }
