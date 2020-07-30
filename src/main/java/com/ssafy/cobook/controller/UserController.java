@@ -28,7 +28,9 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -88,11 +90,13 @@ public class UserController {
 
     @ApiOperation(value = "비밀번호 인증메일을 통해 비밀번호 변경 페이지로 보내준다")
     @GetMapping("/resetPassword/{token}")
-    public RedirectView goResetPassword(Model m, @PathVariable("token") String token) throws URISyntaxException {
+    public RedirectView goResetPassword(Model m, @PathVariable("token") String token) {
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("http://i3a111.p.ssafy.io/password/find");
+        redirectView.setUrl("http://i3a111.p.ssafy.io/password/change");
+        Map<String, String> attributes = new HashMap();
+        attributes.put("jwt", token);
 //        redirectView.setUrl("http://localhost:8081/password/find");
-        m.addAttribute("jwt", token);
+        redirectView.setAttributesMap(attributes);
         return redirectView;
 
     }
