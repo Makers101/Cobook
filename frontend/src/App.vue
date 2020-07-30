@@ -30,17 +30,32 @@
               @blur="focusout"
               >
             <ul 
-              class="autocomplete-results"
+              class="autocomplete-results px-3"
               v-show="searchedUsers"
               >
               <li
-                class="autocomplete-result"
+                class="autocomplete-result d-flex"
                 v-for="user in searchedUsers"
                 :key="`search-${user.id}`"
                 @click="userDetail(user.id)"
               >
-              <img :src="user.profileImg" alt="">
-              {{ user.nickName }}
+              <img
+                class="img-fluid mr-3"
+                style="width:25px; height:25px; border-radius: 50%" 
+                v-if="user.profileImg"
+                :src="user.profileImg" 
+                alt="">
+              <img
+                class="img-fluid mr-3"
+                v-else
+                style="border-radius: 50%"
+                src="https://user-images.githubusercontent.com/57381062/88908958-84e85480-d295-11ea-9637-540f1be674ac.png"
+                width=25px
+                height=25px 
+                >
+              <span>
+                {{ user.nickName }}
+              </span>
               </li>
             </ul>
           </div>
@@ -248,7 +263,7 @@ input::-webkit-input-placeholder {
 }
 #search-bar input[type=search]:focus {
 	width: 130px;
-	padding-left: 32px;
+	padding-left: 35px;
 	color: #000;
 	background-color: #fff;
 	cursor: auto;
