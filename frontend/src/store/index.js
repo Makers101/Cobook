@@ -9,6 +9,7 @@ import meetupStore from '@/store/modules/meetupStore'
 import postStore from '@/store/modules/postStore'
 import profileStore from '@/store/modules/profileStore'
 
+import router from '@/router'
 import axios from 'axios'
 import cookies from 'vue-cookies'
 import SERVER from '@/api/api'
@@ -89,7 +90,14 @@ export default new Vuex.Store({
       axios.post(SERVER.URL + SERVER.ROUTES.noti, notiData)
         .then(res => console.log(res))
         .catch(err => console.log(err.response.data))
-    }
+    },
+    logout({ commit }) {
+          commit('SET_TOKEN', null)
+          cookies.remove('auth-token')
+          // commit('SET_INIT')
+          alert("로그아웃 되었습니다.")
+          router.push({ name: 'Login' })
+    },
   },
 
   modules: {
