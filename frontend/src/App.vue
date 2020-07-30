@@ -265,7 +265,7 @@ export default {
 
 .dropdown-menu {
   top: 50px;
-  left: -70px;
+  left: -70px !important;
 }
 
 /* Search bar */
