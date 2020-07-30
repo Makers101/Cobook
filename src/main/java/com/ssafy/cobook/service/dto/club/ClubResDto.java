@@ -2,6 +2,7 @@ package com.ssafy.cobook.service.dto.club;
 
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.clubgenre.ClubGenre;
+import com.ssafy.cobook.domain.clubmember.MemberRole;
 import com.ssafy.cobook.service.dto.genre.GenreResponseDto;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class ClubResDto {
     private Boolean recruit;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Integer memberCnt;
+    private Long memberCnt;
     private Integer followerCnt;
     private List<GenreResponseDto> genres;
 
@@ -38,7 +39,9 @@ public class ClubResDto {
         this.recruit = club.getRecruit();
         this.createdAt = club.getCreatDateTime();
         this.updatedAt = club.getLastModifiedDate();
-        this.memberCnt = club.getMembers().size();
+        this.memberCnt = club.getMembers().stream()
+                .filter(m->m.getRole().equals(MemberRole.LEADER) || m.getRole().equals(MemberRole.MEMBER))
+                .count();
         this.followerCnt = club.getFollowList().size();
         this.genres = club.getGenres().stream()
                 .map(ClubGenre::getGenre)

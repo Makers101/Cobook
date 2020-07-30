@@ -20,6 +20,6 @@ public class ClubMemberResponseDto {
         if (clubMember.getUser().getProfileImg() != null) {
             this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.id;
         }
-        this.role = clubMember.getRole().getRole();
+        this.role = clubMember.getRole().getRole().toLowerCase();
     }
 }
