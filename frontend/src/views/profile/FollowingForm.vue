@@ -22,8 +22,14 @@
             </v-list-item-content>
             <v-list-item-action>
               <div v-if="item.toUserId !== myaccount.id">
-                <v-btn small dark color="grey lighten-1" v-if="item.isFollow">팔로잉</v-btn>
-                <v-btn small outlined color="grey lighten-1" v-else>팔로우</v-btn>
+                <v-btn 
+                  small dark color="grey lighten-1" 
+                  v-show="item.isFollow"
+                  @click="clickedFollow(item)">팔로잉</v-btn>
+                <v-btn 
+                  small outlined color="grey lighten-1" 
+                  v-show="!item.isFollow"
+                  @click="clickedFollow(item)">팔로우</v-btn>
               </div>
             </v-list-item-action>
           </v-list-item>
@@ -51,6 +57,7 @@ export default {
   props: {
      value: Boolean,
      profile: Object,
+     followingList: Array,
   },
   computed: {
     show: {
@@ -65,13 +72,16 @@ export default {
     ...mapState(['myaccount'])
   },
   methods: {
-    ...mapActions('profileStore', ['fetchFollowingList']),
+    ...mapActions('profileStore', ['clickFollowModal']),
     selectUser(userId) {
       router.push({ name: 'ProfileFeed', params: { userId: userId }})
+    }, 
+    clickedFollow(item) {
+      this.clickFollowModal(item.toUserId)
+      item.isFollow = !item.isFollow
     }
   },
   created() {
-    this.fetchFollowingList(this.$route.params.userId)
   }
 }
 </script>
