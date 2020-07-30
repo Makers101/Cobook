@@ -124,7 +124,7 @@
                   <router-link class="dropdown-item setting-btn" :to="{ name: 'Profile', params: {userId: myaccount.id} }">프로필</router-link>
                   <!-- <router-link v-if="myaccount" class="dropdown-item" :to="{ name: 'ProfileUpdate', params: {userId: myaccount.id} }">프로필 수정</router-link> -->
                   <!-- <div class="dropdown-divider"></div> -->
-                  <router-link class="dropdown-item setting-btn" to="/">로그아웃</router-link>
+                  <div class="dropdown-item setting-btn" @click="logout">로그아웃</div>
                 </div>
               </li>
             </ul>
@@ -161,7 +161,7 @@ export default {
     ...mapState(['genres', 'myaccount', 'books', 'users', 'notis']),
   },
   methods: {
-    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'fetchNotis']),
+    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'fetchNotis', 'logout']),
     searchUser() {
       if (!this.keyword) {
         this.isActive = false
@@ -218,13 +218,13 @@ export default {
 </script>
 
 <style scoped>
-@media (max-width: 1280px) {
+@media (max-width: 960px) {
   #app {
     display: none;
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 960px) {
   #app2 {
     display: none;
   }
