@@ -31,10 +31,14 @@
     <div>
       <h4 class="text-left font-weight-bold mb-3">클럽 가입 신청</h4>
       <div class="list-group">
-        <div class="list-group-item d-flex justify-content-between align-items-center" v-for="candidate in candidates" :key="candidate.id">
-          <p class="mb-0">{{ candidate.nickName }}</p>
+        <div class="list-group-item d-flex justify-content-between align-items-center" v-for="candidate in candidates" :key="candidate.userId">
+          <div class="d-flex justify-content-start align-items-center pointer" @click="toProfile(candidate.userId)">
+            <img class="rounded-circle profile-image" :src="candidate.profileImg" alt="" v-if="candidate.profileImg">
+            <img class="rounded-circle profile-image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
+            <h5 class="mb-0 ml-2 font-weight-bold">{{ candidate.nickName }}</h5>
+          </div>
           <div class="d-flex justify-content-end align-items-center">
-            <button class="btn btn-green" @click="clickDecideClubApply(candidate.clubMemberId, 'approve')">승인</button>
+            <button class="btn btn-green mr-2" @click="clickDecideClubApply(candidate.clubMemberId, 'approve')">승인</button>
             <button class="btn btn-danger" @click="clickDecideClubApply(candidate.clubMemberId, 'reject')">거절</button>
           </div>
         </div>
@@ -44,6 +48,7 @@
 </template>
 
 <script>
+import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'ClubCandidates',
@@ -65,6 +70,9 @@ export default {
       this.applyDecisionData.clubMemberId = clubMemberId
       this.applyDecisionData.decision = decision
       this.decideClubApply(this.applyDecisionData)
+    },
+    toProfile(userId) {
+      router.push({ name: 'Profile', params: { userId: userId }})
     }
   },
   created() {
@@ -79,5 +87,9 @@ export default {
     border-radius: 25px;
     padding: 8px;
     max-height: 300px;
+  }
+  
+  .profile-image {
+    max-height: 50px;
   }
 </style>
