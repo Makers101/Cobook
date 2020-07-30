@@ -125,4 +125,14 @@ public class PostController {
         postService.deleteComment(userId, postId, commentId);
         return ResponseEntity.ok().build();
     }
+
+    @ApiOperation(value = "게시글을 삭제한다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePosts(@ApiIgnore final Authentication authentication,
+                                            @PathVariable("postId") final Long postId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        postService.deletePosts(userId, postId);
+        return ResponseEntity.ok().build();
+    }
 }

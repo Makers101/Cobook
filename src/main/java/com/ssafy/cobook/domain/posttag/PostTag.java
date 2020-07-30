@@ -34,4 +34,9 @@ public class PostTag {
     public void ofPost(Post post) {
         this.post = post;
     }
+
+    public void removeTag() {
+        this.tag.removePostTag(this);
+        this.tag = null;
+    }
 }

@@ -30,4 +30,9 @@ public class PostBookMark {
         this.post = post;
         this.user = user;
     }
+
+    public void removeUser() {
+        this.user.removeBookMark(this);
+        this.user = null;
+    }
 }

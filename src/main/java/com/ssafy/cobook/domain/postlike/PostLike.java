@@ -30,4 +30,9 @@ public class PostLike {
         this.post = post;
         this.user = user;
     }
+
+    public void removeUser() {
+        this.user.removePostLike(this);
+        this.user = null;
+    }
 }
