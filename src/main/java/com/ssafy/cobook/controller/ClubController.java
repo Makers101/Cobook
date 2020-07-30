@@ -155,10 +155,13 @@ public class ClubController {
     }
 
     @ApiOperation(value = "리딩의 상세정보를 조회한다", response = ReadingDetailResDto.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/{clubId}/readings/{readingId}")
-    public ResponseEntity<ReadingDetailResDto> getReadingDetail(@PathVariable("clubId") final Long clubId,
+    public ResponseEntity<ReadingDetailResDto> getReadingDetail(@ApiIgnore final Authentication authentication,
+                                                                @PathVariable("clubId") final Long clubId,
                                                                 @PathVariable("readingId") final Long readingId) {
-        ReadingDetailResDto resDto = readingService.getDetails(clubId, readingId);
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        ReadingDetailResDto resDto = readingService.getDetails(clubId, readingId, userId);
         return ResponseEntity.status(HttpStatus.OK).body(resDto);
     }
 
@@ -185,8 +188,8 @@ public class ClubController {
     @ApiOperation(value = "클럽 게시글 수정", response = PostSaveResDto.class)
     @PutMapping("/{clubId}/posts/{postId}")
     public ResponseEntity<Void> updateClubPosts(@PathVariable("clubId") final Long clubId,
-                                                        @PathVariable("postId") final Long postId,
-                                                        @RequestBody final PostUpdateByClubReqDto requestDto) {
+                                                @PathVariable("postId") final Long postId,
+                                                @RequestBody final PostUpdateByClubReqDto requestDto) {
         postService.updateClubPosts(requestDto, clubId, postId);
         return ResponseEntity.ok().build();
     }

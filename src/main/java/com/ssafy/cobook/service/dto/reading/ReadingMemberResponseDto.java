@@ -12,7 +12,6 @@ public class ReadingMemberResponseDto {
     private Long id;
     private String nickName;
     private String profileImg;
-    private String role;
 
     public ReadingMemberResponseDto(ReadingMember readingMember) {
         this.id = readingMember.getUser().getId();
@@ -20,6 +19,5 @@ public class ReadingMemberResponseDto {
         if (readingMember.getUser().getProfileImg() != null) {
             this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.id;
         }
-        this.role = readingMember.getRole().getRole().toLowerCase();
     }
 }

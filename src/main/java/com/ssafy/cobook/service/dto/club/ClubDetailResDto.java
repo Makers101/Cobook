@@ -33,6 +33,7 @@ public class ClubDetailResDto {
     private Integer memberCnt;
     private Integer followerCnt;
     private List<GenreResponseDto> genres;
+    private ClubMemberResponseDto leader;
     private List<ClubMemberResponseDto> members;
     private List<ReadingSimpleResDto> readings;
 
@@ -52,8 +53,13 @@ public class ClubDetailResDto {
                 .map(ClubGenre::getGenre)
                 .map(GenreResponseDto::new)
                 .collect(Collectors.toList());
+        this.leader = club.getMembers().stream()
+                .filter(m -> m.getRole().equals(MemberRole.LEADER))
+                .findFirst()
+                .map(ClubMemberResponseDto::new)
+                .get();
         this.members = club.getMembers().stream()
-                .filter(m->m.getRole().equals(MemberRole.LEADER) || m.getRole().equals(MemberRole.MEMBER))
+                .filter(m -> m.getRole().equals(MemberRole.MEMBER))
                 .map(ClubMemberResponseDto::new)
                 .collect(Collectors.toList());
         this.readings = club.getReadingList().stream()

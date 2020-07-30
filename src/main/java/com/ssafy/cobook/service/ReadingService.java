@@ -86,8 +86,15 @@ public class ReadingService {
                 .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_READING));
     }
 
-    public ReadingDetailResDto getDetails(Long clubId, Long readingId) {
+    public ReadingDetailResDto getDetails(Long clubId, Long readingId, Long userId) {
         Club club = getClub(clubId);
+        User user = getUser(userId);
+        boolean isMember;
+        if (clubMemberRepository.findByUserAndClub(user, club).isPresent()) {
+            isMember = true;
+        } else {
+            isMember = false;
+        }
         Reading reading = getReading(readingId);
         if (!reading.getClub().getId().equals(clubId)) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
@@ -95,7 +102,7 @@ public class ReadingService {
         List<ReadingMember> members = reading.getMembers();
         Book book = reading.getBook();
         List<PostByMembersResDto> posts = getPosts(members, book);
-        return new ReadingDetailResDto(reading, posts);
+        return new ReadingDetailResDto(reading, posts, isMember);
     }
 
     private List<PostByMembersResDto> getPosts(List<ReadingMember> members, Book book) {

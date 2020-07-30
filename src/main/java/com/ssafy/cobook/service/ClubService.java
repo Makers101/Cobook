@@ -49,17 +49,6 @@ public class ClubService {
         User user = getUser(userId);
         Club club = clubRepository.save(reqDto.toEntity());
         ClubMember leader = clubMemberRepository.save(new ClubMember(user, club, MemberRole.LEADER));
-        if (!reqDto.getMembers().isEmpty()) {
-            List<User> users = reqDto.getMembers().stream()
-                    .map(this::getUser)
-                    .collect(Collectors.toList());
-            List<ClubMember> members = users.stream()
-                    .map(u -> clubMemberRepository.save(new ClubMember(u, club, MemberRole.MEMBER)))
-                    .collect(Collectors.toList());
-            for (ClubMember c : members) {
-                club.enrolls(c);
-            }
-        }
         club.enrolls(leader);
         List<Genre> genres = reqDto.getGenres().stream()
                 .map(this::getGenre)
@@ -110,6 +99,7 @@ public class ClubService {
     public List<ClubResDto> getClubList() {
         return clubRepository.findAll().stream()
                 .map(ClubResDto::new)
+                .sorted()
                 .collect(Collectors.toList());
     }
 
@@ -171,7 +161,7 @@ public class ClubService {
         waiting.chageRole(MemberRole.REJECT);
     }
 
-
+    @Transactional
     public ClubRecruitResponseDto changeRecruit(Long clubId, Long userId) {
         User user = getUser(userId);
         Club club = getClub(clubId);
