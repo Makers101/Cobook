@@ -21,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.UnsupportedEncodingException;
@@ -53,12 +54,12 @@ public class UserController {
 
     @ApiOperation(value = "이메일 인증을 진행하여 회원가입을 한다")
     @GetMapping("/authentication/{token}")
-    public ModelAndView authenticateEmail(@PathVariable("token") String token) {
+    public RedirectView authenticateEmail(@PathVariable("token") String token) {
         userService.checkEmailToken(token);
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("http://i3a111.p.ssafy.io:8080/login");
-        return modelAndView;
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://i3a111.p.ssafy.io:8080/login");
+        return redirectView;
     }
 
     @ApiOperation(value = "이메일, 패스워드를 받아서 로그인하여 토큰을 반환한다")
