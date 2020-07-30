@@ -41,6 +41,12 @@ public class NotificationService {
 
     @Transactional
     public void saveNoti(NotificationRequestDto requestDto) {
+        if (notificationRepository
+                .findByFromIdAndToIdAndDataIdAndTypes(requestDto.getFrom(), requestDto.getTo(), requestDto.getDataId(), requestDto.getType()).isPresent()) {
+            Notification noti = notificationRepository
+                    .findByFromIdAndToIdAndDataIdAndTypes(requestDto.getFrom(), requestDto.getTo(), requestDto.getDataId(), requestDto.getType()).get();
+            notificationRepository.delete(noti);
+        }
         notificationRepository.save(requestDto.toEntity());
     }
 
