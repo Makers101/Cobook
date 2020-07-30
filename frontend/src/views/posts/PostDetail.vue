@@ -229,11 +229,12 @@ export default {
   beforeRouteLeave(to, from, next) {
     if (this.commentCreateData.content) {
       if (confirm('작성 중인 댓글이 있습니다. 정말 넘어가시겠습니까?') === true) {
-        next()
+        next(to)
       } else {
         next(false)
       }
     }
+    next()
   }
 }
 </script>
