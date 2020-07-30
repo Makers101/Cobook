@@ -44,7 +44,7 @@
                 <a class="dropdown-item text-center">정보 수정</a>
               </div>
               <button class="btn btn-warning mr" v-if="selectedClub.recruit && !isMember && !isLeader" @click="clickApplyClub">가입 신청</button>
-              <button class="btn btn-warning mr" v-if="!isLeader && isMember">클럽 탈퇴</button>
+              <button class="btn btn-warning mr" v-if="!isLeader && isMember" @click="clickClubSecede">클럽 탈퇴</button>
             </div>
           </div>
         </div>
@@ -158,7 +158,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('clubStore', ['findClub', 'updateRecruit', 'applyClub']),
+    ...mapActions('clubStore', ['findClub', 'updateRecruit', 'applyClub', 'secedeClub']),
     selectReading(readingId) {
       router.push({ name: 'ReadingDetail', params: { clubId: this.$route.params.clubId, readingId: readingId }})
     },
@@ -174,6 +174,13 @@ export default {
     },
     toClubCandidates() {
       router.push({ name: 'ClubCandidates', params: { clubId: this.$route.params.clubId }})
+    },
+    clickClubSecede() {
+      if (confirm('클럽을 탈퇴하시겠습니까?') === true) {
+        this.secedeClub(this.$route.params.clubId)
+      } else {
+        return false
+      }
     }
   },
   created() {
