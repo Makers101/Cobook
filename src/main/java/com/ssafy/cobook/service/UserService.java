@@ -67,10 +67,10 @@ public class UserService {
         user.changePassword(encodePassword);
         user = userRepository.save(user);
 
-        String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
+//        String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
 
         // 이메일 인증 메일을 보낸다
-        preparedAndSend(userSaveRequestDto.getEmail(), isFind, token);
+//        preparedAndSend(userSaveRequestDto.getEmail(), isFind, token);
 
         return new UserResponseIdDto(user.getId());
     }
