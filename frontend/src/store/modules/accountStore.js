@@ -1,7 +1,7 @@
 import SERVER from '@/api/api'
 import axios from 'axios'
 import router from '@/router'
-
+import cookies from 'vue-cookies'
 
 const accountStore = {
     namespaced: true,
@@ -51,6 +51,21 @@ const accountStore = {
                     console.log(err.response.data)
                 })
         },
+        changePassword(info) {
+            console.log(info.data)
+            axios.post(SERVER.URL + info.location, info.data, {
+                headers: { 
+                    'Content-Type' : 'application/json',
+                    'jwt' : this.$route.query.jwt,
+                }
+            })
+                .then (() => {
+                    router.push({ name: 'PasswordChangeSuccessful'})
+                })
+                .catch (err => {
+                    console.log(err.response)
+                })
+        },
         signup({ dispatch }, signupData) {
             const info = {
                 data: signupData,
@@ -67,6 +82,13 @@ const accountStore = {
             }
             dispatch('postAuthData2', info)
         },
+        clickChangePassword({ dispatch }, passwordChangeData) {
+            const info = {
+                data: passwordChangeData,
+                location: SERVER.ROUTES.changepassword,
+            }
+            dispatch('changePassword', info)
+        }
         // findPassword({ dispatch }, passwordFindData) {
         //     const info = {
         //         data: passwordFindData,

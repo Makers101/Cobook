@@ -4,9 +4,8 @@
       <h3>비밀번호 변경하기</h3>
       <div class="input-with-label">
         <input 
-          v-model="password" 
-          
-          v-bind:class="{error : error.password, complete:!error.password&&password.length!==0}"
+          v-model="passwordChangeData.password" 
+          v-bind:class="{error : error.password, complete:!error.password&&passwordChangeData.password.length!==0}"
           class="inputs"
           id="password" 
           type="password"
@@ -19,11 +18,10 @@
 
       <div class="input-with-label">
         <input
-          v-model="passwordConfirm"
-          
+          v-model="passwordChangeData.passwordConfirm"
           type="password"
           id="password-confirm"
-          v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&passwordConfirm.length!==0}"
+          v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&passwordChangeData.passwordConfirm.length!==0}"
           placeholder="비밀번호를 다시 입력해주세요."
           class="inputs"
           required
@@ -32,19 +30,26 @@
         <div class="error-text ml-3" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
       </div>
       <div class="buttons mt-4 mb-3">
-        <button class="btn change-button" :class="{disabled: !isSubmit}" @click="clickChange" >비밀번호 변경하기</button>
+        <button class="btn change-button" :class="{disabled: !isSubmit}" @click="isSubmit && clickChangePassword(passwordChangeData)" >비밀번호 변경하기</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import SERVER from '@/api/api'
+import axios from 'axios'
+import router from '@/router'
+
 export default {
   name: 'PasswordChange',
   data() {
     return {
-      password: "",
-      passwordConfirm: "",
+      passwordChangeData: {
+        password: "",
+        passwordConfirm: "",
+      },
       error: {
         password: false,
         passwordConfirm: false,
@@ -56,18 +61,20 @@ export default {
     this.component = this;
   },
   watch: {
-    password() {
-      this.checkPasswordForm();
-    },
-    passwordConfirm() {
-      this.checkPasswordConfirmationForm();
+    passwordChangeData: {
+      deep: true,
+
+      handler() {
+        this.checkPasswordForm();
+        this.checkPasswordConfirmationForm();
+      }
     }
   },
   methods: {
     checkPasswordForm() {
-      if (this.password.length > 0 && this.password.length < 8) {
+      if (this.passwordChangeData.password.length > 0 && this.passwordChangeData.password.length < 8) {
           this.error.password = "비밀번호가 너무 짧아요"
-        } else if ( this.password.length >= 8 && !this.validPassword(this.password) ) {
+        } else if ( this.passwordChangeData.password.length >= 8 && !this.validPassword(this.passwordChangeData.password) ) {
           this.error.password = "영문, 숫자 포함 8 자리 이상이어야 해요.";
         } else this.error.password = false;
     },
@@ -76,10 +83,12 @@ export default {
       return va.test(password);
     },
     checkPasswordConfirmationForm() {
-      if (this.password !== this.passwordConfirm )
-        this.error.passwordConfirm = "비밀번호가 일치하지 않아요."
-      else this.error.passwordConfirm = false;
-      
+      if (this.passwordChangeData.password.length >=8 && this.validPassword(this.passwordChangeData.password)){
+        if (this.passwordChangeData.password !== this.passwordChangeData.passwordConfirm )
+          this.error.passwordConfirm = "비밀번호가 일치하지 않아요."
+        else this.error.passwordConfirm = false;
+      }
+
       // 버튼 활성화 코드 (다 통과 했을 때 넘어갈 수 있도록 생성 )
       let isSubmit = true;
       Object.values(this.error).map(v => {
@@ -87,11 +96,32 @@ export default {
       });
       this.isSubmit = isSubmit;
     },
-    clickChange() {
+    ...mapActions('accountStore', ['clickChangePassword']),
+
+    
+    clickChangePassword(info) {
       if ( this.isSubmit ){
-        this.$router.push({ name: 'PasswordChangeSuccessful' })
+        axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then (() => {
+          router.push({ name: 'PasswordChangeSuccessful' })
+        })
+        .catch (err =>{
+          console.log(err.response)
+        })
       }
-    }
+      
+      
+    },
+    changePassword(passwordChangeData) {
+      const info = {
+        data: passwordChangeData,
+        location: SERVER.ROUTES.password,
+        // to: '/'
+      }
+      this.sendPasswordEmail(info)
+    },
   }
 }
 </script>

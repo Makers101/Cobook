@@ -19,6 +19,7 @@ export default {
     signup: '/users/signup',
     login: '/users/signin',
     password: '/users/password',
+    changepassword: '/users/resetPassword/update',
 
 
     // profile 
