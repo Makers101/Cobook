@@ -1,6 +1,6 @@
 <template>
   <div class="mt-3">
-    <div class="row rows-cols-1 row-cols-md-3">
+    <div class="row rows-cols-1 row-cols-md-3" v-if="bookmarks.length">
       <div class="col-12 col-sm-4 mb-4" v-for="bookmark in bookmarks" :key="bookmark.id">
         <div class="card h-100" @click="selectFeed(bookmark.id)">
            <div style="max-height:70px;overflow:hidden;">
@@ -29,6 +29,10 @@
       </div>
       
     </div>
+    <div v-else>
+      <img src="@/assets/ready.png" width="150px" class="mt-3">
+      <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 북마크한 피드가 없습니다. </h3>
+    </div>
   </div>
 </template>
 
@@ -41,7 +45,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('profileStore',['bookmarks']),
+    ...mapState('profileStore',['bookmarks', 'profile']),
     ...mapState(['myaccount'])
   },
   methods: {
