@@ -180,6 +180,7 @@
                   label="질문지"
                   multiple
                   chips
+                  hint="질문지는 여러 개 작성이 가능합니다 :)"
                 >
                   <!-- <template v-slot:no-data>
                     <v-list-item>

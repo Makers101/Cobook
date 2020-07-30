@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container my-3">
+  <div class="custom-container mt-3 mb-5">
     <!-- reading-header -->
     <div class="row">
       <img class="book-image col-2" :src="selectedReading.book.bookImg" alt="" v-if="selectedReading.book.bookImg">
@@ -18,7 +18,10 @@
           <div class="d-flex justify-content-between">
             <div class="d-flex flex-column align-items-start justify-content-end">
               <p class="mb-0"><i class="fas fa-map-marker-alt"></i> {{ selectedReading.place }}</p>
-              <p class="mb-0">{{ selectedReading.dateTime.slice(0, 10) }}</p>
+              <p class="mb-0">{{ selectedReading.dateTime | moment('YYYY-MM-DD HH:mm') }}</p>
+
+              <!-- <p class="mb-0">{{ selectedReading.dateTime.slice(0, 10) }} / {{ selectedReading.dateTime.slice(11, 16) }}</p> -->
+              <!-- <p class="mb-0"></p> -->
             </div>
             <div class="d-flex justify-content-end align-items-end">
               <button class="btn btn-secondary mr-2" v-if="isLeader">리딩 설정</button>
