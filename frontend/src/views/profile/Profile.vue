@@ -32,12 +32,14 @@
       <FollowerForm 
         v-if="showFollowerForm" 
         v-model="showFollowerForm" 
+        :followerList = "this.followerList"
         :profile="this.profile" 
         id="followerModal"
       />
       <FollowingForm 
       v-if="showFollowingForm" 
       v-model="showFollowingForm" 
+      :followingList = "this.followingList"
       :profile="this.profile"
       id="followingModal"/>
 
@@ -62,7 +64,7 @@ import FollowingForm from './FollowingForm'
 export default {
   name: 'Profile',
   computed: {
-    ...mapState('profileStore',['profile', 'followingList']),
+    ...mapState('profileStore',['profile', 'followingList', 'followerList']),
     ...mapState(['myaccount'])
   },
   data() {
@@ -124,10 +126,16 @@ export default {
   },
   created() {
     this.findProfile(this.$route.params.userId)
+    this.fetchFollowerList(this.$route.params.userId) 
+    this.fetchFollowingList(this.$route.params.userId) 
   },
 
   mounted() {
     this.$router.push({ name: 'ProfileFeed',  params: { userId:this.$route.params.userId }})
+  },
+
+  updated() {
+     
   },
 
   beforeRouteUpdate (to, from, next) {

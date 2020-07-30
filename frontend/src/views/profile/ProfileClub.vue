@@ -15,7 +15,7 @@
               :alt="club.name"
               @click="selectClub(club.id)"
             >
-            <span class="badge mb-0 club-open" v-if="club.open">모집중</span>
+            <span class="badge mb-0 club-open" v-if="club.recruit">모집중</span>
           </div>        
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
