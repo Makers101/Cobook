@@ -82,51 +82,6 @@
                 ></v-text-field>
               </v-col>
 
-              <v-col cols="12">
-                <v-autocomplete
-                  v-model="clubCreateData.members"
-                  :items="users"
-                  chips
-                  hide-selected
-                  color="blue-grey lighten-2"
-                  label="클럽 멤버"
-                  item-text="nickName"
-                  item-value="id"
-                  multiple
-                  :search-input.sync="searchMember"
-                  @change="isMemberNull()"
-                  @keypress.enter="isMemberNull()"
-                >
-                  <template v-slot:selection="data">
-                    <v-chip
-                      v-bind="data.attrs"
-                      :input-value="data.selected"
-                      close
-                      @click="data.select"
-                      @click:close="remove(clubCreateData.members, data.item)"
-                    >
-                      <!-- <v-avatar left>
-                        <v-img :src="data.item.avatar"></v-img>
-                      </v-avatar> -->
-                      {{ data.item.nickName }}
-                    </v-chip>
-                  </template>
-                  <template v-slot:item="data">
-                    <template v-if="typeof data.item !== 'object'">
-                      <v-list-item-content v-text="data.item"></v-list-item-content>
-                    </template>
-                    <template v-else>
-                      <!-- <v-list-item-avatar>
-                        <img :src="data.item.avatar">
-                      </v-list-item-avatar> -->
-                      <v-list-item-content>
-                        <v-list-item-title v-html="data.item.nickName"></v-list-item-title>
-                      </v-list-item-content>
-                    </template>
-                  </template>
-                </v-autocomplete>
-              </v-col>
-
               <v-col
                 cols="12"
                 md="12"
@@ -165,7 +120,7 @@
                   counter="5"
                   :rules="[
                     v => (v.length !== 0) || '필수항목입니다.',
-                    v => (v.length < 6) || '최대 5개의 관심 장르를 고를 수 있습니다.'
+                    v => (v.length < 4) || '최대 3개의 관심 장르를 고를 수 있습니다.'
                   ]"
                   label="관심 장르"
                   item-text="name"
@@ -242,7 +197,6 @@ export default {
           onelineDescription: null,
           description: null,
           residence: null,
-          members: [],
           genres: [],
           clubImg: null        
         },
@@ -251,7 +205,6 @@ export default {
       clubImg: null,
       valid: true,
       lazy:false,
-      searchMember: null,
       searchGenre: null,
     }
   },
@@ -265,11 +218,6 @@ export default {
       const index = data.indexOf(item.id)
       if (index >= 0) data.splice(index, 1)
     },
-    isMemberNull() {
-      this.$nextTick(() => {
-        this.searchMember = null
-      })
-    },
     isGenreNull() {
       this.$nextTick(() => {
         this.searchGenre = null
@@ -279,14 +227,7 @@ export default {
       this.$refs.form.validate()
     },
     clickCreate() {
-      // const formData = new FormData()
-      // formData.append('name', this.clubCreateData.name)
       this.clubCreateData.clubImgFormData.append('clubImg', this.clubImg)
-      // console.log(typeof(this.clubCreateData.clubImg))
-      // formData.append('onelineDescription', this.clubCreateData.onelineDescription)
-      // formData.append('description', this.clubCreateData.description)
-      // formData.append('residence', this.clubCreateData.residence)
-      // formData.append('genres', this.clubCreateData.genres)
       this.createClub(this.clubCreateData)
     }
   }
