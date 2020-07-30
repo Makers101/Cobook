@@ -1,5 +1,6 @@
 package com.ssafy.cobook.service.dto.reading;
 
+import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.reading.Reading;
 import com.ssafy.cobook.service.dto.book.BookSimpleResDto;
@@ -22,7 +23,7 @@ public class ReadingByClubResDto {
     private String description;
     private String oneLineDescription;
     private Boolean closed;
-
+    private Book book;
 
     public ReadingByClubResDto(Reading reading) {
         this.clubId = reading.getClub().getId();
@@ -33,5 +34,6 @@ public class ReadingByClubResDto {
         this.description = reading.getDescription();
         this.oneLineDescription = reading.getOneLineDescription();
         this.closed = reading.getClosed();
+        this.book = reading.getBook();
     }
 }
