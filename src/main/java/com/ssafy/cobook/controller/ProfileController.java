@@ -7,7 +7,7 @@ import com.ssafy.cobook.service.dto.club.ClubResDto;
 import com.ssafy.cobook.service.dto.post.PostDetailResDto;
 import com.ssafy.cobook.service.dto.post.PostResponseDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
-import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
+import com.ssafy.cobook.service.dto.reading.ReadingByClubResDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
 import com.ssafy.cobook.service.dto.user.UserResponseIdDto;
 import com.ssafy.cobook.service.dto.user.UserUpdateReqDto;
@@ -137,7 +137,7 @@ public class ProfileController {
 
     @ApiOperation(value = "해당 유저의 리딩을 가져온다")
     @GetMapping("/{userId}/reading")
-    public ResponseEntity<List<ReadingSimpleResDto>>getReading(@PathVariable("userId") Long toUserId){
+    public ResponseEntity<List<ReadingByClubResDto>>getReading(@PathVariable("userId") Long toUserId){
         return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserReading(toUserId));
     }
 }
