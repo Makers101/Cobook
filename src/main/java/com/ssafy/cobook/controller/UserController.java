@@ -58,7 +58,7 @@ public class UserController {
         userService.checkEmailToken(token);
 
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("http://i3a111.p.ssafy.io:8080/login");
+        redirectView.setUrl("http://i3a111.p.ssafy.io/login");
         return redirectView;
     }
 
@@ -88,7 +88,7 @@ public class UserController {
     @ApiOperation(value = "비밀번호 인증메일을 통해 비밀번호 변경 페이지로 보내준다")
     @GetMapping("/resetPassword/{token}")
     public ResponseEntity<Object> goResetPassword(@PathVariable("token") String token) throws URISyntaxException {
-        URI redirectUri = new URI("http://i3a111.p.ssafy.io:8080/password/find");
+        URI redirectUri = new URI("http://i3a111.p.ssafy.io/password/find");
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(redirectUri);
         httpHeaders.set("jwt", token);
