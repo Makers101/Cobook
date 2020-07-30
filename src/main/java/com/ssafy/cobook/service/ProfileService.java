@@ -245,7 +245,7 @@ public class ProfileService {
     public List<ReadingByClubResDto> getUserReading(Long userId) {
         User user = getUserById(userId);
 
-       return readingMemberRepository.findAllByUser(user)
+        return readingMemberRepository.findAllByUser(user)
                 .stream()
                 .map(ReadingMember::getReading)
                 .map(ReadingByClubResDto::new)
