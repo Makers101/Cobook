@@ -21,9 +21,10 @@
               <p class="mb-0">{{ selectedReading.dateTime.slice(0, 10) }}</p>
             </div>
             <div class="d-flex justify-content-end align-items-end">
-              <button class="btn btn-secondary mr-2">리딩 설정</button>
-              <button class="btn btn-warning mr-2">참가 신청</button>
-              <button class="btn btn-primary mr">모임 입장</button>
+              <button class="btn btn-secondary mr-2" v-if="isLeader">리딩 설정</button>
+              <button class="btn btn-warning mr-2" v-if="selectedReading.isMember & !isParticipant">참가 신청</button>
+              <button class="btn btn-warning mr-2" v-if="selectedReading.isMember & isParticipant">참가 취소</button>
+              <button class="btn btn-primary mr" v-if="isLeader || isParticipant">모임 입장</button>
             </div>
           </div>
         </div>
@@ -36,11 +37,18 @@
     <div>
       <h4 class="text-left font-weight-bold mb-3">리딩 멤버({{ selectedReading.participantCnt }})</h4>
       <div class="d-flex justify-content-start">
-        <div class="profile-container pointer" v-for="member in selectedReading.members" :key="member.id" @click="selectUser(member.id)">
-          <img class="rounded-circle image" :src="member.proflieImg" alt="" v-if="member.profileImg">
+        <div class="profile-container pointer" @click="selectUser(selectedReading.leader.id)">
+          <img class="rounded-circle image" :src="selectedReading.leader.profileImg" alt="" v-if="selectedReading.leader.profileImg">
           <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
           <div class="overlay rounded-circle">
-            <div class="text">{{ member.nickName }}</div>
+            <div class="text">{{ selectedReading.leader.nickName }}</div>
+          </div>
+        </div>
+        <div class="profile-container pointer" v-for="participant in selectedReading.participants" :key="participant.id" @click="selectUser(participant.id)">
+          <img class="rounded-circle image" :src="participant.proflieImg" alt="" v-if="participant.profileImg">
+          <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
+          <div class="overlay rounded-circle">
+            <div class="text">{{ participant.nickName }}</div>
           </div>
         </div>
       </div>
@@ -127,7 +135,24 @@ export default {
     }
   },
   computed: {
-    ...mapState('clubStore', ['selectedReading'])
+    ...mapState(['myaccount']),
+    ...mapState('clubStore', ['selectedReading']),
+    isMember: function() {
+      let result = false
+      this.selectedReading.participants.forEach(participant => {
+        if (participant.id === this.myaccount.id) {
+          result = true
+        }
+      })
+      return result
+    },
+    isLeader: function() {
+      if (this.selectedReading.leader.id === this.myaccount.id) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     ...mapActions('clubStore', ['findReading']),
