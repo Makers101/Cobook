@@ -1,5 +1,6 @@
 package com.ssafy.cobook.domain.follow;
 
+import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -31,4 +32,9 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     @Modifying
     @Query("DELETE FROM Follow WHERE fromUser.id= :fromUser AND toUser.id= :toUser")
     void deleteByUser(@Param("fromUser")Long fromUser, @Param("toUser") Long toUser);
+
+    Optional<Follow> findByFromUserAndClub(User user, Club club);
+
+    @Modifying
+    void deleteByFromUserAndClub(User user, Club club);
 }

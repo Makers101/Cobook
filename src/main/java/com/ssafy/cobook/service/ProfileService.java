@@ -9,12 +9,15 @@ import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.genre.GenreRepository;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
+import com.ssafy.cobook.domain.postbookmark.PostBookMark;
+import com.ssafy.cobook.domain.postbookmark.PostBookMarkRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.domain.usergenre.UserGenreRepository;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
+import com.ssafy.cobook.service.dto.post.PostDetailResDto;
 import com.ssafy.cobook.service.dto.post.PostResponseDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.reading.ReadingDetailResDto;
@@ -49,6 +52,7 @@ public class ProfileService {
     private final GenreRepository genreRepository;
     private final UserGenreRepository userGenreRepository;
     private final PostRepository postRepository;
+    private final PostBookMarkRepository postBookMarkRepository;
 
     public ProfileResponseDto getUserInfo(Long fromUserId, Long toUserId) {
         User toUser = userRepository.findById(toUserId)
@@ -253,5 +257,14 @@ public class ProfileService {
         }
 
         return readingList;
+    }
+
+    public List<PostDetailResDto> getUserBookmark(Long userId) {
+        User user = getUserById(userId);
+        return postBookMarkRepository.findAllByUser(user)
+                .stream()
+                .map(PostBookMark::getPost)
+                .map(PostDetailResDto::new)
+                .collect(Collectors.toList());
     }
 }
