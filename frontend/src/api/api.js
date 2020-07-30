@@ -26,6 +26,7 @@ export default {
     follow: '/follow',
     follower: '/follower',
     following: '/following',
-    feed: '/feed'
+    feed: '/feed',
+    bookmark: '/bookmark',
   }
 }

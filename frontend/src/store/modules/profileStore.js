@@ -87,7 +87,6 @@ const profileStore = {
     fetchFeeds({ commit }, userId) {
       axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.feed)
       .then(res => {
-        console.log(res)
         commit('SET_FEEDS', res.data)
       })
       .catch(err => {
@@ -95,9 +94,9 @@ const profileStore = {
       })
     },
     fetchBookmarks({ commit }, userId) {
-      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/' + SERVER.ROUTES.bookmarks)
+      console.log(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.bookmark)
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.bookmark)
         .then(res => {
-          console.log(res)
           commit('SET_BOOKMARKS', res.data)
         })
         .catch(err => {
@@ -107,7 +106,6 @@ const profileStore = {
     fetchClubs({ commit }, userId) {
       axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/' + SERVER.ROUTES.clubs)
         .then(res => {
-          console.log(res)
           commit('SET_CLUBS', res.data)
         })
         .catch(err => {
