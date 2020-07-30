@@ -38,7 +38,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -111,24 +113,29 @@ public class ProfileService {
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
         // 1. isFollow인 애 찾기
-        List<UserByFollowDto> followList = followRepository.findAllByFollowing(toUser.getId(), fromUser.getId())
+        List<UserByFollowDto> followList = Optional.ofNullable(followRepository.findAllByFollowing(toUser.getId(), fromUser.getId())
                 .stream()
                 .map(Follow::getToUser)
                 .map(UserByFollowDto::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
 
         followList.forEach(userByFollowDto -> userByFollowDto.setIsFollow(true));
 
         // 2. isNotFollow 애 찾기
-        List<UserByFollowDto> notFollowList = followRepository.findAllByNotFollowing(toUser.getId(), fromUser.getId())
+        List<UserByFollowDto> notFollowList = Optional.ofNullable(followRepository.findAllByNotFollowing(toUser.getId(), fromUser.getId())
                 .stream()
                 .map(Follow::getToUser)
                 .map(UserByFollowDto::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())).orElse(Collections.emptyList());
 
         List<UserByFollowDto> followingList = new ArrayList<>();
-        followingList.addAll(0, followList);
-        followingList.addAll(0, notFollowList);
+        if (!followList.isEmpty()) {
+            followingList.addAll(0, followList);
+        }
+        if (!notFollowList.isEmpty()) {
+            followingList.addAll(0, notFollowList);
+        }
 
         return followingList;
     }
@@ -142,24 +149,30 @@ public class ProfileService {
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
         // 1. isFollow인 애 찾기
-        List<UserByFollowDto> followList = followRepository.findAllByFollower(toUser.getId(), fromUser.getId())
+        List<UserByFollowDto> followList = Optional.ofNullable(followRepository.findAllByFollower(toUser.getId(), fromUser.getId())
                 .stream()
                 .map(Follow::getFromUser)
                 .map(UserByFollowDto::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
 
         followList.forEach(userByFollowDto -> userByFollowDto.setIsFollow(true));
 
         // 2. isNotFollow 애 찾기
-        List<UserByFollowDto> notFollowList = followRepository.findAllByNotFollower(toUser.getId(), fromUser.getId())
+        List<UserByFollowDto> notFollowList = Optional.ofNullable(followRepository.findAllByNotFollower(toUser.getId(), fromUser.getId())
                 .stream()
                 .map(Follow::getFromUser)
                 .map(UserByFollowDto::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
 
         List<UserByFollowDto> followerList = new ArrayList<>();
-        followerList.addAll(0, followList);
-        followerList.addAll(0, notFollowList);
+        if(!followerList.isEmpty()){
+            followerList.addAll(0, followList);
+        }
+        if(!notFollowList.isEmpty()){
+            followerList.addAll(0, notFollowList);
+        }
 
         return followerList;
     }

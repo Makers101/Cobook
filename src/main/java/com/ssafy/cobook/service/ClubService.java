@@ -143,7 +143,7 @@ public class ClubService {
         if (!waiting.onWait()) {
             throw new BaseException(ErrorCode.ALREADY_PROCESS);
         }
-        waiting.chageRole(MemberRole.MEMBER);
+        waiting.changeRole(MemberRole.MEMBER);
         User clubMember = waiting.getUser();
         clubMember.enrollClub(waiting);
         club.enrolls(waiting);
