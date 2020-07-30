@@ -106,7 +106,6 @@ export default {
       }
       this.sendPasswordEmail(info)
     },
-
   },
 }
 </script>
