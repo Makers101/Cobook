@@ -1,5 +1,6 @@
 <template>
-  <div class="custom-container mt-3 custom-offset-lg-0">
+  <v-app class="custom-container mt-3 custom-offset-lg-0">
+  <div>
     <div class="post mb-4">
       <div class="post-header d-flex justify-content-between p-2 pl-3">
         <div>
@@ -130,11 +131,28 @@
           </div>
           <div>
             <div
-              class="btn text-danger btn-sm" 
+              class="btn text-danger btn-sm"
               v-if="comment.user.id === myaccount.id"
-              @click="deleteComment({ postId: commentCreateData.postId, commentId: comment.id })"
-            >
-            삭제</div>
+              @click.stop="dialog = true"
+            > 삭제 </div>
+            <v-dialog v-model="dialog" max-width="290">
+              <v-card>
+                <v-card-title class="h5">정말 삭제하시겠습니까?</v-card-title>
+                <v-card-actions>
+                  <v-flex flex-column class="justify-end">
+                    <v-btn 
+                    color="red darken-1" 
+                    text 
+                    @click="falseDialog(commentCreateData, comment)" >네</v-btn>
+                    <v-btn 
+                      color="green darken-1" 
+                      text 
+                      @click="dialog = false">아니요</v-btn>
+                  </v-flex>
+                  
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </div>
         </div>
         <div class="col-12 text-left wrapping">
@@ -144,6 +162,7 @@
       </div>
     </div>
   </div>
+  </v-app>
 </template>
 
 <script>
@@ -158,6 +177,7 @@ export default {
         content: null
       },
       btnActive: false,
+      dialog: false,
     }
   },
   computed: {
@@ -234,6 +254,10 @@ export default {
       document.execCommand("copy");
       document.body.removeChild(copyText)
       alert("주소가 복사 되었습니다.")
+    },
+    falseDialog(commentCreateData, comment) {
+      this.dialog = false
+      this.deleteComment({ postId: commentCreateData.postId, commentId: comment.id })
     }
   },
   created() {
