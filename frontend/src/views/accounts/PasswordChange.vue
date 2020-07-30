@@ -38,9 +38,9 @@
 
 <script>
 import { mapActions } from 'vuex'
-import SERVER from '@/api/api'
-import axios from 'axios'
-import router from '@/router'
+// import SERVER from '@/api/api'
+// import axios from 'axios'
+// import router from '@/router'
 
 export default {
   name: 'PasswordChange',
@@ -99,29 +99,29 @@ export default {
     ...mapActions('accountStore', ['clickChangePassword']),
 
     
-    clickChangePassword(info) {
-      if ( this.isSubmit ){
-        axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
-          headers: { 'Content-Type': 'application/json' }
-        })
-        .then (() => {
-          router.push({ name: 'PasswordChangeSuccessful' })
-        })
-        .catch (err =>{
-          console.log(err.response)
-        })
-      }
+    // clickChangePassword(info) {
+    //   if ( this.isSubmit ){
+    //     axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
+    //       headers: { 'Content-Type': 'application/json','jwt' : this.$route.query.jwt, }
+    //     })
+    //     .then (() => {
+    //       router.push({ name: 'PasswordChangeSuccessful' })
+    //     })
+    //     .catch (err =>{
+    //       console.log(err.response)
+    //     })
+    //   }
       
       
-    },
-    changePassword(passwordChangeData) {
-      const info = {
-        data: passwordChangeData,
-        location: SERVER.ROUTES.password,
-        // to: '/'
-      }
-      this.sendPasswordEmail(info)
-    },
+    // },
+    // changePassword(passwordChangeData) {
+    //   const info = {
+    //     data: passwordChangeData,
+    //     location: SERVER.ROUTES.changepassword,
+    //     // to: '/'
+    //   }
+    //   this.sendPasswordEmail(info)
+    // },
   }
 }
 </script>
