@@ -1,8 +1,8 @@
 <template>
   <div class="mt-3">
-    <h5 class="text-left font-weight-bold">Club</h5>
+    <h5 class="text-left font-weight-bold" v-if="clubs.length">Club</h5>
     <!-- Club cards -->
-    <div class="club-list my-2 row">
+    <div class="club-list my-2 row" v-if="clubs.length">
       <div 
         class="col-sm-4 col-12 p-3"
         v-for="club in clubs"
@@ -10,7 +10,7 @@
         <div class="card">
           <div class="card-head">
             <img
-              class="card-img-top to-detail"
+              class="card-img-top to-detail club-image"
               :src="club.clubImg"
               :alt="club.name"
               @click="selectClub(club.id)"
@@ -23,10 +23,10 @@
               <small class="color-green font-weight-bold club-followers">{{ club.followerCnt }} FOLLOW</small>
             </div>
             <p class="card-text text-left club-oneline">{{ club.onelineDescription }}</p>
-            <div class="d-flex justify-content-start my-3">
+            <div class="d-flex justify-content-start my-3 club-genre">
               <span
                 class="badge badge-genre mr-2"
-                v-for="genre in club.genres"
+                v-for="genre in club.genres.slice(0,3)"
                 :key="`club_genre_${genre.id}`">
                 #{{ genre.name }}
               </span>
@@ -48,8 +48,12 @@
         </div>
       </div>
     </div>
+    <div v-else>
+      <img src="@/assets/ready.png" width="150px" class="mt-3">
+      <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 가입한 클럽이 없습니다. </h3>
+    </div>
     <!-- Reading & Meetups -->
-    <h5 class="text-left font-weight-bold">Reading & Meetup</h5>
+    <h5 class="text-left font-weight-bold" v-if="clubs.length">Reading & Meetup</h5>
     <div class="row rows-cols-1 row-cols-sm-3">
       <div class="col mb-4 col-12 col-sm-4" v-for="reading in readings" :key="reading.id">
         <div class="card h-100">
@@ -89,7 +93,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('profileStore',['clubs', 'readings']),
+    ...mapState('profileStore',['clubs', 'readings', 'profile']),
     ...mapState(['myaccount'])
   },
   methods: {
@@ -156,7 +160,12 @@ export default {
   created() {
     this.fetchClubs(this.$route.params.userId)
     this.fetchReadings(this.$route.params.userId)
-  }
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.fetchClubs(to.params.userId)
+    this.fetchReadings(to.params.userId)
+    next();
+  },
 }
 </script>
 
@@ -234,6 +243,23 @@ export default {
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
+    text-align: start;
+  }
+
+  .club-image {
+    max-width: 100%;
+    height: 150px;
+    overflow: hidden;
+  }
+
+  .club-genre {
+    overflow: hidden;
+    white-space: normal;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
     -webkit-box-orient: vertical;
     text-align: start;
   }
