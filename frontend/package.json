@@ -10,8 +10,10 @@
   "dependencies": {
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
+    "scrollmonitor": "^1.2.4",
     "vue": "^2.6.11",
     "vue-cookies": "^1.7.3",
+    "vue-infinite-loading": "^2.4.5",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.2.0",
     "vuetify": "^2.2.11",

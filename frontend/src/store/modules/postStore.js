@@ -6,6 +6,7 @@ const postStore = {
   namespaced: true,
   state: {
     posts: null,
+    // postList: null,
     selectedPost: null,
     comments: null,
     tags: null,
@@ -15,6 +16,7 @@ const postStore = {
   mutations: {
     SET_POSTS(state, posts) {
       state.posts = posts
+      // state.postList = posts.slice(0, 3)
     },
     SET_SELECTED_POST(state, post) {
       state.selectedPost = post
