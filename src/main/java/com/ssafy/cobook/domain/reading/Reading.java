@@ -68,7 +68,7 @@ public class Reading {
     }
 
     public void addMember(ReadingMember readingMember) {
-        if( this.members.contains(readingMember)) {
+        if (this.members.contains(readingMember)) {
             this.members.remove(readingMember);
             return;
         }
@@ -77,5 +77,13 @@ public class Reading {
 
     public void removeMember(ReadingMember delete) {
         this.members.remove(delete);
+    }
+
+    public void delete() {
+        for (ReadingMember member : members) {
+            member.removeUser();
+        }
+        book.removeReading(this);
+        this.questions = null;
     }
 }

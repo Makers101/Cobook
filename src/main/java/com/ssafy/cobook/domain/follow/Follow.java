@@ -46,5 +46,4 @@ public class Follow {
         this.club = club;
         this.isClub = isClub;
     }
-
 }

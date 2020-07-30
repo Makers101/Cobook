@@ -57,4 +57,8 @@ public class Book {
     public void connetPost(Post post) {
         this.posts.add(post);
     }
+
+    public void removeReading(Reading reading) {
+        this.readingBooks.remove(reading);
+    }
 }
