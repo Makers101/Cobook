@@ -218,13 +218,13 @@ export default {
 </script>
 
 <style scoped>
-@media (max-width: 1280px) {
+@media (max-width: 960px) {
   #app {
     display: none;
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 960px) {
   #app2 {
     display: none;
   }
