@@ -8,14 +8,14 @@
         src="https://user-images.githubusercontent.com/57381062/88908323-abf25680-d294-11ea-8edf-3b22787e7f04.jpg"
         alt="">
       <div class="post-banner-text">
-        <h3 class="font-weight-bold">게시물 만들기</h3>
+        <h3 class="font-weight-bold">게시물 수정</h3>
         <p class="mb-0">
-          멋진 책 리뷰를 작성해주세요. :)
+          책 리뷰를 수정해주세요 :)
         </p>
       </div>
     </div>
 
-    <!-- post-create-form -->
+    <!-- post-update-form -->
     <v-app>
       <v-card>
         <template v-slot:progress>
@@ -33,9 +33,9 @@
         >
           <v-container>
             <v-row>
-              <v-col cols="12">
+              <!-- <v-col cols="12">
                 <v-autocomplete
-                  v-model="postCreateData.bookId"
+                  v-model="postUpdateData.bookId"
                   v-if="books"
                   :items="books"
                   hide-selected
@@ -67,13 +67,13 @@
                     </template>
                   </template>
                 </v-autocomplete>
-              </v-col>
+              </v-col> -->
 
               <v-col
                 cols="12"
               >
                 <v-text-field
-                  v-model="postCreateData.onelineReview"
+                  v-model="postUpdateData.basicData.onelineReview"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="30"
@@ -85,7 +85,7 @@
               <v-col cols="12">
                 <v-subheader class="pl-0">평점</v-subheader>
                 <v-slider
-                  v-model="postCreateData.rank"
+                  v-model="postUpdateData.basicData.rank"
                   :tick-labels="rankArray"
                   ticks="always"
                   :thumb-size="30"
@@ -104,7 +104,7 @@
               <v-col cols="12">
                 <v-combobox
                   v-if="tags"
-                  v-model="postCreateData.tags"
+                  v-model="postUpdateData.basicData.tags"
                   :items="tags"
                   :search-input.sync="searchTag"
                   hide-selected
@@ -149,6 +149,7 @@
                   <v-btn
                     class="button btn-outline-green"
                     @click="activateDetailReview"
+                    v-if="!this.postUpdateData.basicData.review"
                   >
                     상세 리뷰(선택)
                   </v-btn>
@@ -164,9 +165,9 @@
             <v-btn
               :disabled="!valid"
               class="button btn-green"
-              @click="clickCreate"
+              @click="clickUpdate"
             >
-              게시글 생성
+              게시글 수정
             </v-btn>
           </v-card-actions>
         </v-form>
@@ -178,18 +179,19 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-
 export default {
-  name: 'PostCreate',
+  name: 'PostUpdate',
   data() {
     return {
-      postCreateData: {
-        bookId: null,
-        onelineReview: null,
-        open: true,
-        rank: 3,
-        review: null,
-        tags: []
+      postUpdateData: {
+        basicData: {
+          onelineReview: null,
+          open: null,
+          rank: null,
+          review: null,
+          tags: [],
+        },
+        postId: this.$route.params.postId
       },
       oneline: true,
       detailReview: false,
@@ -204,10 +206,10 @@ export default {
   },
   computed: {
     ...mapState(['books']),
-    ...mapState('postStore', ['tags'])
+    ...mapState('postStore', ['tags', 'selectedPost'])
   },
   methods: {
-    ...mapActions('postStore', ['fetchTags', 'createPost']),
+    ...mapActions('postStore', ['fetchTags', 'findPost', 'updatePost']),
     makeTwoline() {
       this.oneline = false
     },
@@ -223,7 +225,7 @@ export default {
       this.$refs.form.validate()
     },
     activateDetailReview() {
-      if (!this.activatedDetail) {
+      if (!this.activatedDetail && !this.postUpdateData.basicData.review) {
         this.activatedDetail = true
         window.$('#summernote').summernote({
           placeholder: '상세 리뷰를 작성해주세요 :)',
@@ -242,47 +244,72 @@ export default {
         window.$('#summernote').summernote('justifyLeft');
       }
     },
-    clickCreate() {
+    clickUpdate() {
       if (window.$('#summernote').summernote('code') === '<p style="text-align: left;"><br></p>') {
-        this.postCreateData.review = null
+        this.postUpdateData.basicData.review = null
       } else if (window.$('#summernote').summernote('code') === '<p><br></p>') {
-        this.postCreateData.review = null
+        this.postUpdateData.basicData.review = null
       } else {
-        this.postCreateData.review = window.$('#summernote').summernote('code')
+        this.postUpdateData.basicData.review = window.$('#summernote').summernote('code')
       }
-      this.createPost(this.postCreateData)
+      this.updatePost(this.postUpdateData)
     }
   },
   created() {
     this.fetchTags()
+    this.findPost(this.$route.params.postId)
+  },
+  mounted() {
+    this.postUpdateData.basicData.onelineReview = this.selectedPost.onelineReview
+    this.postUpdateData.basicData.open = this.selectedPost.open
+    this.postUpdateData.basicData.rank = this.selectedPost.rank
+    this.selectedPost.tags.forEach(tag => {
+      this.postUpdateData.basicData.tags.push(tag.name)      
+    })
+    if (this.selectedPost.review) {
+      window.$('#summernote').summernote({
+        placeholder: '상세 리뷰를 작성해주세요 :)',
+        tabsize: 2,
+        height: 200,
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['hr', 'link', 'picture', 'video']],
+          ['view', ['undo', 'redo', 'help']]
+        ]
+      })
+      window.$('#summernote').summernote('code', this.selectedPost.review);
+    }
   }
 }
 </script>
 
 <style scoped>
-.post-banner {
-  position: relative;
-}
+  .post-banner {
+    position: relative;
+  }
 
-.post-banner-img {
-  width: 100%;
-  height: 200px;
-  vertical-align: middle;
-  filter: brightness(0.7)
-}
+  .post-banner-img {
+    width: 100%;
+    height: 200px;
+    vertical-align: middle;
+    filter: brightness(0.7)
+  }
 
-.post-banner-text {
-  color: #F8F8F8;
-  text-align: center;
-  text-shadow: 2px 2px 2px rgb(100, 100, 100);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate( -50%, -50% );
-}
+  .post-banner-text {
+    color: #F8F8F8;
+    text-align: center;
+    text-shadow: 2px 2px 2px rgb(100, 100, 100);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate( -50%, -50% );
+  }
 
-.card-header {
-  background-color: white;
-}
-
+  .card-header {
+    background-color: white;
+  }
 </style>

@@ -31,11 +31,23 @@
           <div class="btn-group">
             <button class="btn-green dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             </button>
-            <div class="dropdown-menu text-center">
-              <p class="dropdown-item m-0 pointer" @click="copyUrl">공유하기</p>
-              <div class="dropdown-divider" v-if="myaccount.nickName===selectedPost.user.nickName"></div>
-              <p class="dropdown-item m-0 pointer" v-if="myaccount.nickName===selectedPost.user.nickName">수정하기</p>
-              <p class="dropdown-item m-0 pointer" v-if="myaccount.nickName===selectedPost.user.nickName">삭제하기</p>
+            <div class="dropdown-menu text-center py-0">
+              <p class="dropdown-item m-0 pointer setting-btn" @click="copyUrl">공유하기</p>
+              <div class="dropdown-divider my-0" v-if="myaccount.id===selectedPost.user.id"></div>
+              <p
+                class="dropdown-item m-0 pointer setting-btn"
+                v-if="myaccount.id===selectedPost.user.id"
+                @click="clickUpdatePost(selectedPost.id)"
+              >
+                수정하기
+              </p>
+              <p
+                class="dropdown-item m-0 pointer setting-btn"
+                v-if="myaccount.id===selectedPost.user.id"
+                @click="clickDeletePost(selectedPost.id)"
+              >
+                삭제하기
+              </p>
             </div>
           </div>
        </div>
@@ -185,7 +197,7 @@ export default {
     ...mapState('postStore', ['selectedPost', 'comments']),
   },
   methods: {
-    ...mapActions('postStore', ['findPost', 'fetchComments', 'createComment', 'createLike', 'createBookmark', 'deleteComment']),
+    ...mapActions('postStore', ['findPost', 'fetchComments', 'createComment', 'createLike', 'createBookmark', 'deleteComment', 'deletePost']),
     clickLike(post) {
       this.createLike(post.id)
       if (post.likeUsers.includes(this.myaccount.id)) {
@@ -258,6 +270,16 @@ export default {
     falseDialog(commentCreateData, comment) {
       this.dialog = false
       this.deleteComment({ postId: commentCreateData.postId, commentId: comment.id })
+    },
+    clickUpdatePost(postId) {
+      router.push({ name: 'PostUpdate', params: { postId: postId }})
+    },
+    clickDeletePost(postId) {
+      if (confirm('게시물을 삭제하시겠습니까?') === true) {
+        this.deletePost(postId)
+      } else {
+        return false
+      }
     }
   },
   created() {
@@ -356,5 +378,17 @@ export default {
     margin-left: auto !important;
     margin-right: auto !important;
   }
+}
+
+.setting-btn:focus {
+  background-color: #88A498 !important;
+  color: #F7F7F7 !important;
+  outline: none;
+}
+
+.setting-btn:active {
+  background-color: #88A498 !important;
+  color: #F7F7F7 !important;
+  outline: none;
 }
 </style>
