@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ClubResDto {
+public class ClubResDto implements Comparable<ClubResDto> {
 
     private Long id;
     private String name;
@@ -40,12 +40,17 @@ public class ClubResDto {
         this.createdAt = club.getCreatDateTime();
         this.updatedAt = club.getLastModifiedDate();
         this.memberCnt = club.getMembers().stream()
-                .filter(m->m.getRole().equals(MemberRole.LEADER) || m.getRole().equals(MemberRole.MEMBER))
+                .filter(m -> m.getRole().equals(MemberRole.LEADER) || m.getRole().equals(MemberRole.MEMBER))
                 .count();
         this.followerCnt = club.getFollowList().size();
         this.genres = club.getGenres().stream()
                 .map(ClubGenre::getGenre)
                 .map(GenreResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public int compareTo(ClubResDto o) {
+        return -this.createdAt.compareTo(o.createdAt);
     }
 }

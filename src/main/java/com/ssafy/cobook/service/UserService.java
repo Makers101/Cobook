@@ -88,6 +88,7 @@ public class UserService {
         List<ClubResDto> clubList = clubMemberRepository.findAllByUser(user).stream()
                 .map(ClubMember::getClub)
                 .map(ClubResDto::new)
+                .sorted()
                 .collect(Collectors.toList());
 
         UserFollowResDto userFollowResDto  = new UserFollowResDto(user.getId(), user.getNickName());
