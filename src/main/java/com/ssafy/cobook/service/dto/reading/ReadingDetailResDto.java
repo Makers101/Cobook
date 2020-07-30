@@ -1,17 +1,10 @@
 package com.ssafy.cobook.service.dto.reading;
 
-import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.clubmember.MemberRole;
 import com.ssafy.cobook.domain.reading.Reading;
-import com.ssafy.cobook.domain.readingmember.ReadingMember;
-import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.dto.book.BookSimpleResDto;
 import com.ssafy.cobook.service.dto.post.PostByMembersResDto;
-import com.ssafy.cobook.service.dto.post.PostSimpleResDto;
 import com.ssafy.cobook.service.dto.question.QuestionResDto;
-import com.ssafy.cobook.service.dto.user.UserByPostDto;
-import com.ssafy.cobook.service.dto.user.UserResponseDto;
-import com.ssafy.cobook.service.dto.user.UserSimpleResDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +27,7 @@ public class ReadingDetailResDto {
     private Boolean isMember;
     private BookSimpleResDto book;
     private List<QuestionResDto> questions;
+    private ReadingMemberResponseDto leader;
     private List<ReadingMemberResponseDto> participants;
     private List<PostByMembersResDto> memberPosts;
 
@@ -49,8 +43,13 @@ public class ReadingDetailResDto {
         this.questions = reading.getQuestions().stream()
                 .map(QuestionResDto::new)
                 .collect(Collectors.toList());
+        this.leader = reading.getMembers().stream()
+                .filter(m->m.getRole().equals(MemberRole.LEADER))
+                .findFirst()
+                .map(ReadingMemberResponseDto::new)
+                .get();
         this.participants = reading.getMembers().stream()
-                .filter(m->m.getRole().equals(MemberRole.MEMBER) || m.getRole().equals(MemberRole.LEADER))
+                .filter(m->m.getRole().equals(MemberRole.MEMBER))
                 .map(ReadingMemberResponseDto::new)
                 .collect(Collectors.toList());
         this.memberPosts = memberPosts;

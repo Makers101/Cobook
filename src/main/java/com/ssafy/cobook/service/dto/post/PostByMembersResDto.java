@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,5 +39,13 @@ public class PostByMembersResDto {
         this.bookmarkUsers = post.getBookMarks().stream()
                 .map(b -> b.getUser().getId())
                 .collect(Collectors.toList());
+    }
+
+    public static List<PostByMembersResDto> getDto(List<Post> posts) {
+        List<PostByMembersResDto> ret = new ArrayList<>();
+        for (Post post : posts) {
+            ret.add(new PostByMembersResDto(post));
+        }
+        return ret;
     }
 }
