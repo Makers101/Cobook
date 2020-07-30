@@ -51,11 +51,21 @@
             <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953039-4a9da800-d2d3-11ea-8f6b-5792b4f87c45.png" width="20px"> {{ selectedPost.book.author }} </p>
             <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px"> {{ selectedPost.book.publisher }}</p>
             <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> {{ selectedPost.book.pubDate.slice(0,4) }}년 {{ selectedPost.book.pubDate.slice(5,7) }}월 {{ selectedPost.book.pubDate.slice(8,10) }}일</p>
+            
           </div>
         </div>
+         <div class="text-center">
+              <v-rating 
+                v-model="rating" 
+                :readonly="readonly" 
+                :dense="dense"
+                :color="color"
+                :size="size"
+                :background-color="bgColor"></v-rating>
+            </div>
         <div>
           <div class="offset-2 col-8 py-3">
-            <div class="w-100 color-black post-onelineReview">
+            <div class="w-100 color-black post-onelineReview">              
               <div class="px-3 pt-2 large-text text-left"><i class="fas fa-quote-left"></i></div>
               <div class="px-3 d-flex justify-content-center"><p class="my-2 w-100">{{ selectedPost.onelineReview }}</p></div>
               <div class="px-3 pb-2 large-text text-right"><i class="fas fa-quote-right"></i></div>
@@ -178,6 +188,12 @@ export default {
       },
       btnActive: false,
       dialog: false,
+      rating: null,
+      readonly: true,
+      dense: true,
+      color: 'yellow lighten-1',
+      bgColor: 'grey lighten-1',
+      size:32,
     }
   },
   computed: {
@@ -264,6 +280,10 @@ export default {
     this.commentCreateData.postId = this.$route.params['postId']
     this.findPost(this.commentCreateData.postId)
     this.fetchComments(this.commentCreateData.postId)
+    
+  },
+  mounted() {
+    this.rating = this.selectedPost.rank
   },
   beforeRouteLeave(to, from, next) {
     if (this.commentCreateData.content) {
