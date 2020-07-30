@@ -9,5 +9,4 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 
     Optional<Club> findByName(String name);
     Optional<Club> findById(Long clubId);
-    List<Club> findAllById(Long clubId);
 }

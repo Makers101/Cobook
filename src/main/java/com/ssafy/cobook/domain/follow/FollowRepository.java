@@ -35,6 +35,9 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     Optional<Follow> findByFromUserAndClub(User user, Club club);
 
+    List<Follow> findAllByClub(Club club);
+
     @Modifying
-    void deleteByFromUserAndClub(User user, Club club);
+    @Query("DELETE FROM Follow WHERE fromUser.id= :userId AND club.id= :clubId")
+    void deleteByUserAndClub(@Param("userId")Long userId, @Param("clubId") Long clubId);
 }

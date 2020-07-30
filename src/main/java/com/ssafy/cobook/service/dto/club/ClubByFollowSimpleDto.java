@@ -1,5 +1,10 @@
 package com.ssafy.cobook.service.dto.club;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
 public class ClubByFollowSimpleDto {
     Long fromUser; // 구독자 번호
     boolean isFollow; //

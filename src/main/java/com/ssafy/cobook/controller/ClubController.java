@@ -191,13 +191,12 @@ public class ClubController {
         return ResponseEntity.ok().build();
     }
 
-//    @ApiOperation(value = "클럽을 팔로우(구독)한다")
-//    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-//    @GetMapping("/{clubId}/follow")
-//    public ResponseEntity<ClubByFollowSimpleDto> getClubFollow(@ApiIgnore final Authentication authentication,
-//                                                                @PathVariable("clubId")final Long clubId){
-//        Long userId = ((User) authentication.getPrincipal()).getId();
-//        log.info(userId+"");
-//        return ResponseEntity.status(HttpStatus.OK).body(clubService.addFollow(userId, clubId));
-//    }
+    @ApiOperation(value = "클럽을 팔로우(구독)한다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/{clubId}/follow")
+    public ResponseEntity<ClubByFollowSimpleDto> getClubFollow(@ApiIgnore final Authentication authentication,
+                                                                @PathVariable("clubId")final Long clubId){
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        return ResponseEntity.status(HttpStatus.OK).body(clubService.addFollow(userId, clubId));
+    }
 }

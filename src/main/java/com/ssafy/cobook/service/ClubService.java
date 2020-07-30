@@ -188,28 +188,32 @@ public class ClubService {
         return new ClubRecruitResponseDto(club.getRecruit());
     }
 
-//    private Long getClubFollow(Long clubId) {
-//        Long userCount = Long.valueOf(clubRepository.findAllById(clubId).size());
-//        return userCount;
-//    }
-//
-//    public ClubByFollowSimpleDto addFollow(Long userId, Long clubId) {
-//        ClubByFollowSimpleDto clubByFollowSimpleDto;
-//
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
-//
-//        Club club = clubRepository.findById(clubId)
-//                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
-//
-//        if (followRepository.findByFromUserAndClub(user, club).isPresent()) {
-//            followRepository.deleteByFromUserAndClub(user, club);
-//            clubByFollowSimpleDto = new ClubByFollowSimpleDto(userId, false, getClubFollow(clubId));
-//        } else {
-//            followRepository.save(new Follow(user, club, true));
-//            clubByFollowSimpleDto = new ClubByFollowSimpleDto(userId, true, getClubFollow(clubId));
-//        }
-//        return clubByFollowSimpleDto;
-//    }
+    private Long getClubFollow(Club club) {
+        List<Follow> list = followRepository.findAllByClub(club);
+        Long userCount = Long.valueOf(list.size());
+        return userCount;
+    }
+
+    public ClubByFollowSimpleDto addFollow(Long userId, Long clubId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        Boolean isFollow = false;
+
+        if (followRepository.findByFromUserAndClub(user, club).isPresent()) {
+            followRepository.deleteByUserAndClub(userId, clubId);
+        } else {
+            followRepository.save(new Follow(user, club, true));
+            isFollow = true;
+        }
+
+        Long userCount = getClubFollow(club);
+
+        ClubByFollowSimpleDto clubByFollowSimpleDto = new ClubByFollowSimpleDto(userId, isFollow, userCount);
+        return clubByFollowSimpleDto;
+    }
 
 }
