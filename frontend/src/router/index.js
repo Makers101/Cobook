@@ -26,6 +26,8 @@ import ClubCreate from '@/views/clubs/ClubCreate'
 import ClubCandidates from '@/views/clubs/ClubCandidates'
 import ReadingDetail from '@/views/clubs/readings/ReadingDetail'
 import ReadingCreate from '@/views/clubs/readings/ReadingCreate'
+// meetups
+import MeetupList from '@/views/meetups/MeetupList'
 
 Vue.use(VueRouter)
 
@@ -149,8 +151,13 @@ Vue.use(VueRouter)
     path: '/clubs/:clubId/readings/:readingId',
     name: 'ReadingDetail',
     component: ReadingDetail
+  },
+  // meetups
+  {
+    path: '/meetups',
+    name: 'MeetupList',
+    component: MeetupList
   }
-
   
 ]
 
