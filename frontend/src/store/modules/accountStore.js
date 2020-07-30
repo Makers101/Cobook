@@ -83,6 +83,7 @@ const accountStore = {
             dispatch('postAuthData2', info)
         },
         clickChangePassword({ dispatch }, passwordChangeData) {
+            console.log(passwordChangeData)
             const info = {
                 data: passwordChangeData,
                 location: SERVER.ROUTES.changepassword,
