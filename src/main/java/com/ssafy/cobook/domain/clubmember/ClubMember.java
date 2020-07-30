@@ -50,4 +50,8 @@ public class ClubMember {
     public void changeRole(MemberRole role) {
         this.role = role;
     }
+
+    public void removeUser() {
+        this.user.removeClub(this);
+    }
 }

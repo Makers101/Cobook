@@ -39,4 +39,8 @@ public class Genre {
     public void addUser(UserGenre userGenre) {
         this.userList.add(userGenre);
     }
+
+    public void removeClub(ClubGenre clubGenre) {
+        this.clubList.remove(clubGenre);
+    }
 }

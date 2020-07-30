@@ -220,4 +220,15 @@ public class ClubController {
         clubService.signOutClub(clubId, userId);
         return ResponseEntity.ok().build();
     }
+
+    @ApiOperation(value = "클럽을 삭제한다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @DeleteMapping("/{clubId}")
+    public ResponseEntity<Void> deleteClub(@ApiIgnore final Authentication authentication,
+                                            @PathVariable("clubId") final Long clubId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        clubService.deleteClub(clubId, userId);
+        return ResponseEntity.ok().build();
+    }
+
 }

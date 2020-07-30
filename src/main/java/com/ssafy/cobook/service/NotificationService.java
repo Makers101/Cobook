@@ -28,7 +28,6 @@ public class NotificationService {
     public List<NotificationResponseDto> getNotis(Long userId) {
         User user = getUser(userId);
         return notificationRepository.findAllByToId(userId).stream()
-                .filter(Notification::unread)
                 .map(NotificationResponseDto::new)
                 .sorted()
                 .collect(Collectors.toList());

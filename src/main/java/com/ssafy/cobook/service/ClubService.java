@@ -11,6 +11,9 @@ import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.genre.GenreRepository;
+import com.ssafy.cobook.domain.reading.Reading;
+import com.ssafy.cobook.domain.reading.ReadingRepository;
+import com.ssafy.cobook.domain.readingmember.ReadingMember;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
@@ -43,6 +46,7 @@ public class ClubService {
     private final GenreRepository genreRepository;
     private final ClubGenreRepository clubGenreRepository;
     private final FollowRepository followRepository;
+    private final ReadingRepository readingRepository;
 
     @Transactional
     public ClubCreateResDto create(Long userId, ClubCreateReqDto reqDto) throws IOException {
@@ -228,5 +232,29 @@ public class ClubService {
         user.removeClub(clubMember);
         club.removeMember(clubMember);
         clubMemberRepository.delete(clubMember);
+    }
+
+    @Transactional
+    public void deleteClub(Long clubId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if (leader.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+        for (ClubMember clubMember : club.getMembers()) {
+            clubMember.removeUser();
+        }
+        clubMemberRepository.deleteAll(club.getMembers());
+        for (Reading reading : club.getReadingList()) {
+            reading.delete();
+        }
+        readingRepository.deleteAll(club.getReadingList());
+        for (ClubGenre clubGenre : club.getGenres()) {
+            clubGenre.remove();
+        }
+        clubGenreRepository.deleteAll(club.getGenres());
+        clubRepository.delete(club);
     }
 }

@@ -30,4 +30,8 @@ public class ClubGenre {
         this.club = club;
         this.genre = genre;
     }
+
+    public void remove() {
+        this.genre.removeClub(this);
+    }
 }
