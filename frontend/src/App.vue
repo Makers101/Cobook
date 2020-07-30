@@ -133,13 +133,13 @@
       </div>
       <router-view/>
     </div>
-    <!-- <div id="app2">
+    <div id="app2">
       <div class="media-q d-flex flex-column justify-content-center align-items-center">
         <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="250px" class="mt-3">
         <h5>이용에 불편을 드려 죄송합니다.</h5>
         <h5>코북은 좀 더 <strong>큰 창</strong>에서 봐야 제 맛 :)</h5>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -218,7 +218,7 @@ export default {
 </script>
 
 <style scoped>
-/* @media (max-width: 1280px) {
+@media (max-width: 1280px) {
   #app {
     display: none;
   }
@@ -228,7 +228,7 @@ export default {
   #app2 {
     display: none;
   }
-} */
+}
 
 
 #app {
