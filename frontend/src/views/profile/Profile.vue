@@ -17,11 +17,15 @@
               </span>
               
             </div>
-            <p class="">{{ profile.description }}</p>
-            <p class="color-light-black font-weight-bold">
-              <span>{{ profile.followerList.length }}</span> <span @click.stop="showFollowerForm=true" class="mr-3"> FOLLOWER</span> 
-              <span>{{ profile.followingList.length }}</span><span @click.stop="showFollowingForm=true"> FOLLOWING</span>
-            </p>        
+            <p class="profile-description">{{ profile.description }}</p>
+            <div class="d-flex justify-content-between">
+              <p class="color-light-black font-weight-bold">
+                <span>{{ profile.followerList.length }}</span> <span @click.stop="showFollowerForm=true" class="mr-3"> FOLLOWER</span> 
+                <span>{{ profile.followingList.length }}</span><span @click.stop="showFollowingForm=true"> FOLLOWING</span>
+              </p>   
+              <button class="btn bg-green" v-if="myaccount.id === profile.id" @click="clickUpdate(profile.id)">수정하기</button>   
+            </div>
+              
           </div>
         </div>
       </div>
@@ -113,10 +117,12 @@ export default {
     closeDialog: function() {
       this.showFollowerDialog = false
       this.showFollowingDIalog = false
+    },
+    clickUpdate(userId) {
+      this.$router.push({ name: 'ProfileUpdate', params: { userId: userId }})
     }
   },
   created() {
-    console.log(this.$route.params.userId)
     this.findProfile(this.$route.params.userId)
   },
 
@@ -161,5 +167,8 @@ export default {
   background-color: #F9F9F9;
 }
 
+.profile-description {
+  white-space: pre-line;
+}
 
 </style>
