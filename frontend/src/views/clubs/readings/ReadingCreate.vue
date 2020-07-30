@@ -5,7 +5,7 @@
     <div class="reading-banner">
       <img
         class="reading-banner-img"
-        src="@/assets/reading_create_banner.jpg"
+        src="https://user-images.githubusercontent.com/57381062/88908347-b57bbe80-d294-11ea-9d31-a88d3d0b3b23.jpg"
         alt="">
       <div class="reading-banner-text">
         <h3 class="font-weight-bold">리딩 만들기</h3>

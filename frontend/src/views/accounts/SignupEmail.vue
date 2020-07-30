@@ -54,7 +54,7 @@ button {
 
 .background::after {
   content:"";
-  background-image: url('../..//assets/books.jpg');
+  background-image: url('https://user-images.githubusercontent.com/57381062/88908481-de03b880-d294-11ea-8567-9e74079c2a7b.jpg');
   opacity: 0.5;
   top: 0;
   left:0;

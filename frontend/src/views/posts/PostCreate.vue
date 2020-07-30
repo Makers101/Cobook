@@ -5,7 +5,7 @@
     <div class="post-banner">
       <img
         class="post-banner-img"
-        src="@/assets/post_create_banner.jpg"
+        src="https://user-images.githubusercontent.com/57381062/88908323-abf25680-d294-11ea-8edf-3b22787e7f04.jpg"
         alt="">
       <div class="post-banner-text">
         <h3 class="font-weight-bold">게시물 만들기</h3>

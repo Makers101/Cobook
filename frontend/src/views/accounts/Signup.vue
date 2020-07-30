@@ -81,7 +81,7 @@
       <div class="buttons mt-2 d-flex justify-content-center mx-auto px-0" style="width: 70%">
         <button class="btn google d-flex align-items-center justify-content-center" style="width:100% !important">
           <!-- <i class="fab fa-google-plus-g"></i> -->
-          <img class="google-logo" src="@/assets/google.png" width="32px" height="32px" >
+          <img class="google-logo" src="https://user-images.githubusercontent.com/57381062/88908677-291dcb80-d295-11ea-8a24-2a96837dd714.png" width="32px" height="32px" >
           <span class="justify-content-center">구글 아이디 회원가입</span>
         </button>
       </div>
@@ -262,7 +262,7 @@ input[type="password"] {
 
 .background::after {
   content:"";
-  background-image: url('../..//assets/books.jpg');
+  background-image: url('https://user-images.githubusercontent.com/57381062/88908481-de03b880-d294-11ea-8567-9e74079c2a7b.jpg');
   opacity: 0.5;
   top: 0;
   left:0;

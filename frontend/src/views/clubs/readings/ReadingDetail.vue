@@ -22,8 +22,18 @@
             </div>
             <div class="d-flex justify-content-end align-items-end">
               <button class="btn btn-secondary mr-2" v-if="isLeader">리딩 설정</button>
-              <button class="btn btn-warning mr-2" v-if="selectedReading.isMember & !isParticipant & !isLeader">참가 신청</button>
-              <button class="btn btn-warning mr-2" v-if="selectedReading.isMember & isParticipant & !isLeader">참가 취소</button>
+              <button
+                class="btn btn-warning mr-2"
+                v-if="selectedReading.isMember & !isParticipant & !isLeader"
+                @click="clickParticipateReading">
+                참가 신청
+              </button>
+              <button
+                class="btn btn-warning mr-2"
+                v-if="selectedReading.isMember & isParticipant & !isLeader"
+                @click="clickParticipateReading">
+                참가 취소
+              </button>
               <!-- <button class="btn btn-primary mr" v-if="isLeader || isParticipant">모임 입장</button> -->
             </div>
           </div>
@@ -37,15 +47,15 @@
     <div>
       <h4 class="text-left font-weight-bold mb-3">리딩 멤버({{ selectedReading.participantCnt }})</h4>
       <div class="d-flex justify-content-start">
-        <div class="profile-container pointer" @click="selectUser(selectedReading.leader.id)">
+        <div class="profile-container pointer mr-3" @click="selectUser(selectedReading.leader.id)">
           <img class="rounded-circle image" :src="selectedReading.leader.profileImg" alt="" v-if="selectedReading.leader.profileImg">
           <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
           <div class="overlay rounded-circle">
             <div class="text">{{ selectedReading.leader.nickName }}</div>
           </div>
         </div>
-        <div class="profile-container pointer" v-for="participant in selectedReading.participants" :key="participant.id" @click="selectUser(participant.id)">
-          <img class="rounded-circle image" :src="participant.proflieImg" alt="" v-if="participant.profileImg">
+        <div class="profile-container pointer mr-3" v-for="participant in selectedReading.participants" :key="participant.id" @click="selectUser(participant.id)">
+          <img class="rounded-circle image" :src="participant.profileImg" alt="" v-if="participant.profileImg">
           <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
           <div class="overlay rounded-circle">
             <div class="text">{{ participant.nickName }}</div>
@@ -59,7 +69,7 @@
     <!-- reading-description -->
     <div>
       <h4 class="text-left font-weight-bold mb-3">리딩 설명</h4>
-      <p class="text-left px-2">{{ selectedReading.description }}</p>
+      <p class="text-left px-2 description">{{ selectedReading.description }}</p>
     </div>
 
     <hr>
@@ -67,9 +77,13 @@
     <!-- reading-question -->
     <div>
       <h4 class="text-left font-weight-bold mb-3">질문지</h4>
-      <ul class="ml-4">
+      <ul class="ml-4" v-if="selectedReading.questions.length !== 0">
         <li class="text-left" v-for="question in selectedReading.questions" :key="question.id">{{ question.question }}</li>
       </ul>
+
+      <div class="no-content d-flex justify-content-center align-items-center" v-else>
+        <p class="mb-0">아직 질문지가 없습니다 ㄴ(°0°)ㄱ</p>
+      </div>
     </div>
 
     <hr>
@@ -77,17 +91,21 @@
     <div>
       <h4 class="text-left font-weight-bold mb-3">멤버의 책 리뷰</h4>
       
-      <div class="row rows-cols-1 row-cols-md-3">
-        <div class="col-12 col-sm-4 mb-4 pointer" v-for="post in selectedReading.memberPosts" :key="post.id">
+      <div class="row rows-cols-1 row-cols-md-3" v-if="selectedReading.memberPosts.length !== 0">
+        <div 
+          class="col-12 col-sm-4 mb-4 pointer"
+          v-for="post in selectedReading.memberPosts"
+          :key="post.id"
+          @click="toPostDetail(post.id)">
           <div class="card h-100">
             <div style="max-height:70px;overflow:hidden;">
               <img class="bg-image" :src="`${ selectedReading.book.bookImg }`" v-if="selectedReading.book.bookImg">
               <h5 
                 class="card-img-top color-light-black px-5 post-user" 
                 alt="book"
-                v-if="post.author.userName" 
+                v-if="post.nickName" 
               >
-                {{ post.author.userName }}
+                {{ post.nickName }}
               </h5>
             </div>
             <div class="card-body bg-light-ivory d-flex flex-column">
@@ -106,7 +124,7 @@
         </div>            
       </div>
       
-      <div class="no-content d-flex justify-content-center align-items-center" v-if="!selectedReading.memberPosts">
+      <div class="no-content d-flex justify-content-center align-items-center" v-else>
         <p class="mb-0">아직 멤버의 책 리뷰가 없습니다 ㄴ(°0°)ㄱ</p>
       </div>
     </div>
@@ -116,8 +134,8 @@
     <!-- reading-reviews -->
     <h4 class="text-left font-weight-bold mb-3">리딩 기록</h4>
     <div class="no-content d-flex justify-content-center align-items-center" v-if="!selectedReading.reviews">
-        <p class="mb-0">아직 리딩 기록이 없습니다 ㄴ(°0°)ㄱ</p>
-      </div>
+      <p class="mb-0">아직 리딩 기록이 없습니다 ㄴ(°0°)ㄱ</p>
+    </div>
   </div>
 </template>
 
@@ -155,9 +173,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions('clubStore', ['findReading']),
+    ...mapActions('clubStore', ['findReading', 'participateReading']),
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
+    },
+    clickParticipateReading() {
+      this.participateReading(this.params)
+    },
+    toPostDetail(postId) {
+      router.push({ name: 'PostDetail', params: { postId: postId }})
     }
   },
   created() {
@@ -246,6 +270,10 @@ export default {
   text-shadow: 1px 1px 2px white;
   font-weight: 900;
   word-break: keep-all;
+}
+
+.description {
+  white-space: pre-line;
 }
 
 </style>

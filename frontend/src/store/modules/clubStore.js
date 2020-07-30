@@ -84,11 +84,11 @@ const clubStore = {
             console.log(err.response.data)
           })
       },
-      createClub({ rootState, rootGetters, dispatch }, clubCreateData) {
-        axios.post(SERVER.URL + SERVER.ROUTES.clubs, clubCreateData.basicData, rootGetters.config)
+      createClub({ rootState, rootGetters, dispatch }, params) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs, params.basicData, rootGetters.config)
           .then(res => {
             const newClubId = res.data.id
-            axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + newClubId + '/images', clubCreateData.clubImgFormData, 
+            axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + newClubId + '/images', params.clubImgFormData, 
               {
                 headers: {
                   'jwt': rootState.authToken,
@@ -107,10 +107,10 @@ const clubStore = {
             console.log(err.response.data)
           })
       },
-      createReading({ rootGetters }, dataContainer) {
-        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + dataContainer.clubId + '/readings', dataContainer.readingCreateData, rootGetters.config)
+      createReading({ rootGetters }, params) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/readings', params.readingCreateData, rootGetters.config)
           .then(res => {
-            router.push({ name: 'ReadingDetail', params: { clubId: dataContainer.clubId, readingId: res.data.id }})
+            router.push({ name: 'ReadingDetail', params: { clubId: params.clubId, readingId: res.data.id }})
           })
           .catch(err => {
             console.log(err.response.data)
@@ -144,10 +144,23 @@ const clubStore = {
             console.log(err.response.data)
           })
       },
-      decideClubApply({ rootGetters, dispatch }, applyDecisionData) {
-        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + applyDecisionData.clubId + '/apply/' + applyDecisionData.clubMemberId + '/' + applyDecisionData.decision, null, rootGetters.config)
+      decideClubApply({ rootGetters, dispatch }, params) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/apply/' + params.clubMemberId + '/' + params.decision, null, rootGetters.config)
           .then(() => {
-            dispatch('fetchCandidates', applyDecisionData.clubId)
+            dispatch('fetchCandidates', params.clubId)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      participateReading({ rootGetters, dispatch }, params) {
+        axios.post(
+          SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/readings/' + params.readingId + '/apply',
+          null,
+          rootGetters.config
+        )
+          .then(() => {
+            dispatch('findReading', params)
           })
           .catch(err => {
             console.log(err.response.data)

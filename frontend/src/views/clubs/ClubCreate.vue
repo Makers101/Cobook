@@ -5,7 +5,7 @@
     <div class="club-banner">
       <img
         class="club-banner-img"
-        src="@/assets/club_create_banner.jpg"
+        src="https://user-images.githubusercontent.com/57381062/88908102-70f02300-d294-11ea-9c03-7aac0e803ea0.jpg"
         alt="">
       <div class="club-banner-text">
         <h3 class="font-weight-bold">클럽 만들기</h3>

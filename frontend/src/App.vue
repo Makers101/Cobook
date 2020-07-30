@@ -5,7 +5,7 @@
         <router-link class="navbar-brand" to="/">
           <img 
             class="img-fluid logo-img" 
-            src="@/assets/logo.png" 
+            src="https://user-images.githubusercontent.com/57381062/88909311-e8728200-d295-11ea-92d4-0a4a805f9afa.png" 
             alt="로고 이미지"
           ><span class="ml-2 logo-text">Co-Book</span>
         </router-link>
@@ -59,7 +59,7 @@
             </li>
             <li class="nav-item col-3">
               <router-link class="nav-link" to="/">
-                <img class="img-fluid club-img" src="@/assets/meetup.png" alt="클럽 이미지">
+                <img class="img-fluid club-img" src="https://user-images.githubusercontent.com/57381062/88909365-f7f1cb00-d295-11ea-859e-656c0633bf2e.png" alt="밋업 이미지">
                 Meetup
               </router-link>
             </li>
