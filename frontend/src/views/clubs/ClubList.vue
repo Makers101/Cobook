@@ -50,11 +50,11 @@
     <!-- clubs-list -->
     <div class="club-list my-2 row">
       <div 
-        class="col-sm-4 col-12 p-3"
+        class="col-lg-4 col-12 p-3"
         v-for="club in filteredClubs"
         :key="`club_${club.id}`">
         <div class="card">
-          <div class="card-head">
+          <div class="card-head club-image-container">
             <img
               class="card-img-top club-image to-detail"
               :src="club.clubImg"
@@ -74,7 +74,7 @@
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h4 class="card-title font-weight-bold mb-0 club-name to-detail" @click="selectClub(club.id)">{{ club.name }}</h4>
-              <small class="color-green font-weight-bold club-followers">{{ club.followerCnt }} FOLLOW</small>
+              <!-- <small class="color-green font-weight-bold club-followers">{{ club.followerCnt }} FOLLOW</small> -->
             </div>
             <p class="card-text text-left club-oneline">{{ club.onelineDescription }}</p>
             <div class="d-flex justify-content-start my-3">
@@ -255,7 +255,18 @@ export default {
     color: #88A498
   }
 
-  .club-image {
-    height: 200px;
+  .club-image-container {
+    max-width: 100%;
+    height: 150px;
+    overflow: hidden;
   }
+
+  .club-image {
+    width: 100%;
+    height: auto;
+  }
+  
+  /* .club-image {
+    height: 200px;
+  } */
 </style>
