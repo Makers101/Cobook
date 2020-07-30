@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 import router from '@/router'
 export default {
   data() {
@@ -50,6 +50,7 @@ export default {
   props: {
      value: Boolean,
      profile: Object,
+     followerList: Array,
   },
   computed: {
     show: {
@@ -60,17 +61,17 @@ export default {
          this.$emit('input', value)
       }
     },
-    ...mapState('profileStore', ['followerList']), 
+    // ...mapState('profileStore', ['followerList']), 
     ...mapState(['myaccount'])
   },
   methods: {
-    ...mapActions('profileStore', ['fetchFollowerList']),
+    // ...mapActions('profileStore', ['fetchFollowerList']),
     selectUser(userId) {
       router.push({ name: 'ProfileFeed', params: { userId: userId }})
     }
   },
   created() {
-    this.fetchFollowerList(this.$route.params.userId)
+    // this.fetchFollowerList(this.$route.params.userId)
   }
 }
 </script>

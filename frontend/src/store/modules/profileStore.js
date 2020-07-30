@@ -12,7 +12,7 @@ const profileStore = {
     clubs: null,
     readings: null,
     followingList: null,
-    followerlist: null,
+    followerList: null,
   },
   getters: {
   },
@@ -61,9 +61,11 @@ const profileStore = {
           console.log(err.response.data)
         })
     },
-    clickFollow({ rootGetters}, userId){
+    clickFollow({ dispatch, rootGetters}, userId){
       axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.follow, rootGetters.config)
         .then(res => {
+          dispatch('fetchFollowerList', userId)
+          // dispatch('fetchFollowingList', userId)
           console.log(res)
         })
         .catch(err => {
