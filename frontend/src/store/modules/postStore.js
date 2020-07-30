@@ -54,6 +54,25 @@ const postStore = {
           console.log(err.response.data)
         })
     },
+    updatePost({ rootGetters }, postUpdateData) {
+      axios.put(SERVER.URL + SERVER.ROUTES.posts + '/' + postUpdateData.postId, postUpdateData.basicData, rootGetters.config)
+        .then(() => {
+          router.push({ name: 'PostDetail', params: { postId: postUpdateData.postId }})
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
+    deletePost({ rootGetters }, postId) {
+      console.log(postId)
+      axios.delete(SERVER.URL + SERVER.ROUTES.posts + '/' + postId, rootGetters.config)
+        .then(() => {
+          router.push({ name: 'PostList' })
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
     fetchComments({ commit }, postId) {
       axios.get(SERVER.URL + SERVER.ROUTES.posts + '/' + postId + SERVER.ROUTES.comments)
         .then(res => {
