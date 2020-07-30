@@ -31,7 +31,7 @@
             <button class="btn-green dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             </button>
             <div class="dropdown-menu">
-              <p class="dropdown-item m-0">공유하기</p>
+              <p class="dropdown-item m-0" @click="copyUrl">공유하기</p>
               <div class="dropdown-divider" v-if="myaccount.nickName===selectedPost.user.nickName"></div>
               <p class="dropdown-item m-0" v-if="myaccount.nickName===selectedPost.user.nickName">수정하기</p>
               <p class="dropdown-item m-0" v-if="myaccount.nickName===selectedPost.user.nickName">삭제하기</p>
@@ -111,20 +111,30 @@
         v-for="comment in comments"
         :key="`comment-${comment.id}`"
       >
-        <div class="col-12 text-left">
-          <span class="rounded-circle">
-            <img
-              v-if="!selectedPost.user.profileImg"
-              class="img-fluid feed-profile-img" 
-              src="@/assets/anonymous user.png" 
-              alt="유저 프로필 사진">
-            <img 
-              v-else
-              class="img-fluid feed-profile-img" 
-              :src="comment.user.profileImg" alt="작성자 프로필 사진">
-          </span>
-          <span @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
-          <span v-if="comment.isClub" class="badge bg-green">Club</span>
+        <div class="col-12 d-flex justify-content-between p-2 pl-3">
+          <div>
+            <span class="rounded-circle">
+              <img
+                v-if="!selectedPost.user.profileImg"
+                class="img-fluid feed-profile-img" 
+                src="@/assets/anonymous user.png" 
+                alt="유저 프로필 사진">
+              <img 
+                v-else
+                class="img-fluid feed-profile-img" 
+                :src="comment.user.profileImg" alt="작성자 프로필 사진">
+            </span>
+            <span @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
+            <span v-if="comment.isClub" class="badge bg-green">Club</span>
+          </div>
+          <div>
+            <div
+              class="btn text-danger btn-sm" 
+              v-if="comment.user.id === myaccount.id"
+              @click="deleteComment({ postId: commentCreateData.postId, commentId: comment.id })"
+            >
+            삭제</div>
+          </div>
         </div>
         <div class="col-12 text-left wrapping">
           <div>{{ comment.content }}</div>
@@ -154,7 +164,7 @@ export default {
     ...mapState('postStore', ['selectedPost', 'comments']),
   },
   methods: {
-    ...mapActions('postStore', ['findPost', 'fetchComments', 'createComment', 'createLike', 'createBookmark']),
+    ...mapActions('postStore', ['findPost', 'fetchComments', 'createComment', 'createLike', 'createBookmark', 'deleteComment']),
     clickLike(post) {
       this.createLike(post.id)
       if (post.likeUsers.includes(this.myaccount.id)) {
@@ -200,12 +210,31 @@ export default {
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
     },
+    copyUrl() {
+      const copyText = document.createElement("input");
+      copyText.value = `http://localhost:8080/posts/${this.commentCreateData.postId}`
+      document.body.appendChild(copyText)
+      
+      copyText.select();
+      document.execCommand("copy");
+      document.body.removeChild(copyText)
+      alert("주소가 복사 되었습니다.")
+    }
   },
   created() {
     this.commentCreateData.postId = this.$route.params['postId']
     this.findPost(this.commentCreateData.postId)
     this.fetchComments(this.commentCreateData.postId)
   },
+  beforeRouteLeave(to, from, next) {
+    if (this.commentCreateData.content) {
+      if (confirm('작성 중인 댓글이 있습니다. 정말 넘어가시겠습니까?') === true) {
+        next()
+      } else {
+        next(false)
+      }
+    }
+  }
 }
 </script>
 
