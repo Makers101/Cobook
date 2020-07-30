@@ -37,22 +37,22 @@ public class ReadingDetailResDto {
         this.dateTime = reading.getDateTime();
         this.place = reading.getPlace();
         this.description = reading.getDescription();
-        this.participantCnt = reading.getMembers().size();
         this.closed = reading.getClosed();
         this.book = new BookSimpleResDto(reading.getBook());
         this.questions = reading.getQuestions().stream()
                 .map(QuestionResDto::new)
                 .collect(Collectors.toList());
         this.leader = reading.getMembers().stream()
-                .filter(m->m.getRole().equals(MemberRole.LEADER))
+                .filter(m -> m.getRole().equals(MemberRole.LEADER))
                 .findFirst()
                 .map(ReadingMemberResponseDto::new)
                 .get();
         this.participants = reading.getMembers().stream()
-                .filter(m->m.getRole().equals(MemberRole.MEMBER))
+                .filter(m -> m.getRole().equals(MemberRole.MEMBER))
                 .map(ReadingMemberResponseDto::new)
                 .collect(Collectors.toList());
         this.memberPosts = memberPosts;
         this.isMember = isMember;
+        this.participantCnt = participants.size() + 1;
     }
 }

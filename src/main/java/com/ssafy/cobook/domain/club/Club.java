@@ -81,4 +81,8 @@ public class Club extends BaseTimeEntity {
     public void changeRecruit() {
         this.recruit = !this.recruit;
     }
+
+    public void removeMember(ClubMember clubMember) {
+        this.members.remove(clubMember);
+    }
 }

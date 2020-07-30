@@ -143,6 +143,7 @@ public class PostService {
         Post post = getPostById(postId);
         return postCommentRepository.findAllByPost(post).stream()
                 .map(CommentsResDto::new)
+                .sorted()
                 .collect(Collectors.toList());
     }
 

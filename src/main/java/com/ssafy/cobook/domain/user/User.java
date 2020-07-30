@@ -201,4 +201,8 @@ public class User implements UserDetails {
     public void removeReading(ReadingMember delete) {
         this.readingMembers.remove(delete);
     }
+
+    public void removeClub(ClubMember clubMember) {
+        this.clubMembers.remove(clubMember);
+    }
 }

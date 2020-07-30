@@ -35,6 +35,7 @@ public class ClubDetailResDto {
     private List<GenreResponseDto> genres;
     private ClubMemberResponseDto leader;
     private List<ClubMemberResponseDto> members;
+    private List<Long> candidates;
     private List<ReadingSimpleResDto> readings;
 
     public ClubDetailResDto(Club club) {
@@ -47,7 +48,6 @@ public class ClubDetailResDto {
         this.recruit = club.getRecruit();
         this.createdAt = club.getCreatDateTime();
         this.updatedAt = club.getLastModifiedDate();
-        this.memberCnt = club.getMembers().size();
         this.followerCnt = club.getFollowList().size();
         this.genres = club.getGenres().stream()
                 .map(ClubGenre::getGenre)
@@ -64,6 +64,11 @@ public class ClubDetailResDto {
                 .collect(Collectors.toList());
         this.readings = club.getReadingList().stream()
                 .map(ReadingSimpleResDto::new)
+                .collect(Collectors.toList());
+        this.memberCnt = members.size() + 1;
+        this.candidates = club.getMembers().stream()
+                .filter(m->m.getRole().equals(MemberRole.WAITING))
+                .map(m->m.getUser().getId())
                 .collect(Collectors.toList());
     }
 }
