@@ -16,6 +16,7 @@ public class NotificationResponseDto implements Comparable<NotificationResponseD
     private Long to;
     private Long dataId;
     private String type;
+    private boolean isread;
     private LocalDateTime createdAt;
 
     public NotificationResponseDto(Notification noti) {
@@ -24,6 +25,7 @@ public class NotificationResponseDto implements Comparable<NotificationResponseD
         this.to = noti.getToId();
         this.dataId = noti.getDataId();
         this.type = noti.getTypes();
+        this.isread = noti.getIsread();
         this.createdAt = noti.getCreatDateTime();
     }
 

@@ -46,6 +46,7 @@ public class NotificationService {
             Notification noti = notificationRepository
                     .findByFromIdAndToIdAndDataIdAndTypes(requestDto.getFrom(), requestDto.getTo(), requestDto.getDataId(), requestDto.getType()).get();
             notificationRepository.delete(noti);
+            return;
         }
         notificationRepository.save(requestDto.toEntity());
     }
