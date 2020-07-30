@@ -165,6 +165,15 @@ const clubStore = {
           .catch(err => {
             console.log(err.response.data)
           })
+      },
+      secedeClub({ rootGetters, dispatch }, clubId) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId + '/secede', null, rootGetters.config)
+          .then(() => {
+            dispatch('findClub', clubId)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
       }
     }
 }
