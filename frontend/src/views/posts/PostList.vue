@@ -29,7 +29,7 @@
         :key="`post-${post.id}`"
         >
         <div class="post-header d-flex justify-content-between py-2">
-          <div class="ml-3">
+          <div class="ml-3 pointer" @click="selectUser(post.user.id)">
             <span class="rounded-circle">
               <img
                 v-if="!post.user.profileImg"
@@ -41,16 +41,16 @@
                 class="img-fluid feed-profile-img mr-2" 
                 :src="post.user.profileImg" alt="작성자 프로필 사진">
             </span>
-            <span @click="selectUser(post.user.id)">{{ post.user.nickName }}</span>
+            <span>{{ post.user.nickName }}</span>
             <span v-if="post.isClub" class="badge bg-green">Club</span>
           </div>
           <div class="color-beige small-text">
-            <span class="pointer" @click="postDetail(post.id)">
-              <i class="fas fa-comments mr-2" id="heart"></i><small class="mr-3">{{ post.commentCnt }}</small>
+            <span class="pointer text-center" @click="postDetail(post.id)">
+              <i class="fas fa-comments mr-2" id="heart"></i><small>{{ post.commentCnt }}</small>
             </span>
-            <span class="pointer" @click="clickBookmark(post)">
-              <span v-if="checkBookmark(post)"><i class="fas fa-bookmark mr-2 color-green" id="bookmark"></i><small class="mr-3">{{ post.bookmarkUsers.length }}</small></span>
-              <span v-else><i class="fas fa-bookmark mr-2" id="bookmark"></i><small class="mr-3">{{ post.bookmarkUsers.length }}</small></span>
+            <span class="pointer text-center" @click="clickBookmark(post)">
+              <span v-if="checkBookmark(post)"><i class="fas fa-bookmark mx-2 color-green" id="bookmark"></i><small class="mr-3">{{ post.bookmarkUsers.length }}</small></span>
+              <span v-else><i class="fas fa-bookmark mx-2" id="bookmark"></i><small class="mr-3">{{ post.bookmarkUsers.length }}</small></span>
             </span>
           </div>
         </div>
@@ -217,8 +217,6 @@ export default {
       setTimeout(() => {
         if (this.posts.slice(this.page, this.page + 3).length) {
           this.postList = this.postList.concat(this.posts.slice(this.page, this.page + 3))
-          console.log(this.page)
-          console.log(this.postList)
           $state.loaded();
           this.page += 3
         } else {

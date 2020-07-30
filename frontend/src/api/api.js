@@ -30,5 +30,8 @@ export default {
     bookmark: '/bookmark',
     club: '/club',
     reading: '/reading',
+
+    // noti
+    noti: '/noti',
   }
 }

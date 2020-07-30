@@ -202,12 +202,22 @@ public class ClubController {
         return ResponseEntity.status(HttpStatus.OK).body(clubService.addFollow(userId, clubId));
     }
 
-    @ApiOperation(value = "클럽 신청 목록을 조회한다")
+    @ApiOperation(value = "클럽 신청 목록을 조회한다", response = ClubCandidatesResponseDto.class)
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/{clubId}/candidates")
     public ResponseEntity<List<ClubCandidatesResponseDto>> getClubCandidates(@ApiIgnore final Authentication authentication,
-                                              @PathVariable("clubId") final Long clubId) {
+                                                                             @PathVariable("clubId") final Long clubId) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         return ResponseEntity.status(HttpStatus.OK).body(clubService.getCandidates(clubId, userId));
+    }
+
+    @ApiOperation(value = "클럽에서 탈퇴한다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @DeleteMapping("/{clubId}/members")
+    public ResponseEntity<Void> signoutClub(@ApiIgnore final Authentication authentication,
+                                            @PathVariable("clubId") final Long clubId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        clubService.signOutClub(clubId, userId);
+        return ResponseEntity.ok().build();
     }
 }

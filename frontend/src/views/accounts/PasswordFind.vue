@@ -31,7 +31,7 @@
 </template>
 
 <script>
-// import { mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import SERVER from '@/api/api'
 import axios from 'axios'
 import router from '@/router'
@@ -62,7 +62,7 @@ export default {
     },
   },
   methods: {
-    // ...mapActions('accountStore', ['findPassword']),
+    ...mapActions('accountStore', ['findPassword']),
     checkEmailForm() {
       if ( this.passwordFindData.email.length > 0 && !this.validEmail(this.passwordFindData.email) ) {
         this.error.email = "올바른 이메일 형식이 아니에요"   
@@ -85,21 +85,26 @@ export default {
         this.$router.push({name: 'PasswordFindEmail'})
       }
     },
-    findPassword(passwordFindData) {
-        axios({
-          method: 'post',
-          url: SERVER.URL + SERVER.ROUTES.password,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data: passwordFindData
-        })
+    sendPasswordEmail(info) {
+      console.log("THIS IS INFO", info.data)
+      axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
+        headers: { 'Content-Type': 'application/json' }
+      })
         .then (() => {
-                router.push({ name: 'PasswordFindEmail'})
-            })
-            .catch (err =>{
-                console.log(err.response)
-            })
+          console.log("Success")
+          router.push({ name: 'PasswordFindEmail'})
+        })
+        .catch (err =>{
+          console.log(err.response)
+        })
+    },
+    findPassword(passwordFindData) {
+      const info = {
+        data: passwordFindData,
+        location: SERVER.ROUTES.password,
+        // to: '/'
+      }
+      this.sendPasswordEmail(info)
     },
   },
 }

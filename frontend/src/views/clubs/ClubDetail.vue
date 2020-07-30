@@ -187,6 +187,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['createNoti']),
     ...mapActions('clubStore', ['findClub', 'updateRecruit', 'applyClub', 'secedeClub']),
     selectReading(readingId) {
       router.push({ name: 'ReadingDetail', params: { clubId: this.$route.params.clubId, readingId: readingId }})
@@ -199,6 +200,15 @@ export default {
       this.selectedClub.recruit = !this.selectedClub.recruit
     },
     clickApplyClub(type) {
+      let notiData = new Object()
+      notiData = {
+        from: this.myaccount.id,
+        to: this.selectedClub.leader.id,
+        dataId: this.selectedClub.id,
+        type: "club"
+      }
+      this.createNoti(notiData)
+      
       if (type === 'apply') {
         alert('가입 신청이 완료 되었습니다. 설레는 마음으로 기다려주세요 :)')
         this.applyClub(this.$route.params.clubId)

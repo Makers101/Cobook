@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommentsResDto {
+public class CommentsResDto implements Comparable<CommentsResDto> {
 
     private Long id;
     private UserByPostDto user;
@@ -24,5 +24,10 @@ public class CommentsResDto {
         this.user = new UserByPostDto(postComment.getUser());
         this.createdAt = postComment.getCreatDateTime();
         this.updatedAt = postComment.getLastModifiedDate();
+    }
+
+    @Override
+    public int compareTo(CommentsResDto o) {
+        return -this.createdAt.compareTo(o.createdAt);
     }
 }

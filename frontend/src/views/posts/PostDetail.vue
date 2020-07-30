@@ -1,5 +1,6 @@
 <template>
-  <div class="custom-container mt-3 custom-offset-lg-0">
+  <v-app class="custom-container mt-3 custom-offset-lg-0">
+  <div>
     <div class="post mb-4">
       <div class="post-header d-flex justify-content-between p-2 pl-3">
         <div>
@@ -14,7 +15,7 @@
               class="img-fluid feed-profile-img" 
               :src="selectedPost.user.profileImg" alt="작성자 프로필 사진">
           </span>
-          <span @click="selectUser(selectedPost.user.id)">
+          <span class="ml-1 pointer" @click="selectUser(selectedPost.user.id)">
              {{ selectedPost.user.nickName }}
           </span>
           <span v-if="selectedPost.isClub" class="badge bg-green">Club</span>
@@ -30,11 +31,11 @@
           <div class="btn-group">
             <button class="btn-green dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             </button>
-            <div class="dropdown-menu">
-              <p class="dropdown-item m-0" @click="copyUrl">공유하기</p>
+            <div class="dropdown-menu text-center">
+              <p class="dropdown-item m-0 pointer" @click="copyUrl">공유하기</p>
               <div class="dropdown-divider" v-if="myaccount.nickName===selectedPost.user.nickName"></div>
-              <p class="dropdown-item m-0" v-if="myaccount.nickName===selectedPost.user.nickName">수정하기</p>
-              <p class="dropdown-item m-0" v-if="myaccount.nickName===selectedPost.user.nickName">삭제하기</p>
+              <p class="dropdown-item m-0 pointer" v-if="myaccount.nickName===selectedPost.user.nickName">수정하기</p>
+              <p class="dropdown-item m-0 pointer" v-if="myaccount.nickName===selectedPost.user.nickName">삭제하기</p>
             </div>
           </div>
        </div>
@@ -47,20 +48,21 @@
           </div>
           <div class="col-9 my-5 text-left pr-3 wrapping">
             <h5 class="font-weight-bold">{{ selectedPost.book.title }}</h5>
-            <p>- {{ selectedPost.book.author }} -</p>
-            <p>{{ selectedPost.book.publisher }}</p>
-            <p>{{ selectedPost.book.pubDate.slice(0,4) }}년 {{ selectedPost.book.pubDate.slice(5,7) }}월 {{ selectedPost.book.pubDate.slice(8,10) }}일</p>
+            <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953039-4a9da800-d2d3-11ea-8f6b-5792b4f87c45.png" width="20px"> {{ selectedPost.book.author }} </p>
+            <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px"> {{ selectedPost.book.publisher }}</p>
+            <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> {{ selectedPost.book.pubDate.slice(0,4) }}년 {{ selectedPost.book.pubDate.slice(5,7) }}월 {{ selectedPost.book.pubDate.slice(8,10) }}일</p>
           </div>
         </div>
         <div>
-          <div class="offset-2 col-8 mt-3">
-            <div class="w-100 color-black">
-              <div class="large-text text-left"><i class="fas fa-quote-left"></i></div>
-              <div class="d-flex justify-content-center"><p class="my-2 w-50">{{ selectedPost.onelineReview }}</p></div>
-              <div class="large-text text-right"><i class="fas fa-quote-right"></i></div>
+          <div class="offset-2 col-8 py-3">
+            <div class="w-100 color-black post-onelineReview">
+              <div class="px-3 pt-2 large-text text-left"><i class="fas fa-quote-left"></i></div>
+              <div class="px-3 d-flex justify-content-center"><p class="my-2 w-100">{{ selectedPost.onelineReview }}</p></div>
+              <div class="px-3 pb-2 large-text text-right"><i class="fas fa-quote-right"></i></div>
             </div>
           </div>
-          <div class="col-12 py-5 px-5">
+          <!-- <hr class="w-50 d-flex justify-content-center"> -->
+          <div class="col-12 py-2 px-5" v-if="selectedPost.review" >
             <div class="w-100 color-black">
               <div class="review" v-html="selectedPost.review"></div>
             </div>
@@ -92,7 +94,7 @@
       <div class="input-group row no-gutters mb-3 commentSection">
         <textarea
           class="col-11 textareaSection p-3" 
-          @keyup.enter="clickComment" 
+          @keyup.enter="enterComment" 
           @input="activeBtn"
           v-model="commentCreateData.content" 
           type="content" 
@@ -124,16 +126,33 @@
                 class="img-fluid feed-profile-img" 
                 :src="comment.user.profileImg" alt="작성자 프로필 사진">
             </span>
-            <span @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
+            <span class="ml-2 pointer" @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
             <span v-if="comment.isClub" class="badge bg-green">Club</span>
           </div>
           <div>
             <div
-              class="btn text-danger btn-sm" 
+              class="btn text-danger btn-sm"
               v-if="comment.user.id === myaccount.id"
-              @click="deleteComment({ postId: commentCreateData.postId, commentId: comment.id })"
-            >
-            삭제</div>
+              @click.stop="dialog = true"
+            > 삭제 </div>
+            <v-dialog v-model="dialog" max-width="290">
+              <v-card>
+                <v-card-title class="h5">정말 삭제하시겠습니까?</v-card-title>
+                <v-card-actions>
+                  <v-flex flex-column class="justify-end">
+                    <v-btn 
+                    color="red darken-1" 
+                    text 
+                    @click="falseDialog(commentCreateData, comment)" >네</v-btn>
+                    <v-btn 
+                      color="green darken-1" 
+                      text 
+                      @click="dialog = false">아니요</v-btn>
+                  </v-flex>
+                  
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </div>
         </div>
         <div class="col-12 text-left wrapping">
@@ -143,6 +162,7 @@
       </div>
     </div>
   </div>
+  </v-app>
 </template>
 
 <script>
@@ -157,6 +177,7 @@ export default {
         content: null
       },
       btnActive: false,
+      dialog: false,
     }
   },
   computed: {
@@ -188,7 +209,21 @@ export default {
         .then(() => {
           this.commentCreateData.content = null
           this.btnActive = false
-        })
+        })  
+      
+    },
+    enterComment() {
+      if (this.commentCreateData.content.length === 1){
+        this.commentCreateData.content = null
+        this.btnActive = false
+        alert("댓글을 작성해주세요.")
+      } else {
+        this.createComment(this.commentCreateData)
+        .then(() => {
+          this.commentCreateData.content = null
+          this.btnActive = false
+        })  
+      }
     },
     activeBtn() {
       if (this.commentCreateData.content) {
@@ -219,6 +254,10 @@ export default {
       document.execCommand("copy");
       document.body.removeChild(copyText)
       alert("주소가 복사 되었습니다.")
+    },
+    falseDialog(commentCreateData, comment) {
+      this.dialog = false
+      this.deleteComment({ postId: commentCreateData.postId, commentId: comment.id })
     }
   },
   created() {
@@ -251,6 +290,8 @@ export default {
 
 .feed-profile-img {
   height: 25px;
+  width: 25px;
+  border-radius: 50%;
 }
 
 .small-text {
@@ -294,6 +335,19 @@ export default {
 
 .textareaSection:focus {
   outline: 1px solid #88A498;
+}
+
+.post-onelineReview {
+  background-color: #f3f0ec;
+  border-radius: 50px;
+}
+
+.dropdown-menu {
+  left: -126px !important;
+}
+
+.btn-group > .btn-green {
+  outline-style: none !important;
 }
 
 @media screen and (min-width: 1264px) {

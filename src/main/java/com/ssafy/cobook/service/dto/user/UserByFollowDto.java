@@ -15,11 +15,13 @@ public class UserByFollowDto {
     public UserByFollowDto(User user) {
         this.toUserId = user.getId();
         this.nickname = user.getNickName();
-        this.profileImg = user.getProfileImg();
+        if (user.getProfileImg() != null) {
+            this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.toUserId;
+        }
         this.isFollow = false;
     }
 
-    public void setIsFollow(Boolean isFollow){
+    public void setIsFollow(Boolean isFollow) {
         this.isFollow = isFollow;
     }
 
