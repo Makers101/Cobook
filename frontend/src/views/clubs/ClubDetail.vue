@@ -57,15 +57,15 @@
     <div>
       <h4 class="text-left font-weight-bold mb-3">클럽 멤버({{ selectedClub.memberCnt }})</h4>
       <div class="d-flex justify-content-start">
-        <div class="profile-container pointer" @click="selectUser(selectedClub.leader.id)">
+        <div class="profile-container pointer mr-3" @click="selectUser(selectedClub.leader.id)">
           <img class="rounded-circle image" :src="selectedClub.leader.profileImg" alt="" v-if="selectedClub.leader.profileImg">
           <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
           <div class="overlay rounded-circle">
             <div class="text">{{ selectedClub.leader.nickName }}</div>
           </div>
         </div>
-        <div class="profile-container pointer" v-for="member in selectedClub.members" :key="member.id" @click="selectUser(member.id)">
-          <img class="rounded-circle image" :src="member.proflieImg" alt="" v-if="member.profileImg">
+        <div class="profile-container pointer mr-3" v-for="member in selectedClub.members" :key="member.id" @click="selectUser(member.id)">
+          <img class="rounded-circle image" :src="member.profileImg" alt="" v-if="member.profileImg">
           <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
           <div class="overlay rounded-circle">
             <div class="text">{{ member.nickName }}</div>
@@ -79,7 +79,7 @@
     <!-- club-description -->
     <div>
       <h4 class="text-left font-weight-bold mb-3">클럽 설명</h4>
-      <p class="text-left px-2">{{ selectedClub.description }}</p>
+      <p class="text-left px-2 description">{{ selectedClub.description }}</p>
     </div>
 
     <hr>
@@ -87,7 +87,7 @@
     <!-- club-readings -->
     <div>
       <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 리딩</h4>
-      <div class="row rows-cols-1 row-cols-sm-3">
+      <div class="row rows-cols-1 row-cols-sm-3" v-if="selectedClub.readings.length !== 0">
         <div class="mb-2 col-12 col-sm-4 pointer" v-for="reading in selectedClub.readings" :key="reading.id" @click="selectReading(reading.id)">
           <div class="card h-100">
             <div class="row no-gutters">
@@ -112,7 +112,7 @@
         </div>
       </div>
 
-      <div class="no-content d-flex justify-content-center align-items-center" v-if="!selectedClub.readings">
+      <div class="no-content d-flex justify-content-center align-items-center" v-else>
         <p class="mb-0">아직 {{ selectedClub.name }}의 리딩이 없습니다 ㄴ(°0°)ㄱ</p>
       </div>
     </div>  
@@ -271,5 +271,9 @@ export default {
     color: #F8F8F8;
     text-align: center;
     padding: 6px;
+  }
+
+  .description {
+    white-space: pre-line;
   }
 </style>

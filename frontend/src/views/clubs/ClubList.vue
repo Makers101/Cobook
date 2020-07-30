@@ -5,7 +5,7 @@
     <div class="club-banner">
       <img
         class="club-banner-img"
-        src="@/assets/club_banner.jpg" 
+        src="https://user-images.githubusercontent.com/57381062/88907929-3090a500-d294-11ea-94c0-601ed914d2e4.jpg" 
         alt="">
       <div class="club-banner-text">
         <h3 class="font-weight-bold">클럽</h3>

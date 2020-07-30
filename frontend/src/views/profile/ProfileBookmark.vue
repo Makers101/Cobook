@@ -30,7 +30,7 @@
       
     </div>
     <div v-else>
-      <img src="@/assets/ready.png" width="150px" class="mt-3">
+      <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
       <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 북마크한 피드가 없습니다. </h3>
     </div>
   </div>

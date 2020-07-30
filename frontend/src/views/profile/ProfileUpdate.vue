@@ -3,7 +3,7 @@
     
     <div class="profile-banner">
       <img class="profile-banner-img"
-      src = "@/assets/night.jpg"
+      src = "https://user-images.githubusercontent.com/57381062/88908230-90874b80-d294-11ea-96f1-10073a23235f.jpg"
       alt="profile banner image">
       <div class="profile-banner-text">
         <h3 class="font-weight-bold">프로필 수정하기</h3>

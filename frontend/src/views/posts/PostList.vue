@@ -34,7 +34,7 @@
               <img
                 v-if="!post.user.profileImg"
                 class="img-fluid feed-profile-img" 
-                src="@/assets/anonymous user.png" 
+                src="https://user-images.githubusercontent.com/57381062/88908958-84e85480-d295-11ea-9637-540f1be674ac.png" 
                 alt="유저 프로필 사진">
               <img 
                 v-else
@@ -89,7 +89,7 @@
         </div>
       </div>
     </div>
-    <div class="d-none custom-d-md-block col-2">
+    <!-- <div class="d-none custom-d-md-block col-2">
       <div class="recommend border rounded">
         <div class="recommend-header font-weight-extrabold mt-3">추천하는 책</div>
         <hr>
@@ -114,7 +114,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <infinite-loading class="col-12" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
     <!-- <div id="bottomSensor"></div> -->
   </div>
