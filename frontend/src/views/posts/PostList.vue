@@ -115,7 +115,7 @@
         </div>
       </div>
     </div>
-    <infinite-loading @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+    <infinite-loading class="col-12" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
     <!-- <div id="bottomSensor"></div> -->
   </div>
 </template>
