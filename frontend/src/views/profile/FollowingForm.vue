@@ -18,7 +18,7 @@
               </v-avatar>
             </v-list-item-avatar>
             <v-list-item-content class="text-left">
-              <v-list-item-title class="nicknameSection" @click="selectUser(item.toUserId)">{{ item.nickname }}</v-list-item-title>
+              <v-list-item-title><span @click="selectUser(item.toUserId)" class="nicknameSection">{{ item.nickname }}</span></v-list-item-title>
             </v-list-item-content>
             <v-list-item-action>
               <div v-if="item.toUserId !== myaccount.id">

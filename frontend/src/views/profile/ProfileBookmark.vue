@@ -1,6 +1,6 @@
 <template>
   <div class="mt-3">
-    <div class="row rows-cols-1 row-cols-md-3" v-if="bookmarks.length">
+    <div class="row rows-cols-1 row-cols-md-3 pointer" v-if="bookmarks.length">
       <div class="col-12 col-sm-4 mb-4" v-for="bookmark in bookmarks" :key="bookmark.id">
         <div class="card h-100" @click="selectFeed(bookmark.id)">
            <div style="max-height:70px;overflow:hidden;">

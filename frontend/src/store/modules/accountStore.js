@@ -1,7 +1,5 @@
 import SERVER from '@/api/api'
-
 import axios from 'axios'
-
 import router from '@/router'
 
 
