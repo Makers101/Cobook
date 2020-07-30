@@ -71,6 +71,14 @@ export default {
   text-shadow: 1px 1px 2px white;
   font-weight: 900;
   word-break: keep-all;
+  overflow: hidden;
+  white-space: normal;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; 
+  -webkit-box-orient: vertical;
+  height: 3rem;
 }
 
 .card {
