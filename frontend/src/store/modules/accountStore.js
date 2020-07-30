@@ -1,7 +1,7 @@
 import SERVER from '@/api/api'
 import axios from 'axios'
 import router from '@/router'
-import cookies from 'vue-cookies'
+// import cookies from 'vue-cookies'
 
 const accountStore = {
     namespaced: true,
