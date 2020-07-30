@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
 public class PostByMembersResDto {
 
     private Long id;
+    private Long userId;
+    private String nickName;
+    private String profileImg;
     private String onelineReview;
     private Integer rank;
     private Boolean open;
@@ -28,6 +31,11 @@ public class PostByMembersResDto {
 
     public PostByMembersResDto(Post post) {
         this.id = post.getId();
+        this.userId = post.getUser().getId();
+        this.nickName = post.getUser().getNickName();
+        if (post.getUser().getProfileImg() != null) {
+            this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.userId;
+        }
         this.onelineReview = post.getOnelineReview();
         this.rank = post.getRank();
         this.open = post.getOpen();
