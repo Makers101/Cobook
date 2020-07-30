@@ -5,11 +5,11 @@ import router from '@/router'
 const clubStore = {
     namespaced: true,
     state: {
-        clubs: null,
-        filteredClubs: null,
-        selectedClub: null,
-        selectedReading: null,
-        candidates: null,
+      clubs: null,
+      filteredClubs: null,
+      selectedClub: null,
+      selectedReading: null,
+      candidates: null,
     },
     getters: {
     },
