@@ -10,6 +10,7 @@ const profileStore = {
     feeds: null,
     bookmarks: null,
     clubs: null,
+    readings: null,
     followingList: null,
     followerlist: null,
   },
@@ -30,6 +31,9 @@ const profileStore = {
     },
     SET_CLUBS(state, clubs) {
       state.clubs = clubs
+    },
+    SET_READINGS(state, readings) {
+      state.readings = readings
     },
     SET_FOLLOWINGLIST(state, followingList) {
       state.followingList = followingList
@@ -85,9 +89,8 @@ const profileStore = {
       })
      },
     fetchFeeds({ commit }, userId) {
-      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/' + SERVER.ROUTES.feeds)
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.feed)
       .then(res => {
-        console.log(res)
         commit('SET_FEEDS', res.data)
       })
       .catch(err => {
@@ -95,9 +98,9 @@ const profileStore = {
       })
     },
     fetchBookmarks({ commit }, userId) {
-      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/' + SERVER.ROUTES.bookmarks)
+      console.log(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.bookmark)
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.bookmark)
         .then(res => {
-          console.log(res)
           commit('SET_BOOKMARKS', res.data)
         })
         .catch(err => {
@@ -105,10 +108,18 @@ const profileStore = {
         })
     },
     fetchClubs({ commit }, userId) {
-      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/' + SERVER.ROUTES.clubs)
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.club)
         .then(res => {
-          console.log(res)
           commit('SET_CLUBS', res.data)
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
+    fetchReadings({ commit }, userId) {
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.reading)
+        .then(res => {
+          commit('SET_READINGS', res.data)
         })
         .catch(err => {
           console.log(err.response.data)

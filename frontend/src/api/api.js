@@ -25,6 +25,10 @@ export default {
     profile: '/profile',
     follow: '/follow',
     follower: '/follower',
-    following: '/following'
+    following: '/following',
+    feed: '/feed',
+    bookmark: '/bookmark',
+    club: '/club',
+    reading: '/reading',
   }
 }
