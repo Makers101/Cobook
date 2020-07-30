@@ -13,17 +13,17 @@
               <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>
               <span v-if="myaccount.id !== profile.id">
                 <button v-if="checkFollow(profile)" class="btn px-4 bg-light-black" @click="clickedFollow(profile)">팔로잉</button>
-                <button v-else class="btn bg-green px-4" @click="clickedFollow(profile)">팔로우</button>
+                <button v-else class="btn bg-green px-4 follow-button" @click="clickedFollow(profile)">팔로우</button>
               </span>
               
             </div>
             <p class="profile-description">{{ profile.description }}</p>
             <div class="d-flex justify-content-between">
               <p class="color-light-black font-weight-bold">
-                <span>{{ profile.followerList.length }}</span> <span @click.stop="showFollowerForm=true" class="mr-3"> FOLLOWER</span> 
-                <span>{{ profile.followingList.length }}</span><span @click.stop="showFollowingForm=true"> FOLLOWING</span>
+                <span>{{ profile.followerList.length }}</span> <span @click.stop="showFollowerForm=true" class="mr-3 pointer"> FOLLOWER</span> 
+                <span>{{ profile.followingList.length }}</span><span @click.stop="showFollowingForm=true" class="pointer"> FOLLOWING</span>
               </p>   
-              <button class="btn bg-green" v-if="myaccount.id === profile.id" @click="clickUpdate(profile.id)">수정하기</button>   
+              <button class="btn bg-green" v-if="myaccount.id === profile.id" @click="clickUpdate(profile.id)">프로필 수정</button>   
             </div>
               
           </div>
