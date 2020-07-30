@@ -33,12 +33,12 @@
             <span class="rounded-circle">
               <img
                 v-if="!post.user.profileImg"
-                class="img-fluid feed-profile-img" 
+                class="img-fluid feed-profile-img mr-2" 
                 src="https://user-images.githubusercontent.com/57381062/88908958-84e85480-d295-11ea-9637-540f1be674ac.png" 
                 alt="유저 프로필 사진">
               <img 
                 v-else
-                class="img-fluid feed-profile-img" 
+                class="img-fluid feed-profile-img mr-2" 
                 :src="post.user.profileImg" alt="작성자 프로필 사진">
             </span>
             <span @click="selectUser(post.user.id)">{{ post.user.nickName }}</span>
@@ -274,6 +274,8 @@ export default {
 
 .feed-profile-img {
   height: 25px;
+  width: 25px;
+  border-radius: 50%;
 }
 
 .small-text {
@@ -320,7 +322,7 @@ export default {
   color: red !important;
 }
 
-/* .bookmarkselected {
-  color: #907a62 !important;
-} */
+.club-img {
+  border-radius: 50%;
+}
 </style>
