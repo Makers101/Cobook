@@ -1,32 +1,32 @@
 <template>
   <div class="mt-3">
-    <h5 class="text-left font-weight-bold">Club</h5>
+    <h5 class="text-left font-weight-bold" v-if="clubs.length">Club</h5>
     <!-- Club cards -->
-    <div class="club-list my-2 row">
+    <div class="club-list my-2 row" v-if="clubs.length">
       <div 
         class="col-sm-4 col-12 p-3"
         v-for="club in clubs"
         :key="`club_${club.id}`">
         <div class="card">
-          <div class="card-head">
+          <div class="card-head club-image-container">
             <img
-              class="card-img-top to-detail"
-              :src="club.image"
+              class="card-img-top to-detail club-image"
+              :src="club.clubImg"
               :alt="club.name"
               @click="selectClub(club.id)"
             >
-            <span class="badge mb-0 club-open" v-if="club.open">모집중</span>
+            <span class="badge mb-0 club-open" v-if="club.recruit">모집중</span>
           </div>        
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h4 class="card-title font-weight-bold mb-0 club-name to-detail" @click="selectClub(club.id)">{{ club.name }}</h4>
-              <small class="color-green font-weight-bold club-followers">{{ club.followers }} FOLLOW</small>
+              <small class="color-green font-weight-bold club-followers">{{ club.followerCnt }} FOLLOW</small>
             </div>
-            <p class="card-text text-left club-oneline">{{ club.oneline_description }}</p>
-            <div class="d-flex justify-content-start my-3">
+            <p class="card-text text-left club-oneline">{{ club.onelineDescription }}</p>
+            <div class="d-flex justify-content-start my-3 club-genre">
               <span
                 class="badge badge-genre mr-2"
-                v-for="genre in club.genres"
+                v-for="genre in club.genres.slice(0,3)"
                 :key="`club_genre_${genre.id}`">
                 #{{ genre.name }}
               </span>
@@ -48,29 +48,31 @@
         </div>
       </div>
     </div>
+    <div v-else>
+      <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
+      <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 가입한 클럽이 없습니다. </h3>
+    </div>
     <!-- Reading & Meetups -->
-    <h5 class="text-left font-weight-bold">Reading & Meetup</h5>
+    <h5 class="text-left font-weight-bold" v-if="clubs.length">Reading & Meetup</h5>
     <div class="row rows-cols-1 row-cols-sm-3">
       <div class="col mb-4 col-12 col-sm-4" v-for="reading in readings" :key="reading.id">
         <div class="card h-100">
           <div class="row no-gutters">
-            <div class="col-6">
+            <div class="col-6" @click="selectReading(reading.clubId, reading.id)">
               <img class="bg-image" :src="`${ reading.book.bookImg }`" width="100%">
             </div>
             <div class="col-6 text-left d-flex flex-column p-2">
-              <p class="color-light-black book-title" lt="book">{{ reading.book.title }}</p>
-              <small>{{ reading.name }}</small>
+              <p class="color-light-black book-title reading-booktitle" alt="book">{{ reading.book.title }}</p>
+              <small class="reading-name" @click="selectReading(reading.clubId, reading.id)">{{ reading.name }}</small>
               <div class="mt-auto">
                 <div class="d-flex justify-content-between">
                   <span><small><i class="fas fa-users"></i> {{ reading.participantCnt}}</small></span>
                   <span><small><i class="fas fa-map-marker-alt"></i> {{ reading.place }}</small></span>
                 </div>
-                <span><small>{{ reading.datetime }}</small></span>
+                <span class="reading-date"><small>{{ reading.datetime | moment('YYYY-MM-DD HH:mm') }}</small></span>
               </div>
-              
             </div>
           </div>
-         
         </div>
       </div>
     </div>
@@ -78,146 +80,9 @@
 </template>
 
 <script>
-const sample_clubs = [
-  {
-    id: 1,
-    name: 'sample_name_1',
-    image: 'http://placehold.jp/300x200.png?text=sample',
-    oneline_description: '주로 문학 작품을 읽는 클럽 sample_club_1입니다. 쿄쿄쿄쿄쿄쿜쿄쿄쿄쿄쿄쿄쿄',
-    residence: '역삼동',
-    participant_num: 3,
-    followers: 50,
-    genres: [
-      {
-        id: 1,
-        name: '문학'
-      },
-      {
-        id: 3,
-        name: '예술'
-      }
-    ],
-    open: true
-  },
-  {
-    id: 2,
-    name: 'sample_name_2',
-    image: 'http://placehold.jp/300x200.png?text=sample',
-    oneline_description: '주로 철학 작품을 읽는 클럽 sample_club_2입니다.',
-    residence: '온라인',
-    participant_num: 5,
-    followers: 10,
-    genres: [
-      {
-        id: 2,
-        name: '철학',
-      },
-    ],
-    open: true
-  },
-  {
-    id: 3,
-    name: 'sample_name_3',
-    image: 'http://placehold.jp/300x200.png?text=sample',
-    oneline_description: '같이 읽어봐요 sample_club_3입니다.',
-    residence: '온라인',
-    participant_num: 1,
-    followers: 1,
-    genres: [
-      {
-        id: 1,
-        name: '문학',
-      },
-      {
-        id: 2,
-        name: '철학',
-      },
-    ],
-    open: true
-  },
-]
-const sample_readings = [
-  {
-    id: 1,
-    name: '만든이101 1회 리딩',
-    datetime: '2020-07-10 16:00~',
-    participantCnt: 5,
-    closed: true,
-    place: '역삼역',
-    book: {
-      id: 4,
-      title: '아큐정전',
-      bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
-    }
-  },
-  {
-    id: 2,
-    name: '만든이101 2회 리딩',
-    datetime: '2020-07-15 16:00~',
-    participantCnt: 5,
-    closed: true,
-    place: '역삼역',
-    book: {
-      id: 4,
-      title: '아큐정전',
-      bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
-    }
-  },
-  {
-    id: 3,
-    name: '만든이101 3회 리딩',
-    datetime: '2020-07-20 16:00~',
-    participantCnt: 4,
-    closed: true,
-    place: '역삼역',
-    book: {
-      id: 4,
-      title: '아큐정전',
-      bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
-    }
-  },
-  {
-    id: 4,
-    name: '만든이101 4회 리딩',
-    datetime: '2020-07-23 16:00~',
-    participantCnt: 5,
-    closed: true,
-    place: '역삼역',
-    book: {
-      id: 4,
-      title: '아큐정전',
-      bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
-    }
-  },
-  {
-    id: 5,
-    name: '만든이101 5회 리딩',
-    datetime: '2020-07-25 16:00~',
-    participantCnt: 4,
-    closed: true,
-    place: '역삼역',
-    book: {
-      id: 4,
-      title: '아큐정전',
-      bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
-    }
-  },
-  {
-    id: 6,
-    name: '만든이101 6회 리딩',
-    datetime: '2020-07-26 16:00~',
-    participantCnt: 5,
-    closed: true,
-    place: '역삼역',
-    book: {
-      id: 4,
-      title: '아큐정전',
-      bookImg: 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1410820%3Ftimestamp%3D20200723133257'
-    }
-  },
-]
-
+import { mapState, mapActions } from 'vuex'
 import router from '@/router'
+
 export default {
   name: 'ProfileClub',
   data() {
@@ -225,67 +90,57 @@ export default {
       popular_filter: false,
       open_filter: false,
       genre_filter: new Set(),
-      
-      clubs: sample_clubs,
-      user_genres: [
-        {
-          id: 1,
-          name: '문학',
-        },
-        {
-          id: 2,
-          name: '철학',
-        },
-        {
-          id: 3,
-          name: '예술',
-        }
-      ],
-
-      readings: sample_readings,
     }
   },
+  computed: {
+    ...mapState('profileStore',['clubs', 'readings', 'profile']),
+    ...mapState(['myaccount'])
+  },
   methods: {
+     ...mapActions('profileStore', ['fetchClubs', 'fetchReadings']),
     selectClub(club_id) {
-      router.push({ name: 'ClubDetail', params: { club_id: club_id }})
+      router.push({ name: 'ClubDetail', params: { clubId: club_id }})
     },
-    filterClubs() {
-      let new_clubs = []
+    selectReading(club_id, reading_id) {
+      router.push({ name: 'ReadingDetail', params: {clubId: club_id, readingId: reading_id }})
+    },
+    // filterClubs() {
+    //   let new_clubs = []
             
-      if (this.open_filter) {
-        sample_clubs.forEach(club => {
-          if (club.open) {
-            new_clubs.push(club)
-          }
-        });
-      } else {
-        new_clubs = sample_clubs
-      }
+    //   if (this.open_filter) {
+    //     sample_clubs.forEach(club => {
+    //       if (club.open) {
+    //         new_clubs.push(club)
+    //       }
+    //     });
+    //   } else {
+    //     new_clubs = sample_clubs
+    //   }
 
-      console.log(new_clubs)
+    //   console.log(new_clubs)
 
-      if (this.genre_filter.size !== 0) {
-        console.log('여기1')
-        let new_clubs2 = new Set()
-        new_clubs.forEach(club => {
-          let temp = 0
-          club.genres.forEach(genre => {
-            if (this.genre_filter.has(genre.name)) {
-              temp = temp + 1
-            }
-          })
-          console.log(club.genres.length)
-          console.log(temp)
-          if (club.genres.length === temp) {
-            new_clubs2.add(club)
-          }
-        })
-        this.clubs = new_clubs2
-      } else {
-        console.log('여기2')
-        this.clubs = new_clubs
-      }
-    },
+    //   if (this.genre_filter.size !== 0) {
+    //     console.log('여기1')
+    //     let new_clubs2 = new Set()
+    //     new_clubs.forEach(club => {
+    //       let temp = 0
+    //       club.genres.forEach(genre => {
+    //         if (this.genre_filter.has(genre.name)) {
+    //           temp = temp + 1
+    //         }
+    //       })
+    //       console.log(club.genres.length)
+    //       console.log(temp)
+    //       if (club.genres.length === temp) {
+    //         new_clubs2.add(club)
+    //       }
+    //     })
+    //     this.clubs = new_clubs2
+    //   } else {
+    //     console.log('여기2')
+    //     this.clubs = new_clubs
+    //   }
+    // },
     selectFilter(filter) {
       if (filter === 'popular') {
         this.popular_filter = !this.popular_filter
@@ -301,7 +156,16 @@ export default {
       this.$forceUpdate();
       this.filterClubs()
     }
-  }
+  },
+  created() {
+    this.fetchClubs(this.$route.params.userId)
+    this.fetchReadings(this.$route.params.userId)
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.fetchClubs(to.params.userId)
+    this.fetchReadings(to.params.userId)
+    next();
+  },
 }
 </script>
 
@@ -327,7 +191,7 @@ export default {
     white-space: nowrap;
   }
 
-  .club-oneline {
+  .club-oneline, .reading-name {
     overflow: hidden;
     white-space: normal;
     word-wrap: break-word;
@@ -359,5 +223,49 @@ export default {
   .to-detail:hover {
     cursor: pointer;
     color: #88A498
+  }
+
+  .reading-date {
+    overflow: hidden;
+    white-space: normal;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+    -webkit-box-orient: vertical;
+    text-align: start;
+  }
+
+  .reading-booktitle {
+    overflow: hidden;
+    white-space: normal;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
+    text-align: start;
+  }
+
+  .club-image-container {
+    max-width: 100%;
+    height: 150px;
+    overflow: hidden;
+  }
+
+  .club-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .club-genre {
+    overflow: hidden;
+    white-space: normal;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+    -webkit-box-orient: vertical;
+    text-align: start;
   }
 </style>

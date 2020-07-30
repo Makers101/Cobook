@@ -1,6 +1,7 @@
 package com.ssafy.cobook.service.dto.club;
 
 import com.ssafy.cobook.domain.club.Club;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,10 +1,11 @@
 <template>
   <div class="custom-container">
+
     <!-- clubs-banner -->
     <div class="club-banner">
       <img
         class="club-banner-img"
-        src="@/assets/club_banner.jpg" 
+        src="https://user-images.githubusercontent.com/57381062/88907929-3090a500-d294-11ea-94c0-601ed914d2e4.jpg" 
         alt="">
       <div class="club-banner-text">
         <h3 class="font-weight-bold">클럽</h3>
@@ -19,27 +20,24 @@
     <!-- clubs-menubar -->
     <div class="club-menubar my-3 d-flex justify-content-between">
       <div class="club-toggle">
-        <!-- <button class="btn btn-toggle-false mx-1" @click="selectFilter('popular')" v-show="popular_filter">#인기</button>
-        <button class="btn btn-toggle-true mx-1" @click="selectFilter('popular')" v-show="!popular_filter">#인기</button> -->
-
-        <button class="btn btn-toggle-false mx-1" @click="selectFilter('open')" v-show="open_filter">#모집중</button>
-        <button class="btn btn-toggle-true mx-1" @click="selectFilter('open')" v-show="!open_filter">#모집중</button>
+        <button class="btn btn-toggle-false mx-1" @click="selectFilter('recruit')" v-show="filters.recruit_filter">#모집중</button>
+        <button class="btn btn-toggle-true mx-1" @click="selectFilter('recruit')" v-show="!filters.recruit_filter">#모집중</button>
 
         <span             
-          v-for="genre in userGenres"
+          v-for="genre in myaccount.likeGenres"
           :key="`userGenres_${genre.id}`"
         >
           <button 
             class="btn btn btn-toggle-false mx-1"
-            @click="selectFilter(genre.name)"
-            v-show="genre_filter.has(genre.name)"
+            @click="selectFilter(genre.id)"
+            v-show="filters.genre_filter.has(genre.id)"
           >
             #{{ genre.name }}
           </button>
           <button 
             class="btn btn btn-toggle-true mx-1"
-            @click="selectFilter(genre.name)"
-            v-show="!genre_filter.has(genre.name)"
+            @click="selectFilter(genre.id)"
+            v-show="!filters.genre_filter.has(genre.id)"
           >
             #{{ genre.name }}
           </button>
@@ -52,13 +50,13 @@
     <!-- clubs-list -->
     <div class="club-list my-2 row">
       <div 
-        class="col-sm-4 col-12 p-3"
-        v-for="club in clubs"
+        class="col-lg-4 col-12 p-3"
+        v-for="club in filteredClubs"
         :key="`club_${club.id}`">
         <div class="card">
-          <div class="card-head">
+          <div class="card-head club-image-container">
             <img
-              class="card-img-top to-detail"
+              class="card-img-top club-image to-detail"
               :src="club.clubImg"
               :alt="club.name"
               @click="selectClub(club.id)"
@@ -71,12 +69,12 @@
               @click="selectClub(club.id)"
               v-else
             >
-            <span class="badge mb-0 club-open" v-if="club.recruit">모집중</span>
+            <span class="badge mb-0 club-recruit" v-if="club.recruit">모집중</span>
           </div>        
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h4 class="card-title font-weight-bold mb-0 club-name to-detail" @click="selectClub(club.id)">{{ club.name }}</h4>
-              <small class="color-green font-weight-bold club-followers">{{ club.followerCnt }} FOLLOW</small>
+              <!-- <small class="color-green font-weight-bold club-followers">{{ club.followerCnt }} FOLLOW</small> -->
             </div>
             <p class="card-text text-left club-oneline">{{ club.onelineDescription }}</p>
             <div class="d-flex justify-content-start my-3">
@@ -111,68 +109,36 @@ export default {
   name: 'ClubList',
   data() {
     return {
-      popular_filter: false,
-      open_filter: false,
-      genre_filter: new Set(),
-      
+      filters: {
+        recruit_filter: false,
+        genre_filter: new Set()
+      }
     }
   },
   computed: {
-    ...mapState('clubStore', ['clubs', 'userGenres']),
+    ...mapState(['myaccount']),
+    ...mapState('clubStore', ['clubs', 'filteredClubs']),
   },
   methods: {
-    ...mapActions('clubStore', ['fetchClubs', 'findClub']),
+    ...mapActions('clubStore', ['fetchClubs', 'filterClubs']),
     selectClub(clubId) {
       router.push({ name: 'ClubDetail', params: { clubId: clubId }})
     },
     toClubCreate() {
       router.push({ name: 'ClubCreate' })
     },
-    // filterClubs() {
-    //   let new_clubs = []
-            
-    //   if (this.open_filter) {
-    //     this.clubs.forEach(club => {
-    //       if (club.open) {
-    //         new_clubs.push(club)
-    //       }
-    //     });
-    //   } else {
-    //     new_clubs = this.clubs
-    //   }
-
-    //   if (this.genre_filter.size !== 0) {
-    //     let new_clubs2 = new Set()
-    //     new_clubs.forEach(club => {
-    //       let temp = 0
-    //       club.genres.forEach(genre => {
-    //         if (this.genre_filter.has(genre.name)) {
-    //           temp = temp + 1
-    //         }
-    //       })
-    //       if (club.genres.length === temp) {
-    //         new_clubs2.add(club)
-    //       }
-    //     })
-    //     this.clubs = new_clubs2
-    //   } else {
-    //     this.clubs = new_clubs
-    //   }
-    // },
     selectFilter(filter) {
-      if (filter === 'popular') {
-        this.popular_filter = !this.popular_filter
-      } else if (filter === 'open') {
-        this.open_filter = !this.open_filter
+      if (filter === 'recruit') {
+        this.filters.recruit_filter = !this.filters.recruit_filter
       } else {
-        if (!this.genre_filter.has(filter)) {
-          this.genre_filter.add(filter)
+        if (!this.filters.genre_filter.has(filter)) {
+          this.filters.genre_filter.add(filter)
         } else {
-          this.genre_filter.delete(filter)
+          this.filters.genre_filter.delete(filter)
         }
       }
       this.$forceUpdate();
-      // this.filterClubs()
+      this.filterClubs(this.filters);
     }
   },
   created() {
@@ -208,21 +174,21 @@ export default {
     color: #88A498;
   }
 
-  .btn-toggle-true:hover {
+  /* .btn-toggle-true:hover {
     background-color: #88A498;
     color: #F8F8F8;
-  }
+  } */
 
   .btn-toggle-false {
     background-color: #88A498;
     color: #F8F8F8;
   }
 
-  .btn-toggle-false:hover {
+  /* .btn-toggle-false:hover {
     background-color: white;
     border-color: #88A498;
     color: #88A498;
-  }
+  } */
 
   .btn-club-create {
     background-color: #88A498;
@@ -271,7 +237,7 @@ export default {
     position: relative;
   }
 
-  .club-open {
+  .club-recruit {
     /* background-color: #b68145; */
     /* background-color: #907a62; */
     background-color: rgba(221, 118, 0, 0.8); 
@@ -288,4 +254,19 @@ export default {
     cursor: pointer;
     color: #88A498
   }
+
+  .club-image-container {
+    max-width: 100%;
+    height: 150px;
+    overflow: hidden;
+  }
+
+  .club-image {
+    width: 100%;
+    height: auto;
+  }
+  
+  /* .club-image {
+    height: 200px;
+  } */
 </style>

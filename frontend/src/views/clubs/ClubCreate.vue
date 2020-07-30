@@ -5,7 +5,7 @@
     <div class="club-banner">
       <img
         class="club-banner-img"
-        src="@/assets/club_create_banner.jpg"
+        src="https://user-images.githubusercontent.com/57381062/88908102-70f02300-d294-11ea-9c03-7aac0e803ea0.jpg"
         alt="">
       <div class="club-banner-text">
         <h3 class="font-weight-bold">클럽 만들기</h3>
@@ -37,7 +37,7 @@
                 cols="12"
               >
                 <v-text-field
-                  v-model="clubCreateData.name"
+                  v-model="clubCreateData.basicData.name"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="30"
@@ -48,7 +48,7 @@
               
               <v-col cols="12">
                 <v-file-input
-                  v-model="clubCreateData.clubImg"
+                  v-model="clubImg"
                   enctype="multipart/form-data"
                   accept="image/png, image/jpeg, image/bmp"
                   label="프로필 이미지"
@@ -65,8 +65,8 @@
                 md="6"
               >
                 <v-text-field
-                  v-if="leader"
-                  v-model="leader.userName"
+                  v-if="myaccount"
+                  v-model="myaccount.nickName"
                   disabled
                   color="blue-grey lighten-2"
                   :rules="[v => !!v || '필수항목입니다.']"
@@ -74,7 +74,7 @@
                 ></v-text-field>
                 <v-text-field
                   v-else
-                  v-model="leader"
+                  v-model="myaccount.nickName"
                   disabled
                   color="blue-grey lighten-2"
                   :rules="[v => !!v || '필수항목입니다.']"
@@ -82,57 +82,12 @@
                 ></v-text-field>
               </v-col>
 
-              <!-- <v-col cols="12">
-                <v-autocomplete
-                  v-model="clubCreateData.members"
-                  :items="users"
-                  chips
-                  hide-selected
-                  color="blue-grey lighten-2"
-                  label="클럽 멤버"
-                  item-text="userName"
-                  item-value="id"
-                  multiple
-                  :search-input.sync="searchMember"
-                  @change="isMemberNull()"
-                  @keypress.enter="isMemberNull()"
-                >
-                  <template v-slot:selection="data">
-                    <v-chip
-                      v-bind="data.attrs"
-                      :input-value="data.selected"
-                      close
-                      @click="data.select"
-                      @click:close="remove(clubCreateData.members, data.item)"
-                    >
-                      <v-avatar left>
-                        <v-img :src="data.item.avatar"></v-img>
-                      </v-avatar>
-                      {{ data.item.userName }}
-                    </v-chip>
-                  </template>
-                  <template v-slot:item="data">
-                    <template v-if="typeof data.item !== 'object'">
-                      <v-list-item-content v-text="data.item"></v-list-item-content>
-                    </template>
-                    <template v-else>
-                      <v-list-item-avatar>
-                        <img :src="data.item.avatar">
-                      </v-list-item-avatar>
-                      <v-list-item-content>
-                        <v-list-item-title v-html="data.item.userName"></v-list-item-title>
-                      </v-list-item-content>
-                    </template>
-                  </template>
-                </v-autocomplete>
-              </v-col> -->
-
               <v-col
                 cols="12"
                 md="12"
               >
                 <v-text-field
-                  v-model="clubCreateData.onelineDescription"
+                  v-model="clubCreateData.basicData.onelineDescription"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="30"
@@ -145,7 +100,7 @@
                 md="12"
               >
                 <v-textarea
-                  v-model="clubCreateData.description"
+                  v-model="clubCreateData.basicData.description"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="100"
@@ -156,16 +111,16 @@
 
               <v-col cols="12">
                 <v-autocomplete
-                  v-model="clubCreateData.genres"
+                  v-model="clubCreateData.basicData.genres"
                   v-if="genres"
                   :items="genres"
                   chips
                   hide-selected
                   color="blue-grey lighten-2"
-                  counter="5"
+                  counter="3"
                   :rules="[
                     v => (v.length !== 0) || '필수항목입니다.',
-                    v => (v.length < 6) || '최대 5개 관심 장르를 고를 수 있습니다.'
+                    v => (v.length < 4) || '최대 3개의 관심 장르를 고를 수 있습니다.'
                   ]"
                   label="관심 장르"
                   item-text="name"
@@ -181,7 +136,7 @@
                       :input-value="data.selected"
                       close
                       @click="data.select"
-                      @click:close="remove(clubCreateData.genres, data.item)"
+                      @click:close="remove(clubCreateData.basicData.genres, data.item)"
                     >
                       {{ data.item.name }}
                     </v-chip>
@@ -204,7 +159,7 @@
                 md="12"
               >
                 <v-text-field
-                  v-model="clubCreateData.residence"
+                  v-model="clubCreateData.basicData.residence"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="10"
@@ -237,38 +192,31 @@ export default {
   data() {
     return {
       clubCreateData: {
-        name: null,
-        clubImg: null,
-        onelineDescription: null,
-        description: null,
-        residence: null,
-        // members: [],
-        genres: [],
+        basicData: {
+          name: null,
+          onelineDescription: null,
+          description: null,
+          residence: null,
+          genres: [],
+          clubImg: null        
+        },
+        clubImgFormData: new FormData()
       },
-      leader: {
-        id: 6,
-        userName: "T-Leader"
-      },
+      clubImg: null,
       valid: true,
       lazy:false,
-      searchMember: null,
       searchGenre: null,
     }
   },
   computed: {
     ...mapState('clubStore', ['users']),
-    ...mapState(['genres'])
+    ...mapState(['genres', 'myaccount', 'users'])
   },
   methods: {
     ...mapActions('clubStore', ['createClub']),
     remove (data, item) {
       const index = data.indexOf(item.id)
       if (index >= 0) data.splice(index, 1)
-    },
-    isMemberNull() {
-      this.$nextTick(() => {
-        this.searchMember = null
-      })
     },
     isGenreNull() {
       this.$nextTick(() => {
@@ -279,14 +227,8 @@ export default {
       this.$refs.form.validate()
     },
     clickCreate() {
-      const formData = new FormData()
-      formData.append('name', this.clubCreateData.name)
-      formData.append('clubImg', this.clubCreateData.clubImg)
-      formData.append('onelineDescription', this.clubCreateData.onelineDescription)
-      formData.append('description', this.clubCreateData.description)
-      formData.append('residence', this.clubCreateData.residence)
-      formData.append('genres', this.clubCreateData.genres)
-      this.createClub(formData)
+      this.clubCreateData.clubImgFormData.append('clubImg', this.clubImg)
+      this.createClub(this.clubCreateData)
     }
   }
 }

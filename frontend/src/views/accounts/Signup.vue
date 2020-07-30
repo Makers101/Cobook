@@ -67,7 +67,7 @@
       </div>
 
       <div class="buttons mt-3">
-        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="signup(signupData)" >가입하기</button>
+        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="isSubmit && signup(signupData)" >가입하기</button>
       </div>
 
       <hr class="divide">
@@ -78,11 +78,11 @@
           <span class="justify-content-center">카카오 아이디 회원가입</span>
         </button>
       </div>
-      <div class="buttons mt-2 d-flex justify-content-center">
-        <button class="btn google d-flex align-items-center justify-content-center row">
+      <div class="buttons mt-2 d-flex justify-content-center mx-auto px-0" style="width: 70%">
+        <button class="btn google d-flex align-items-center justify-content-center" style="width:100% !important">
           <!-- <i class="fab fa-google-plus-g"></i> -->
-          <img class="google-logo" src="@/assets/google.png" width="32px" height="32px" >
-          <span class="justify-content-center col-">구글 아이디 회원가입</span>
+          <img class="google-logo" src="https://user-images.githubusercontent.com/57381062/88908677-291dcb80-d295-11ea-8a24-2a96837dd714.png" width="32px" height="32px" >
+          <span class="justify-content-center">구글 아이디 회원가입</span>
         </button>
       </div>
     </div>
@@ -153,7 +153,7 @@ export default {
         } else this.error.password = false;
     },
     validPassword(password) {
-      var va = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z]{8,}$/;
+      var va = /^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/;
       return va.test(password);
     },
     checkPasswordConfirmationForm() {
@@ -257,11 +257,12 @@ input[type="password"] {
 .disabled, .disabled:hover {
   background-color: rgb(136, 154, 152, 0.25);
   color: #F8F8F8;
+  cursor: inherit;
 }
 
 .background::after {
   content:"";
-  background-image: url('../..//assets/books.jpg');
+  background-image: url('https://user-images.githubusercontent.com/57381062/88908481-de03b880-d294-11ea-8567-9e74079c2a7b.jpg');
   opacity: 0.5;
   top: 0;
   left:0;

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostResponseDto {
+public class PostResponseDto implements Comparable<PostResponseDto> {
 
     private Long id;
     private UserByPostDto user;
@@ -32,6 +32,7 @@ public class PostResponseDto {
     private List<Long> likeUsers;
     private List<Long> bookmarkUsers;
     private List<TagByPostDto> tags;
+    private Integer commentCnt;
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
@@ -49,14 +50,20 @@ public class PostResponseDto {
         this.updatedAt = post.getLastModifiedDate();
         this.isClub = post.getIsClub();
         this.likeUsers = post.getPostLikes().stream()
-                .map(p->p.getUser().getId())
+                .map(p -> p.getUser().getId())
                 .collect(Collectors.toList());
         this.bookmarkUsers = post.getBookMarks().stream()
-                .map(b->b.getUser().getId())
+                .map(b -> b.getUser().getId())
                 .collect(Collectors.toList());
         this.tags = post.getTags().stream()
                 .map(PostTag::getTag)
                 .map(TagByPostDto::new)
                 .collect(Collectors.toList());
+        this.commentCnt = post.getComments().size();
+    }
+
+    @Override
+    public int compareTo(PostResponseDto o) {
+        return -this.createdAt.compareTo(o.createdAt);
     }
 }

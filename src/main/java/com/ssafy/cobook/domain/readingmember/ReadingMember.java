@@ -35,4 +35,8 @@ public class ReadingMember {
         this.reading = reading;
         this.role = role;
     }
+
+    public void removeUser() {
+        this.user.removeReading(this);
+    }
 }

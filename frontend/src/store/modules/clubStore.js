@@ -1,102 +1,15 @@
 import axios from 'axios'
 import SERVER from '@/api/api'
-
-const readingSample = {
-  id: 1,
-  name: "string",
-  participantCnt: 1,
-  place: "string",
-  closed: null,
-  dateTime: "2020-07-24T17:21:41",
-  description: "이번 리딩은 이렇게 진행할 것입니다. 벌금은 얼마입니다.",
-  book: {
-    bookId: 57,
-    bookTitle: "내 강아지 마음 상담소",
-    bookImage: "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5116719%3Ftimestamp%3D20200723135844"
-  },
-  members: [
-    {
-      id: 0,
-      profileImg: null,
-      userName: "string"
-    }
-  ],
-  memberPosts: [
-    {
-      bookmarkUsers: [
-        0
-      ],
-      createdAt: "2020-07-26T13:38:31.114Z",
-      id: 0,
-      likeUsers: [
-        0
-      ],
-      onelineReview: "한 줄 평은 이렇다 호호호호호호호",
-      open: true,
-      rank: 0,
-      updatedAt: "2020-07-26T13:38:31.114Z",
-
-      author: {
-        id: 0,
-        profileImg: null,
-        userName: "string"
-      }
-    }
-  ],
-  questions: [
-    {
-      id: 0,
-      question: "책을 읽고 난 후의 전반적인 감상은?"
-    },
-    {
-      id: 1,
-      question: "강아지 캐릭터는 왜 귀여운가?"
-    }
-  ]
-}
+import router from '@/router'
 
 const clubStore = {
     namespaced: true,
     state: {
-        clubs: null,
-        selectedClub: null,
-        selectedReading: null,
-        userGenres: [
-          {
-            id: 700,
-            name: '언어'
-          },
-          {
-            id: 810,
-            name: '한국문학'
-          },
-          {
-            id: 600,
-            name: '예술'
-          }
-        ],
-        users: [
-          {
-            id: 0,
-            userName: '사용자1'
-          },
-          {
-            id: 1,
-            userName: '사용자2'
-          },
-          {
-            id: 2,
-            userName: '사용자3'
-          },
-          {
-            id: 3,
-            userName: '사용자4'
-          },
-          {
-            id: 4,
-            userName: '사용자5'
-          }
-        ] 
+      clubs: null,
+      filteredClubs: null,
+      selectedClub: null,
+      selectedReading: null,
+      candidates: null,
     },
     getters: {
     },
@@ -104,11 +17,17 @@ const clubStore = {
       SET_CLUBS(state, clubs) {
         state.clubs = clubs
       },
+      SET_FILTERED_CLUBS(state, clubs) {
+        state.filteredClubs = clubs
+      },
       SET_SELECTED_CLUB(state, club) {
         state.selectedClub = club
       },
       SET_SELECTED_READING(state, reading) {
         state.selectedReading = reading
+      },
+      SET_CANDIDATES(state, candidates) {
+        state.candidates = candidates
       }
     },
     actions: {
@@ -116,8 +35,38 @@ const clubStore = {
         axios.get(SERVER.URL + SERVER.ROUTES.clubs)
           .then(res => {
             commit('SET_CLUBS', res.data)
+            commit('SET_FILTERED_CLUBS', res.data)
           })
           .catch(err => console.log(err.response.data))
+      },
+      filterClubs({ state }, filters) {
+        let new_clubs1 = []
+        if (filters.recruit_filter) {
+          state.clubs.forEach(club => {
+            if (club.recruit) {
+              new_clubs1.push(club)
+            }
+          })
+        } else {
+          new_clubs1 = state.clubs
+        }
+        if (filters.genre_filter.size !== 0) {
+          let new_clubs2 = new Set()
+          new_clubs1.forEach(club => {
+            let temp = 0
+            club.genres.forEach(genre => {
+              if (filters.genre_filter.has(genre.id)) {
+                temp = temp + 1
+              }
+            })
+            if (filters.genre_filter.size === temp) {
+              new_clubs2.add(club)
+            }
+          })
+          state.filteredClubs = new_clubs2
+        } else {
+          state.filteredClubs = new_clubs1
+        }
       },
       findClub({ commit }, clubId) {
         axios.get(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId)
@@ -126,34 +75,104 @@ const clubStore = {
           })
           .catch(err => console.log(err.response.data))
       },
-      findReading({ commit }, params) {
-        axios.get(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/readings/' + params.readingId)
+      findReading({ rootGetters, commit }, params) {
+        axios.get(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/readings/' + params.readingId, rootGetters.config)
           .then(res => {
             commit('SET_SELECTED_READING', res.data)
           })
           .catch(err => {
             console.log(err.response.data)
-            commit('SET_SELECTED_READING', readingSample)
           })
       },
-      createClub({ state }, formData) {
-        axios.post(SERVER.URL + SERVER.ROUTES.clubs, formData,
-          { 
-            headers: { 
-              'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1Iiwicm9sZXMiOltdLCJpYXQiOjE1OTU4NjIwMjQsImV4cCI6MTU5NTg2NTYyNH0.igHgYbItRIEJEiePM1_iHYe2CQ65YAaglzaDyfJ5BMQ',
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-          )
-            .then(res => {
-              console.log(res.data)
-              console.log(state.selectedClub)
-            })
-            .catch(err => {
-              console.log(err.response.data)
-            })
+      createClub({ rootState, rootGetters, dispatch }, params) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs, params.basicData, rootGetters.config)
+          .then(res => {
+            const newClubId = res.data.id
+            axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + newClubId + '/images', params.clubImgFormData, 
+              {
+                headers: {
+                  'jwt': rootState.authToken,
+                  'Content-Type': 'multipart/form-data'
+                }
+              })
+              .then(() => {
+                dispatch('findMyAccount', null, { root: true })
+                router.push({ name: 'ClubDetail', params: { clubId: newClubId }})
+              })
+              .catch(err => {
+                console.log(err.response.data)
+              })
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      createReading({ rootGetters }, params) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/readings', params.readingCreateData, rootGetters.config)
+          .then(res => {
+            router.push({ name: 'ReadingDetail', params: { clubId: params.clubId, readingId: res.data.id }})
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      updateRecruit({ rootGetters }, clubId) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId + '/recruit', null, rootGetters.config)
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      applyClub({ rootGetters, dispatch }, clubId) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId + '/apply', null, rootGetters.config)
+          .then(() => {
+            dispatch('findClub', clubId)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+            alert(err.response.data.message)
+          })
+      },
+      fetchCandidates({ rootGetters, commit }, clubId) {
+        axios.get(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId + '/candidates', rootGetters.config)
+          .then(res => {
+            commit('SET_CANDIDATES', res.data)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      decideClubApply({ rootGetters, dispatch }, params) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/apply/' + params.clubMemberId + '/' + params.decision, null, rootGetters.config)
+          .then(() => {
+            dispatch('fetchCandidates', params.clubId)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      participateReading({ rootGetters, dispatch }, params) {
+        axios.post(
+          SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/readings/' + params.readingId + '/apply',
+          null,
+          rootGetters.config
+        )
+          .then(() => {
+            dispatch('findReading', params)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      secedeClub({ rootGetters, dispatch }, clubId) {
+        axios.delete(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId + '/members', rootGetters.config)
+          .then(() => {
+            dispatch('findClub', clubId)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
       }
-    },
+    }
 }
 
 export default clubStore

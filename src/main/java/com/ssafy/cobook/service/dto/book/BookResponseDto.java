@@ -22,19 +22,19 @@ public class BookResponseDto {
     private String publisher;
     private String contents;
     private String url;
-    private LocalDateTime publishDates;
+    private LocalDateTime pubDate;
 
     public BookResponseDto(Book book) {
-        id = book.getId();
-        isbn = book.getIsbn();
-        bookImg = book.getBookImg();
-        title = book.getTitle();
-        author = book.getAuthor();
-        translators = book.getTranslators();
-        publisher = book.getPublisher();
-        contents = book.getContents();
-        url = book.getUrl();
-        publishDates = book.getPublishDates();
-        genre = book.getGenre().getGenreName();
+        this.id = book.getId();
+        this.isbn = book.getIsbn();
+        this.bookImg = book.getBookImg();
+        this.title = book.getTitle();
+        this.author = book.getAuthor();
+        this.translators = book.getTranslators();
+        this.publisher = book.getPublisher();
+        this.contents = book.getContent();
+        this.url = book.getUrl();
+        this.pubDate = book.getPubDate();
+        this.genre = book.getGenre().getGenreName();
     }
 }

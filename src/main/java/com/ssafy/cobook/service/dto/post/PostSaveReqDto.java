@@ -1,6 +1,7 @@
 package com.ssafy.cobook.service.dto.post;
 
 import com.ssafy.cobook.domain.post.Post;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,12 +12,17 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostSaveReqDto {
 
+    @ApiModelProperty(position = 1)
     private Long bookId;
+    @ApiModelProperty(position = 2)
     private String onelineReview;
+    @ApiModelProperty(position = 3)
     private Integer rank;
+    @ApiModelProperty(position = 4)
     private Boolean open;
+    @ApiModelProperty(position = 5)
     private String review;
-    private Boolean isClub;
+    @ApiModelProperty(position = 6)
     private List<String> tags;
 
     public Post toEntity() {
@@ -25,11 +31,6 @@ public class PostSaveReqDto {
                 .review(review)
                 .rank(rank)
                 .open(open)
-                .isClub(isClub)
                 .build();
-    }
-
-    public boolean isClub() {
-        return isClub;
     }
 }

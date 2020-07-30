@@ -1,84 +1,145 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <nav class="navbar navbar-expand-md navbar-light navbar-bg-color">
-        <router-link class="navbar-brand" to="/">
-          <img 
-            class="img-fluid logo-img" 
-            src="@/assets/logo.png" 
-            alt="로고 이미지"
-          ><span class="ml-2 logo-text">Co-Book</span>
-        </router-link>
-        <button 
-          class="navbar-toggler" 
-          type="button" 
-          data-toggle="collapse" 
-          data-target="#navbarSupportedContent" 
-          aria-controls="navbarSupportedContent" 
-          aria-expanded="false" 
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
+  <div>
+    <div id="app">
+      <div id="nav">
+        <nav class="navbar navbar-expand-md navbar-light navbar-bg-color">
+          <router-link class="navbar-brand" to="/">
+            <img 
+              class="img-fluid logo-img" 
+              src="https://user-images.githubusercontent.com/57381062/88909311-e8728200-d295-11ea-92d4-0a4a805f9afa.png" 
+              alt="로고 이미지"
+            ><span class="ml-2 logo-text">Co-Book</span>
+          </router-link>
+          <button 
+            class="navbar-toggler" 
+            type="button" 
+            data-toggle="collapse" 
+            data-target="#navbarSupportedContent" 
+            aria-controls="navbarSupportedContent" 
+            aria-expanded="false" 
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <form id="search-bar">
-            <input type="search" placeholder="Search">
-          </form>
-          <ul class="navbar-nav mr-auto row w-100">
-            <li class="nav-item col-3">
-              <router-link class="nav-link" :to="{ name: 'PostList' }">
-                <i class="fas fa-home color-green"></i>
-                Feed
-              </router-link>
-            </li>
-            <li class="nav-item col-3">
-              <router-link class="nav-link" :to="{ name: 'ClubList' }">
-                <i class="fas fa-users color-green"></i>
-                Club
-              </router-link>
-            </li>
-            <li class="nav-item col-3">
-              <router-link class="nav-link" to="/">
-                <img class="img-fluid club-img" src="@/assets/meetup.png" alt="클럽 이미지">
-                Meetup
-              </router-link>
-            </li>
-            <li class="nav-item col-1">
-              <router-link class="nav-link" to="/">
-                <i class="fas fa-bell color-green"></i>
-              </router-link>
-            </li>
-            <li class="nav-item col-1">
-              <router-link class="nav-link" :to="{ name: 'PostCreate' }">
-                <i class="fas fa-plus-circle color-green"></i>
-              </router-link>
-            </li>
-            <li class="nav-item dropdown col-1">
-              <router-link 
-                class="nav-link dropdown-toggle" 
-                to="/" 
-                id="navbarDropdown" 
-                type="button"
-                role="button" 
-                data-toggle="dropdown" 
-                aria-haspopup="true" 
-                aria-expanded="false"
-              >
-                <i class="fas fa-user color-green"></i>
-              </router-link>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <router-link class="dropdown-item" :to="{ name: 'Profile' }">프로필</router-link>
-                <router-link class="dropdown-item" :to="{ name: 'ProfileUpdate'}">프로필 수정</router-link>
-                <div class="dropdown-divider"></div>
-                <router-link class="dropdown-item" to="/">로그아웃</router-link>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </nav>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="autocomplete" id="search-bar">
+              <input 
+                type="search" 
+                v-model="keyword" 
+                @input="searchUser"
+                @blur="focusout"
+                >
+              <ul 
+                class="autocomplete-results px-3"
+                v-show="searchedUsers"
+                >
+                <li
+                  class="autocomplete-result d-flex"
+                  v-for="user in searchedUsers"
+                  :key="`search-${user.id}`"
+                  @click="userDetail(user.id)"
+                >
+                <img
+                  class="img-fluid mr-3"
+                  style="width:25px; height:25px; border-radius: 50%" 
+                  v-if="user.profileImg"
+                  :src="user.profileImg" 
+                  alt="">
+                <img
+                  class="img-fluid mr-3"
+                  v-else
+                  style="border-radius: 50%"
+                  src="https://user-images.githubusercontent.com/57381062/88908958-84e85480-d295-11ea-9637-540f1be674ac.png"
+                  width=25px
+                  height=25px 
+                  >
+                <span>
+                  {{ user.nickName }}
+                </span>
+                </li>
+              </ul>
+            </div>
+            <ul class="navbar-nav mr-auto row w-100">
+              <li class="nav-item col-3">
+                <router-link class="nav-link" :to="{ name: 'PostList' }">
+                  <i class="fas fa-home color-green"></i>
+                  Feed
+                </router-link>
+              </li>
+              <li class="nav-item col-3">
+                <router-link class="nav-link" :to="{ name: 'ClubList' }">
+                  <i class="fas fa-users color-green"></i>
+                  Club
+                </router-link>
+              </li>
+              <li class="nav-item col-3">
+                <router-link class="nav-link" :to="{ name: 'MeetupList' }">
+                  <img class="img-fluid club-img" src="https://user-images.githubusercontent.com/57381062/88909365-f7f1cb00-d295-11ea-859e-656c0633bf2e.png" alt="밋업 이미지">
+                  Meetup
+                </router-link>
+              </li>
+              <li class="nav-item dropdown col-1 pointer">
+                <div 
+                  class="nav-link dropdown-toggle" 
+                  id="navbarDropdown" 
+                  type="button"
+                  role="button" 
+                  data-toggle="dropdown" 
+                  aria-haspopup="true" 
+                  aria-expanded="false"
+                >
+                  <i class="fas fa-bell color-green"></i>
+                </div>
+                <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
+                  <div
+                    class="dropdown-item setting-btn"
+                    v-for="noti in notis"
+                    :key="`noti-${noti.id}`"
+                    @click="toRoute(noti)"
+                  >
+                    <p v-if="noti.type==='club'">{{ findUsers[noti.from] }}님이 '{{ findClubs[noti.dataId] }}' club에 가입신청했습니다.</p>
+                    <p v-if="noti.type==='follow'">{{ findUsers[noti.from] }}님이 팔로우했습니다.</p>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item col-1">
+                <router-link class="nav-link" :to="{ name: 'PostCreate' }">
+                  <i class="fas fa-plus-circle color-green"></i>
+                </router-link>
+              </li>
+              <li class="nav-item dropdown col-1">
+                <div 
+                  class="nav-link dropdown-toggle" 
+                  id="navbarDropdown" 
+                  type="button"
+                  role="button" 
+                  data-toggle="dropdown" 
+                  aria-haspopup="true" 
+                  aria-expanded="false"
+                >
+                  <i class="fas fa-user color-green"></i>
+                </div>
+                <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
+                  <router-link class="dropdown-item setting-btn" :to="{ name: 'Profile', params: {userId: myaccount.id} }">프로필</router-link>
+                  <!-- <router-link v-if="myaccount" class="dropdown-item" :to="{ name: 'ProfileUpdate', params: {userId: myaccount.id} }">프로필 수정</router-link> -->
+                  <!-- <div class="dropdown-divider"></div> -->
+                  <div class="dropdown-item setting-btn" @click="logout">로그아웃</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+      <router-view/>
     </div>
-    <router-view/>
+    <div id="app2">
+      <div class="media-q d-flex flex-column justify-content-center align-items-center">
+        <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="250px" class="mt-3">
+        <h5>이용에 불편을 드려 죄송합니다.</h5>
+        <h5>코북은 좀 더 <strong>큰 창</strong>에서 봐야 제 맛 :)</h5>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -87,24 +148,95 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'App',
+  data() {
+    return {
+      keyword: null,
+      isActive:null,
+      searchedUsers: null,
+      findUsers: null,
+      findClubs: null,
+    }
+  },
   computed: {
-    ...mapState(['genres'])
+    ...mapState(['genres', 'myaccount', 'books', 'users', 'notis']),
   },
   methods: {
-    ...mapActions(['fetchGenres'])
+    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'fetchNotis', 'logout']),
+    searchUser() {
+      if (!this.keyword) {
+        this.isActive = false
+        this.searchedUsers = null
+      } else {
+        this.isActive = true
+        this.searchedUsers = this.users.filter((user) => {
+          return user.nickName.match(this.keyword)
+        })
+        if (this.searchedUsers.length < 1) {
+          this.searchedUsers = null
+        }
+      }
+    },
+    focusout() {
+      setTimeout(this.isKeywordNull, 100)
+    },
+    isKeywordNull() {
+      this.keyword = null
+      this.searchedUsers = null
+    },
+    userDetail(userId) {
+      this.$router.push({ name: 'Profile', params: {userId : userId}})
+    },
+    toRoute(noti) {
+      if (noti.type === 'club') {
+        this.$router.push({name: 'ClubCandidates', params: { clubId: noti.dataId }})
+      } else if (noti.type === 'follow') {
+        this.$router.push({name: 'Profile', params: { userId: noti.dataId }})
+      }
+    }
+  },
+  watch: {
+    users() {
+      const mapData = this.users.map(user => [user.id, user.nickName])
+      this.findUsers = Object.fromEntries(mapData)
+    },
+    myaccount() {
+      const mapData = []
+      this.myaccount.myClubs.forEach(club => {
+        mapData.push([club.id, club.name])
+      })
+      this.findClubs = Object.fromEntries(mapData)
+    }
   },
   created() {
     this.fetchGenres()
+    this.findMyAccount()
+    this.fetchBooks()
+    this.fetchUsers()
+    this.fetchNotis()
   }
 }
 </script>
 
 <style scoped>
+@media (max-width: 960px) {
+  #app {
+    display: none;
+  }
+}
+
+@media (min-width: 960px) {
+  #app2 {
+    display: none;
+  }
+}
+
+
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  max-height: 960px;
 }
 
 #nav a {
@@ -133,7 +265,7 @@ export default {
 
 .dropdown-menu {
   top: 50px;
-  left: -70px;
+  left: -70px !important;
 }
 
 /* Search bar */
@@ -194,7 +326,7 @@ input::-webkit-input-placeholder {
 }
 #search-bar input[type=search]:focus {
 	width: 130px;
-	padding-left: 32px;
+	padding-left: 35px;
 	color: #000;
 	background-color: #fff;
 	cursor: auto;
@@ -204,5 +336,83 @@ input::-webkit-input-placeholder {
 }
 #search-bar input::-webkit-input-placeholder {
 	color: transparent;
+}
+
+
+/* autocomplete */
+.autocomplete {
+  position: relative;
+  width: 130px;
+}
+
+.autocomplete-results {
+  position: absolute;
+  top: 55px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #eeeeee;
+  background: #F7F4F2;
+  height: 120px;
+  overflow: auto;
+  z-index: 1;
+}
+
+.autocomplete-results{
+  overflow: hidden;
+  
+}
+.autocomplete-results::-webkit-scrollbar {
+  width: 8px; height: 8px; border: 3px solid white; 
+  } 
+.autocomplete-results::-webkit-scrollbar-button,.autocomplete-results::-webkit-scrollbar-button:END {
+  background-color: white;
+}
+.autocomplete-results::-webkit-scrollbar-button:start:decrement{
+}
+.autocomplete-results::-webkit-scrollbar-track {
+  background: white; 
+  -webkit-border-radius: 10px white; 
+  border-radius:10px white;
+  /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.2) */
+  }
+.autocomplete-results::-webkit-scrollbar-thumb {
+  height: 10px; 
+  width: 50px; 
+  background: #88A498; 
+  -webkit-border-radius: 15px; border-radius: 15px; 
+  /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
+  }
+.autocomplete-results:hover{
+  overflow-y: scroll;
+}
+
+.autocomplete-result {
+  list-style: none;
+  text-align: left;
+  padding: 4px 2px;
+  cursor: pointer;
+	width: 180px;
+}
+
+.autocomplete-result:hover {
+  background-color: #707070;
+  color: white;
+}
+
+.media-q {
+  width:500px;
+  height:500px;
+  margin:0 auto;
+  position:absolute;
+  left:50%;
+  top:50%;
+  margin-left:-250px;
+  margin-top:-250px;
+}
+
+.setting-btn:focus {
+  background-color: #88A498 !important;
+  color: #F7F7F7 !important;
+  outline: none;
 }
 </style>

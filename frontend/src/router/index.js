@@ -19,11 +19,20 @@ import ProfileUpdate from '@/views/profile/ProfileUpdate'
 import PostList from '@/views/posts/PostList'
 import PostCreate from '@/views/posts/PostCreate'
 import PostDetail from '@/views/posts/PostDetail'
+import PostUpdate from '@/views/posts/PostUpdate'
 // clubs
 import ClubList from '@/views/clubs/ClubList'
 import ClubDetail from '@/views/clubs/ClubDetail'
 import ClubCreate from '@/views/clubs/ClubCreate'
+import ClubCandidates from '@/views/clubs/ClubCandidates'
 import ReadingDetail from '@/views/clubs/readings/ReadingDetail'
+import ReadingCreate from '@/views/clubs/readings/ReadingCreate'
+// meetups
+import MeetupList from '@/views/meetups/MeetupList'
+
+//pagenotfound
+import PageNotFound from '@/views/PageNotFound'
+
 
 Vue.use(VueRouter)
 
@@ -68,30 +77,34 @@ Vue.use(VueRouter)
 
   // profile
   {
-    path: '/profile',
+    path: '/profile/:userId',
     name: 'Profile',
     component: Profile,
     children: [
       {
         path: 'feed',
-        component: ProfileFeed
+        component: ProfileFeed,
+        name: 'ProfileFeed'
       },
       {
         path: 'club',
-        component: ProfileClub
+        component: ProfileClub,
+        name: 'ProfileClub'
       },
       {
         path: 'bookmark',
-        component: ProfileBookmark
+        component: ProfileBookmark,
+        name: 'ProfileBookmark'
       },
       {
         path: 'overview',
-        component: ProfileOverview
+        component: ProfileOverview,
+        name: 'ProfileOverview'
       },
     ]
   },
   {
-    path: '/profile/update',
+    path: '/profile/:userId/update',
     name: 'ProfileUpdate',
     component: ProfileUpdate
   },
@@ -112,6 +125,11 @@ Vue.use(VueRouter)
     name: 'PostDetail',
     component: PostDetail
   },
+  {
+    path: '/posts/:postId/update',
+    name: 'PostUpdate',
+    component: PostUpdate
+  },
 
   // clubs
   {
@@ -130,11 +148,33 @@ Vue.use(VueRouter)
     component: ClubDetail
   },
   {
+    path: '/clubs/:clubId/candidates',
+    name: 'ClubCandidates',
+    component: ClubCandidates
+  },
+  {
+    path: '/clubs/:clubId/readings/create',
+    name: 'ReadingCreate',
+    component: ReadingCreate
+  },
+  {
     path: '/clubs/:clubId/readings/:readingId',
     name: 'ReadingDetail',
     component: ReadingDetail
-  }
+  },
+  // meetups
+  {
+    path: '/meetups',
+    name: 'MeetupList',
+    component: MeetupList
+  },
+  // 404 Pages
+  {
+    path: '*',
+    name: 'PageNotFound',
+    component: PageNotFound
 
+  }
   
 ]
 
@@ -142,6 +182,24 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const pubicPages = ['Login', 'Signup'] // Login 안해도 됨
+  const authPages = ['Login', 'Signup'] // Login 되어있으면 안됨
+  const authRequired = !pubicPages.includes(to.name) // 로그인 해야하는 페이지면 true 반환
+  const unauthRequired = authPages.includes(to.name)
+  const isLoggedIn = Vue.$cookies.isKey('auth-token')
+
+  if (unauthRequired && isLoggedIn){
+    next('/')
+  }
+  
+  if (authRequired && !isLoggedIn) {
+    next({ name: 'Login' })
+  } else {
+    next()
+  }
 })
 
 export default router

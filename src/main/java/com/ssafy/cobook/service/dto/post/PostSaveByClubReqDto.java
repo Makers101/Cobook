@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostSaveByClubReqDto {
@@ -22,6 +24,8 @@ public class PostSaveByClubReqDto {
     private String review;
     @ApiModelProperty(position = 6)
     private Boolean isClub;
+    @ApiModelProperty(position = 7)
+    private List<String> tags;
 
     public Post toEntity() {
         return Post.builder()

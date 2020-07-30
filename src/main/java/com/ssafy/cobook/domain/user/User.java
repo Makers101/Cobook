@@ -10,7 +10,6 @@ import com.ssafy.cobook.domain.postcomment.PostComment;
 import com.ssafy.cobook.domain.postlike.PostLike;
 import com.ssafy.cobook.domain.readingmember.ReadingMember;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
-import com.ssafy.cobook.service.dto.UserUpdateDto;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,6 +38,7 @@ public class User implements UserDetails {
     private String nickName;
     private String description;
     private String profileImg;
+    private Boolean accept;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
@@ -78,7 +78,7 @@ public class User implements UserDetails {
     private List<MeetUpMember> meetUpMembers = new ArrayList<>();
 
     @Builder
-    public User(String email, String password, String nickName, PlatformType platformType, List<String> roles){
+    public User(String email, String password, String nickName, PlatformType platformType, List<String> roles) {
         this.email = email;
         this.password = password;
         this.nickName = nickName;
@@ -86,8 +86,12 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public void changePassword(String password){
+    public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void changeAccept(boolean accept){
+        this.accept = accept;
     }
 
     public void enrollClub(ClubMember clubMember) {
@@ -100,15 +104,6 @@ public class User implements UserDetails {
 
     public void addPosts(Post post) {
         this.posts.add(post);
-    }
-
-
-    public void updateUserInfo(UserUpdateDto userUpdateDto) {
-        this.email = userUpdateDto.getEmail();
-        this.password = userUpdateDto.getEmail();
-        this.nickName = userUpdateDto.getNickName();
-        this.description = userUpdateDto.getDescription();
-        this.profileImg = userUpdateDto.getProfileImg();
     }
 
     @Override
@@ -144,5 +139,70 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void enrollReading(ReadingMember readingMember) {
+        if(this.readingMembers.contains(readingMember)) {
+            readingMembers.remove(readingMember);
+            return;
+        }
+        this.readingMembers.add(readingMember);
+    }
+
+    public void deleteLike(PostLike postLike) {
+        this.postLikes.remove(postLike);
+    }
+
+    public void addLikes(PostLike postLike) {
+        this.postLikes.add(postLike);
+    }
+
+    public void deleteBookMark(PostBookMark postBookMark) {
+        this.bookMarks.remove(postBookMark);
+    }
+
+    public void addBookMarks(PostBookMark postBookMark) {
+        this.bookMarks.add(postBookMark);
+    }
+
+    public void removeGenre(UserGenre userGenre) {
+        this.userGenres.remove(userGenre);
+    }
+
+    public void addGenres(UserGenre userGenre) {
+        this.userGenres.add(userGenre);
+    }
+
+    public void updateInfo(String nicnName, String description) {
+        this.nickName = nicnName;
+        this.description = description;
+    }
+
+    public void setProfile(String profileImg) {
+        this.profileImg = profileImg;
+    }
+
+    public void removeComment(PostComment postComment) {
+        this.comments.remove(postComment);
+    }
+
+    public void removePost(Post post) {
+        this.posts.remove(post);
+    }
+
+    public void removeBookMark(PostBookMark postBookMark) {
+        this.bookMarks.remove(postBookMark);
+    }
+
+    public void removePostLike(PostLike postLike) {
+        this.postLikes.remove(postLike);
+    }
+
+    public void removeReading(ReadingMember delete) {
+        this.readingMembers.remove(delete);
+    }
+
+    public void removeClub(ClubMember clubMember) {
+        this.clubMembers.remove(clubMember);
     }
 }

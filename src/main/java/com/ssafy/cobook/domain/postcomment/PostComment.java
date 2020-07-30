@@ -32,4 +32,9 @@ public class PostComment extends BaseTimeEntity {
         this.user = user;
         this.content = content;
     }
+
+    public void removeUser() {
+        this.user.removeComment(this);
+        this.user = null;
+    }
 }

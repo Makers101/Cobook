@@ -7,12 +7,18 @@ import com.ssafy.cobook.domain.clubgenre.ClubGenreRepository;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
 import com.ssafy.cobook.domain.clubmember.MemberRole;
+import com.ssafy.cobook.domain.follow.Follow;
+import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.genre.GenreRepository;
+import com.ssafy.cobook.domain.reading.Reading;
+import com.ssafy.cobook.domain.reading.ReadingRepository;
+import com.ssafy.cobook.domain.readingmember.ReadingMember;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
+import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.*;
 import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
 import com.ssafy.cobook.service.dto.user.UserSimpleResDto;
@@ -33,16 +39,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClubService {
 
-    private final String IMAGE_DIR = "./images/club/";
-
+    private final String IMAGE_DIR = "/home/ubuntu/images/club/";
     private final ClubRepository clubRepository;
     private final UserRepository userRepository;
     private final ClubMemberRepository clubMemberRepository;
     private final GenreRepository genreRepository;
     private final ClubGenreRepository clubGenreRepository;
+    private final FollowRepository followRepository;
+    private final ReadingRepository readingRepository;
 
     @Transactional
-    public ClubCreateResDto create(Long userId, ClubCreateReqDto reqDto, MultipartFile clubImg) throws IOException {
+    public ClubCreateResDto create(Long userId, ClubCreateReqDto reqDto) throws IOException {
         if (clubRepository.findByName(reqDto.getName()).isPresent()) {
             throw new BaseException(ErrorCode.EXIST_CLUB_NAME);
         }
@@ -57,7 +64,6 @@ public class ClubService {
                 .map(g -> clubGenreRepository.save(new ClubGenre(club, g)))
                 .collect(Collectors.toList());
         club.setGenres(clubGenres);
-        club.setProfile(uploadFile(clubImg));
         return new ClubCreateResDto(club.getId());
     }
 
@@ -66,21 +72,24 @@ public class ClubService {
                 .orElseThrow(() -> new BaseException(ErrorCode.INVALID_GENRE));
     }
 
-    @Transactional
-    public String uploadFile(MultipartFile file) throws IOException {
+    private void uploadFile(MultipartFile file) throws IOException {
         String originName = file.getOriginalFilename();
         File dest = new File(IMAGE_DIR + originName);
         file.transferTo(dest);
-        return dest.getCanonicalPath();
     }
 
     @Transactional
-    public void joinClub(ClubEnrollReqDto reqDto) {
-        User user = getUser(reqDto.getUserId());
-        Club club = getClub(reqDto.getClubId());
-        ClubMember clubMember = clubMemberRepository.save(new ClubMember(user, club, MemberRole.MEMBER));
-        user.enrollClub(clubMember);
-        club.enrolls(clubMember);
+    public void joinClub(Long userId, Long clubId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        if (clubMemberRepository.findByUserAndClub(user, club).isPresent()) {
+            ClubMember clubMember = clubMemberRepository.findByUserAndClub(user, club).get();
+            if (clubMember.getRole().equals(MemberRole.WAITING)) {
+                clubMemberRepository.delete(clubMemberRepository.findByUserAndClub(user, club).get());
+            }
+            return;
+        }
+        clubMemberRepository.save(new ClubMember(user, club, MemberRole.WAITING));
     }
 
     private User getUser(Long userId) {
@@ -96,6 +105,7 @@ public class ClubService {
     public List<ClubResDto> getClubList() {
         return clubRepository.findAll().stream()
                 .map(ClubResDto::new)
+                .sorted()
                 .collect(Collectors.toList());
     }
 
@@ -109,5 +119,142 @@ public class ClubService {
                 .map(ReadingSimpleResDto::new)
                 .collect(Collectors.toList());
         return new ClubDetailResDto(club);
+    }
+
+    @Transactional
+    public void fileSave(Long clubId, MultipartFile clubImg) throws IOException {
+        uploadFile(clubImg);
+        Club club = getClub(clubId);
+        club.setProfile("http://i3a111.p.ssafy.io:8080/api/clubs/images/club/" + clubImg.getOriginalFilename());
+    }
+
+    public String getFilePath(Long id) {
+        Club club = getClub(id);
+        return club.getClubImg().replace("http://i3a111.p.ssafy.io:8080/api/clubs/images/", "");
+    }
+
+    @Transactional
+    public void approve(Long clubId, Long clubMemberId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if (leader.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+        ClubMember waiting = clubMemberRepository.findById(clubMemberId)
+                .orElseThrow(() -> new BaseException(ErrorCode.ALREADY_PROCESS));
+        if (!waiting.onWait()) {
+            throw new BaseException(ErrorCode.ALREADY_PROCESS);
+        }
+        waiting.changeRole(MemberRole.MEMBER);
+        User clubMember = waiting.getUser();
+        clubMember.enrollClub(waiting);
+        club.enrolls(waiting);
+    }
+
+    @Transactional
+    public void reject(Long clubId, Long clubMemberId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if (leader.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+        ClubMember waiting = clubMemberRepository.findById(clubMemberId)
+                .orElseThrow(() -> new BaseException(ErrorCode.ALREADY_PROCESS));
+        if (!waiting.onWait()) {
+            throw new BaseException(ErrorCode.ALREADY_PROCESS);
+        }
+        clubMemberRepository.delete(waiting);
+    }
+
+    @Transactional
+    public ClubRecruitResponseDto changeRecruit(Long clubId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if (leader.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+        club.changeRecruit();
+        return new ClubRecruitResponseDto(club.getRecruit());
+    }
+
+    private Long getClubFollow(Club club) {
+        List<Follow> list = followRepository.findAllByClub(club);
+        return Long.valueOf(list.size());
+    }
+
+    public ClubByFollowSimpleDto addFollow(Long userId, Long clubId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        Boolean isFollow = false;
+
+        if (followRepository.findByFromUserAndClub(user, club).isPresent()) {
+            followRepository.deleteByUserAndClub(userId, clubId);
+        } else {
+            followRepository.save(new Follow(user, club, true));
+            isFollow = true;
+        }
+
+        Long userCount = getClubFollow(club);
+
+        return new ClubByFollowSimpleDto(userId, isFollow, userCount);
+    }
+
+    public List<ClubCandidatesResponseDto> getCandidates(Long clubId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember clubMember = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if (clubMember.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+        return club.getMembers().stream()
+                .filter(m -> m.getRole().onWait())
+                .map(ClubCandidatesResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void signOutClub(Long clubId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember clubMember = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        user.removeClub(clubMember);
+        club.removeMember(clubMember);
+        clubMemberRepository.delete(clubMember);
+    }
+
+    @Transactional
+    public void deleteClub(Long clubId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if (leader.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+        for (ClubMember clubMember : club.getMembers()) {
+            clubMember.removeUser();
+        }
+        clubMemberRepository.deleteAll(club.getMembers());
+        for (Reading reading : club.getReadingList()) {
+            reading.delete();
+        }
+        readingRepository.deleteAll(club.getReadingList());
+        for (ClubGenre clubGenre : club.getGenres()) {
+            clubGenre.remove();
+        }
+        clubGenreRepository.deleteAll(club.getGenres());
+        clubRepository.delete(club);
     }
 }

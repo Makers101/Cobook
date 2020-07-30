@@ -1,8 +1,9 @@
 <template>
   <div class="custom-container mb-5">
+    
     <div class="profile-banner">
       <img class="profile-banner-img"
-      src = "@/assets/night.jpg"
+      src = "https://user-images.githubusercontent.com/57381062/88908230-90874b80-d294-11ea-96f1-10073a23235f.jpg"
       alt="profile banner image">
       <div class="profile-banner-text">
         <h3 class="font-weight-bold">프로필 수정하기</h3>
@@ -31,7 +32,7 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="accountUpdateData.nickName"
+                    v-model="profileUpdateData.basicData.nickName"
                     color="blue-grey lighten-2"
                     :rules="[v => !!v || '필수항목입니다.']"
                     label="닉네임"
@@ -43,7 +44,7 @@
                   md="12"
                 >
                   <v-textarea
-                    v-model="accountUpdateData.description"
+                    v-model="profileUpdateData.basicData.description"
                     color="blue-grey lighten-2"
                     :rules="[v => !!v || '필수항목입니다.']"
                     label="소개"
@@ -52,16 +53,16 @@
                 <!-- 장르란 -->
                 <v-col cols="12">
                   <v-autocomplete
-                    v-model="accountUpdateData.genres"
+                    v-model="profileUpdateData.basicData.genres"
                     v-if="genres"
                     :items="genres"
                     chips
                     hide-selected
                     color="blue-grey lighten-2"
-                    counter="5"
+                    counter="3"
                     :rules="[
                       v => (v.length !== 0) || '필수항목입니다.',
-                      v => (v.length < 6) || '최대 5개 관심 장르를 고를 수 있습니다.'
+                      v => (v.length < 4) || '최대 3개의 관심 장르를 고를 수 있습니다.'
                     ]"
                     label="관심 장르"
                     item-text="name"
@@ -77,7 +78,7 @@
                         :input-value="data.selected"
                         close
                         @click="data.select"
-                        @click:close="remove(accountUpdateData.genres, data.item)"
+                        @click:close="remove(profileUpdateData.basicData.genres, data.item)"
                       >
                         {{ data.item.name }}
                       </v-chip>
@@ -94,15 +95,21 @@
                     </template>
                   </v-autocomplete>
                 </v-col>
+
                 <!-- 프로필 사진 첨부 -->
                 <v-col cols="12">
+                  <!-- <div class="d-flex flex-column justify-content-center align-items-start">
+                    <p class="mb-0">현재 프로필 이미지</p>
+                    <img class="profile-img" :src="myaccount.profileImg" alt="" v-if="myaccount.profileImg">
+                  </div> -->
                   <v-file-input
-                    v-model="accountUpdateData.profileImg"
+                    v-model="profileImg"
+                    enctype="multipart/form-data"
                     accept="image/png, image/jpeg, image/bmp"
-                    label="프로필 이미지"
+                    label="프로필 이미지 변경"
                     prepend-icon=""
                     chips
-                    :rules="[v => !!v || '필수항목입니다.', v => !v || v.size < 2000000 || '이미지 크기는 최대 2MB 입니다.' ]"
+                    :rules="[v => !v || v.size < 2000000 || '이미지 크기는 최대 2MB 입니다.' ]"
                   >
                   </v-file-input>
                 </v-col>
@@ -113,7 +120,7 @@
                 <v-btn
                   :disabled="!valid"
                   class="btn btn-green"
-                  @click="updateProfile"
+                  @click="clickUpdate"
                 >
                   프로필 수정
                 </v-btn>
@@ -127,21 +134,19 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-let account = {
-  nickName : 'nickname1',
-  description: '책을 좋아하는 사람입니다.특히 SF에 관심이 많습니다. 좋은 사람들과 club에서 함께하기 위해 참여했습니다.',
-  genres: [110, 120, 310, 410],
-}
 
 export default {
   name: 'ProfileUpdate',
   data () {
     return {
-      account: account,
-      accountUpdateData: {
-        nickName: null,
-        description: null,
-        genres: null,
+      profileImg: null,
+      profileUpdateData: {
+        basicData: {
+          nickName: null,
+          description: null,
+          genres: null,
+        },
+        profileImgFormData: null
       },
       valid: true,
       lazy: false,
@@ -149,9 +154,10 @@ export default {
     }
   },
   computed: {
-    ...mapState('profileStore', ['genres'])
+    ...mapState(['myaccount', 'genres']),
   },
   methods: {
+    ...mapActions('profileStore', ['updateProfile']),
     remove (data, item) {
       const index = data.indexOf(item.id)
       if (index >= 0) data.splice(index, 1)
@@ -164,27 +170,32 @@ export default {
     validate() {
       this.$refs.form.validate()
     },
-    ...mapActions('profileStore', ['fetchGenres'])
+    clickUpdate() {
+      // console.log(this.profileImg)
+      if (this.profileImg) {
+        this.profileUpdateData.profileImgFormData = new FormData()
+        this.profileUpdateData.profileImgFormData.append('profileImg', this.profileImg)
+      }
+      this.updateProfile(this.profileUpdateData)
+    },
   },
   created() {
-    this.fetchGenres()
   },
   mounted() {
-    this.accountUpdateData.nickName = this.account.nickName;
-    this.accountUpdateData.description = this.account.description;
-    if (this.account.genre.length) {
-      this.accountUpdateData.genres = this.account.genres;
-    }
-    this.accountUpdateData.profileImg = this.account.profileImg
+    this.profileUpdateData.basicData.nickName = this.myaccount.nickName;
+    this.profileUpdateData.basicData.description = this.myaccount.description;
+    const tempGenres = []
+    this.myaccount.likeGenres.forEach(genre => {
+      tempGenres.push(genre.id)
+    });
+    this.profileUpdateData.basicData.genres = tempGenres;
   }
 }
 </script>
 
 <style scoped>
-.profile-image{
-  border-radius: 50%;
-  width: 5vw;
-  height: 5vw;
+.profile-img{
+  max-height: 300px;
 }
 
  .profile-banner {

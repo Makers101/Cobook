@@ -8,8 +8,8 @@
 
       <div class="input-with-label mt-3">
         <input 
-          v-model="email" 
-          v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}"
+          v-model="passwordFindData.email" 
+          v-bind:class="{error : error.email, complete:!error.email&&passwordFindData.email.length!==0}"
           class="inputs"
           id="email" 
           placeholder="이메일" 
@@ -22,9 +22,8 @@
         <label for="email"></label>
         <div class="error-text ml-3" v-if="error.email">{{error.email}}</div>
       </div>
-
       <div class="buttons mt-5 ">
-        <button class="btn done-button" :class="{disabled: !isSubmit}" @click="clickDone" >입력완료</button>
+        <button class="btn done-button" :class="{disabled: !isSubmit}" @click="findPassword(passwordFindData)" >입력완료</button>
       </div>
 
     </div>
@@ -32,11 +31,18 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import SERVER from '@/api/api'
+import axios from 'axios'
+import router from '@/router'
+
 export default {
   name: 'PasswordFind',
   data() {
     return {
-      email: "",
+      passwordFindData: {
+        email: ""
+      },
       error: {
         email: false,
       },
@@ -47,13 +53,18 @@ export default {
     this.component = this;
   },
   watch: {
-    email() {
-      this.checkEmailForm();
-    }
+    passwordFindData: {
+      deep: true,
+
+      handler() {
+        this.checkEmailForm();
+      }
+    },
   },
   methods: {
+    ...mapActions('accountStore', ['findPassword']),
     checkEmailForm() {
-      if ( this.email.length > 0 && !this.validEmail(this.email) ) {
+      if ( this.passwordFindData.email.length > 0 && !this.validEmail(this.passwordFindData.email) ) {
         this.error.email = "올바른 이메일 형식이 아니에요"   
       }
       else this.error.email = false;
@@ -73,9 +84,27 @@ export default {
       if ( this.isSubmit ){
         this.$router.push({name: 'PasswordFindEmail'})
       }
-      
-    }
-  }
+    },
+    sendPasswordEmail(info) {
+      axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then (() => {
+          router.push({ name: 'PasswordFindEmail'})
+        })
+        .catch (err =>{
+          console.log(err.response)
+        })
+    },
+    findPassword(passwordFindData) {
+      const info = {
+        data: passwordFindData,
+        location: SERVER.ROUTES.password,
+        // to: '/'
+      }
+      this.sendPasswordEmail(info)
+    },
+  },
 }
 </script>
 
@@ -136,7 +165,7 @@ input[type="password"] {
 
 .background::after {
   content:"";
-  background-image: url('../..//assets/books.jpg');
+  background-image: url('https://user-images.githubusercontent.com/57381062/88908481-de03b880-d294-11ea-8567-9e74079c2a7b.jpg');
   opacity: 0.5;
   top: 0;
   left:0;
