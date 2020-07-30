@@ -17,11 +17,13 @@
               </v-avatar>
             </v-list-item-avatar>
             <v-list-item-content class="text-left">
-              <v-list-item-title @click="selectUser(item.toUserId)">{{ item.nickname }}</v-list-item-title>
+              <v-list-item-title class="nicknameSection" @click="selectUser(item.toUserId)">{{ item.nickname }}</v-list-item-title>
             </v-list-item-content>
-            <v-list-item-action>
-              <v-btn small dark color="grey lighten-1" v-if="item.isFollow">팔로잉</v-btn>
-              <v-btn small outlined color="grey lighten-1" v-else>팔로우</v-btn>
+            <v-list-item-action  >
+              <div v-if="item.toUserId !== myaccount.id">
+                <v-btn small dark color="grey lighten-1" v-if="item.isFollow">팔로잉</v-btn>
+                <v-btn small outlined color="grey lighten-1" v-else>팔로우</v-btn>
+              </div>
             </v-list-item-action>
           </v-list-item>
         </template>
@@ -59,6 +61,7 @@ export default {
       }
     },
     ...mapState('profileStore', ['followerList']), 
+    ...mapState(['myaccount'])
   },
   methods: {
     ...mapActions('profileStore', ['fetchFollowerList']),
@@ -71,3 +74,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.nicknameSection {
+  cursor: pointer;
+}
+</style>

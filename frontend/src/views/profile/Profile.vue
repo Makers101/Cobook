@@ -12,7 +12,7 @@
             <div class="d-flex justify-content-between mt-auto">
               <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>
               <span v-if="myaccount.id !== profile.id">
-                <button v-if="checkFollow()" class="btn px-4 bg-light-black" @click="clickedFollow(profile)">팔로잉</button>
+                <button v-if="checkFollow(profile)" class="btn px-4 bg-light-black" @click="clickedFollow(profile)">팔로잉</button>
                 <button v-else class="btn bg-green px-4" @click="clickedFollow(profile)">팔로우</button>
               </span>
               
@@ -58,13 +58,14 @@ import FollowingForm from './FollowingForm'
 export default {
   name: 'Profile',
   computed: {
-    ...mapState('profileStore',['profile']),
+    ...mapState('profileStore',['profile', 'followingList']),
     ...mapState(['myaccount'])
   },
   data() {
     return {
       showFollowerForm: false,
       showFollowingForm: false,
+      currentlyFollowing: null,
     }
   },
   components: {
@@ -73,48 +74,39 @@ export default {
   },
 
   methods: {
-    ...mapActions('profileStore', ['findProfile', 'clickFollow', 'fetchFollowerList']),
+    ...mapActions('profileStore', ['findProfile', 'clickFollow', 'fetchFollowerList', 'fetchFollowingList']),
     clickedFollow(profile) {
       this.clickFollow(profile.id)
-      if (profile.followerList.length === 0){
-          var temp = {
-            isFollow: true,
-            nickname: this.myaccount.nickName,
-            profileImg: this.myaccount.profileImg,
-            toUserId: this.myaccount.id
-          }
-          profile.followerList.push(temp)
-        }
-      else {
-        for (let [index, key] of profile.followerList.entries()) {
-          console.log(index, key)
-          var obj = key;
-          // 일치하는 id가 있다면 followerList에서 제거
-          if (obj.toUserId === this.myaccount.id){
-            profile.followerList.splice(index, 1);
-            break;
-          }
-          if (index === profile.followerList.length - 1) {
-             temp = {
-              isFollow: true,
-              nickname: this.myaccount.nickName,
-              profileImg: this.myaccount.profileImg,
-              toUserId: this.myaccount.id
-            }
-            profile.followerList.push(temp)
-          }
+      var temp = {
+        isFollow: true,
+        nickname: this.myaccount.nickName,
+        profileImg: this.myaccount.profileImg,
+        toUserId: this.myaccount.id
+      }
+      var flag = false
+      for (let [index, key] of profile.followerList.entries()) {
+        // 일치하는 id가 있다면 followerList에서 제거
+        if (key.toUserId === this.myaccount.id){
+          flag = true
+          profile.followerList.splice(index, 1);
+          break;
         }
       }
+      if (flag === false){
+        profile.followerList.push(temp)
+      }
     },
-    checkFollow() {
-      for (let [index] in this.profile.followerList) {
-        var obj = this.profile.followerList[index];
-        if (obj.toUserId === this.myaccount.id){
+    checkFollow(profile) {
+      var flag = false
+      for (let key of profile.followerList.entries()) {
+        // 일치하는 id가 있다면 followerList에서 제거
+        if (key[1].toUserId === this.myaccount.id){
+          flag = true
           return true
         }
-        if (index === this.profile.followeList.length -1) {
-          return false
-        }
+      }
+      if (flag === false){
+        return false
       }
 
     },
