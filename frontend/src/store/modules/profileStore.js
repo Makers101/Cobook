@@ -85,7 +85,7 @@ const profileStore = {
       })
      },
     fetchFeeds({ commit }, userId) {
-      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/' + SERVER.ROUTES.feeds)
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.feed)
       .then(res => {
         console.log(res)
         commit('SET_FEEDS', res.data)
