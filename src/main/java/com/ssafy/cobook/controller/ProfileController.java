@@ -4,6 +4,7 @@ package com.ssafy.cobook.controller;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.ProfileService;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
+import com.ssafy.cobook.service.dto.post.PostDetailResDto;
 import com.ssafy.cobook.service.dto.post.PostResponseDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
@@ -128,7 +129,13 @@ public class ProfileController {
         return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserClub(toUserId));
     }
 
-    @ApiOperation(value = "해당 유저의 리딩을 가져다")
+    @ApiOperation(value = "해당 유저의 북마크를 가져온다")
+    @GetMapping("/{userId}/bookmark")
+    public ResponseEntity<List<PostDetailResDto>>getBookmark(@PathVariable("userId") Long toUserId){
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserBookmark(toUserId));
+    }
+
+    @ApiOperation(value = "해당 유저의 리딩을 가져온다")
     @GetMapping("/{userId}/reading")
     public ResponseEntity<List<ReadingSimpleResDto>>getReading(@PathVariable("userId") Long toUserId){
         return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserReading(toUserId));
