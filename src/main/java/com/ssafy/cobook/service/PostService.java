@@ -222,9 +222,9 @@ public class PostService {
         for (PostTag tag : originTags) {
             Tag temp = tag.getTag();
             if (!tags.contains(temp)) {
-                Tag delete = tagRepository.findById(temp.getId()).get();
-                delete.removePostTag(tag);
+                temp.removePostTag(tag);
                 post.deleteTags(tag);
+                postTagRepository.delete(tag);
             }
         }
         List<PostTag> postTags = tags.stream()
