@@ -20,8 +20,8 @@
     <!-- clubs-menubar -->
     <div class="club-menubar my-3 d-flex justify-content-between">
       <div class="club-toggle">
-        <button class="btn btn-toggle-false mx-1" @click="selectFilter('recruit')" v-show="recruit_filter">#모집중</button>
-        <button class="btn btn-toggle-true mx-1" @click="selectFilter('recruit')" v-show="!recruit_filter">#모집중</button>
+        <button class="btn btn-toggle-false mx-1" @click="selectFilter('recruit')" v-show="filters.recruit_filter">#모집중</button>
+        <button class="btn btn-toggle-true mx-1" @click="selectFilter('recruit')" v-show="!filters.recruit_filter">#모집중</button>
 
         <span             
           v-for="genre in myaccount.likeGenres"
@@ -30,14 +30,14 @@
           <button 
             class="btn btn btn-toggle-false mx-1"
             @click="selectFilter(genre.id)"
-            v-show="genre_filter.has(genre.id)"
+            v-show="filters.genre_filter.has(genre.id)"
           >
             #{{ genre.name }}
           </button>
           <button 
             class="btn btn btn-toggle-true mx-1"
             @click="selectFilter(genre.id)"
-            v-show="!genre_filter.has(genre.id)"
+            v-show="!filters.genre_filter.has(genre.id)"
           >
             #{{ genre.name }}
           </button>
@@ -51,7 +51,7 @@
     <div class="club-list my-2 row">
       <div 
         class="col-sm-4 col-12 p-3"
-        v-for="club in clubs"
+        v-for="club in filteredClubs"
         :key="`club_${club.id}`">
         <div class="card">
           <div class="card-head">
@@ -109,46 +109,36 @@ export default {
   name: 'ClubList',
   data() {
     return {
-      recruit_filter: false,
-      genre_filter: new Set(),
+      filters: {
+        recruit_filter: false,
+        genre_filter: new Set()
+      }
     }
   },
   computed: {
     ...mapState(['myaccount']),
-    ...mapState('clubStore', ['clubs']),
+    ...mapState('clubStore', ['clubs', 'filteredClubs']),
   },
   methods: {
-    ...mapActions('clubStore', ['fetchClubs']),
+    ...mapActions('clubStore', ['fetchClubs', 'filterClubs']),
     selectClub(clubId) {
       router.push({ name: 'ClubDetail', params: { clubId: clubId }})
     },
     toClubCreate() {
       router.push({ name: 'ClubCreate' })
     },
-    // filterClubs() {
-    //   let new_clubs = []
-            
-    //   if (this.recruit_filter) {
-    //     this.clubs.forEach(club => {
-    //       if (club.recruit) {
-    //         new_clubs.push(club)
-    //       }
-    //     })
-    //     this.clubs = new_clubs
-    //   }
-    // },
     selectFilter(filter) {
       if (filter === 'recruit') {
-        this.recruit_filter = !this.recruit_filter
+        this.filters.recruit_filter = !this.filters.recruit_filter
       } else {
-        if (!this.genre_filter.has(filter)) {
-          this.genre_filter.add(filter)
+        if (!this.filters.genre_filter.has(filter)) {
+          this.filters.genre_filter.add(filter)
         } else {
-          this.genre_filter.delete(filter)
+          this.filters.genre_filter.delete(filter)
         }
       }
-      this.filterClubs();
       this.$forceUpdate();
+      this.filterClubs(this.filters);
     }
   },
   created() {

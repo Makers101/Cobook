@@ -7,10 +7,8 @@ import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
-import com.ssafy.cobook.service.dto.profile.ProfileFollowUserDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.*;
-import com.ssafy.cobook.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -91,11 +89,8 @@ public class UserService {
                 .sorted()
                 .collect(Collectors.toList());
 
-        UserFollowResDto userFollowResDto  = new UserFollowResDto(user.getId(), user.getNickName());
-        ProfileFollowUserDto profileFollowUserDto = new ProfileFollowUserDto(userFollowResDto, userFollowResDto, false);
-
-        List<UserByFollowDto> followerList = profileService.getFollowerList(profileFollowUserDto);
-        List<UserByFollowDto> followingList = profileService.getFollowingList(profileFollowUserDto);
+        List<UserByFollowDto> followerList = profileService.getFollowerList(user.getId(), user.getId());
+        List<UserByFollowDto> followingList = profileService.getFollowingList(user.getId(), user.getId());
 
         ProfileResponseDto profileResponseDto = new ProfileResponseDto(user, clubList, followerList, followingList);
         return profileResponseDto;

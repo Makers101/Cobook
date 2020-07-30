@@ -7,12 +7,15 @@ import com.ssafy.cobook.domain.clubgenre.ClubGenreRepository;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
 import com.ssafy.cobook.domain.clubmember.MemberRole;
+import com.ssafy.cobook.domain.follow.Follow;
+import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.genre.GenreRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
+import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.*;
 import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
 import com.ssafy.cobook.service.dto.user.UserSimpleResDto;
@@ -40,6 +43,7 @@ public class ClubService {
     private final ClubMemberRepository clubMemberRepository;
     private final GenreRepository genreRepository;
     private final ClubGenreRepository clubGenreRepository;
+    private final FollowRepository followRepository;
 
     @Transactional
     public ClubCreateResDto create(Long userId, ClubCreateReqDto reqDto) throws IOException {
@@ -137,8 +141,8 @@ public class ClubService {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
         }
         ClubMember waiting = clubMemberRepository.findById(clubMemberId)
-                .orElseThrow(()->new BaseException(ErrorCode.ALREADY_PROCESS));
-        if( !waiting.onWait()) {
+                .orElseThrow(() -> new BaseException(ErrorCode.ALREADY_PROCESS));
+        if (!waiting.onWait()) {
             throw new BaseException(ErrorCode.ALREADY_PROCESS);
         }
         waiting.chageRole(MemberRole.MEMBER);
@@ -154,8 +158,8 @@ public class ClubService {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
         }
         ClubMember waiting = clubMemberRepository.findById(clubMemberId)
-                .orElseThrow(()->new BaseException(ErrorCode.ALREADY_PROCESS));
-        if( !waiting.onWait()) {
+                .orElseThrow(() -> new BaseException(ErrorCode.ALREADY_PROCESS));
+        if (!waiting.onWait()) {
             throw new BaseException(ErrorCode.ALREADY_PROCESS);
         }
         waiting.chageRole(MemberRole.REJECT);
@@ -167,10 +171,39 @@ public class ClubService {
         Club club = getClub(clubId);
         ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
                 .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
-        if( leader.isNotLeader()) {
+        if (leader.isNotLeader()) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
         }
         club.changeRecruit();
         return new ClubRecruitResponseDto(club.getRecruit());
     }
+
+    private Long getClubFollow(Club club) {
+        List<Follow> list = followRepository.findAllByClub(club);
+        Long userCount = Long.valueOf(list.size());
+        return userCount;
+    }
+
+    public ClubByFollowSimpleDto addFollow(Long userId, Long clubId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        Boolean isFollow = false;
+
+        if (followRepository.findByFromUserAndClub(user, club).isPresent()) {
+            followRepository.deleteByUserAndClub(userId, clubId);
+        } else {
+            followRepository.save(new Follow(user, club, true));
+            isFollow = true;
+        }
+
+        Long userCount = getClubFollow(club);
+
+        ClubByFollowSimpleDto clubByFollowSimpleDto = new ClubByFollowSimpleDto(userId, isFollow, userCount);
+        return clubByFollowSimpleDto;
+    }
+
 }

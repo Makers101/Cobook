@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row" >
     <div class="d-none custom-d-md-block col-2">
       <div class="myclub border rounded">
         <div class="myclub-header font-weight-extrabold mt-3">내 클럽</div>
@@ -25,7 +25,7 @@
     <div class="col-12 custom-offset-sm-2 col-sm-8 custom-offset-lg-0 col-lg-8 mt-3">
       <div
         class="post mb-5"
-        v-for="post in posts"
+        v-for="post in postList"
         :key="`post-${post.id}`"
         >
         <div class="post-header d-flex justify-content-between py-2">
@@ -41,11 +41,10 @@
                 class="img-fluid feed-profile-img" 
                 :src="post.user.profileImg" alt="작성자 프로필 사진">
             </span>
-            {{ post.user.nickName }}
+            <span @click="selectUser(post.user.id)">{{ post.user.nickName }}</span>
             <span v-if="post.isClub" class="badge bg-green">Club</span>
           </div>
           <div class="color-beige small-text">
-            
             <span class="pointer" @click="postDetail(post.id)">
               <i class="fas fa-comments mr-2" id="heart"></i><small class="mr-3">{{ post.commentCnt }}</small>
             </span>
@@ -116,14 +115,29 @@
         </div>
       </div>
     </div>
+    <infinite-loading @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+    <!-- <div id="bottomSensor"></div> -->
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import InfiniteLoading from 'vue-infinite-loading'
+import router from '@/router'
 
 export default {
   name: 'PostList',
+  components: {
+    InfiniteLoading
+  },
+  data() {
+    return {
+      postList: [], 
+      page: 3,
+      limit: 0,
+      loading: false,
+    }
+  },
   computed: {
     ...mapState(['myaccount']),
     ...mapState('postStore', ['posts']),
@@ -166,12 +180,89 @@ export default {
       if (post.bookmarkUsers.includes(this.myaccount.id)) {
         return true;
       }
+    },
+    getPosts() {
+      if (this.posts.slice(this.page, this.page + 3).length) {
+        this.postList = this.postList.concat(this.posts.slice(this.page, this.page + 3))
+        this.page += 3
+      }
+    },
+    // onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
+    //   console.log(1)
+    //   console.log(scrollTop, clientHeight, scrollHeight)
+    //   if (scrollTop + clientHeight >= scrollHeight) {
+    //     this.getPosts()
+    //   }
+    // },
+    // addScrollWatcher: function() {
+    //   const bottomSensor = document.querySelector('#bottomSensor')
+    //   const watcher = scrollMonitor.create(bottomSensor)
+    //   // watcher가 화면에 들어오면, callback 하겠다.
+    //   watcher.enterViewport(() => {
+    //     setTimeout(() => {
+    //       this.getPosts()
+    //     }, 500)
+    //   })
+    // },
+    
+
+    // loadUntilViewportIsFull: function() {
+    //   const bottomSensor = document.querySelector('#bottomSensor')
+    //   const watcher = scrollMonitor.create(bottomSensor)
+    //   if (watcher.isFullyInViewport){
+    //     this.getPosts()
+    //   }
+    // },
+    infiniteHandler($state) {
+      setTimeout(() => {
+        if (this.posts.slice(this.page, this.page + 3).length) {
+          this.postList = this.postList.concat(this.posts.slice(this.page, this.page + 3))
+          console.log(this.page)
+          console.log(this.postList)
+          $state.loaded();
+          this.page += 3
+        } else {
+          $state.complete();
+        }
+      }, 1000)
+    },
+    // onBottom() {
+    //   setTimeout(function() {
+    //     const el = document.querySelector("#bottomSensor");
+    //     console.log(el.scrollTop)
+    //   }, 1000)
+    // },
+    selectUser(userId) {
+      router.push({ name: 'Profile', params: { userId: userId }})
     }
-      
+  },
+  watch: {
+    posts() {
+      this.postList = this.posts.slice(0, 3)
+    }
   },
   created() {
     this.fetchPosts()
   },
+  // mounted() {
+    // window.addEventListener('scroll', this.onScroll(window))
+    // const listElm = document.querySelector('#scroll');
+    // listElm.addEventListener('scroll', () => {
+    //   console.log(1)
+    //   if(listElm.scrollTop + listElm.clientHeight >= listElm.scrollHeight) {
+    //     this.getPosts();
+    //   }
+    // });
+  //   this.addScrollWatcher()
+  //   window.$(window).scroll(function() {
+  //     if(window.$(window).scrollTop() + window.$(window).height() == window.$(document).height()) {
+  //       console.log(window.$(window).scrollTop())
+  //     }
+  //   });
+  // },
+  // updated() {
+  //   this.loadUntilViewportIsFull()
+  // }
 
 }
 </script>
