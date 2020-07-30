@@ -20,6 +20,6 @@ public class ReadingMemberResponseDto {
         if (readingMember.getUser().getProfileImg() != null) {
             this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.id;
         }
-        this.role = readingMember.getRole().getRole();
+        this.role = readingMember.getRole().getRole().toLowerCase();
     }
 }
