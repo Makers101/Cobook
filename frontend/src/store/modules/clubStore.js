@@ -120,10 +120,10 @@ const clubStore = {
         axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId + '/recruit', null, rootGetters.config)
         .then((res) => {
           console.log(res.data)
-          })
-          .catch(err => {
-            console.log(err.response.data)
-          })
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
       },
       applyClub({ rootGetters }, clubId) {
         axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId + '/apply', null, rootGetters.config)
