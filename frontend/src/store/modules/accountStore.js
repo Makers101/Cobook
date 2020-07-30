@@ -18,25 +18,35 @@ const accountStore = {
     },
     actions: {
         // Signup
-        postAuthData1({ dispatch, commit }, info) {
+        postAuthData1( info) {
             axios.post(SERVER.URL + info.location, info.data)
                 .then(res => {
-                    console.log("SUCCESS")
-                    commit('SET_TOKEN', res.data, { root: true })
-                    dispatch('findMyAccount', null, { root: true })
+                    console.log("SUCCESS", res.data)
+                    // commit('SET_TOKEN', res.data, { root: true })
                     router.push({ name: 'SignupEmail' })
+                    
                 })
                 .catch(err => {
                     console.log(err.response.data)
                 })
         },
         // Login
-        postAuthData2({ dispatch, commit }, info) {
+        postAuthData2({ commit }, info) {
             axios.post(SERVER.URL + info.location, info.data)
                 .then(res => {
                     console.log("SUCCESS")
                     commit('SET_TOKEN', res.data, { root: true })
-                    dispatch('findMyAccount', null, { root: true })
+                    router.push('/')
+                })
+                .catch(err => {
+                    console.log(err.response.data)
+                })
+        },
+        sendPasswordEmail(info){
+            console.log(info)
+            axios.post(SERVER.URL + info.location, info.data)
+                .then(() => {
+                    console.log("SUCCESS")
                     router.push('/')
                 })
                 .catch(err => {
@@ -59,17 +69,27 @@ const accountStore = {
             }
             dispatch('postAuthData2', info)
         },
+        // findPassword({ dispatch }, passwordFindData) {
+        //     const info = {
+        //         data: passwordFindData,
+        //         location: SERVER.ROUTES.password,
+        //     }
+        //     dispatch('sendPasswordEmail', info)
+        // }
         
-        findPassword(email) {
-            axios.post(SERVER.URL + SERVER.ROUTES.password, email)
-                .then (res => {
-                    console.log(res)
-                    router.push({ name: 'PasswordFindEmail'})
-                })
-                .catch (err =>{
-                    console.log(err.response)
-                })
-        },
+        // findPassword(email) {
+        //     const info = {
+        //         data: email,
+        //     }
+        //     axios.post(SERVER.URL + SERVER.ROUTES.password, info)
+        //         .then (res => {
+        //             console.log(res.data)
+        //             router.push({ name: 'PasswordFindEmail'})
+        //         })
+        //         .catch (err =>{
+        //             console.log(err.response)
+        //         })
+        // },
         
     },
 }
