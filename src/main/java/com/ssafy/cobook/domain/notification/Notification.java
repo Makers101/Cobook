@@ -20,26 +20,26 @@ public class Notification extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long from;
-    private Long to;
+    private Long fromId;
+    private Long toId;
     private Long dataId;
-    private String type;
-    private Boolean read;
+    private String types;
+    private Boolean isread;
 
     @Builder
     public Notification(Long from, Long to, Long dataId, String type) {
-        this.from = from;
-        this.to = to;
+        this.fromId = from;
+        this.toId = to;
         this.dataId = dataId;
-        this.type = type;
-        this.read = false;
+        this.types = type;
+        this.isread = false;
     }
 
     public boolean unread() {
-        return !read;
+        return !isread;
     }
 
     public void read() {
-        this.read = true;
+        this.isread = true;
     }
 }

@@ -22,9 +22,9 @@ public class NotificationRequestDto {
     public Notification toEntity() {
         return Notification.builder()
                 .from(from)
+                .type(type)
                 .to(to)
                 .dataId(dataId)
-                .type(type)
                 .build();
     }
 }
