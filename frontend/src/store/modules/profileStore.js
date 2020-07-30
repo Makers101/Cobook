@@ -117,19 +117,26 @@ const profileStore = {
     updateProfile({ rootState, rootGetters, dispatch }, profileUpdateData) {
       axios.put(SERVER.URL + SERVER.ROUTES.profile, profileUpdateData.basicData, rootGetters.config )
         .then(res => {
-          const userId = res.data.id
-          axios.post(SERVER.URL + SERVER.ROUTES.profile + '/images', profileUpdateData.profileImgFormData,
-            {
-              'jwt': rootState.authToken,
-              'Content-Type': 'multipart/form-data'
-            })
-              .then(() => {
-                dispatch('findMyAccount', null, { root: true })
-                router.push({ name: 'Profile', params: { userId: userId }})
+          const userId = res.data.userId
+          if (profileUpdateData.profileImgFormData) {
+            axios.post(SERVER.URL + SERVER.ROUTES.profile + '/images', profileUpdateData.profileImgFormData,
+              {  
+                headers: {
+                  'jwt': rootState.authToken,
+                  'Content-Type': 'multipart/form-data'
+                }
               })
-              .catch(err => {
-                console.log(err.response.data)
-              })
+                .then(() => {
+                  dispatch('findMyAccount', null, { root: true })
+                  router.push({ name: 'Profile', params: { userId: userId }})
+                })
+                .catch(err => {
+                  console.log(err.response.data)
+                })
+          } else {
+            dispatch('findMyAccount', null, { root: true })
+            router.push({ name: 'Profile', params: { userId: userId }})
+          }
         })
         .catch(err => {
           console.log(err.response.data)
