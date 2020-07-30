@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div>
     <!-- <v-row justify="center" v-if="myaccount.likeGenres">
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
@@ -65,8 +65,8 @@
         </v-card>
       </v-dialog>
     </v-row> -->
-    <div class="d-none custom-d-md-block col-2" v-if="myaccount">
-      <div class="myclub border rounded">
+    <div class="custom-container" v-if="myaccount">
+      <!-- <div class="myclub border rounded">
         <div class="myclub-header font-weight-extrabold mt-3">내 클럽</div>
         <hr>
         <div class="myclub-content">
@@ -85,9 +85,9 @@
             <hr>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
-    <div class="col-12 custom-offset-sm-2 col-sm-8 custom-offset-lg-0 col-lg-8 mt-3">
+    <div class="custom-container mt-3">
       <div
         class="post mb-5"
         v-for="post in postList"
@@ -126,7 +126,7 @@
           <div class="d-flex align-items-center justify-content-center w-50">
             <div class="w-75 color-black">
               <div class="large-text text-left"><i class="fas fa-quote-left"></i></div>
-              <div class="d-flex justify-content-center"><p class="my-2 w-50">{{ post.onelineReview }}</p></div>
+              <div class="d-flex justify-content-center"><p class="my-2 w-50" style="word-break: keep-all">{{ post.onelineReview }}</p></div>
               <div class="large-text text-right"><i class="fas fa-quote-right"></i></div>
             </div>
           </div>
@@ -208,6 +208,7 @@ export default {
     ...mapState('postStore', ['posts']),
   },
   methods: {
+    ...mapActions(['findMyAccount']),
     ...mapActions('postStore', ['fetchPosts', 'createLike', 'createBookmark']),
     clubDetail(clubId) {
       this.$router.push({ name: 'ClubDetail', params: { clubId: clubId }})
@@ -306,7 +307,14 @@ export default {
   },
   created() {
     this.fetchPosts()
+    this.findMyAccount()
   },
+  // mounted() {
+  //   setTimeout(() => {
+  //     this.fetchPosts()
+  //     this.$forceUpdate();
+  //   }, 1000);
+  // }
   // mounted() {
     // window.addEventListener('scroll', this.onScroll(window))
     // const listElm = document.querySelector('#scroll');
