@@ -41,7 +41,7 @@
                 class="img-fluid feed-profile-img" 
                 :src="post.user.profileImg" alt="작성자 프로필 사진">
             </span>
-            {{ post.user.nickName }}
+            <span @click="selectUser(post.user.id)">{{ post.user.nickName }}</span>
             <span v-if="post.isClub" class="badge bg-green">Club</span>
           </div>
           <div class="color-beige small-text">
@@ -123,6 +123,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import InfiniteLoading from 'vue-infinite-loading'
+import router from '@/router'
 
 export default {
   name: 'PostList',
@@ -231,6 +232,9 @@ export default {
     //     console.log(el.scrollTop)
     //   }, 1000)
     // },
+    selectUser(userId) {
+      router.push({ name: 'Profile', params: { userId: userId }})
+    }
   },
   watch: {
     posts() {

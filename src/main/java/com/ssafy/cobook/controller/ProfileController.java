@@ -3,9 +3,11 @@ package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.ProfileService;
-import com.ssafy.cobook.service.dto.postbookmark.PostBookMarkReqDto;
-import com.ssafy.cobook.service.dto.profile.ProfileFollowUserDto;
+import com.ssafy.cobook.service.dto.club.ClubResDto;
+import com.ssafy.cobook.service.dto.post.PostDetailResDto;
+import com.ssafy.cobook.service.dto.post.PostResponseDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
+import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
 import com.ssafy.cobook.service.dto.user.UserResponseIdDto;
 import com.ssafy.cobook.service.dto.user.UserUpdateReqDto;
@@ -53,7 +55,7 @@ public class ProfileController {
 
     @ApiOperation(value = "사용자의 이미지를 저장한다")
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/imagse")
+    @PostMapping("/images")
     public ResponseEntity<Void> updateUserPicture(@ApiIgnore final Authentication authentication,
                                                   @RequestParam final MultipartFile profileImg) throws IOException {
         Long userId = ((User) authentication.getPrincipal()).getId();
@@ -90,22 +92,52 @@ public class ProfileController {
     }
 
     @ApiOperation(value = "팔로우 버튼을 누른다")
-    @PostMapping("/follow")
-    public ResponseEntity<Void> followUser(@RequestBody ProfileFollowUserDto profileFollowUserDto){
-        profileService.addFollow(profileFollowUserDto);
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/{userId}/follow")
+    public ResponseEntity<Void> followUser(@ApiIgnore Authentication authentication, @PathVariable("userId") Long toUserId){
+        Long fromUserId =  ((User) authentication.getPrincipal()).getId();
+        profileService.addFollow(fromUserId, toUserId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @ApiOperation(value = "팔로잉한 사람들의 리스트 가져오기")
-    @PostMapping("/following")
-    public ResponseEntity<List<UserByFollowDto>>getFollowingList(@RequestBody ProfileFollowUserDto profileFollowUserDto){
-        return ResponseEntity.status(HttpStatus.OK).body(profileService.getFollowingList(profileFollowUserDto));
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/{userId}/following")
+    public ResponseEntity<List<UserByFollowDto>>getFollowingList(@ApiIgnore Authentication authentication, @PathVariable("userId") Long toUserId){
+        Long fromUserId =  ((User) authentication.getPrincipal()).getId();
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getFollowingList(fromUserId, toUserId));
     }
 
 
     @ApiOperation(value = "팔로우한 사람들의 리스트가져오기")
-    @PostMapping("/follower")
-    public ResponseEntity<List<UserByFollowDto>>getFollowerList(@RequestBody ProfileFollowUserDto profileFollowUserDto){
-        return ResponseEntity.status(HttpStatus.OK).body(profileService.getFollowerList(profileFollowUserDto));
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/{userId}/follower")
+    public ResponseEntity<List<UserByFollowDto>>getFollowerList(@ApiIgnore Authentication authentication, @PathVariable("userId") Long toUserId){
+        Long fromUserId =  ((User) authentication.getPrincipal()).getId();
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getFollowerList(fromUserId, toUserId));
+    }
+
+    @ApiOperation(value = "해당 유저의 피드를 가져온다")
+    @GetMapping("/{userId}/feed")
+    public ResponseEntity<List<PostResponseDto>>getFeed(@PathVariable("userId") Long toUserId){
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserFeed(toUserId));
+    }
+
+    @ApiOperation(value = "해당 유저의 클럽을 가져온다")
+    @GetMapping("/{userId}/club")
+    public ResponseEntity<List<ClubResDto>>getClub(@PathVariable("userId") Long toUserId){
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserClub(toUserId));
+    }
+
+    @ApiOperation(value = "해당 유저의 북마크를 가져온다")
+    @GetMapping("/{userId}/bookmark")
+    public ResponseEntity<List<PostDetailResDto>>getBookmark(@PathVariable("userId") Long toUserId){
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserBookmark(toUserId));
+    }
+
+    @ApiOperation(value = "해당 유저의 리딩을 가져온다")
+    @GetMapping("/{userId}/reading")
+    public ResponseEntity<List<ReadingSimpleResDto>>getReading(@PathVariable("userId") Long toUserId){
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserReading(toUserId));
     }
 }

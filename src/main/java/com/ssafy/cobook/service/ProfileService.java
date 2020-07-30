@@ -1,24 +1,32 @@
 package com.ssafy.cobook.service;
 
+import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
 import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.genre.GenreRepository;
+import com.ssafy.cobook.domain.post.Post;
+import com.ssafy.cobook.domain.post.PostRepository;
+import com.ssafy.cobook.domain.postbookmark.PostBookMark;
+import com.ssafy.cobook.domain.postbookmark.PostBookMarkRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.domain.usergenre.UserGenreRepository;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
-import com.ssafy.cobook.service.dto.profile.ProfileFollowUserDto;
+import com.ssafy.cobook.service.dto.post.PostDetailResDto;
+import com.ssafy.cobook.service.dto.post.PostResponseDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
+import com.ssafy.cobook.service.dto.reading.ReadingDetailResDto;
+import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
-import com.ssafy.cobook.service.dto.user.UserFollowResDto;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.service.dto.user.UserResponseIdDto;
+import com.ssafy.cobook.service.dto.user.UserUpdateReqDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,7 +51,9 @@ public class ProfileService {
     private final FollowRepository followRepository;
     private final GenreRepository genreRepository;
     private final UserGenreRepository userGenreRepository;
-    
+    private final PostRepository postRepository;
+    private final PostBookMarkRepository postBookMarkRepository;
+
     public ProfileResponseDto getUserInfo(Long fromUserId, Long toUserId) {
         User toUser = userRepository.findById(toUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
@@ -56,14 +66,8 @@ public class ProfileService {
                 .map(ClubResDto::new)
                 .collect(Collectors.toList());
 
-        UserFollowResDto to = new UserFollowResDto(toUser.getId(), toUser.getNickName());
-        UserFollowResDto from = new UserFollowResDto(fromUser.getId(), fromUser.getNickName());
-
-
-        ProfileFollowUserDto profileFollowUserDto = new ProfileFollowUserDto(to, from, false);
-
-        List<UserByFollowDto> followerList = getFollowerList(profileFollowUserDto);
-        List<UserByFollowDto> followingList = getFollowingList(profileFollowUserDto);
+        List<UserByFollowDto> followerList = getFollowerList(fromUserId, toUserId);
+        List<UserByFollowDto> followingList = getFollowingList(fromUserId, toUserId);
 
         ProfileResponseDto profileResponseDto = new ProfileResponseDto(toUser, clubList, followerList, followingList);
 
@@ -76,12 +80,13 @@ public class ProfileService {
     }
 
     // 팔로잉 - 눌러져있지 않으면 디비에 추가한다
-    public void addFollow(ProfileFollowUserDto profileFollowUserDto) {
-        User toUser = userRepository.findById(profileFollowUserDto.getToUser().getUserId())
+    public void addFollow(Long fromUserId, Long toUserId) {
+        User toUser = userRepository.findById(toUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
-        User fromUser = userRepository.findById(profileFollowUserDto.getFromUser().getUserId())
+        User fromUser = userRepository.findById(fromUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
 
         if (followRepository.findByToUser(fromUser, toUser).isPresent()) {
             followRepository.deleteByUser(fromUser.getId(), toUser.getId());
@@ -92,11 +97,13 @@ public class ProfileService {
     }
 
     // 팔로잉 리스트를 가져온다
-    public List<UserByFollowDto> getFollowingList(ProfileFollowUserDto profileFollowUserDto) {
-        User toUser = userRepository.findById(profileFollowUserDto.getToUser().getUserId())
+    public List<UserByFollowDto> getFollowingList(Long fromUserId, Long toUserId) {
+
+
+        User toUser = userRepository.findById(toUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
-        User fromUser = userRepository.findById(profileFollowUserDto.getFromUser().getUserId())
+        User fromUser = userRepository.findById(fromUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
         // 1. isFollow인 애 찾기
@@ -117,17 +124,17 @@ public class ProfileService {
 
         List<UserByFollowDto> followingList = new ArrayList<>();
         followingList.addAll(0, followList);
-        followingList.addAll(followingList.size(), notFollowList);
+        followingList.addAll(0, notFollowList);
 
         return followingList;
     }
 
     // 팔로워 리스트 가져오기 (fromUser의 아이디가 들어오면 toUser가 fromUser의 값인 애들을 뽑아야함)
-    public List<UserByFollowDto> getFollowerList(ProfileFollowUserDto profileFollowUserDto) {
-        User toUser = userRepository.findById(profileFollowUserDto.getToUser().getUserId())
+    public List<UserByFollowDto> getFollowerList(Long fromUserId, Long toUserId) {
+        User toUser = userRepository.findById(toUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
-        User fromUser = userRepository.findById(profileFollowUserDto.getFromUser().getUserId())
+        User fromUser = userRepository.findById(fromUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
         // 1. isFollow인 애 찾기
@@ -148,7 +155,7 @@ public class ProfileService {
 
         List<UserByFollowDto> followerList = new ArrayList<>();
         followerList.addAll(0, followList);
-        followerList.addAll(followerList.size(), notFollowList);
+        followerList.addAll(0, notFollowList);
 
         return followerList;
     }
@@ -185,7 +192,7 @@ public class ProfileService {
         for (Genre genre : updateGenres) {
             updateUserGenres(user, genre);
         }
-        user.updateInfo(requestDto.getNicnName(), requestDto.getDescription());
+        user.updateInfo(requestDto.getNickName(), requestDto.getDescription());
         return new UserResponseIdDto(user.getId());
     }
 
@@ -211,5 +218,53 @@ public class ProfileService {
     public String getFilePath(Long userId) {
         User user = getUserById(userId);
         return user.getProfileImg().replace("http://i3a111.p.ssafy.io:8080/api/profile/images/", "");
+    }
+
+    public List<PostResponseDto> getUserFeed(Long userId){
+        User user = getUserById(userId);
+        return postRepository.findAllByUser(user)
+                .stream()
+                .filter(Post::getOpen)
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<ClubResDto> getUserClub(Long userId) {
+        User user = getUserById(userId);
+        return clubMemberRepository.findAllByUser(user)
+                .stream()
+                .map(ClubMember::getClub)
+                .map(ClubResDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<ReadingSimpleResDto> getUserReading(Long userId) {
+        User user = getUserById(userId);
+
+        // 그 유저가 포함된 클럽들
+        List<Club> clubList = clubMemberRepository.findAllByUser(user)
+                .stream()
+                .map(ClubMember::getClub)
+                .collect(Collectors.toList());
+
+        List<ReadingSimpleResDto> readingList = new ArrayList<>();
+
+        for (Club c : clubList){
+            List<ReadingSimpleResDto> readings = c.getReadingList().stream()
+                    .map(ReadingSimpleResDto::new)
+                    .collect(Collectors.toList());
+            readingList.addAll(0, readings);
+        }
+
+        return readingList;
+    }
+
+    public List<PostDetailResDto> getUserBookmark(Long userId) {
+        User user = getUserById(userId);
+        return postBookMarkRepository.findAllByUser(user)
+                .stream()
+                .map(PostBookMark::getPost)
+                .map(PostDetailResDto::new)
+                .collect(Collectors.toList());
     }
 }

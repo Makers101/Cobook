@@ -1,6 +1,6 @@
 <template>
-  <div class="custom-container mt-3">
-    <div class="post mb-5">
+  <div class="custom-container mt-3 custom-offset-lg-0">
+    <div class="post mb-4">
       <div class="post-header d-flex justify-content-between p-2 pl-3">
         <div>
           <span class="rounded-circle">
@@ -14,20 +14,32 @@
               class="img-fluid feed-profile-img" 
               :src="selectedPost.user.profileImg" alt="작성자 프로필 사진">
           </span>
-          {{ selectedPost.user.nickName }}
+          <span @click="selectUser(selectedPost.user.id)">
+             {{ selectedPost.user.nickName }}
+          </span>
           <span v-if="selectedPost.isClub" class="badge bg-green">Club</span>
         </div>
-        <div class="color-beige small-text">
-          <span class="mr-3 color-black">{{ selectedPost.createdAt | moment("from", "now") }}</span>
-          <!-- <span>
-            <i class="fas fa-comments mr-2"></i><small class="mr-3">{{ selectedPost.commentCnt }}</small>
-          </span> -->
-          <span class="pointer" @click="clickBookmark(selectedPost)">
-            <span v-if="checkBookmark(selectedPost)"><i class="fas fa-bookmark mr-2 color-green" id="bookmark"></i><small class="mr-3">{{ selectedPost.bookmarkUsers.length }}</small></span>
-            <span v-else><i class="fas fa-bookmark mr-2" id="bookmark"></i><small class="mr-3">{{ selectedPost.bookmarkUsers.length }}</small></span>
-          </span>
-        </div>
+        <div class="d-flex justify-center align-items-center">
+          <div class="color-beige small-text">
+            <span class="mr-3 color-black">{{ selectedPost.createdAt | moment("from", "now") }}</span>
+            <span class="pointer" @click="clickBookmark(selectedPost)">
+              <span v-if="checkBookmark(selectedPost)"><i class="fas fa-bookmark mr-2 color-green" id="bookmark"></i><small class="mr-3">{{ selectedPost.bookmarkUsers.length }}</small></span>
+              <span v-else><i class="fas fa-bookmark mr-2" id="bookmark"></i><small class="mr-3">{{ selectedPost.bookmarkUsers.length }}</small></span>
+            </span>
+          </div>
+          <div class="btn-group">
+            <button class="btn-green dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            </button>
+            <div class="dropdown-menu">
+              <p class="dropdown-item m-0">공유하기</p>
+              <div class="dropdown-divider" v-if="myaccount.nickName===selectedPost.user.nickName"></div>
+              <p class="dropdown-item m-0" v-if="myaccount.nickName===selectedPost.user.nickName">수정하기</p>
+              <p class="dropdown-item m-0" v-if="myaccount.nickName===selectedPost.user.nickName">삭제하기</p>
+            </div>
+          </div>
+       </div>
       </div>
+        
       <div class="post-content">
         <div class="row no-gutters bg-light-beige">
           <div class="col-3 my-5">
@@ -48,7 +60,7 @@
               <div class="large-text text-right"><i class="fas fa-quote-right"></i></div>
             </div>
           </div>
-          <div class="col-12 my-5 px-5">
+          <div class="col-12 py-5 px-5">
             <div class="w-100 color-black">
               <div class="review" v-html="selectedPost.review"></div>
             </div>
@@ -75,22 +87,21 @@
         
       </div>
     </div>
-    <hr>
     <div class="comment mb-5" id="comment">
-      <h5 class="text-left">댓글</h5>
-      <div class="input-group row no-gutters mb-5 commentSection">
+      <h5 class="text-left mb-3">댓글</h5>
+      <div class="input-group row no-gutters mb-3 commentSection">
         <textarea
-          class="col-11" 
+          class="col-11 textareaSection p-3" 
           @keyup.enter="clickComment" 
           @input="activeBtn"
           v-model="commentCreateData.content" 
           type="content" 
           placeholder="댓글을 작성하세요 :)" 
-          rows="2" 
+          rows="3" 
         ></textarea>
         <button 
           :class="{ 'btn-green': btnActive, 'pointer': btnActive }"
-          class="btn col-1"
+          class="btn col-1 commentBtn"
           :disabled="!btnActive"
           @click="clickComment"
         >
@@ -112,10 +123,10 @@
               class="img-fluid feed-profile-img" 
               :src="comment.user.profileImg" alt="작성자 프로필 사진">
           </span>
-          {{ comment.user.nickName }}
+          <span @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
           <span v-if="comment.isClub" class="badge bg-green">Club</span>
         </div>
-        <div class="col-12 text-left">
+        <div class="col-12 text-left wrapping">
           <div>{{ comment.content }}</div>
         </div>
         <hr>
@@ -126,7 +137,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-
+import router from '@/router'
 export default {
   name: 'PostDetail',
   data() {
@@ -186,6 +197,9 @@ export default {
         return true;
       }
     },
+    selectUser(userId) {
+      router.push({ name: 'Profile', params: { userId: userId }})
+    },
   },
   created() {
     this.commentCreateData.postId = this.$route.params['postId']
@@ -196,8 +210,13 @@ export default {
 </script>
 
 <style>
-.post-header, .post-content, .post-footer{
+.post-header, .post-content{
   border: 1px solid #D6CBBD ;
+  border-bottom-style: none;
+}
+
+.post-footer {
+  border: 1px solid #D6CBBD;
 }
 
 .feed-profile-img {
@@ -234,13 +253,24 @@ export default {
   color: red !important;
 }
 
-/* .bookmarkselected {
-  color: #907a62 !important;
-} */
-
 .commentSection {
-  border: 1px solid black;
-  padding: 10px;
+  border: 1px solid #D6CBBD;
   border-radius: 5px;
+}
+
+.textareaSection {
+  border-right: 1px solid #D6CBBD;
+}
+
+.textareaSection:focus {
+  outline: 1px solid #88A498;
+}
+
+@media screen and (min-width: 1264px) {
+  .custom-offset-lg-0 {
+    max-width: 823.46px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
 }
 </style>

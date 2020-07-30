@@ -231,8 +231,6 @@
 </template>
 
 <script>
-const clubImgFormData = new FormData()
-
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'ClubCreate',
@@ -248,7 +246,7 @@ export default {
           genres: [],
           clubImg: null        
         },
-        clubImgFormData: clubImgFormData
+        clubImgFormData: new FormData()
       },
       clubImg: null,
       valid: true,
