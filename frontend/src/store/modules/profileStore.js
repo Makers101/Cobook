@@ -65,7 +65,16 @@ const profileStore = {
       axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.follow, rootGetters.config)
         .then(res => {
           dispatch('fetchFollowerList', userId)
-          // dispatch('fetchFollowingList', userId)
+          dispatch('fetchFollowingList', userId)
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err.response)
+        })
+    },
+    clickFollowModal({ rootGetters}, userId){
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.follow, rootGetters.config)
+        .then(res => {
           console.log(res)
         })
         .catch(err => {
