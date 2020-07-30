@@ -38,6 +38,7 @@ public class User implements UserDetails {
     private String nickName;
     private String description;
     private String profileImg;
+    private Boolean accept;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
@@ -87,6 +88,10 @@ public class User implements UserDetails {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void changeAccept(boolean accept){
+        this.accept = accept;
     }
 
     public void enrollClub(ClubMember clubMember) {
@@ -158,9 +163,6 @@ public class User implements UserDetails {
 
     public void addBookMarks(PostBookMark postBookMark) {
         this.bookMarks.add(postBookMark);
-    }
-
-    private void updateNickName(String nicnName) {
     }
 
     public void removeGenre(UserGenre userGenre) {

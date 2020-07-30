@@ -9,6 +9,11 @@ import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.*;
+import com.ssafy.cobook.util.JwtTokenProvider;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -20,8 +25,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.security.Key;
+import java.util.Base64;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -36,6 +46,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ClubMemberRepository clubMemberRepository;
     private final ProfileService profileService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -47,18 +58,29 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseIdDto saveUser(UserSaveRequestDto userSaveRequestDto) {
+    public UserResponseIdDto signUp(UserSaveRequestDto userSaveRequestDto, Boolean isFind) {
         if (userRepository.findByEmail(userSaveRequestDto.getEmail()).isPresent()) {
             throw new UserException("이미 가입된 메일입니다", ErrorCode.MEMBER_DUPLICATED_EMAIL);
         }
         String encodePassword = passwordEncoder.encode(userSaveRequestDto.getPassword());
-
         User user = userSaveRequestDto.toEntity();
         user.changePassword(encodePassword);
         user = userRepository.save(user);
+
+        String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
+
+        // 이메일 인증 메일을 보낸다
+        preparedAndSend(userSaveRequestDto.getEmail(), isFind, token);
+
         return new UserResponseIdDto(user.getId());
     }
 
+    @Transactional
+    public void checkEmailToken(String token) {
+        Long id = Long.valueOf(jwtTokenProvider.getId(token));
+        userRepository.findById(id).orElseThrow(()->new UserException(ErrorCode.WRONG_EMAIL_CHECK_AUTH));
+        userRepository.updateAccept(id, true);
+    }
 
     private User getUser(final String email) {
         return userRepository.findByEmail(email)
@@ -79,9 +101,9 @@ public class UserService {
         return user;
     }
 
-    public ProfileResponseDto getMyInfo(Long userId){
+    public ProfileResponseDto getMyInfo(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserException("존재 하지 않는 회원 입니다.",ErrorCode.UNEXPECTED_USER));
+                .orElseThrow(() -> new UserException("존재 하지 않는 회원 입니다.", ErrorCode.UNEXPECTED_USER));
 
         List<ClubResDto> clubList = clubMemberRepository.findAllByUser(user).stream()
                 .map(ClubMember::getClub)
@@ -96,30 +118,32 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseIdDto preparedAndSend(String recipient, HttpServletRequest httpServletRequest) {
-        User user = getUser(recipient);
+    public void preparedAndSend(String recipient, Boolean isFind, String token) {
+        StringBuilder stringBuilder = new StringBuilder();
 
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom("noreply@cobook.co.kr");
-            messageHelper.setTo(user.getEmail());
-            messageHelper.setSubject("cobook 비밀번호 재설정 코드");
-
-            HttpSession session = httpServletRequest.getSession(true);
-            int randomCode = new Random().nextInt(900000) + 100000;
-
-            String authCode = String.valueOf(randomCode);
-            session.setAttribute("authCode", authCode);
-
-            StringBuilder stringBuilder = new StringBuilder();
-            String content = stringBuilder.append("cobook의 인증코드는 ")
-                    .append(randomCode).append("입니다.")
-                    .append("30분 안에 입력해주세요.")
-                    .toString();
-            messageHelper.setText(content, true);
+            messageHelper.setTo(recipient);
+            if (!isFind) { // 이메일 인증
+                messageHelper.setSubject("Cobook 회원가입 인증이메일입니다.");
+                URL url = new URL("http://i3a111.p.ssafy.io:8080/api/users/authentication/" + token);
+                String content = stringBuilder.append("하단의 링크로 접속하여 인증해주세요!")
+                        .append("\n")
+                        .append(url)
+                        .toString();
+                messageHelper.setText(content, true);
+            } else {
+                messageHelper.setSubject("Cobook 비밀번호 변경 메일입니다.");
+                URL url = new URL("http://i3a111.p.ssafy.io:8080/api/users/resetPassword");
+                String content = stringBuilder.append("하단의 링크로 접속하여 새로운 비밀번호를 입력해주세요!")
+                        .append("\n")
+                        .append(url)
+                        .toString();
+                messageHelper.setText(content, true);
+            }
         };
         emailSender.send(messagePreparator);
-        return new UserResponseIdDto(user.getId());
     }
 
 //    @Transactional
