@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -162,6 +163,7 @@ public class PostService {
         return postRepository.findAll().stream()
                 .filter(Post::getOpen)
                 .map(PostResponseDto::new)
+                .sorted()
                 .collect(Collectors.toList());
     }
 
@@ -273,5 +275,36 @@ public class PostService {
         user.removeComment(postComment);
         post.removeComment(postComment);
         postCommentRepository.delete(postComment);
+    }
+
+    @Transactional
+    public void deletePosts(Long userId, Long postId) {
+        User user = getUserById(userId);
+        Post post = getPostById(postId);
+        if (!post.getUser().equals(user)) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_POST);
+        }
+        List<PostLike> postLikes = postLikeRepository.findAllByPost(post);
+        for (PostLike postLike : postLikes) {
+            postLike.removeUser();
+        }
+        postLikeRepository.deleteAll(postLikes);
+        List<PostTag> postTags = postTagRepository.findAllByPost(post);
+        for (PostTag postTag : postTags) {
+            postTag.removeTag();
+        }
+        postTagRepository.deleteAll(postTags);
+        List<PostBookMark> bookMarks = postBookMarkRepository.findAllByPost(post);
+        for (PostBookMark postBookMark : bookMarks) {
+            postBookMark.removeUser();
+        }
+        postBookMarkRepository.deleteAll(bookMarks);
+        List<PostComment> comments = postCommentRepository.findAllByPost(post);
+        for (PostComment comment : comments) {
+            comment.removeUser();
+        }
+        postCommentRepository.deleteAll(comments);
+        user.removePost(post);
+        postRepository.delete(post);
     }
 }

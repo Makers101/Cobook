@@ -31,12 +31,13 @@ public class ReadingDetailResDto {
     private String place;
     private Integer participantCnt;
     private Boolean closed;
+    private Boolean isMember;
     private BookSimpleResDto book;
     private List<QuestionResDto> questions;
-    private List<ReadingMemberResponseDto> members;
+    private List<ReadingMemberResponseDto> participants;
     private List<PostByMembersResDto> memberPosts;
 
-    public ReadingDetailResDto(Reading reading, List<PostByMembersResDto> memberPosts) {
+    public ReadingDetailResDto(Reading reading, List<PostByMembersResDto> memberPosts, boolean isMember) {
         this.id = reading.getId();
         this.name = reading.getTitle();
         this.dateTime = reading.getDateTime();
@@ -48,10 +49,11 @@ public class ReadingDetailResDto {
         this.questions = reading.getQuestions().stream()
                 .map(QuestionResDto::new)
                 .collect(Collectors.toList());
-        this.members = reading.getMembers().stream()
+        this.participants = reading.getMembers().stream()
                 .filter(m->m.getRole().equals(MemberRole.MEMBER) || m.getRole().equals(MemberRole.LEADER))
                 .map(ReadingMemberResponseDto::new)
                 .collect(Collectors.toList());
         this.memberPosts = memberPosts;
+        this.isMember = isMember;
     }
 }

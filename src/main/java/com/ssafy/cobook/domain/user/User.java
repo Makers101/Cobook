@@ -183,4 +183,16 @@ public class User implements UserDetails {
     public void removeComment(PostComment postComment) {
         this.comments.remove(postComment);
     }
+
+    public void removePost(Post post) {
+        this.posts.remove(post);
+    }
+
+    public void removeBookMark(PostBookMark postBookMark) {
+        this.bookMarks.remove(postBookMark);
+    }
+
+    public void removePostLike(PostLike postLike) {
+        this.postLikes.remove(postLike);
+    }
 }

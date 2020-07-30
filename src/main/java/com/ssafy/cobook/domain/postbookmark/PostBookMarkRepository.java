@@ -10,5 +10,8 @@ import java.util.Optional;
 public interface PostBookMarkRepository extends JpaRepository<PostBookMark, Long> {
 
     Optional<PostBookMark> findByUserAndPost(User user, Post post);
+
+    List<PostBookMark> findAllByPost(Post post);
+
     List<PostBookMark> findAllByUser(User user);
 }

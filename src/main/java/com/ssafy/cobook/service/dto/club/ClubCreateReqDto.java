@@ -23,8 +23,6 @@ public class ClubCreateReqDto {
     private String residence;
     @ApiModelProperty(position = 5)
     private List<Long> genres;
-    @ApiModelProperty(position = 6)
-    private List<Long> members;
 
     public Club toEntity() {
         return Club.builder()
