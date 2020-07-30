@@ -19,6 +19,8 @@ public enum ErrorCode {
     ILLEGAL_ACCESS_READING(7100, "잘못된 접근입니다"),
     UNEXPECTED_COMMENTS(8000, "존재하지 않는 댓글입니다"),
     ILLEGAL_ACCESS_COMMENT(8100, "댓글에 권한이 없습니다"),
+    ILLEGAL_ACCESS_NOTIFICATION(9000, "알람에 대한 권한이 없습니다"),
+    ALREADY_READ(9100, "이미 처리된 알람입니다"),
     MEMBER_DUPLICATED_EMAIL(1100, "이미 가입된 이메일입니다."),
     UNSIGNED(1000, "존재하지 않는 회원입니다."),
     WRONG_PASSWORD(1200, "잘못된 비밀번호입니다.");
