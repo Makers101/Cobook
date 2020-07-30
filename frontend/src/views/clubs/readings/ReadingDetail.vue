@@ -22,9 +22,9 @@
             </div>
             <div class="d-flex justify-content-end align-items-end">
               <button class="btn btn-secondary mr-2" v-if="isLeader">리딩 설정</button>
-              <button class="btn btn-warning mr-2" v-if="selectedReading.isMember & !isParticipant">참가 신청</button>
-              <button class="btn btn-warning mr-2" v-if="selectedReading.isMember & isParticipant">참가 취소</button>
-              <button class="btn btn-primary mr" v-if="isLeader || isParticipant">모임 입장</button>
+              <button class="btn btn-warning mr-2" v-if="selectedReading.isMember & !isParticipant & !isLeader">참가 신청</button>
+              <button class="btn btn-warning mr-2" v-if="selectedReading.isMember & isParticipant & !isLeader">참가 취소</button>
+              <!-- <button class="btn btn-primary mr" v-if="isLeader || isParticipant">모임 입장</button> -->
             </div>
           </div>
         </div>
@@ -137,7 +137,7 @@ export default {
   computed: {
     ...mapState(['myaccount']),
     ...mapState('clubStore', ['selectedReading']),
-    isMember: function() {
+    isParticipant: function() {
       let result = false
       this.selectedReading.participants.forEach(participant => {
         if (participant.id === this.myaccount.id) {
@@ -209,8 +209,8 @@ export default {
 
   .image {
     display: block;
-    width: 100%;
-    height: auto;
+    width: 150px;
+    height: 150px;
   }
 
   .text {
