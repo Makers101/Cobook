@@ -20,7 +20,6 @@ import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.service.dto.post.PostByMembersResDto;
-import com.ssafy.cobook.service.dto.post.PostSimpleResDto;
 import com.ssafy.cobook.service.dto.reading.ReadingDetailResDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSaveReqDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSaveResDto;
@@ -29,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -90,11 +90,7 @@ public class ReadingService {
         Club club = getClub(clubId);
         User user = getUser(userId);
         boolean isMember;
-        if (clubMemberRepository.findByUserAndClub(user, club).isPresent()) {
-            isMember = true;
-        } else {
-            isMember = false;
-        }
+        isMember = clubMemberRepository.findByUserAndClub(user, club).isPresent();
         Reading reading = getReading(readingId);
         if (!reading.getClub().getId().equals(clubId)) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
@@ -106,23 +102,17 @@ public class ReadingService {
     }
 
     private List<PostByMembersResDto> getPosts(List<ReadingMember> members, Book book) {
-        return members.stream()
+        List<PostByMembersResDto> ret = new ArrayList<>();
+        members.stream()
                 .map(m -> getPost(m.getUser(), book))
                 .filter(Objects::nonNull)
-                .map(PostByMembersResDto::new)
-                .collect(Collectors.toList());
+                .map(PostByMembersResDto::getDto)
+                .forEach(ret::addAll);
+        return ret;
     }
 
-    private List<PostSimpleResDto> getReadingPosts(List<ReadingMember> members, Book book) {
-        return members.stream()
-                .map(m -> getPost(m.getUser(), book))
-                .map(PostSimpleResDto::new)
-                .collect(Collectors.toList());
-    }
-
-    private Post getPost(User user, Book book) {
-        return postRepository.findByUserAndBook(user, book)
-                .orElse(null);
+    private List<Post> getPost(User user, Book book) {
+        return postRepository.findAllByUserAndBook(user, book);
     }
 
     private User getUser(Long userId) {

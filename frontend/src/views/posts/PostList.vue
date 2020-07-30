@@ -1,6 +1,6 @@
 <template>
   <div class="row" >
-    <div class="d-none custom-d-md-block col-2">
+    <div class="d-none custom-d-md-block col-2" v-if="myaccount">
       <div class="myclub border rounded">
         <div class="myclub-header font-weight-extrabold mt-3">내 클럽</div>
         <hr>
@@ -115,7 +115,7 @@
         </div>
       </div>
     </div>
-    <infinite-loading @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+    <infinite-loading class="col-12" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
     <!-- <div id="bottomSensor"></div> -->
   </div>
 </template>

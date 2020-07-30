@@ -9,6 +9,7 @@ const clubStore = {
         filteredClubs: null,
         selectedClub: null,
         selectedReading: null,
+        candidates: null,
     },
     getters: {
     },
@@ -24,6 +25,9 @@ const clubStore = {
       },
       SET_SELECTED_READING(state, reading) {
         state.selectedReading = reading
+      },
+      SET_CANDIDATES(state, candidates) {
+        state.candidates = candidates
       }
     },
     actions: {
@@ -71,8 +75,8 @@ const clubStore = {
           })
           .catch(err => console.log(err.response.data))
       },
-      findReading({ commit }, params) {
-        axios.get(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/readings/' + params.readingId)
+      findReading({ rootGetters, commit }, params) {
+        axios.get(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/readings/' + params.readingId, rootGetters.config)
           .then(res => {
             commit('SET_SELECTED_READING', res.data)
           })
@@ -81,11 +85,9 @@ const clubStore = {
           })
       },
       createClub({ rootState, rootGetters, dispatch }, clubCreateData) {
-        // console.log(rootGetters.config)
         axios.post(SERVER.URL + SERVER.ROUTES.clubs, clubCreateData.basicData, rootGetters.config)
           .then(res => {
             const newClubId = res.data.id
-            // console.log(res.data)
             axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + newClubId + '/images', clubCreateData.clubImgFormData, 
               {
                 headers: {
@@ -131,6 +133,24 @@ const clubStore = {
           .catch(err => {
             console.log(err.response.data)
             alert(err.response.data.message)
+          })
+      },
+      fetchCandidates({ rootGetters, commit }, clubId) {
+        axios.get(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId + '/candidates', rootGetters.config)
+          .then(res => {
+            commit('SET_CANDIDATES', res.data)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      decideClubApply({ rootGetters, dispatch }, applyDecisionData) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + applyDecisionData.clubId + '/apply/' + applyDecisionData.clubMemberId + '/' + applyDecisionData.decision, null, rootGetters.config)
+          .then(() => {
+            dispatch('fetchCandidates', applyDecisionData.clubId)
+          })
+          .catch(err => {
+            console.log(err.response.data)
           })
       }
     }

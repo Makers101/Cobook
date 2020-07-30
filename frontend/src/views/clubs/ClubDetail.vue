@@ -37,17 +37,17 @@
               </button>
               <div class="dropdown-menu">
                 <router-link class="dropdown-item text-center" :to="{ name: 'ReadingCreate' }">리딩 생성</router-link>
-                <a class="dropdown-item text-center pointer" @click="clickUpdateRecruit" v-if="!selectedClub.recruit">멤버 모집</a>
-                <a class="dropdown-item text-center pointer" @click="clickUpdateRecruit" v-if="selectedClub.recruit">모집 취소</a>
+                <a class="dropdown-item text-center pointer" @click="clickUpdateRecruit" v-if="!selectedClub.recruit">모집 활성화</a>
+                <a class="dropdown-item text-center pointer" @click="clickUpdateRecruit" v-if="selectedClub.recruit">모집 비활성화</a>
+                <a class="dropdown-item text-center pointer" @click="toClubCandidates" v-if="selectedClub.recruit">모집 현황</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item text-center">정보 수정</a>
               </div>
-              <button class="btn btn-warning mr" v-if="selectedClub.recruit && !isMembers" @click="clickApplyClub">가입 신청</button>
-              <button class="btn btn-warning mr" v-if="isMembers && !isLeader">클럽 탈퇴</button>
+              <button class="btn btn-warning mr" v-if="selectedClub.recruit && !isMember && !isLeader" @click="clickApplyClub">가입 신청</button>
+              <button class="btn btn-warning mr" v-if="!isLeader && isMember">클럽 탈퇴</button>
             </div>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -57,6 +57,13 @@
     <div>
       <h4 class="text-left font-weight-bold mb-3">클럽 멤버({{ selectedClub.memberCnt }})</h4>
       <div class="d-flex justify-content-start">
+        <div class="profile-container pointer" @click="selectUser(selectedClub.leader.id)">
+          <img class="rounded-circle image" :src="selectedClub.leader.profileImg" alt="" v-if="selectedClub.leader.profileImg">
+          <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
+          <div class="overlay rounded-circle">
+            <div class="text">{{ selectedClub.leader.nickName }}</div>
+          </div>
+        </div>
         <div class="profile-container pointer" v-for="member in selectedClub.members" :key="member.id" @click="selectUser(member.id)">
           <img class="rounded-circle image" :src="member.proflieImg" alt="" v-if="member.profileImg">
           <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
@@ -133,7 +140,7 @@ export default {
   computed: {
     ...mapState(['myaccount']),
     ...mapState('clubStore', ['selectedClub']),
-    isMembers: function() {
+    isMember: function() {
       let result = false
       this.selectedClub.members.forEach(member => {
         if (member.id === this.myaccount.id) {
@@ -143,7 +150,7 @@ export default {
       return result
     },
     isLeader: function() {
-      if (this.selectedClub.members[0].id === this.myaccount.id) {
+      if (this.selectedClub.leader.id === this.myaccount.id) {
         return true
       } else {
         return false
@@ -164,6 +171,9 @@ export default {
     },
     clickApplyClub() {
       this.applyClub(this.$route.params.clubId)
+    },
+    toClubCandidates() {
+      router.push({ name: 'ClubCandidates', params: { clubId: this.$route.params.clubId }})
     }
   },
   created() {
@@ -196,8 +206,8 @@ export default {
 
   .image {
     display: block;
-    width: 100%;
-    height: auto;
+    width: 150px;
+    height: 150px;
   }
 
   .text {

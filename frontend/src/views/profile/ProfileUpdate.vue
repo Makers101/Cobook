@@ -62,7 +62,7 @@
                     counter="5"
                     :rules="[
                       v => (v.length !== 0) || '필수항목입니다.',
-                      v => (v.length < 6) || '최대 5개 관심 장르를 고를 수 있습니다.'
+                      v => (v.length < 4) || '최대 3개 관심 장르를 고를 수 있습니다.'
                     ]"
                     label="관심 장르"
                     item-text="name"
@@ -98,11 +98,15 @@
 
                 <!-- 프로필 사진 첨부 -->
                 <v-col cols="12">
+                  <!-- <div class="d-flex flex-column justify-content-center align-items-start">
+                    <p class="mb-0">현재 프로필 이미지</p>
+                    <img class="profile-img" :src="myaccount.profileImg" alt="" v-if="myaccount.profileImg">
+                  </div> -->
                   <v-file-input
                     v-model="profileImg"
                     enctype="multipart/form-data"
                     accept="image/png, image/jpeg, image/bmp"
-                    label="프로필 이미지"
+                    label="프로필 이미지 변경"
                     prepend-icon=""
                     chips
                     :rules="[v => !v || v.size < 2000000 || '이미지 크기는 최대 2MB 입니다.' ]"
@@ -142,7 +146,7 @@ export default {
           description: null,
           genres: null,
         },
-        profileImgFormData: new FormData()
+        profileImgFormData: null
       },
       valid: true,
       lazy: false,
@@ -167,7 +171,11 @@ export default {
       this.$refs.form.validate()
     },
     clickUpdate() {
-      this.profileUpdateData.profileImgFormData.append('profileImg', this.profileImg)
+      // console.log(this.profileImg)
+      if (this.profileImg) {
+        this.profileUpdateData.profileImgFormData = new FormData()
+        this.profileUpdateData.profileImgFormData.append('profileImg', this.profileImg)
+      }
       this.updateProfile(this.profileUpdateData)
     },
   },
@@ -186,10 +194,8 @@ export default {
 </script>
 
 <style scoped>
-.profile-image{
-  border-radius: 50%;
-  width: 5vw;
-  height: 5vw;
+.profile-img{
+  max-height: 300px;
 }
 
  .profile-banner {

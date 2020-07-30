@@ -175,7 +175,7 @@ public class ClubController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "클럽 모집 활성화 및 비활성화")
+    @ApiOperation(value = "클럽 모집 활성화 및 비활성화", response = ClubRecruitResponseDto.class)
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/{clubId}/recruit")
     public ResponseEntity<ClubRecruitResponseDto> changeStatus(@ApiIgnore final Authentication authentication,
@@ -193,12 +193,21 @@ public class ClubController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "클럽을 팔로우(구독)한다")
+    @ApiOperation(value = "클럽을 팔로우(구독)한다", response = ClubByFollowSimpleDto.class)
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/{clubId}/follow")
     public ResponseEntity<ClubByFollowSimpleDto> getClubFollow(@ApiIgnore final Authentication authentication,
-                                                                @PathVariable("clubId")final Long clubId){
+                                                               @PathVariable("clubId") final Long clubId) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         return ResponseEntity.status(HttpStatus.OK).body(clubService.addFollow(userId, clubId));
+    }
+
+    @ApiOperation(value = "클럽 신청 목록을 조회한다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/{clubId}/candidates")
+    public ResponseEntity<List<ClubCandidatesResponseDto>> getClubCandidates(@ApiIgnore final Authentication authentication,
+                                              @PathVariable("clubId") final Long clubId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        return ResponseEntity.status(HttpStatus.OK).body(clubService.getCandidates(clubId, userId));
     }
 }

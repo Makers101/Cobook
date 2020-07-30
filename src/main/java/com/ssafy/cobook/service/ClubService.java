@@ -163,7 +163,7 @@ public class ClubService {
         if (!waiting.onWait()) {
             throw new BaseException(ErrorCode.ALREADY_PROCESS);
         }
-        waiting.chageRole(MemberRole.REJECT);
+        clubMemberRepository.delete(waiting);
     }
 
     @Transactional
@@ -207,4 +207,17 @@ public class ClubService {
         return clubByFollowSimpleDto;
     }
 
+    public List<ClubCandidatesResponseDto> getCandidates(Long clubId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember clubMember = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if (clubMember.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+        return club.getMembers().stream()
+                .filter(m->m.getRole().onWait())
+                .map(ClubCandidatesResponseDto::new)
+                .collect(Collectors.toList());
+    }
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="mt-3">
-    <div class="row rows-cols-1 row-cols-md-3">
+    <div class="row rows-cols-1 row-cols-md-3" v-if="this.feeds.length">
       <div class="col-12 col-sm-4 mb-4" v-for="feed in this.feeds" :key="feed.id">
         <div class="card h-100" @click="selectFeed(feed.id)">
            <div style="max-height:70px;overflow:hidden;">
@@ -27,6 +27,10 @@
         </div>
       </div>
     </div>
+    <div v-else>
+      <img src="@/assets/ready.png" width="150px" class="mt-3">
+      <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 작성한 피드가 없습니다. </h3>
+    </div>
   </div>
 </template>
 
@@ -40,18 +44,22 @@ export default {
     }
   },
   computed: {
-    ...mapState('profileStore',['feeds']),
+    ...mapState('profileStore',['feeds', 'profile']),
     ...mapState(['myaccount'])
   },
   methods: {
-    ...mapActions('profileStore', ['fetchFeeds']),
+    ...mapActions('profileStore', ['fetchFeeds', 'findProfile']),
     selectFeed(id) {
       this.$router.push({name: 'PostDetail', params: {postId: id}})
     }
   },
   created() {
     this.fetchFeeds(this.$route.params.userId)
-  }
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.fetchFeeds(to.params.userId)
+    next();
+  },
 }
 </script>
 

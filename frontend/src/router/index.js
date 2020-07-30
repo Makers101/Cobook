@@ -23,6 +23,7 @@ import PostDetail from '@/views/posts/PostDetail'
 import ClubList from '@/views/clubs/ClubList'
 import ClubDetail from '@/views/clubs/ClubDetail'
 import ClubCreate from '@/views/clubs/ClubCreate'
+import ClubCandidates from '@/views/clubs/ClubCandidates'
 import ReadingDetail from '@/views/clubs/readings/ReadingDetail'
 import ReadingCreate from '@/views/clubs/readings/ReadingCreate'
 
@@ -133,6 +134,11 @@ Vue.use(VueRouter)
     path: '/clubs/:clubId',
     name: 'ClubDetail',
     component: ClubDetail
+  },
+  {
+    path: '/clubs/:clubId/candidates',
+    name: 'ClubCandidates',
+    component: ClubCandidates
   },
   {
     path: '/clubs/:clubId/readings/create',

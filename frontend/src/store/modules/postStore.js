@@ -6,7 +6,6 @@ const postStore = {
   namespaced: true,
   state: {
     posts: null,
-    // postList: null,
     selectedPost: null,
     comments: null,
     tags: null,
@@ -16,7 +15,6 @@ const postStore = {
   mutations: {
     SET_POSTS(state, posts) {
       state.posts = posts
-      // state.postList = posts.slice(0, 3)
     },
     SET_SELECTED_POST(state, post) {
       state.selectedPost = post
@@ -67,6 +65,15 @@ const postStore = {
     },
     createComment({ dispatch, rootGetters }, commentData) {
       axios.post(SERVER.URL + SERVER.ROUTES.posts + '/' + commentData.postId + SERVER.ROUTES.comments, commentData, rootGetters.config)
+        .then(() => {
+          dispatch('fetchComments', commentData.postId)
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
+    deleteComment({ dispatch, rootGetters }, commentData) {
+      axios.delete(SERVER.URL + SERVER.ROUTES.posts + '/' + commentData.postId + SERVER.ROUTES.comments + '/' + commentData.commentId, rootGetters.config)
         .then(() => {
           dispatch('fetchComments', commentData.postId)
         })

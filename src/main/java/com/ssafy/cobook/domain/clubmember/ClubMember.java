@@ -47,7 +47,7 @@ public class ClubMember {
         return this.role.equals(MemberRole.WAITING);
     }
 
-    public void chageRole(MemberRole role) {
+    public void changeRole(MemberRole role) {
         this.role = role;
     }
 }

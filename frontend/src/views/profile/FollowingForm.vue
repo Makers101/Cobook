@@ -67,7 +67,7 @@ export default {
   methods: {
     ...mapActions('profileStore', ['fetchFollowingList']),
     selectUser(userId) {
-      router.push({ name: 'Profile', params: { userId: userId }})
+      router.push({ name: 'ProfileFeed', params: { userId: userId }})
     }
   },
   created() {
