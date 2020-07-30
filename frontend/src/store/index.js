@@ -20,6 +20,7 @@ export default new Vuex.Store({
     myaccount: null,
     books: null,
     users: null,
+    notis: null,
   },
   getters: {
     config: state => ({ headers: { jwt : state.authToken}}),
@@ -40,6 +41,9 @@ export default new Vuex.Store({
     },
     SET_USERS(state, users) {
       state.users = users
+    },
+    SET_NOTIS(state, notis) {
+      state.notis = notis
     }
   },
   actions: {
@@ -71,6 +75,21 @@ export default new Vuex.Store({
         .then(res => {
           commit('SET_USERS', res.data)
         })
+        .catch(err => console.log(err.response.data))
+    },
+    fetchNoti({ getters, commit }) {
+      axios.post(SERVER.URL + SERVER.ROUTES.noti, null, getters.config)
+        .then(res => {
+          commit('SET_NOTIS', res.data)
+        })
+        .catch(err => console.log(err.response.data))
+
+
+    },
+    createNoti({ state }, notiData) {
+      console.log(state)
+      axios.post(SERVER.URL + SERVER.ROUTES.noti, notiData)
+        .then(res => console.log(res))
         .catch(err => console.log(err.response.data))
     }
   },

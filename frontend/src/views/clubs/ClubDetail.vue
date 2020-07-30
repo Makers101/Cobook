@@ -158,6 +158,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['createNoti']),
     ...mapActions('clubStore', ['findClub', 'updateRecruit', 'applyClub', 'secedeClub']),
     selectReading(readingId) {
       router.push({ name: 'ReadingDetail', params: { clubId: this.$route.params.clubId, readingId: readingId }})
@@ -170,6 +171,15 @@ export default {
       this.selectedClub.recruit = !this.selectedClub.recruit
     },
     clickApplyClub() {
+      let notiData = new Object()
+      notiData = {
+        from: this.myaccount.id,
+        to: this.selectedClub.leader.id,
+        dataId: this.selectedClub.id,
+        type: "club"
+      }
+      console.log(notiData)
+      this.createNoti(notiData)
       this.applyClub(this.$route.params.clubId)
     },
     toClubCandidates() {
