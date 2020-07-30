@@ -30,6 +30,10 @@ import ReadingCreate from '@/views/clubs/readings/ReadingCreate'
 // meetups
 import MeetupList from '@/views/meetups/MeetupList'
 
+//pagenotfound
+import PageNotFound from '@/views/PageNotFound'
+
+
 Vue.use(VueRouter)
 
   const routes = [
@@ -163,6 +167,13 @@ Vue.use(VueRouter)
     path: '/meetups',
     name: 'MeetupList',
     component: MeetupList
+  },
+  // 404 Pages
+  {
+    path: '*',
+    name: 'PageNotFound',
+    component: PageNotFound
+
   }
   
 ]
