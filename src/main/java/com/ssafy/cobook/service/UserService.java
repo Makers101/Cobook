@@ -123,16 +123,16 @@ public class UserService {
         return new UserResponseIdDto(user.getId());
     }
 
-    @Transactional
-    public String checkEmailAuth(int inputAuthCode, HttpSession httpSession) {
-        String originalCode = (String) httpSession.getAttribute("authCode");
-        String randomCode = String.valueOf(inputAuthCode);
-
-        if (!originalCode.equals(randomCode)) {
-            throw new UserException(ErrorCode.WRONG_EMAIL_CHECK_AUTH_CODE);
-        }
-        return "Check Ok";
-    }
+//    @Transactional
+//    public String checkEmailAuth(int inputAuthCode, HttpSession httpSession) {
+//        String originalCode = (String) httpSession.getAttribute("authCode");
+//        String randomCode = String.valueOf(inputAuthCode);
+//
+//        if (!originalCode.equals(randomCode)) {
+//            throw new UserException(ErrorCode.WRONG_EMAIL_CHECK_AUTH_CODE);
+//        }
+//        return "Check Ok";
+//    }
 
     @Transactional
     public UserResponseIdDto updatePassword(UserUpdatePwdDto userUpdatePwdDto) {

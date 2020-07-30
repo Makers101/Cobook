@@ -1,6 +1,5 @@
 package com.ssafy.cobook.service;
 
-import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
 import com.ssafy.cobook.domain.follow.Follow;
@@ -11,6 +10,10 @@ import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
 import com.ssafy.cobook.domain.postbookmark.PostBookMark;
 import com.ssafy.cobook.domain.postbookmark.PostBookMarkRepository;
+import com.ssafy.cobook.domain.reading.Reading;
+import com.ssafy.cobook.domain.reading.ReadingRepository;
+import com.ssafy.cobook.domain.readingmember.ReadingMember;
+import com.ssafy.cobook.domain.readingmember.ReadingMemberRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.domain.usergenre.UserGenreRepository;
@@ -20,8 +23,7 @@ import com.ssafy.cobook.service.dto.club.ClubResDto;
 import com.ssafy.cobook.service.dto.post.PostDetailResDto;
 import com.ssafy.cobook.service.dto.post.PostResponseDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
-import com.ssafy.cobook.service.dto.reading.ReadingDetailResDto;
-import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
+import com.ssafy.cobook.service.dto.reading.ReadingByClubResDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
 import com.ssafy.cobook.exception.BaseException;
@@ -53,6 +55,8 @@ public class ProfileService {
     private final UserGenreRepository userGenreRepository;
     private final PostRepository postRepository;
     private final PostBookMarkRepository postBookMarkRepository;
+    private final ReadingRepository readingRepository;
+    private final ReadingMemberRepository readingMemberRepository;
 
     public ProfileResponseDto getUserInfo(Long fromUserId, Long toUserId) {
         User toUser = userRepository.findById(toUserId)
@@ -220,7 +224,7 @@ public class ProfileService {
         return user.getProfileImg().replace("http://i3a111.p.ssafy.io:8080/api/profile/images/", "");
     }
 
-    public List<PostResponseDto> getUserFeed(Long userId){
+    public List<PostResponseDto> getUserFeed(Long userId) {
         User user = getUserById(userId);
         return postRepository.findAllByUser(user)
                 .stream()
@@ -238,25 +242,14 @@ public class ProfileService {
                 .collect(Collectors.toList());
     }
 
-    public List<ReadingSimpleResDto> getUserReading(Long userId) {
+    public List<ReadingByClubResDto> getUserReading(Long userId) {
         User user = getUserById(userId);
 
-        // 그 유저가 포함된 클럽들
-        List<Club> clubList = clubMemberRepository.findAllByUser(user)
+       return readingMemberRepository.findAllByUser(user)
                 .stream()
-                .map(ClubMember::getClub)
+                .map(ReadingMember::getReading)
+                .map(ReadingByClubResDto::new)
                 .collect(Collectors.toList());
-
-        List<ReadingSimpleResDto> readingList = new ArrayList<>();
-
-        for (Club c : clubList){
-            List<ReadingSimpleResDto> readings = c.getReadingList().stream()
-                    .map(ReadingSimpleResDto::new)
-                    .collect(Collectors.toList());
-            readingList.addAll(0, readings);
-        }
-
-        return readingList;
     }
 
     public List<PostDetailResDto> getUserBookmark(Long userId) {
