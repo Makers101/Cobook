@@ -243,7 +243,11 @@ export default {
       }
     },
     clickCreate() {
-      if (window.$('#summernote').summernote('code') !== '<p><br></p>') {
+      if (window.$('#summernote').summernote('code') === '<p style="text-align: left;"><br></p>') {
+        this.postCreateData.review = null
+      } else if (window.$('#summernote').summernote('code') === '<p><br></p>') {
+        this.postCreateData.review = null
+      } else {
         this.postCreateData.review = window.$('#summernote').summernote('code')
       }
       this.createPost(this.postCreateData)
