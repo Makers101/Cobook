@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <v-row justify="center" v-if="myaccount.likeGenres">
+    <!-- <v-row justify="center" v-if="myaccount.likeGenres">
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -64,7 +64,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-row>
+    </v-row> -->
     <div class="d-none custom-d-md-block col-2" v-if="myaccount">
       <div class="myclub border rounded">
         <div class="myclub-header font-weight-extrabold mt-3">내 클럽</div>
