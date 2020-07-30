@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserUpdatePwdDto {
     private String password;
+    private String passwordConfirm;
 }
