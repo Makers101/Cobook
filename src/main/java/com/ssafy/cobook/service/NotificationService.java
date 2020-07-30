@@ -27,7 +27,7 @@ public class NotificationService {
 
     public List<NotificationResponseDto> getNotis(Long userId) {
         User user = getUser(userId);
-        return notificationRepository.findAllByTo(userId).stream()
+        return notificationRepository.findAllByToId(userId).stream()
                 .filter(Notification::unread)
                 .map(NotificationResponseDto::new)
                 .sorted()
@@ -48,7 +48,7 @@ public class NotificationService {
     public void readNoti(Long notiId, Long userId) {
         Notification notification = notificationRepository.findById(notiId)
                 .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_NOTIFICATION));
-        if (!notification.getTo().equals(userId)) {
+        if (!notification.getToId().equals(userId)) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_NOTIFICATION);
         }
         if (notification.unread()) {
@@ -62,7 +62,7 @@ public class NotificationService {
     public void deleteNoti(Long notiId, Long userId) {
         Notification notification = notificationRepository.findById(notiId)
                 .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_NOTIFICATION));
-        if (!notification.getTo().equals(userId)) {
+        if (!notification.getToId().equals(userId)) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_NOTIFICATION);
         }
         notificationRepository.delete(notification);

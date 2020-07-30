@@ -20,10 +20,10 @@ public class NotificationResponseDto implements Comparable<NotificationResponseD
 
     public NotificationResponseDto(Notification noti) {
         this.id = noti.getId();
-        this.from = noti.getFrom();
-        this.to = noti.getTo();
+        this.from = noti.getFromId();
+        this.to = noti.getToId();
         this.dataId = noti.getDataId();
-        this.type = noti.getType();
+        this.type = noti.getTypes();
         this.createdAt = noti.getCreatDateTime();
     }
 
