@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,8 @@ import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @Slf4j
@@ -74,28 +77,29 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.getMyInfo(userId));
     }
 
-//    @ApiOperation(value = "비밀번호 찾기")
-//    @PostMapping("/password")
-//    public ResponseEntity<Void> getPasswowrd(@RequestBody UserEmailSimpleDto userEmailSimpleDto) {
-//        userService.getPassword(userEmailSimpleDto, true);
-//    }
+    @ApiOperation(value = "비밀번호 찾기")
+    @PostMapping("/password")
+    public ResponseEntity<Void> getPassword(@RequestBody UserEmailSimpleDto userEmailSimpleDto) {
+        userService.getPassword(userEmailSimpleDto, true);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
-    //    @ApiOperation(value = "이메일을 받아서 인증코드를 보낸다.", response = String.class)
-//    @PostMapping("/checkEmail")
-//    public ResponseEntity<UserResponseIdDto> sendEmail(@RequestBody final String email, HttpServletRequest httpServletRequest) {
-//        return ResponseEntity.status(HttpStatus.OK).body(userService.preparedAndSend(email, httpServletRequest));
-//    }
-//
-//    @ApiOperation(value = "인증코드를 확인하여 올바른지 확인한다", response = String.class)
-//    @PostMapping("/checkAuth")
-//    public ResponseEntity<String> checkAuth(@RequestBody final UserResetPwdRequestDto userResetPwdRequestDto, HttpSession httpSession) {
-//        String result = userService.checkEmailAuth(userResetPwdRequestDto.getRandomCode(), httpSession);
-//        return ResponseEntity.status(HttpStatus.OK).body(result);
-//    }
-//
-//    @ApiOperation(value = "인증코드가 올바르다면 비밀번호를 새로 입력받아 저장한다.", response = String.class)
-//    @PostMapping("/resetPassword")
-//    public ResponseEntity<UserResponseIdDto> resetPassword(@RequestBody final UserUpdatePwdDto userUpdatePwdDto) {
-//        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.updatePassword(userUpdatePwdDto));
-//    }
+    @ApiOperation(value = "비밀번호 인증메일을 통해 비밀번호 변경 페이지로 보내준다")
+    @GetMapping("/resetPassword/{token}")
+    public ResponseEntity<Object> goResetPassword(@PathVariable("token") String token) throws URISyntaxException {
+        URI redirectUri = new URI("http://i3a111.p.ssafy.io:8080/password/find");
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(redirectUri);
+        httpHeaders.set("jwt", token);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "인증코드가 올바르다면 비밀번호를 새로 입력받아 저장한다.", response = String.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PostMapping("resetPassword/update")
+    public ResponseEntity<Void> resetPassword(@ApiIgnore final Authentication authentication, @RequestBody final UserUpdatePwdDto userUpdatePwdDto) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        userService.updatePassword(userId, userUpdatePwdDto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
 }

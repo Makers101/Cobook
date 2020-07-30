@@ -117,9 +117,7 @@ public class UserService {
         ProfileResponseDto profileResponseDto = new ProfileResponseDto(user, clubList, followerList, followingList);
         return profileResponseDto;
     }
-
-    @Transactional
-    public void preparedAndSend(String recipient, Boolean isFind, String token) {
+    private void preparedAndSend(String recipient, boolean isFind, String token) {
         StringBuilder stringBuilder = new StringBuilder();
 
         MimeMessagePreparator messagePreparator = mimeMessage -> {
@@ -136,7 +134,7 @@ public class UserService {
                 messageHelper.setText(content, true);
             } else {
                 messageHelper.setSubject("Cobook 비밀번호 변경 메일입니다.");
-                URL url = new URL("http://i3a111.p.ssafy.io:8080/api/users/resetPassword");
+                URL url = new URL("http://i3a111.p.ssafy.io:8080/api/users/resetPassword/" + token);
                 String content = stringBuilder.append("하단의 링크로 접속하여 새로운 비밀번호를 입력해주세요!")
                         .append("\n")
                         .append(url)
@@ -147,24 +145,23 @@ public class UserService {
         emailSender.send(messagePreparator);
     }
 
-//    @Transactional
-//    public String checkEmailAuth(int inputAuthCode, HttpSession httpSession) {
-//        String originalCode = (String) httpSession.getAttribute("authCode");
-//        String randomCode = String.valueOf(inputAuthCode);
-//
-//        if (!originalCode.equals(randomCode)) {
-//            throw new UserException(ErrorCode.WRONG_EMAIL_CHECK_AUTH_CODE);
-//        }
-//        return "Check Ok";
-//    }
+    public void getPassword(UserEmailSimpleDto userEmailSimpleDto, boolean isFind){
+        String userEmail = userEmailSimpleDto.getEmail();
+        User user = userRepository.findByEmail(userEmailSimpleDto.getEmail())
+                .orElseThrow(()->new UserException(ErrorCode.UNSIGNED));
+
+        String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
+        preparedAndSend(userEmail, isFind, token);
+    }
+
 
     @Transactional
-    public UserResponseIdDto updatePassword(UserUpdatePwdDto userUpdatePwdDto) {
-        User user = userRepository.findByEmail(userUpdatePwdDto.getEmail())
+    public void updatePassword(Long userId, UserUpdatePwdDto userUpdatePwdDto) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
         String encodePassword = passwordEncoder.encode(userUpdatePwdDto.getPassword());
-        user.changePassword(encodePassword);
-        return new UserResponseIdDto(user.getId());
+        userRepository.updatePassword(user.getId(), encodePassword);
     }
 
 }
