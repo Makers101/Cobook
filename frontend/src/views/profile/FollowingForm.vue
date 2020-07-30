@@ -72,11 +72,20 @@ export default {
     ...mapState(['myaccount'])
   },
   methods: {
+    ...mapActions(['createNoti']),
     ...mapActions('profileStore', ['clickFollowModal']),
     selectUser(userId) {
       router.push({ name: 'ProfileFeed', params: { userId: userId }})
     }, 
     clickedFollow(item) {
+      let notiData = new Object()
+      notiData = {
+        from: this.myaccount.id,
+        to: this.profile.id,
+        dataId: this.profile.id,
+        type: "follow"
+      }
+      this.createNoti(notiData)
       this.clickFollowModal(item.toUserId)
       item.isFollow = !item.isFollow
     }

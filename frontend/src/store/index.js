@@ -77,14 +77,12 @@ export default new Vuex.Store({
         })
         .catch(err => console.log(err.response.data))
     },
-    fetchNoti({ getters, commit }) {
-      axios.post(SERVER.URL + SERVER.ROUTES.noti, null, getters.config)
+    fetchNotis({ getters, commit }) {
+      axios.get(SERVER.URL + SERVER.ROUTES.noti, getters.config)
         .then(res => {
           commit('SET_NOTIS', res.data)
         })
         .catch(err => console.log(err.response.data))
-
-
     },
     createNoti({ state }, notiData) {
       console.log(state)

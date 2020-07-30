@@ -80,8 +80,17 @@ export default {
   },
 
   methods: {
+    ...mapActions(['createNoti']),
     ...mapActions('profileStore', ['findProfile', 'clickFollow', 'fetchFollowerList', 'fetchFollowingList']),
     clickedFollow(profile) {
+      let notiData = new Object()
+      notiData = {
+        from: this.myaccount.id,
+        to: this.profile.id,
+        dataId: this.profile.id,
+        type: "follow"
+      }
+      this.createNoti(notiData)
       this.clickFollow(profile.id)
       var temp = {
         isFollow: true,

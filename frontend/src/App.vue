@@ -79,10 +79,29 @@
                   Meetup
                 </router-link>
               </li>
-              <li class="nav-item col-1">
-                <router-link class="nav-link" to="/">
+              <li class="nav-item dropdown col-1 pointer">
+                <div 
+                  class="nav-link dropdown-toggle" 
+                  id="navbarDropdown" 
+                  type="button"
+                  role="button" 
+                  data-toggle="dropdown" 
+                  aria-haspopup="true" 
+                  aria-expanded="false"
+                >
                   <i class="fas fa-bell color-green"></i>
-                </router-link>
+                </div>
+                <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
+                  <div
+                    class="dropdown-item setting-btn"
+                    v-for="noti in notis"
+                    :key="`noti-${noti.id}`"
+                    @click="toRoute(noti)"
+                  >
+                    <p v-if="noti.type==='club'">{{ findUsers[noti.from] }}님이 '{{ findClubs[noti.dataId] }}' club에 가입신청했습니다.</p>
+                    <p v-if="noti.type==='follow'">{{ findUsers[noti.from] }}님이 팔로우했습니다.</p>
+                  </div>
+                </div>
               </li>
               <li class="nav-item col-1">
                 <router-link class="nav-link" :to="{ name: 'PostCreate' }">
@@ -114,14 +133,13 @@
       </div>
       <router-view/>
     </div>
-    <div id="app2">
+    <!-- <div id="app2">
       <div class="media-q d-flex flex-column justify-content-center align-items-center">
         <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="250px" class="mt-3">
-        <!-- <h3 class="mt-3">현재 <strong>페이지 준비중</strong> 입니다.</h3> -->
         <h5>이용에 불편을 드려 죄송합니다.</h5>
         <h5>코북은 좀 더 <strong>큰 창</strong>에서 봐야 제 맛 :)</h5>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -135,13 +153,15 @@ export default {
       keyword: null,
       isActive:null,
       searchedUsers: null,
+      findUsers: null,
+      findClubs: null,
     }
   },
   computed: {
-    ...mapState(['genres', 'myaccount', 'books', 'users'])
+    ...mapState(['genres', 'myaccount', 'books', 'users', 'notis']),
   },
   methods: {
-    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers']),
+    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'fetchNotis']),
     searchUser() {
       if (!this.keyword) {
         this.isActive = false
@@ -165,6 +185,26 @@ export default {
     },
     userDetail(userId) {
       this.$router.push({ name: 'Profile', params: {userId : userId}})
+    },
+    toRoute(noti) {
+      if (noti.type === 'club') {
+        this.$router.push({name: 'ClubCandidates', params: { clubId: noti.dataId }})
+      } else if (noti.type === 'follow') {
+        this.$router.push({name: 'Profile', params: { userId: noti.dataId }})
+      }
+    }
+  },
+  watch: {
+    users() {
+      const mapData = this.users.map(user => [user.id, user.nickName])
+      this.findUsers = Object.fromEntries(mapData)
+    },
+    myaccount() {
+      const mapData = []
+      this.myaccount.myClubs.forEach(club => {
+        mapData.push([club.id, club.name])
+      })
+      this.findClubs = Object.fromEntries(mapData)
     }
   },
   created() {
@@ -172,12 +212,13 @@ export default {
     this.findMyAccount()
     this.fetchBooks()
     this.fetchUsers()
+    this.fetchNotis()
   }
 }
 </script>
 
 <style scoped>
-@media (max-width: 1280px) {
+/* @media (max-width: 1280px) {
   #app {
     display: none;
   }
@@ -187,7 +228,7 @@ export default {
   #app2 {
     display: none;
   }
-}
+} */
 
 
 #app {
