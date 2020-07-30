@@ -8,7 +8,7 @@
         v-for="club in clubs"
         :key="`club_${club.id}`">
         <div class="card">
-          <div class="card-head">
+          <div class="card-head club-image-container">
             <img
               class="card-img-top to-detail club-image"
               :src="club.clubImg"
@@ -247,10 +247,15 @@ export default {
     text-align: start;
   }
 
-  .club-image {
+  .club-image-container {
     max-width: 100%;
     height: 150px;
     overflow: hidden;
+  }
+
+  .club-image {
+    width: 100%;
+    height: auto;
   }
 
   .club-genre {
