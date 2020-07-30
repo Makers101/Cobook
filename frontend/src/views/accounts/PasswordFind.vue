@@ -86,12 +86,10 @@ export default {
       }
     },
     sendPasswordEmail(info) {
-      console.log("THIS IS INFO", info.data)
       axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
         headers: { 'Content-Type': 'application/json' }
       })
         .then (() => {
-          console.log("Success")
           router.push({ name: 'PasswordFindEmail'})
         })
         .catch (err =>{
