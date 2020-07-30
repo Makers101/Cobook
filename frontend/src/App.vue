@@ -27,7 +27,7 @@
               type="search" 
               v-model="keyword" 
               @input="searchUser"
-              @blur="isKeywordNull"
+              @blur="focusout"
               >
             <ul 
               class="autocomplete-results"
@@ -37,6 +37,7 @@
                 class="autocomplete-result"
                 v-for="user in searchedUsers"
                 :key="`search-${user.id}`"
+                @click="userDetail(user.id)"
               >
               <img :src="user.profileImg" alt="">
               {{ user.nickName }}
@@ -131,9 +132,15 @@ export default {
         }
       }
     },
+    focusout() {
+      setTimeout(this.isKeywordNull, 100)
+    },
     isKeywordNull() {
       this.keyword = null
       this.searchedUsers = null
+    },
+    userDetail(userId) {
+      this.$router.push({ name: 'Profile', params: {userId : userId}})
     }
   },
   created() {
@@ -151,6 +158,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  max-height: 960px;
 }
 
 #nav a {
@@ -260,8 +268,8 @@ input::-webkit-input-placeholder {
 }
 
 .autocomplete-results {
-  position: fixed;
-  top: 65px;
+  position: absolute;
+  top: 55px;
   padding: 0;
   margin: 0;
   border: 1px solid #eeeeee;
