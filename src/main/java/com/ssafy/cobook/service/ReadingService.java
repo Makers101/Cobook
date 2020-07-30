@@ -127,9 +127,16 @@ public class ReadingService {
         Reading reading = getReading(readingId);
         ClubMember clubMember = clubMemberRepository.findByUserAndClub(user, club)
                 .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_READING));
-        ReadingMember readingMember = readingMemberRepository.findByUserAndReading(user, reading)
-                .orElse(readingMemberRepository.save(new ReadingMember(user, reading, MemberRole.MEMBER)));
-        user.enrollReading(readingMember);
-        reading.addMember(readingMember);
+        ReadingMember readingMember = new ReadingMember(user, reading, MemberRole.MEMBER);
+        if (readingMemberRepository.findByUserAndReading(user, reading).isPresent()) {
+            ReadingMember delete = readingMemberRepository.findByUserAndReading(user, reading).get();
+            user.removeReading(delete);
+            reading.removeMember(delete);
+            readingMemberRepository.delete(delete);
+        } else {
+            readingMemberRepository.save(readingMember);
+            user.enrollReading(readingMember);
+            reading.addMember(readingMember);
+        }
     }
 }

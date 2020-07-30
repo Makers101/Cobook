@@ -74,4 +74,8 @@ public class Reading {
         }
         this.members.add(readingMember);
     }
+
+    public void removeMember(ReadingMember delete) {
+        this.members.remove(delete);
+    }
 }

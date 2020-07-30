@@ -197,4 +197,8 @@ public class User implements UserDetails {
     public void removePostLike(PostLike postLike) {
         this.postLikes.remove(postLike);
     }
+
+    public void removeReading(ReadingMember delete) {
+        this.readingMembers.remove(delete);
+    }
 }

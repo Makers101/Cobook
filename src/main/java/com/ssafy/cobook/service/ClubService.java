@@ -83,8 +83,6 @@ public class ClubService {
             throw new BaseException(ErrorCode.ALREADY_APPLY_USER);
         }
         ClubMember clubMember = clubMemberRepository.save(new ClubMember(user, club, MemberRole.WAITING));
-        user.enrollClub(clubMember);
-        club.enrolls(clubMember);
         /*
         club의 Leader에게 알람 보내기
          */
@@ -145,7 +143,10 @@ public class ClubService {
         if (!waiting.onWait()) {
             throw new BaseException(ErrorCode.ALREADY_PROCESS);
         }
-        waiting.changeRole(MemberRole.MEMBER);
+        waiting.chageRole(MemberRole.MEMBER);
+        User clubMember = waiting.getUser();
+        clubMember.enrollClub(waiting);
+        club.enrolls(waiting);
     }
 
     @Transactional
