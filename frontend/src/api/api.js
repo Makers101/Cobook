@@ -28,5 +28,7 @@ export default {
     following: '/following',
     feed: '/feed',
     bookmark: '/bookmark',
+    club: '/club',
+    reading: '/reading',
   }
 }
