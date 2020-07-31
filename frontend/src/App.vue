@@ -124,7 +124,7 @@
                   <router-link class="dropdown-item setting-btn" :to="{ name: 'Profile', params: {userId: myaccount.id} }">프로필</router-link>
                   <!-- <router-link v-if="myaccount" class="dropdown-item" :to="{ name: 'ProfileUpdate', params: {userId: myaccount.id} }">프로필 수정</router-link> -->
                   <!-- <div class="dropdown-divider"></div> -->
-                  <div class="dropdown-item setting-btn" @click="logout">로그아웃</div>
+                  <div class="dropdown-item setting-btn pointer" @click="logout">로그아웃</div>
                 </div>
               </li>
             </ul>
@@ -408,6 +408,10 @@ input::-webkit-input-placeholder {
   top:50%;
   margin-left:-250px;
   margin-top:-250px;
+}
+
+.dropdown-item {
+  font-weight: 600 !important;
 }
 
 .setting-btn:focus {
