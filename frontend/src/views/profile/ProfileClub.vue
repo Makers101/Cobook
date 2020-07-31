@@ -53,7 +53,7 @@
       <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 가입한 클럽이 없습니다. </h3>
     </div>
     <!-- Reading & Meetups -->
-    <h5 class="text-left font-weight-bold" v-if="clubs.length">Reading & Meetup</h5>
+    <!-- <h5 class="text-left font-weight-bold" v-if="clubs.length">Reading & Meetup</h5>
     <div class="row rows-cols-1 row-cols-sm-3">
       <div class="col mb-4 col-12 col-sm-4" v-for="reading in readings" :key="reading.id">
         <div class="card h-100">
@@ -75,7 +75,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -97,7 +97,8 @@ export default {
     ...mapState(['myaccount'])
   },
   methods: {
-     ...mapActions('profileStore', ['fetchClubs', 'fetchReadings']),
+    //  ...mapActions('profileStore', ['fetchClubs', 'fetchReadings']),
+     ...mapActions('profileStore', ['fetchClubs']),
     selectClub(club_id) {
       router.push({ name: 'ClubDetail', params: { clubId: club_id }})
     },
