@@ -38,7 +38,6 @@
                   class="autocomplete-result d-flex"
                   v-for="user in searchedUsers"
                   :key="`search-${user.id}`"
-                  @click="userDetail(user.id)"
                 >
                 <img
                   class="img-fluid mr-3"
@@ -54,7 +53,7 @@
                   width=25px
                   height=25px 
                   >
-                <span>
+                <span @click="userDetail(user.id)">
                   {{ user.nickName }}
                 </span>
                 </li>
@@ -121,10 +120,10 @@
                   <i class="fas fa-user color-green"></i>
                 </div>
                 <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
-                  <router-link class="dropdown-item setting-btn" :to="{ name: 'Profile', params: {userId: myaccount.id} }">프로필</router-link>
+                  <router-link class="dropdown-item setting-btn menus" :to="{ name: 'Profile', params: {userId: myaccount.id} }">프로필</router-link>
                   <!-- <router-link v-if="myaccount" class="dropdown-item" :to="{ name: 'ProfileUpdate', params: {userId: myaccount.id} }">프로필 수정</router-link> -->
                   <!-- <div class="dropdown-divider"></div> -->
-                  <div class="dropdown-item setting-btn pointer" @click="logout">로그아웃</div>
+                  <div class="dropdown-item setting-btn pointer menus" @click="logout">로그아웃</div>
                 </div>
               </li>
             </ul>
@@ -418,5 +417,9 @@ input::-webkit-input-placeholder {
   background-color: #88A498 !important;
   color: #F7F7F7 !important;
   outline: none;
+}
+
+.menus {
+  font-size: 17px !important;
 }
 </style>
