@@ -1,4 +1,4 @@
-# Welcome to Co-book
+Welcome to Co-book
 
 ![co-book](./images/README/co-book.png)
 
@@ -67,8 +67,15 @@
         <li><a href="Document/Dev_log/20200725_0726_dev_log.md">7/25 ~ 7/26 - Back-end (OAuth) + Front-end (Feed - Create/Detail + Profile - List/Update + Club - Detail/List + Authentication - Password Change)</a></li>
         <li><a href="Document/Dev_log/20200727_dev_log.md">7/27 - Back-end (JWT bug + fix bug + OAuth) + Front-end (Club - Create + Authentication - Background image + Profile - Update + Add Vuetify/Cookies)</a></li>
     </ul>
-</details>
 
+<details>
+    <summary>3주차</summary>
+    <ul>
+        <li><a href="Document/Dev_log/20200728_dev_log.md">7/28 - Back-end (프로필 - 상세 조회 + 팔로잉 ) + Front-end (Profile - 팔로잉/팔로워 + Authentication 디자인 수정 + Post/Club API 연결</a></li>
+        <li><a href="Document/Dev_log/20200729_dev_log.md">7/29 - Back-end (프로필 - 팔로잉 + Club - 팔로잉) + Front-end (프로필 - 팔로잉/팔로워 모달 구현 + 수정 기능)</a></li>
+        <li><a href="Document/Dev_log/20200730_dev_log.md">7/30 - Back-end (Club - Reading Feed) + Front-end (Feed - 무한 스크롤 + 프로필 - 수정 + 팔로잉 기능 실시간 반영)</a></li>
+    </ul>
+</details>
 
 <br>
 
