@@ -321,7 +321,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .post-header, .post-content{
   border: 1px solid #D6CBBD ;
   border-bottom-style: none;
