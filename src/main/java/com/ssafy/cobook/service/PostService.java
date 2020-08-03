@@ -28,9 +28,12 @@ import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.tag.TagResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -249,14 +252,16 @@ public class PostService {
         List<Tag> tags = requestDto.getTags().stream()
                 .map(this::saveTag)
                 .collect(Collectors.toList());
+        List<PostTag> deletes = new ArrayList<>();
         for (PostTag tag : originTags) {
             Tag temp = tag.getTag();
             if (!tags.contains(temp)) {
-                Tag delete = tagRepository.findById(temp.getId()).get();
-                delete.removePostTag(tag);
+                temp.removePostTag(tag);
                 post.deleteTags(tag);
+                deletes.add(tag);
             }
         }
+        postTagRepository.deleteAll(deletes);
         List<PostTag> postTags = tags.stream()
                 .map(t -> saveTag(post, t))
                 .collect(Collectors.toList());
@@ -270,7 +275,7 @@ public class PostService {
         Post post = getPostById(postId);
         PostComment postComment = postCommentRepository.findById(commentId)
                 .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_COMMENTS));
-        if (!postComment.getUser().equals(user)) {
+        if (!postComment.getUser().equals(user) || !user.getNickName().equals("코북이")) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_COMMENT);
         }
         user.removeComment(postComment);
@@ -282,7 +287,7 @@ public class PostService {
     public void deletePosts(Long userId, Long postId) {
         User user = getUserById(userId);
         Post post = getPostById(postId);
-        if (!post.getUser().equals(user)) {
+        if (!post.getUser().equals(user) || !user.getNickName().equals("코북이")) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_POST);
         }
         List<PostLike> postLikes = postLikeRepository.findAllByPost(post);
@@ -307,5 +312,9 @@ public class PostService {
         postCommentRepository.deleteAll(comments);
         user.removePost(post);
         postRepository.delete(post);
+    }
+
+    public Page<PostResponseDto> getAllPostsPage(Pageable pageable) {
+        return postRepository.findAll(pageable).map(PostResponseDto::new);
     }
 }

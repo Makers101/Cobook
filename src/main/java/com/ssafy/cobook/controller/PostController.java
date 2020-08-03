@@ -13,6 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -134,5 +138,11 @@ public class PostController {
         Long userId = ((User) authentication.getPrincipal()).getId();
         postService.deletePosts(userId, postId);
         return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "게시글을 페이징 처리해 전체 조회한다.")
+    @GetMapping("/page")
+    public ResponseEntity<Page<PostResponseDto>> getAllPostsByPaging(@PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPostsPage(pageable));
     }
 }

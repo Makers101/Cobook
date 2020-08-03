@@ -10,6 +10,7 @@ import com.ssafy.cobook.service.dto.reading.ReadingDetailResDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSaveReqDto;
 import com.ssafy.cobook.service.dto.reading.ReadingSaveResDto;
 import com.ssafy.cobook.util.FileUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -225,10 +226,20 @@ public class ClubController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @DeleteMapping("/{clubId}")
     public ResponseEntity<Void> deleteClub(@ApiIgnore final Authentication authentication,
-                                            @PathVariable("clubId") final Long clubId) {
+                                           @PathVariable("clubId") final Long clubId) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         clubService.deleteClub(clubId, userId);
         return ResponseEntity.ok().build();
     }
 
+    @ApiOperation(value = "클럽 정보를 수정한다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PutMapping("/{clubId}")
+    public ResponseEntity<Void> updateClub(@ApiIgnore final Authentication authentication,
+                                           @PathVariable final Long clubId,
+                                           @RequestBody final ClubUpdateRequestDto requestDto) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        clubService.updateClub(userId, clubId, requestDto);
+        return ResponseEntity.ok().build();
+    }
 }
