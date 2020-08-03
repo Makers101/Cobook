@@ -59,14 +59,15 @@
             <img style="height: 20vh;" :src="selectedPost.book.bookImg" alt="책 이미지">
           </div>
           <div class="col-9 my-5 text-left pr-3 wrapping">
-            <h5 class="font-weight-bold">{{ selectedPost.book.title }}</h5>
+            <h5 class="font-weight-bold "><span class="mr-3">{{ selectedPost.book.title }}</span> <i class="fas fa-star" style="color:yellow"></i> <span class="color:black">{{ selectedPost.rank }}</span>
+            </h5>
             <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953039-4a9da800-d2d3-11ea-8f6b-5792b4f87c45.png" width="20px"> {{ selectedPost.book.author }} </p>
             <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px"> {{ selectedPost.book.publisher }}</p>
             <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> {{ selectedPost.book.pubDate.slice(0,4) }}년 {{ selectedPost.book.pubDate.slice(5,7) }}월 {{ selectedPost.book.pubDate.slice(8,10) }}일</p>
             
           </div>
         </div>
-         <div class="text-center">
+         <!-- <div class="text-center">
               <v-rating 
                 v-model="rating" 
                 :readonly="readonly" 
@@ -74,7 +75,7 @@
                 :color="color"
                 :size="size"
                 :background-color="bgColor"></v-rating>
-            </div>
+            </div> -->
         <div>
           <div class="offset-2 col-8 py-3">
             <div class="w-100 color-black post-onelineReview">              
@@ -320,7 +321,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .post-header, .post-content{
   border: 1px solid #D6CBBD ;
   border-bottom-style: none;

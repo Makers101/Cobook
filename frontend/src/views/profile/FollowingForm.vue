@@ -2,13 +2,12 @@
   <v-app>
     <v-dialog v-model="show" max-width="500px">
     <v-card>
-      <v-card-text class="">
+      <v-card-text>
         <div class="display-1 pt-3">팔로잉</div>
         <p class="mb-0 text--primary">{{ profile.nickName }}님이 팔로잉 하는 유저입니다.</p>
       </v-card-text>
       <v-divider class="m-0"></v-divider>
-      
-      <v-virtual-scroll :itemHeight="50" height="300" :items="followingList">
+      <v-virtual-scroll :itemHeight="50" height="300" :items="followingList"  v-if="followingList.length">
         <template v-slot="{item}">
           <v-list-item>
             <v-list-item-avatar>
@@ -35,6 +34,9 @@
           </v-list-item>
         </template>
       </v-virtual-scroll>
+      <v-card-text v-else class="p-0">
+        <p class="py-2 m-0">{{ profile.nickName }}이 팔로잉하는 유저가 없습니다.</p>
+      </v-card-text>
       <v-divider class="m-0"></v-divider>
       <v-card-actions>
         <v-col class="text-right">
