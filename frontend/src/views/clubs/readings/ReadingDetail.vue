@@ -28,13 +28,13 @@
               <button
                 class="btn btn-warning mr-2"
                 v-if="selectedReading.isMember & !isParticipant & !isLeader"
-                @click="clickParticipateReading">
+                @click="clickParticipateReading('apply')">
                 참가 신청
               </button>
               <button
                 class="btn btn-warning mr-2"
                 v-if="selectedReading.isMember & isParticipant & !isLeader"
-                @click="clickParticipateReading">
+                @click="clickParticipateReading('cancel')">
                 참가 취소
               </button>
               <!-- <button class="btn btn-primary mr" v-if="isLeader || isParticipant">모임 입장</button> -->
@@ -180,8 +180,20 @@ export default {
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
     },
-    clickParticipateReading() {
-      this.participateReading(this.params)
+    clickParticipateReading(type) {
+      if (type === 'apply') {
+        if (confirm('리딩에 참가하시겠습니까?') === true) {
+          this.participateReading(this.params)
+        } else {
+          return false
+        }
+      } else if (type === 'cancel') {
+        if (confirm('리딩 참가를 취소하시겠습니까?') === true) {
+          this.participateReading(this.params)
+        } else {
+          return false
+        }
+      }
     },
     toPostDetail(postId) {
       router.push({ name: 'PostDetail', params: { postId: postId }})
