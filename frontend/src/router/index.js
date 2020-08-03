@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Login from '@/views/accounts/Login'
 import Signup from '@/views/accounts/Signup'
 import SignupEmail from '@/views/accounts/SignupEmail'
+import SignupSuccessful from '@/views/accounts/SignupSuccessful'
 import PasswordFind from '@/views/accounts/PasswordFind'
 import PasswordFindEmail from '@/views/accounts/PasswordFindEmail'
 import PasswordChange from '@/views/accounts/PasswordChange'
@@ -52,6 +53,11 @@ Vue.use(VueRouter)
     path: '/signup/email',
     name: 'SignupEmail',
     component: SignupEmail
+  },
+  {
+    path: '/signup/success',
+    name: 'SignupSuccessful',
+    component: SignupSuccessful
   },
   {
     path: '/password',

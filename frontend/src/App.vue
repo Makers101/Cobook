@@ -38,24 +38,25 @@
                   class="autocomplete-result d-flex"
                   v-for="user in searchedUsers"
                   :key="`search-${user.id}`"
+                  @click="userDetail(user.id)"
                 >
-                <img
-                  class="img-fluid mr-3"
-                  style="width:25px; height:25px; border-radius: 50%" 
-                  v-if="user.profileImg"
-                  :src="user.profileImg" 
-                  alt="">
-                <img
-                  class="img-fluid mr-3"
-                  v-else
-                  style="border-radius: 50%"
-                  src="https://user-images.githubusercontent.com/57381062/88908958-84e85480-d295-11ea-9637-540f1be674ac.png"
-                  width=25px
-                  height=25px 
-                  >
-                <span @click="userDetail(user.id)">
-                  {{ user.nickName }}
-                </span>
+                  <img
+                    class="img-fluid mr-3"
+                    style="width:25px; height:25px; border-radius: 50%" 
+                    v-if="user.profileImg"
+                    :src="user.profileImg" 
+                    alt="">
+                  <img
+                    class="img-fluid mr-3"
+                    v-else
+                    style="border-radius: 50%"
+                    src="https://user-images.githubusercontent.com/57381062/88908958-84e85480-d295-11ea-9637-540f1be674ac.png"
+                    width=25px
+                    height=25px 
+                    >
+                  <span>
+                    {{ user.nickName }}
+                  </span>
                 </li>
               </ul>
             </div>
@@ -245,7 +246,6 @@ export default {
 }
 
 .navbar-bg-color {
-  background: #D6CBBD;
   height: 65px;
 }
 
@@ -271,16 +271,17 @@ export default {
 input {
 	outline: none;
 }
+
 input[type=search] {
 	-webkit-appearance: textfield;
 	-webkit-box-sizing: content-box;
 	font-size: 100%;
 }
+
 input::-webkit-search-decoration,
 input::-webkit-search-cancel-button {
 	display: none; 
 }
-
 
 input[type=search] {
 	background: #ededed url(https://static.tumblr.com/ftv85bp/MIXmud4tx/search-icon.png) no-repeat 9px center;
@@ -296,6 +297,7 @@ input[type=search] {
 	-moz-transition: all .5s;
 	transition: all .5s;
 }
+
 input[type=search]:focus {
 	width: 130px;
 	background-color: #fff;
@@ -306,10 +308,10 @@ input[type=search]:focus {
 	box-shadow: 0 0 5px #88A498;
 }
 
-
 input:-moz-placeholder {
 	color: #999;
 }
+
 input::-webkit-input-placeholder {
 	color: #999;
 }
@@ -320,9 +322,11 @@ input::-webkit-input-placeholder {
 	color: transparent;
 	cursor: pointer;
 }
+
 #search-bar input[type=search]:hover {
 	background-color: #fff;
 }
+
 #search-bar input[type=search]:focus {
 	width: 130px;
 	padding-left: 35px;
@@ -330,9 +334,11 @@ input::-webkit-input-placeholder {
 	background-color: #fff;
 	cursor: auto;
 }
+
 #search-bar input:-moz-placeholder {
 	color: transparent;
 }
+
 #search-bar input::-webkit-input-placeholder {
 	color: transparent;
 }
@@ -363,24 +369,29 @@ input::-webkit-input-placeholder {
 .autocomplete-results::-webkit-scrollbar {
   width: 8px; height: 8px; border: 3px solid white; 
   } 
+
 .autocomplete-results::-webkit-scrollbar-button,.autocomplete-results::-webkit-scrollbar-button:END {
   background-color: white;
 }
+
 .autocomplete-results::-webkit-scrollbar-button:start:decrement{
 }
+
 .autocomplete-results::-webkit-scrollbar-track {
   background: white; 
   -webkit-border-radius: 10px white; 
   border-radius:10px white;
   /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.2) */
-  }
+}
+
 .autocomplete-results::-webkit-scrollbar-thumb {
   height: 10px; 
   width: 50px; 
   background: #88A498; 
   -webkit-border-radius: 15px; border-radius: 15px; 
   /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
-  }
+}
+
 .autocomplete-results:hover{
   overflow-y: scroll;
 }
