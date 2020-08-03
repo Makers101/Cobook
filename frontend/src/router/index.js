@@ -25,6 +25,7 @@ import PostUpdate from '@/views/posts/PostUpdate'
 import ClubList from '@/views/clubs/ClubList'
 import ClubDetail from '@/views/clubs/ClubDetail'
 import ClubCreate from '@/views/clubs/ClubCreate'
+import ClubUpdate from '@/views/clubs/ClubUpdate'
 import ClubCandidates from '@/views/clubs/ClubCandidates'
 import ReadingDetail from '@/views/clubs/readings/ReadingDetail'
 import ReadingCreate from '@/views/clubs/readings/ReadingCreate'
@@ -152,6 +153,11 @@ Vue.use(VueRouter)
     path: '/clubs/:clubId',
     name: 'ClubDetail',
     component: ClubDetail
+  },
+  {
+    path: '/clubs/:clubId/update',
+    name: 'ClubUpdate',
+    component: ClubUpdate
   },
   {
     path: '/clubs/:clubId/candidates',

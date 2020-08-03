@@ -107,6 +107,24 @@ const clubStore = {
             console.log(err.response.data)
           })
       },
+      updateClub({ rootGetters }, clubUpdateData) {
+        axios.put(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubUpdateData.clubId, clubUpdateData.basicData, rootGetters.config)
+          .then(() => {
+            router.push({ name: 'ClubDetail', params: { clubId: clubUpdateData.clubId }})
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      deleteClub({ rootGetters }, clubId) {
+        axios.delete(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId, rootGetters.config)
+          .then(() => {
+            router.push({ name: 'ClubList' })
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
       createReading({ rootGetters }, params) {
         axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/readings', params.readingCreateData, rootGetters.config)
           .then(res => {

@@ -45,28 +45,41 @@
                 <button 
                   class="dropdown-item setting-btn text-center"
                   type="button"
-                  @click="clickUpdateRecruit"
+                  @click="clickUpdateRecruit(selectedClub.id)"
                   v-if="!selectedClub.recruit">
                   모집 활성화
                 </button>
                 <button 
                   class="dropdown-item setting-btn text-center"
                   type="button"
-                  @click="clickUpdateRecruit"
+                  @click="clickUpdateRecruit(selectedClub.id)"
                   v-if="selectedClub.recruit">
                   모집 비활성화
                 </button>
                 <button 
                   class="dropdown-item setting-btn text-center"
                   type="button"
-                  @click="toClubCandidates"
+                  @click="toClubCandidates(selectedClub.id)"
                   v-if="selectedClub.recruit">
                   모집 현황
                 </button>
+                <div class="dropdown-divider my-1"></div>
+                <button 
+                  class="dropdown-item setting-btn text-center"
+                  type="button"
+                  @click="toClubUpdate(selectedClub.id)">
+                  클럽 정보 수정
+                </button>
+                <button 
+                  class="dropdown-item setting-btn text-center"
+                  type="button"
+                  @click="clickClubDelete(selectedClub.id)">
+                  클럽 삭제
+                </button>
               </div>
-              <button class="btn btn-warning mr" v-if="selectedClub.recruit && !isMember && !isLeader &&!isCandidate" @click="clickApplyClub('apply')">가입 신청</button>
-              <button class="btn btn-warning mr" v-if="selectedClub.recruit && isCandidate" @click="clickApplyClub('cancel')">가입 취소</button>
-              <button class="btn btn-warning mr" v-if="!isLeader && isMember" @click="clickClubSecede">클럽 탈퇴</button>
+              <button class="btn btn-warning mr" v-if="selectedClub.recruit && !isMember && !isLeader &&!isCandidate" @click="clickApplyClub('apply', selectedClub.id)">가입 신청</button>
+              <button class="btn btn-warning mr" v-if="selectedClub.recruit && isCandidate" @click="clickApplyClub('cancel', selectedClub.id)">가입 취소</button>
+              <button class="btn btn-warning mr" v-if="!isLeader && isMember" @click="clickClubSecede(selectedClub.id)">클럽 탈퇴</button>
             </div>
           </div>
         </div>
@@ -188,18 +201,18 @@ export default {
   },
   methods: {
     ...mapActions(['createNoti']),
-    ...mapActions('clubStore', ['findClub', 'updateRecruit', 'applyClub', 'secedeClub']),
+    ...mapActions('clubStore', ['findClub', 'updateRecruit', 'applyClub', 'secedeClub', 'deleteClub']),
     selectReading(readingId) {
       router.push({ name: 'ReadingDetail', params: { clubId: this.$route.params.clubId, readingId: readingId }})
     },
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
     },
-    clickUpdateRecruit() {
-      this.updateRecruit(this.$route.params.clubId)
+    clickUpdateRecruit(clubId) {
+      this.updateRecruit(clubId)
       this.selectedClub.recruit = !this.selectedClub.recruit
     },
-    clickApplyClub(type) {
+    clickApplyClub(type, clubId) {
       let notiData = new Object()
       notiData = {
         from: this.myaccount.id,
@@ -211,24 +224,34 @@ export default {
       
       if (type === 'apply') {
         alert('가입 신청이 완료 되었습니다. 설레는 마음으로 기다려주세요 :)')
-        this.applyClub(this.$route.params.clubId)
+        this.applyClub(clubId)
       } else if (type === 'cancel') {
         alert('가입 신청이 취소 되었습니다 :)')
-        this.applyClub(this.$route.params.clubId)
+        this.applyClub(clubId)
       }
     },
-    toClubCandidates() {
-      router.push({ name: 'ClubCandidates', params: { clubId: this.$route.params.clubId }})
+    toClubCandidates(clubId) {
+      router.push({ name: 'ClubCandidates', params: { clubId: clubId }})
     },
-    clickClubSecede() {
+    clickClubSecede(clubId) {
       if (confirm('클럽을 탈퇴하시겠습니까?') === true) {
-        this.secedeClub(this.$route.params.clubId)
+        this.secedeClub(clubId)
       } else {
         return false
       }
     },
     toReadingCreate() {
       router.push({ name: 'ReadingCreate' })
+    },
+    toClubUpdate(clubId) {
+      router.push({ name: 'ClubUpdate', params: { clubId: clubId } })
+    },
+    clickClubDelete(clubId) {
+      if (confirm('클럽을 삭제하시겠습니까?') === true) {
+        this.deleteClub(clubId)
+      } else {
+        return false
+      }
     }
   },
   created() {
