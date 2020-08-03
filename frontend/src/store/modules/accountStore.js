@@ -16,11 +16,11 @@ const accountStore = {
   },
   actions: {
     // Signup
-    postAuthData1(info) {
+    postAuthData1({ commit } , info) {
       axios.post(SERVER.URL + info.location, info.data)
         .then(res => {
           console.log("SUCCESS", res.data)
-          // commit('SET_TOKEN', res.data, { root: true })
+          console.log(commit)
           router.push({ name: 'SignupEmail' })
 
         })
@@ -68,7 +68,7 @@ const accountStore = {
       const info = {
         data: signupData,
         location: SERVER.ROUTES.signup,
-        to: '/password/email'
+        to: '/signup/email'
       }
       dispatch('postAuthData1', info)
     },
