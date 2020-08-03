@@ -67,7 +67,7 @@
       </div>
 
       <div class="buttons mt-3">
-        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="isSubmit && signup(signupData)" >가입하기</button>
+        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickSignup" >가입하기</button>
       </div>
 
       <hr class="divide">
@@ -175,7 +175,8 @@ export default {
     },
     clickSignup() {
       if ( this.isSubmit ){
-        this.$router.push( {name: 'SignupEmail' })
+        this.signup(this.signupData)
+        // this.$router.push( {name: 'SignupEmail' })
       }
     },
     ...mapActions('accountStore', ['signup'])
