@@ -94,7 +94,6 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'Signup',
-
   data() {
     return {
       signupData: {
@@ -176,7 +175,6 @@ export default {
     clickSignup() {
       if ( this.isSubmit ){
         this.signup(this.signupData)
-        // this.$router.push( {name: 'SignupEmail' })
       }
     },
     ...mapActions('accountStore', ['signup'])
@@ -208,7 +206,6 @@ h3 {
   background-color: #88A498;
   color: #F8F8F8;
   width: 70%;
-  /* font-size: 10px; */
 }
 
 .divide {
