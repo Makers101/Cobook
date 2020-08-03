@@ -148,11 +148,12 @@ export default {
   },
 
   beforeRouteUpdate (to, from, next) {
-    this.findProfile(to.params.userId)
     this.showFollowerForm = false
     this.showFollowingForm = false
-
+    this.findProfile(to.params.userId)
     next();
+    this.fetchFollowerList(to.params.userId)
+    this.fetchFollowingList(to.params.userId)
   },
 }
 </script>

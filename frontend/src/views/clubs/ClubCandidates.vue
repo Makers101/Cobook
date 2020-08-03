@@ -8,7 +8,7 @@
         <div>
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-start align-items-center">
-              <h3 class="mb-0 font-weight-bold">{{ selectedClub.name }}</h3>
+              <h3 class="mb-0 font-weight-bold pointer" @click="toClub(selectedClub.clubId)">{{ selectedClub.name }}</h3>
               <!-- <span class="badge mb-0 ml-2 club-recruit" v-if="selectedClub.recruit">모집중</span> -->
             </div>
           </div>
@@ -73,6 +73,9 @@ export default {
     },
     toProfile(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
+    },
+    toClub(clubId) {
+      router.push({ name: 'ClubDetail', params: {clubId: clubId}})
     }
   },
   created() {
@@ -92,4 +95,5 @@ export default {
   .profile-image {
     max-height: 50px;
   }
+
 </style>
