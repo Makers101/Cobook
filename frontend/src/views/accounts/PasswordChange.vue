@@ -105,7 +105,6 @@ export default {
           data: newData,
           location: SERVER.ROUTES.changepassword,
         }
-        { headers: { Authorization: `Token ${state.authToken}` } }
         axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
           headers: { 
             'Content-Type': 'application/json',
