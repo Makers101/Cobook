@@ -22,8 +22,28 @@
             <span class="navbar-toggler-icon"></span>
           </button>
 
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <div class="autocomplete" id="search-bar">
+          <div class="collapse navbar-collapse row" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto col-3 d-flex justify-content-between">
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'PostList' }">
+                  <!-- <i class="fas fa-home"></i> -->
+                  피드
+                </router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'ClubList' }">
+                  <!-- <i class="fas fa-users"></i> -->
+                  클럽
+                </router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'MeetupList' }">
+                  <!-- <img class="img-fluid club-img" src="https://user-images.githubusercontent.com/57381062/88909365-f7f1cb00-d295-11ea-859e-656c0633bf2e.png" alt="밋업 이미지"> -->
+                  원데이이벤트
+                </router-link>
+              </li>
+            </ul>
+            <div class="autocomplete col-3 text-right offset-4 " id="search-bar">
               <input 
                 type="search" 
                 v-model="keyword" 
@@ -60,26 +80,13 @@
                 </li>
               </ul>
             </div>
-            <ul class="navbar-nav mr-auto row w-100">
-              <li class="nav-item col-3">
-                <router-link class="nav-link" :to="{ name: 'PostList' }">
-                  <i class="fas fa-home color-green"></i>
-                  Feed
+            <ul class="navbar-nav mr-auto col-2 d-flex justify-content-between">
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'PostCreate' }">
+                  <i class="fas fa-plus-circle"></i>
                 </router-link>
               </li>
-              <li class="nav-item col-3">
-                <router-link class="nav-link" :to="{ name: 'ClubList' }">
-                  <i class="fas fa-users color-green"></i>
-                  Club
-                </router-link>
-              </li>
-              <li class="nav-item col-3">
-                <router-link class="nav-link" :to="{ name: 'MeetupList' }">
-                  <img class="img-fluid club-img" src="https://user-images.githubusercontent.com/57381062/88909365-f7f1cb00-d295-11ea-859e-656c0633bf2e.png" alt="밋업 이미지">
-                  Meetup
-                </router-link>
-              </li>
-              <li class="nav-item dropdown col-1 pointer">
+              <li class="nav-item dropdown pointer">
                 <div 
                   class="nav-link dropdown-toggle" 
                   id="navbarDropdown" 
@@ -89,7 +96,7 @@
                   aria-haspopup="true" 
                   aria-expanded="false"
                 >
-                  <i class="fas fa-bell color-green"></i>
+                  <i class="fas fa-bell"></i>
                 </div>
                 <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
                   <div
@@ -103,12 +110,7 @@
                   </div>
                 </div>
               </li>
-              <li class="nav-item col-1">
-                <router-link class="nav-link" :to="{ name: 'PostCreate' }">
-                  <i class="fas fa-plus-circle color-green"></i>
-                </router-link>
-              </li>
-              <li class="nav-item dropdown col-1">
+              <li class="nav-item dropdown">
                 <div 
                   class="nav-link dropdown-toggle" 
                   id="navbarDropdown" 
@@ -118,7 +120,7 @@
                   aria-haspopup="true" 
                   aria-expanded="false"
                 >
-                  <i class="fas fa-user color-green"></i>
+                  <i class="fas fa-user"></i>
                 </div>
                 <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
                   <router-link class="dropdown-item setting-btn menus" :to="{ name: 'Profile', params: {userId: myaccount.id} }">프로필</router-link>
@@ -239,7 +241,7 @@ export default {
   max-height: 960px;
 }
 
-#nav a {
+#nav a, i {
   font-size: 1.1rem;
   font-weight: 900;
   color: #3A2F15;
