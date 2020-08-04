@@ -99,11 +99,10 @@ public class UserController {
     }
 
     @ApiOperation(value = "인증코드가 올바르다면 비밀번호를 새로 입력받아 저장한다.", response = String.class)
-    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("resetPassword/update")
-    public ResponseEntity<Void> resetPassword(@ApiIgnore final Authentication authentication, @RequestBody final UserUpdatePwdDto userUpdatePwdDto) {
-        Long userId = ((User) authentication.getPrincipal()).getId();
-        userService.updatePassword(userId, userUpdatePwdDto);
+    public ResponseEntity<Void> resetPassword(@RequestBody final UserUpdatePwdDto userUpdatePwdDto) {
+        String token = userUpdatePwdDto.getJwt();
+        userService.updatePassword(token, userUpdatePwdDto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }

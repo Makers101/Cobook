@@ -146,7 +146,8 @@ public class UserService {
 
 
     @Transactional
-    public void updatePassword(Long userId, UserUpdatePwdDto userUpdatePwdDto) {
+    public void updatePassword(String token, UserUpdatePwdDto userUpdatePwdDto) {
+        Long userId = Long.valueOf(jwtTokenProvider.getId(token));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
