@@ -181,7 +181,6 @@
       </div>
     </div> -->
     <infinite-loading class="col-12" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
-    <!-- <div id="bottomSensor"></div> -->
   </div>
 </template>
 
@@ -253,32 +252,6 @@ export default {
         this.page += 3
       }
     },
-    // onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
-    //   console.log(1)
-    //   console.log(scrollTop, clientHeight, scrollHeight)
-    //   if (scrollTop + clientHeight >= scrollHeight) {
-    //     this.getPosts()
-    //   }
-    // },
-    // addScrollWatcher: function() {
-    //   const bottomSensor = document.querySelector('#bottomSensor')
-    //   const watcher = scrollMonitor.create(bottomSensor)
-    //   // watcher가 화면에 들어오면, callback 하겠다.
-    //   watcher.enterViewport(() => {
-    //     setTimeout(() => {
-    //       this.getPosts()
-    //     }, 500)
-    //   })
-    // },
-    
-
-    // loadUntilViewportIsFull: function() {
-    //   const bottomSensor = document.querySelector('#bottomSensor')
-    //   const watcher = scrollMonitor.create(bottomSensor)
-    //   if (watcher.isFullyInViewport){
-    //     this.getPosts()
-    //   }
-    // },
     infiniteHandler($state) {
       setTimeout(() => {
         if (this.posts.slice(this.page, this.page + 3).length) {
@@ -290,12 +263,6 @@ export default {
         }
       }, 1000)
     },
-    // onBottom() {
-    //   setTimeout(function() {
-    //     const el = document.querySelector("#bottomSensor");
-    //     console.log(el.scrollTop)
-    //   }, 1000)
-    // },
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
     }
