@@ -29,4 +29,18 @@ public class OneDayEventMember {
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
+
+    public OneDayEventMember(User user, OneDayEvent oneDayEvent, MemberRole role) {
+        this.user = user;
+        this.oneDayEvent = oneDayEvent;
+        this.role = role;
+    }
+
+    public boolean isNotLeader() {
+        return !this.role.equals(MemberRole.LEADER);
+    }
+
+    public void signOutEvent() {
+        this.user.removeEvents(this);
+    }
 }

@@ -39,4 +39,8 @@ public class ClubEventMember {
     public void removeUser() {
         this.user.removeReading(this);
     }
+
+    public boolean isNotLeader() {
+        return !this.role.equals(MemberRole.LEADER);
+    }
 }

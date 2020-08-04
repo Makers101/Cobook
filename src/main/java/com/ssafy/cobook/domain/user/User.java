@@ -204,4 +204,12 @@ public class User implements UserDetails {
     public void removeClub(ClubMember clubMember) {
         this.clubMembers.remove(clubMember);
     }
+
+    public void enrollOneDayEvent(OneDayEventMember member) {
+        this.oneDayEventMembers.add(member);
+    }
+
+    public void removeEvents(OneDayEventMember member) {
+        this.oneDayEventMembers.remove(member);
+    }
 }

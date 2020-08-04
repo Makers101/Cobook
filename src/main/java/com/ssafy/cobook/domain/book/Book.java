@@ -58,7 +58,15 @@ public class Book {
         this.posts.add(post);
     }
 
-    public void removeReading(ClubEvent clubEvent) {
+    public void removeEvent(ClubEvent clubEvent) {
         this.readingBooks.remove(clubEvent);
+    }
+
+    public void addEvent(OneDayEvent oneDayEvent) {
+        this.oneDayEvents.add(oneDayEvent);
+    }
+
+    public void removeEvent(OneDayEvent oneDayEvent) {
+        this.oneDayEvents.remove(oneDayEvent);
     }
 }

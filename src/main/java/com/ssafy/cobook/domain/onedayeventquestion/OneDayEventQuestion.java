@@ -22,4 +22,9 @@ public class OneDayEventQuestion {
     private OneDayEvent oneDayEvent;
 
     private String question;
+
+    public OneDayEventQuestion(OneDayEvent oneDayEvent, String question) {
+        this.oneDayEvent = oneDayEvent;
+        this.question = question;
+    }
 }

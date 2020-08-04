@@ -1,6 +1,7 @@
-package com.ssafy.cobook.service.dto.clubevent;
+package com.ssafy.cobook.service.dto.onedayevent;
 
-import com.ssafy.cobook.domain.clubeventmember.ClubEventMember;
+import com.ssafy.cobook.domain.onedayevent.OneDayEvent;
+import com.ssafy.cobook.domain.onedayeventmember.OneDayEventMember;
 import com.ssafy.cobook.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,14 +9,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ClubEventMemberResponseDto {
+public class OneDayEventMemberResponseDto {
 
     private Long id;
     private String nickName;
     private String profileImg;
 
-    public ClubEventMemberResponseDto(ClubEventMember clubEventMember) {
-        User user = clubEventMember.getUser();
+    public OneDayEventMemberResponseDto(OneDayEventMember member) {
+        User user = member.getUser();
         this.id = user.getId();
         this.nickName = user.getNickName();
         if (user.getProfileImg() != null) {

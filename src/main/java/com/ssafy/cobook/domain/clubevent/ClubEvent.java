@@ -4,6 +4,7 @@ import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.clubeventmember.ClubEventMember;
 import com.ssafy.cobook.domain.clubeventquestion.ClubEventQuestion;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventUpdateReqDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,16 +43,14 @@ public class ClubEvent {
     private LocalDateTime dateTime;
     private String place;
     private String description;
-    private String oneLineDescription;
     private Boolean closed;
 
     @Builder
-    public ClubEvent(String title, LocalDateTime dateTime, String place, String description, String oneLineDescription, Boolean closed) {
+    public ClubEvent(String title, LocalDateTime dateTime, String place, String description, Boolean closed) {
         this.title = title;
         this.dateTime = dateTime;
         this.place = place;
         this.description = description;
-        this.oneLineDescription = oneLineDescription;
         this.closed = closed;
     }
 
@@ -83,7 +82,24 @@ public class ClubEvent {
         for (ClubEventMember member : members) {
             member.removeUser();
         }
-        book.removeReading(this);
+        book.removeEvent(this);
         this.questions = null;
+    }
+
+    public void updateInfo(ClubEventUpdateReqDto reqDto) {
+        this.title = reqDto.getTitle();
+        this.dateTime = reqDto.getDateTime();
+        this.place = reqDto.getPlace();
+        this.description = reqDto.getDescription();
+    }
+
+    public void setQuestions(List<ClubEventQuestion> questions) {
+        this.questions = questions;
+    }
+
+    public void changeBook(Book book) {
+        this.book.removeEvent(this);
+        this.book = book;
+        this.book.enrollReading(this);
     }
 }

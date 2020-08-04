@@ -100,4 +100,8 @@ public class Club extends BaseTimeEntity {
     public void addGenres(List<ClubGenre> clubGenres) {
         this.genres.addAll(clubGenres);
     }
+
+    public void removeEvents(ClubEvent event) {
+        this.clubEvents.remove(event);
+    }
 }

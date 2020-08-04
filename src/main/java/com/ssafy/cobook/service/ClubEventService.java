@@ -13,6 +13,7 @@ import com.ssafy.cobook.domain.clubeventquestion.ClubEventQuestionRepository;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
 import com.ssafy.cobook.domain.clubmember.MemberRole;
+import com.ssafy.cobook.domain.onedayeventquestion.OneDayEventQuestion;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
 import com.ssafy.cobook.domain.user.User;
@@ -21,6 +22,7 @@ import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.service.dto.clubevent.ClubEventSaveReqDto;
 import com.ssafy.cobook.service.dto.clubevent.ClubEventSaveResDto;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventUpdateReqDto;
 import com.ssafy.cobook.service.dto.post.PostByMembersResDto;
 import com.ssafy.cobook.service.dto.clubevent.ClubEventDetailResDto;
 import lombok.RequiredArgsConstructor;
@@ -138,5 +140,52 @@ public class ClubEventService {
             user.enrollReading(readingMember);
             clubEvent.addMember(readingMember);
         }
+    }
+
+    public void updateEvent(Long userId, Long clubId, Long eventId, ClubEventUpdateReqDto reqDto) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        if (!clubMemberRepository.findByUserAndClub(user, club).isPresent()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
+        }
+        ClubEvent event = getClubEvent(eventId);
+        if( !clubId.equals(event.getClub().getId())) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
+        }
+        ClubEventMember member = clubEventMemberRepository.findByUserAndClubEvent(user, event)
+                .orElseThrow(()-> new BaseException(ErrorCode.ILLEGAL_ACCESS_READING));
+        if( member.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
+        }
+        event.updateInfo(reqDto);
+        Book book = getBook(reqDto.getBooKId());
+        clubEventQuestionRepository.deleteAll(event.getQuestions());
+        List<ClubEventQuestion> questions = reqDto.getQuestion().stream()
+                .map(q -> clubEventQuestionRepository.save(new ClubEventQuestion(event, q)))
+                .collect(Collectors.toList());
+        event.setQuestions(questions);
+        if (!book.getId().equals(event.getBook().getId())) {
+            event.changeBook(book);
+        }
+
+    }
+
+    public void deleteEvents(Long eventId, Long clubId, Long userId) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        if (!clubMemberRepository.findByUserAndClub(user, club).isPresent()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
+        }
+        ClubEvent event = getClubEvent(eventId);
+        if( !clubId.equals(event.getClub().getId())) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
+        }
+        ClubEventMember member = clubEventMemberRepository.findByUserAndClubEvent(user, event)
+                .orElseThrow(()-> new BaseException(ErrorCode.ILLEGAL_ACCESS_READING));
+        if( member.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
+        }
+        event.delete();
+        club.removeEvents(event);
     }
 }
