@@ -49,6 +49,7 @@ export default {
       passwordChangeData: {
         password: "",
         passwordConfirm: "",
+        jwt: this.$route.query.jwt
       },
       error: {
         password: false,
@@ -101,22 +102,12 @@ export default {
     
     clickChangePassword(newData) {
       if ( this.isSubmit ){
-        const info = {
-          data: newData,
-          location: SERVER.ROUTES.changepassword,
-        }
-        axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
-          headers: { 
-            'Content-Type': 'application/json',
-            // 'jwt' : this.$route.query.jwt 
-             Authorization: `Token ${this.$route.query.jwt}`
-            }
-        })
+        axios.post(SERVER.URL + SERVER.ROUTES.password, newData)
         .then (() => {
           console.log("clickChangePassword Success")
           router.push({ name: 'PasswordChangeSuccessful' })
         })
-        .catch (err =>{
+        .catch (err => {
           console.log(err.response)
         })
       }
