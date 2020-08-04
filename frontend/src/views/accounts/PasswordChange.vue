@@ -101,11 +101,9 @@ export default {
     
     clickChangePassword(newData) {
       if ( this.isSubmit ){
-        console.log("HELLO")
         const info = {
           data: newData,
           location: SERVER.ROUTES.changepassword,
-          // to: '/'
         }
         axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
           headers: { 
@@ -117,7 +115,6 @@ export default {
           router.push({ name: 'PasswordChangeSuccessful' })
         })
         .catch (err =>{
-          console.log("HI")
           console.log(err.response)
         })
       }
@@ -129,6 +126,10 @@ export default {
 </script>
 
 <style scoped>
+.background {
+  background-repeat: repeat;
+}
+
 .container {
   width: 30%;
   border-radius: 25px;
