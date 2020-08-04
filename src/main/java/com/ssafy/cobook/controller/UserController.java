@@ -6,6 +6,7 @@ import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.UserService;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.*;
+import com.ssafy.cobook.service.dto.user.oauth.KakaoLoginDto;
 import com.ssafy.cobook.util.JwtTokenProvider;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -49,6 +50,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }
 
+    @ApiOperation(value = "카카오톡으로 로그인하는 경우", response = UserResponseIdDto.class)
+    @PostMapping("/social/kakao")
+    public ResponseEntity<String> kakaoLogin(@RequestBody final KakaoLoginDto kakaoLoginDto) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.kakaoLogin(kakaoLoginDto));
+    }
+
     @ApiOperation(value = "이메일 인증을 진행하여 회원가입을 한다")
     @GetMapping("/authentication/{token}")
     public RedirectView authenticateEmail(@PathVariable("token") String token) {
@@ -87,7 +94,7 @@ public class UserController {
 
     @ApiOperation(value = "비밀번호 인증메일을 통해 비밀번호 변경 페이지로 보내준다")
     @GetMapping("/resetPassword/{token}")
-    public RedirectView goResetPassword(Model m, @PathVariable("token") String token) {
+    public RedirectView goResetPassword(@PathVariable("token") String token) {
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("http://i3a111.p.ssafy.io/password/change");
         Map<String, String> attributes = new HashMap();
