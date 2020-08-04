@@ -1,9 +1,9 @@
-package com.ssafy.cobook.domain.reading;
+package com.ssafy.cobook.domain.clubevent;
 
 import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.club.Club;
-import com.ssafy.cobook.domain.readingmember.ReadingMember;
-import com.ssafy.cobook.domain.readingquestion.ReadingQuestion;
+import com.ssafy.cobook.domain.clubeventmember.ClubEventMember;
+import com.ssafy.cobook.domain.clubeventquestion.ClubEventQuestion;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,11 +17,11 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Reading {
+public class ClubEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reading_id")
+    @Column(name = "club_event_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,11 +32,11 @@ public class Reading {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    @OneToMany(mappedBy = "reading", cascade = CascadeType.ALL)
-    private List<ReadingQuestion> questions = new ArrayList<>();
+    @OneToMany(mappedBy = "clubEvent", cascade = CascadeType.ALL)
+    private List<ClubEventQuestion> questions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "reading", cascade = CascadeType.ALL)
-    private List<ReadingMember> members = new ArrayList<>();
+    @OneToMany(mappedBy = "clubEvent", cascade = CascadeType.ALL)
+    private List<ClubEventMember> members = new ArrayList<>();
 
     private String title;
     private LocalDateTime dateTime;
@@ -46,7 +46,7 @@ public class Reading {
     private Boolean closed;
 
     @Builder
-    public Reading(String title, LocalDateTime dateTime, String place, String description, String oneLineDescription, Boolean closed) {
+    public ClubEvent(String title, LocalDateTime dateTime, String place, String description, String oneLineDescription, Boolean closed) {
         this.title = title;
         this.dateTime = dateTime;
         this.place = place;
@@ -63,11 +63,11 @@ public class Reading {
         this.book = book;
     }
 
-    public void enrollQuestion(List<ReadingQuestion> questions) {
+    public void enrollQuestion(List<ClubEventQuestion> questions) {
         this.questions = questions;
     }
 
-    public void addMember(ReadingMember readingMember) {
+    public void addMember(ClubEventMember readingMember) {
         if (this.members.contains(readingMember)) {
             this.members.remove(readingMember);
             return;
@@ -75,12 +75,12 @@ public class Reading {
         this.members.add(readingMember);
     }
 
-    public void removeMember(ReadingMember delete) {
+    public void removeMember(ClubEventMember delete) {
         this.members.remove(delete);
     }
 
     public void delete() {
-        for (ReadingMember member : members) {
+        for (ClubEventMember member : members) {
             member.removeUser();
         }
         book.removeReading(this);

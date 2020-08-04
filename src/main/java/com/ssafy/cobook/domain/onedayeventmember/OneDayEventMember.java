@@ -1,7 +1,7 @@
-package com.ssafy.cobook.domain.readingmember;
+package com.ssafy.cobook.domain.onedayeventmember;
 
 import com.ssafy.cobook.domain.clubmember.MemberRole;
-import com.ssafy.cobook.domain.reading.Reading;
+import com.ssafy.cobook.domain.onedayevent.OneDayEvent;
 import com.ssafy.cobook.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,11 +12,11 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReadingMember {
+public class OneDayEventMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "rmember_id")
+    @Column(name = "one_day_event_member_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,19 +24,9 @@ public class ReadingMember {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reading_id")
-    private Reading reading;
+    @JoinColumn(name = "one_day_event_id")
+    private OneDayEvent oneDayEvent;
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
-
-    public ReadingMember(User user, Reading reading, MemberRole role) {
-        this.user = user;
-        this.reading = reading;
-        this.role = role;
-    }
-
-    public void removeUser() {
-        this.user.removeReading(this);
-    }
 }

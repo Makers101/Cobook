@@ -1,6 +1,6 @@
-package com.ssafy.cobook.domain.readingquestion;
+package com.ssafy.cobook.domain.clubeventquestion;
 
-import com.ssafy.cobook.domain.reading.Reading;
+import com.ssafy.cobook.domain.clubevent.ClubEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,21 +10,21 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReadingQuestion {
+public class ClubEventQuestion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "rquestion_id")
+    @Column(name = "club_event_question_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reading_id")
-    private Reading reading;
+    @JoinColumn(name = "club_event_id")
+    private ClubEvent clubEvent;
 
     private String question;
 
-    public ReadingQuestion(Reading reading, String question) {
-        this.reading = reading;
+    public ClubEventQuestion(ClubEvent clubEvent, String question) {
+        this.clubEvent = clubEvent;
         this.question = question;
     }
 }

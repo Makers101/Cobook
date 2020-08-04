@@ -1,6 +1,6 @@
 package com.ssafy.cobook.service.dto.question;
 
-import com.ssafy.cobook.domain.readingquestion.ReadingQuestion;
+import com.ssafy.cobook.domain.clubeventquestion.ClubEventQuestion;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ public class QuestionResDto {
         this.question = question;
     }
 
-    public QuestionResDto(ReadingQuestion question) {
+    public QuestionResDto(ClubEventQuestion question) {
         this.id = question.getId();
         this.question = question.getQuestion();
     }

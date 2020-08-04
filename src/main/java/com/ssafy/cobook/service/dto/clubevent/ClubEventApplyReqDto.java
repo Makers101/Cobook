@@ -1,4 +1,4 @@
-package com.ssafy.cobook.service.dto.reading;
+package com.ssafy.cobook.service.dto.clubevent;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReadingApplyReqDto {
+public class ClubEventApplyReqDto {
 
     private Long userId;
     private Long clubId;
-    private Long readingId;
+    private Long clubEventId;
 }

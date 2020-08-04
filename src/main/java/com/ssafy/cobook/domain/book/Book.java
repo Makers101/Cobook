@@ -2,9 +2,9 @@ package com.ssafy.cobook.domain.book;
 
 import com.ssafy.cobook.domain.booklike.BookLike;
 import com.ssafy.cobook.domain.genre.Genre;
-import com.ssafy.cobook.domain.meetup.MeetUp;
+import com.ssafy.cobook.domain.onedayevent.OneDayEvent;
 import com.ssafy.cobook.domain.post.Post;
-import com.ssafy.cobook.domain.reading.Reading;
+import com.ssafy.cobook.domain.clubevent.ClubEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,24 +41,24 @@ public class Book {
     private List<BookLike> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-    private List<Reading> readingBooks = new ArrayList<>();
+    private List<ClubEvent> readingBooks = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-    private List<MeetUp> meetUps = new ArrayList<>();
+    private List<OneDayEvent> oneDayEvents = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id")
     private Genre genre;
 
-    public void enrollReading(Reading reading) {
-        this.readingBooks.add(reading);
+    public void enrollReading(ClubEvent clubEvent) {
+        this.readingBooks.add(clubEvent);
     }
 
     public void connetPost(Post post) {
         this.posts.add(post);
     }
 
-    public void removeReading(Reading reading) {
-        this.readingBooks.remove(reading);
+    public void removeReading(ClubEvent clubEvent) {
+        this.readingBooks.remove(clubEvent);
     }
 }

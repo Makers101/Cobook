@@ -4,25 +4,25 @@ import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.book.BookRepository;
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.club.ClubRepository;
+import com.ssafy.cobook.domain.clubevent.ClubEvent;
+import com.ssafy.cobook.domain.clubevent.ClubEventRepository;
+import com.ssafy.cobook.domain.clubeventmember.ClubEventMember;
+import com.ssafy.cobook.domain.clubeventmember.ClubEventMemberRepository;
+import com.ssafy.cobook.domain.clubeventquestion.ClubEventQuestion;
+import com.ssafy.cobook.domain.clubeventquestion.ClubEventQuestionRepository;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
 import com.ssafy.cobook.domain.clubmember.MemberRole;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
-import com.ssafy.cobook.domain.reading.Reading;
-import com.ssafy.cobook.domain.reading.ReadingRepository;
-import com.ssafy.cobook.domain.readingmember.ReadingMember;
-import com.ssafy.cobook.domain.readingmember.ReadingMemberRepository;
-import com.ssafy.cobook.domain.readingquestion.ReadingQuestion;
-import com.ssafy.cobook.domain.readingquestion.ReadingQuestionRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventSaveReqDto;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventSaveResDto;
 import com.ssafy.cobook.service.dto.post.PostByMembersResDto;
-import com.ssafy.cobook.service.dto.reading.ReadingDetailResDto;
-import com.ssafy.cobook.service.dto.reading.ReadingSaveReqDto;
-import com.ssafy.cobook.service.dto.reading.ReadingSaveResDto;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventDetailResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,38 +37,38 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ReadingService {
+public class ClubEventService {
 
-    private final ReadingRepository readingRepository;
+    private final ClubEventRepository clubEventRepository;
     private final ClubRepository clubRepository;
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
     private final ClubMemberRepository clubMemberRepository;
-    private final ReadingMemberRepository readingMemberRepository;
+    private final ClubEventMemberRepository clubEventMemberRepository;
     private final PostRepository postRepository;
-    private final ReadingQuestionRepository readingQuestionRepository;
+    private final ClubEventQuestionRepository clubEventQuestionRepository;
 
     @Transactional
-    public ReadingSaveResDto makeReading(Long userId, Long clubId, ReadingSaveReqDto reqDto) {
+    public ClubEventSaveResDto makeReading(Long userId, Long clubId, ClubEventSaveReqDto reqDto) {
         User user = getUser(userId);
         Club club = getClub(clubId);
         if (!clubMemberRepository.findByUserAndClub(user, club).isPresent()) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
         }
         Book book = getBook(reqDto.getBookId());
-        Reading reading = readingRepository.save(reqDto.toEntity());
-        reading.ofClub(club);
-        reading.ofBook(book);
-        club.enrollReading(reading);
-        book.enrollReading(reading);
-        ReadingMember readingMember = readingMemberRepository.save(new ReadingMember(user, reading, MemberRole.LEADER));
-        user.enrollReading(readingMember);
-        reading.addMember(readingMember);
-        List<ReadingQuestion> questions = reqDto.getQuestions().stream()
-                .map(q -> readingQuestionRepository.save(new ReadingQuestion(reading, q)))
+        ClubEvent clubEvent = clubEventRepository.save(reqDto.toEntity());
+        clubEvent.ofClub(club);
+        clubEvent.ofBook(book);
+        club.enrollReading(clubEvent);
+        book.enrollReading(clubEvent);
+        ClubEventMember clubEventMember = clubEventMemberRepository.save(new ClubEventMember(user, clubEvent, MemberRole.LEADER));
+        user.enrollReading(clubEventMember);
+        clubEvent.addMember(clubEventMember);
+        List<ClubEventQuestion> questions = reqDto.getQuestions().stream()
+                .map(q -> clubEventQuestionRepository.save(new ClubEventQuestion(clubEvent, q)))
                 .collect(Collectors.toList());
-        reading.enrollQuestion(questions);
-        return new ReadingSaveResDto(reading.getId());
+        clubEvent.enrollQuestion(questions);
+        return new ClubEventSaveResDto(clubEvent.getId());
     }
 
     private Book getBook(Long bookId) {
@@ -81,27 +81,27 @@ public class ReadingService {
                 .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_CLUB));
     }
 
-    private Reading getReading(Long readingId) {
-        return readingRepository.findById(readingId)
+    private ClubEvent getClubEvent(Long clubEventId) {
+        return clubEventRepository.findById(clubEventId)
                 .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_READING));
     }
 
-    public ReadingDetailResDto getDetails(Long clubId, Long readingId, Long userId) {
+    public ClubEventDetailResDto getDetails(Long clubId, Long clubEventId, Long userId) {
         Club club = getClub(clubId);
         User user = getUser(userId);
         boolean isMember;
         isMember = clubMemberRepository.findByUserAndClub(user, club).isPresent();
-        Reading reading = getReading(readingId);
-        if (!reading.getClub().getId().equals(clubId)) {
+        ClubEvent clubEvent = getClubEvent(clubEventId);
+        if (!clubEvent.getClub().getId().equals(clubId)) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
         }
-        List<ReadingMember> members = reading.getMembers();
-        Book book = reading.getBook();
+        List<ClubEventMember> members = clubEvent.getMembers();
+        Book book = clubEvent.getBook();
         List<PostByMembersResDto> posts = getPosts(members, book);
-        return new ReadingDetailResDto(reading, posts, isMember);
+        return new ClubEventDetailResDto(clubEvent, posts, isMember);
     }
 
-    private List<PostByMembersResDto> getPosts(List<ReadingMember> members, Book book) {
+    private List<PostByMembersResDto> getPosts(List<ClubEventMember> members, Book book) {
         List<PostByMembersResDto> ret = new ArrayList<>();
         members.stream()
                 .map(m -> getPost(m.getUser(), book))
@@ -121,22 +121,22 @@ public class ReadingService {
     }
 
     @Transactional
-    public void applyReading(Long readingId, Long clubId, Long userId) {
+    public void applyReading(Long clubEventId, Long clubId, Long userId) {
         User user = getUser(userId);
         Club club = getClub(clubId);
-        Reading reading = getReading(readingId);
+        ClubEvent clubEvent = getClubEvent(clubEventId);
         ClubMember clubMember = clubMemberRepository.findByUserAndClub(user, club)
                 .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_READING));
-        ReadingMember readingMember = new ReadingMember(user, reading, MemberRole.MEMBER);
-        if (readingMemberRepository.findByUserAndReading(user, reading).isPresent()) {
-            ReadingMember delete = readingMemberRepository.findByUserAndReading(user, reading).get();
+        ClubEventMember readingMember = new ClubEventMember(user, clubEvent, MemberRole.MEMBER);
+        if (clubEventMemberRepository.findByUserAndClubEvent(user, clubEvent).isPresent()) {
+            ClubEventMember delete = clubEventMemberRepository.findByUserAndClubEvent(user, clubEvent).get();
             user.removeReading(delete);
-            reading.removeMember(delete);
-            readingMemberRepository.delete(delete);
+            clubEvent.removeMember(delete);
+            clubEventMemberRepository.delete(delete);
         } else {
-            readingMemberRepository.save(readingMember);
+            clubEventMemberRepository.save(readingMember);
             user.enrollReading(readingMember);
-            reading.addMember(readingMember);
+            clubEvent.addMember(readingMember);
         }
     }
 }

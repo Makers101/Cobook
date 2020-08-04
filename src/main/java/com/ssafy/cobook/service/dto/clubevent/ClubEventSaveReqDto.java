@@ -1,6 +1,6 @@
-package com.ssafy.cobook.service.dto.reading;
+package com.ssafy.cobook.service.dto.clubevent;
 
-import com.ssafy.cobook.domain.reading.Reading;
+import com.ssafy.cobook.domain.clubevent.ClubEvent;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReadingSaveReqDto {
+public class ClubEventSaveReqDto {
 
     @ApiModelProperty(position = 1)
     private String name;
@@ -26,8 +26,8 @@ public class ReadingSaveReqDto {
     @ApiModelProperty(position = 6)
     private List<String> questions;
 
-    public Reading toEntity() {
-        return Reading.builder()
+    public ClubEvent toEntity() {
+        return ClubEvent.builder()
                 .title(name)
                 .dateTime(datetime)
                 .place(place)

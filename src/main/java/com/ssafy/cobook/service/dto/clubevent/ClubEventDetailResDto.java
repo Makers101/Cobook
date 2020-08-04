@@ -1,7 +1,7 @@
-package com.ssafy.cobook.service.dto.reading;
+package com.ssafy.cobook.service.dto.clubevent;
 
+import com.ssafy.cobook.domain.clubevent.ClubEvent;
 import com.ssafy.cobook.domain.clubmember.MemberRole;
-import com.ssafy.cobook.domain.reading.Reading;
 import com.ssafy.cobook.service.dto.book.BookSimpleResDto;
 import com.ssafy.cobook.service.dto.post.PostByMembersResDto;
 import com.ssafy.cobook.service.dto.question.QuestionResDto;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReadingDetailResDto {
+public class ClubEventDetailResDto {
 
     private Long id;
     private String name;
@@ -27,29 +27,29 @@ public class ReadingDetailResDto {
     private Boolean isMember;
     private BookSimpleResDto book;
     private List<QuestionResDto> questions;
-    private ReadingMemberResponseDto leader;
-    private List<ReadingMemberResponseDto> participants;
+    private ClubEventMemberResponseDto leader;
+    private List<ClubEventMemberResponseDto> participants;
     private List<PostByMembersResDto> memberPosts;
 
-    public ReadingDetailResDto(Reading reading, List<PostByMembersResDto> memberPosts, boolean isMember) {
-        this.id = reading.getId();
-        this.name = reading.getTitle();
-        this.dateTime = reading.getDateTime();
-        this.place = reading.getPlace();
-        this.description = reading.getDescription();
-        this.closed = reading.getClosed();
-        this.book = new BookSimpleResDto(reading.getBook());
-        this.questions = reading.getQuestions().stream()
+    public ClubEventDetailResDto(ClubEvent clubEvent, List<PostByMembersResDto> memberPosts, boolean isMember) {
+        this.id = clubEvent.getId();
+        this.name = clubEvent.getTitle();
+        this.dateTime = clubEvent.getDateTime();
+        this.place = clubEvent.getPlace();
+        this.description = clubEvent.getDescription();
+        this.closed = clubEvent.getClosed();
+        this.book = new BookSimpleResDto(clubEvent.getBook());
+        this.questions = clubEvent.getQuestions().stream()
                 .map(QuestionResDto::new)
                 .collect(Collectors.toList());
-        this.leader = reading.getMembers().stream()
+        this.leader = clubEvent.getMembers().stream()
                 .filter(m -> m.getRole().equals(MemberRole.LEADER))
                 .findFirst()
-                .map(ReadingMemberResponseDto::new)
+                .map(ClubEventMemberResponseDto::new)
                 .get();
-        this.participants = reading.getMembers().stream()
+        this.participants = clubEvent.getMembers().stream()
                 .filter(m -> m.getRole().equals(MemberRole.MEMBER))
-                .map(ReadingMemberResponseDto::new)
+                .map(ClubEventMemberResponseDto::new)
                 .collect(Collectors.toList());
         this.memberPosts = memberPosts;
         this.isMember = isMember;

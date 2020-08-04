@@ -5,7 +5,7 @@ import com.ssafy.cobook.domain.clubgenre.ClubGenre;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.post.Post;
-import com.ssafy.cobook.domain.reading.Reading;
+import com.ssafy.cobook.domain.clubevent.ClubEvent;
 import com.ssafy.cobook.service.dto.club.ClubUpdateRequestDto;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,7 +33,7 @@ public class Club extends BaseTimeEntity {
     private List<ClubGenre> genres = new ArrayList<>();
 
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
-    private List<Reading> readingList = new ArrayList<>();
+    private List<ClubEvent> clubEvents = new ArrayList<>();
 
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
@@ -70,8 +70,8 @@ public class Club extends BaseTimeEntity {
         this.clubImg = url;
     }
 
-    public void enrollReading(Reading reading) {
-        this.readingList.add(reading);
+    public void enrollReading(ClubEvent clubEvent) {
+        this.clubEvents.add(clubEvent);
     }
 
     public void addPosts(Post post) {

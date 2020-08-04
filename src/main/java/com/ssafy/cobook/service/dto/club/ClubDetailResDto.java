@@ -2,13 +2,10 @@ package com.ssafy.cobook.service.dto.club;
 
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.clubgenre.ClubGenre;
-import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.clubmember.MemberRole;
-import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.service.dto.clubmember.ClubMemberResponseDto;
 import com.ssafy.cobook.service.dto.genre.GenreResponseDto;
-import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
-import com.ssafy.cobook.service.dto.user.UserSimpleResDto;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventSimpleResDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,7 +33,7 @@ public class ClubDetailResDto {
     private ClubMemberResponseDto leader;
     private List<ClubMemberResponseDto> members;
     private List<Long> candidates;
-    private List<ReadingSimpleResDto> readings;
+    private List<ClubEventSimpleResDto> clubEvents;
 
     public ClubDetailResDto(Club club) {
         this.id = club.getId();
@@ -62,8 +59,8 @@ public class ClubDetailResDto {
                 .filter(m -> m.getRole().equals(MemberRole.MEMBER))
                 .map(ClubMemberResponseDto::new)
                 .collect(Collectors.toList());
-        this.readings = club.getReadingList().stream()
-                .map(ReadingSimpleResDto::new)
+        this.clubEvents = club.getClubEvents().stream()
+                .map(ClubEventSimpleResDto::new)
                 .collect(Collectors.toList());
         this.memberCnt = members.size() + 1;
         this.candidates = club.getMembers().stream()

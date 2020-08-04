@@ -1,6 +1,6 @@
-package com.ssafy.cobook.domain.meetupquestion;
+package com.ssafy.cobook.domain.onedayeventquestion;
 
-import com.ssafy.cobook.domain.meetup.MeetUp;
+import com.ssafy.cobook.domain.onedayevent.OneDayEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,16 +10,16 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MeetUpQuestion {
+public class OneDayEventQuestion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "mquestion_id")
+    @Column(name = "one_day_event_question_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "meetup_id")
-    private MeetUp meetUp;
+    @JoinColumn(name = "one_day_event_id")
+    private OneDayEvent oneDayEvent;
 
     private String question;
 }
