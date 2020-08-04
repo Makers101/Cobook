@@ -289,8 +289,31 @@ public class PostService {
         Post post = getPostById(postId);
         if (!post.getUser().equals(user)) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_POST);
-        } else if (!user.getNickName().equals("코북이")) {
-            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_POST);
+        }
+        if (!user.getNickName().equals("코북이")) {
+            List<PostLike> postLikes = postLikeRepository.findAllByPost(post);
+            for (PostLike postLike : postLikes) {
+                postLike.removeUser();
+            }
+            postLikeRepository.deleteAll(postLikes);
+            List<PostTag> postTags = postTagRepository.findAllByPost(post);
+            for (PostTag postTag : postTags) {
+                postTag.removeTag();
+            }
+            postTagRepository.deleteAll(postTags);
+            List<PostBookMark> bookMarks = postBookMarkRepository.findAllByPost(post);
+            for (PostBookMark postBookMark : bookMarks) {
+                postBookMark.removeUser();
+            }
+            postBookMarkRepository.deleteAll(bookMarks);
+            List<PostComment> comments = postCommentRepository.findAllByPost(post);
+            for (PostComment comment : comments) {
+                comment.removeUser();
+            }
+            postCommentRepository.deleteAll(comments);
+            user.removePost(post);
+            postRepository.delete(post);
+            return;
         }
         List<PostLike> postLikes = postLikeRepository.findAllByPost(post);
         for (PostLike postLike : postLikes) {
