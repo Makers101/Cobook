@@ -24,7 +24,7 @@
         <div class="error-text ml-3" v-if="error.email">{{error.email}}</div>
       </div>
       <div class="buttons mt-5 ">
-        <button class="btn done-button" :class="{disabled: !isSubmit}" @click="signupKakao(this.signupKakaoData)" >입력완료</button>
+        <button class="btn done-button" :class="{disabled: !isSubmit}" @click="signupKakao(signupKakaoData)" >입력완료</button>
       </div>
     </div>
   </div>
@@ -34,6 +34,7 @@
 import SERVER from '@/api/api'
 import axios from 'axios'
 import router from '@/router'
+import cookies from 'vue-cookies'
 export default {
   name: 'SignupKakao',
   data() {
@@ -81,8 +82,9 @@ export default {
     },
     signupKakao(info) {
       axios.post(SERVER.URL + SERVER.ROUTES.signupKakao, info)
-        .then(() => {
-          router.push({ name: 'SignupSuccessful'})
+        .then(res => {
+          cookies.set("auth-token", res.data);
+          router.push('/')
         })
         .catch (err => {
           console.log(err.response)
