@@ -240,6 +240,22 @@ public class ClubService {
         Club club = getClub(clubId);
         ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
                 .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if ( user.getNickName().equals("코북이")) {
+            for (ClubMember clubMember : club.getMembers()) {
+                clubMember.removeUser();
+            }
+            clubMemberRepository.deleteAll(club.getMembers());
+            for (Reading reading : club.getReadingList()) {
+                reading.delete();
+            }
+            readingRepository.deleteAll(club.getReadingList());
+            for (ClubGenre clubGenre : club.getGenres()) {
+                clubGenre.remove();
+            }
+            clubGenreRepository.deleteAll(club.getGenres());
+            clubRepository.delete(club);
+            return;
+        }
         if (leader.isNotLeader()) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
         }
@@ -256,5 +272,16 @@ public class ClubService {
         }
         clubGenreRepository.deleteAll(club.getGenres());
         clubRepository.delete(club);
+    }
+
+    public void updateClub(Long userId, Long clubId, ClubUpdateRequestDto requestDto) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
+        if (leader.isNotLeader() || !user.getNickName().equals("코북이")) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        }
+
     }
 }

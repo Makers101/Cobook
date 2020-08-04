@@ -77,6 +77,9 @@ public class UserController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping
     public ResponseEntity<ProfileResponseDto> getMyInfo(@ApiIgnore final Authentication authentication) {
+        if( authentication == null) {
+            return ResponseEntity.ok().build();
+        }
         Long userId = ((User) authentication.getPrincipal()).getId();
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.getMyInfo(userId));
     }

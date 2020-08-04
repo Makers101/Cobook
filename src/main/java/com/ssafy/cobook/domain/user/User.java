@@ -44,7 +44,6 @@ public class User implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-
     @Enumerated(EnumType.STRING)
     private PlatformType platformType;
 
