@@ -137,4 +137,8 @@ public class Post extends BaseEntity {
     public void removeComment(PostComment postComment) {
         this.comments.remove(postComment);
     }
+
+    public void addTags(List<PostTag> postTags) {
+        this.tags.addAll(postTags);
+    }
 }

@@ -11,9 +11,11 @@ import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.genre.GenreRepository;
+import com.ssafy.cobook.domain.posttag.PostTag;
 import com.ssafy.cobook.domain.reading.Reading;
 import com.ssafy.cobook.domain.reading.ReadingRepository;
 import com.ssafy.cobook.domain.readingmember.ReadingMember;
+import com.ssafy.cobook.domain.tag.Tag;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
@@ -30,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -240,7 +243,7 @@ public class ClubService {
         Club club = getClub(clubId);
         ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
                 .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
-        if ( user.getNickName().equals("코북이")) {
+        if (user.getNickName().equals("코북이")) {
             for (ClubMember clubMember : club.getMembers()) {
                 clubMember.removeUser();
             }
@@ -279,9 +282,33 @@ public class ClubService {
         Club club = getClub(clubId);
         ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
                 .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
-        if (leader.isNotLeader() || !user.getNickName().equals("코북이")) {
+        if (leader.isNotLeader()) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
         }
+        club.updateInfos(requestDto);
+        List<ClubGenre> originGenres = club.getGenres();
+        List<Genre> genres = requestDto.getGenres().stream()
+                .map(this::getGenre)
+                .collect(Collectors.toList());
+        List<ClubGenre> deletes = new ArrayList<>();
+        for (ClubGenre genre : originGenres) {
+            Genre temp = genre.getGenre();
+            if (!genres.contains(temp)) {
+                temp.removeClub(genre);
+                club.removeGenre(genre);
+                deletes.add(genre);
+            } else {
+                genres.remove(temp);
+            }
+        }
+        clubGenreRepository.deleteAll(deletes);
+        List<ClubGenre> clubGenres = genres.stream()
+                .map(g-> saveGenre(club, g))
+                .collect(Collectors.toList());
+        club.addGenres(clubGenres);
+    }
 
+    private ClubGenre saveGenre(Club club, Genre g) {
+        return clubGenreRepository.save(new ClubGenre(club, g));
     }
 }
