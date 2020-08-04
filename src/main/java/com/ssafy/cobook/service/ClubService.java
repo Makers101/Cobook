@@ -2,6 +2,8 @@ package com.ssafy.cobook.service;
 
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.club.ClubRepository;
+import com.ssafy.cobook.domain.clubevent.ClubEvent;
+import com.ssafy.cobook.domain.clubevent.ClubEventRepository;
 import com.ssafy.cobook.domain.clubgenre.ClubGenre;
 import com.ssafy.cobook.domain.clubgenre.ClubGenreRepository;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
@@ -11,18 +13,12 @@ import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.genre.GenreRepository;
-import com.ssafy.cobook.domain.posttag.PostTag;
-import com.ssafy.cobook.domain.reading.Reading;
-import com.ssafy.cobook.domain.reading.ReadingRepository;
-import com.ssafy.cobook.domain.readingmember.ReadingMember;
-import com.ssafy.cobook.domain.tag.Tag;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.*;
-import com.ssafy.cobook.service.dto.reading.ReadingSimpleResDto;
 import com.ssafy.cobook.service.dto.user.UserSimpleResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +45,7 @@ public class ClubService {
     private final GenreRepository genreRepository;
     private final ClubGenreRepository clubGenreRepository;
     private final FollowRepository followRepository;
-    private final ReadingRepository readingRepository;
+    private final ClubEventRepository clubEventRepository;
 
     @Transactional
     public ClubCreateResDto create(Long userId, ClubCreateReqDto reqDto) throws IOException {
@@ -117,9 +113,6 @@ public class ClubService {
         List<UserSimpleResDto> users = club.getMembers()
                 .stream()
                 .map(c -> new UserSimpleResDto(c.getUser(), c.getRole()))
-                .collect(Collectors.toList());
-        List<ReadingSimpleResDto> readings = club.getReadingList().stream()
-                .map(ReadingSimpleResDto::new)
                 .collect(Collectors.toList());
         return new ClubDetailResDto(club);
     }
@@ -248,10 +241,10 @@ public class ClubService {
                 clubMember.removeUser();
             }
             clubMemberRepository.deleteAll(club.getMembers());
-            for (Reading reading : club.getReadingList()) {
+            for (ClubEvent reading : club.getClubEvents()) {
                 reading.delete();
             }
-            readingRepository.deleteAll(club.getReadingList());
+            clubEventRepository.deleteAll(club.getClubEvents());
             for (ClubGenre clubGenre : club.getGenres()) {
                 clubGenre.remove();
             }
@@ -266,10 +259,10 @@ public class ClubService {
             clubMember.removeUser();
         }
         clubMemberRepository.deleteAll(club.getMembers());
-        for (Reading reading : club.getReadingList()) {
+        for (ClubEvent reading : club.getClubEvents()) {
             reading.delete();
         }
-        readingRepository.deleteAll(club.getReadingList());
+        clubEventRepository.deleteAll(club.getClubEvents());
         for (ClubGenre clubGenre : club.getGenres()) {
             clubGenre.remove();
         }

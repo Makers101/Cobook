@@ -1,16 +1,19 @@
 package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.domain.user.User;
+import com.ssafy.cobook.service.ClubEventService;
 import com.ssafy.cobook.service.ClubService;
 import com.ssafy.cobook.service.PostService;
-import com.ssafy.cobook.service.ReadingService;
 import com.ssafy.cobook.service.dto.club.*;
-import com.ssafy.cobook.service.dto.post.*;
-import com.ssafy.cobook.service.dto.reading.ReadingDetailResDto;
-import com.ssafy.cobook.service.dto.reading.ReadingSaveReqDto;
-import com.ssafy.cobook.service.dto.reading.ReadingSaveResDto;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventDetailResDto;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventSaveReqDto;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventSaveResDto;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventUpdateReqDto;
+import com.ssafy.cobook.service.dto.post.PostByClubResponseDto;
+import com.ssafy.cobook.service.dto.post.PostSaveByClubReqDto;
+import com.ssafy.cobook.service.dto.post.PostSaveResDto;
+import com.ssafy.cobook.service.dto.post.PostUpdateByClubReqDto;
 import com.ssafy.cobook.util.FileUtil;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -42,7 +45,7 @@ public class ClubController {
 
     private final ClubService clubService;
     private final PostService postService;
-    private final ReadingService readingService;
+    private final ClubEventService clubEventService;
     private final FileUtil fileService;
 
     @ApiOperation(value = "클럽을 생성한다", response = ClubCreateResDto.class)
@@ -143,36 +146,59 @@ public class ClubController {
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
 
-    @ApiOperation(value = "리딩을 생성한다.", response = ReadingSaveResDto.class)
+    @ApiOperation(value = "리딩을 생성한다.", response = ClubEventSaveResDto.class)
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/{clubId}/readings")
-    public ResponseEntity<ReadingSaveResDto> makeReading(@ApiIgnore final Authentication authentication,
-                                                         @PathVariable("clubId") final Long clubId,
-                                                         @RequestBody final ReadingSaveReqDto reqDto) {
+    @PostMapping("/{clubId}/clubevents")
+    public ResponseEntity<ClubEventSaveResDto> makeEvents(@ApiIgnore final Authentication authentication,
+                                                          @PathVariable("clubId") final Long clubId,
+                                                          @RequestBody final ClubEventSaveReqDto reqDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
-        ReadingSaveResDto resDto = readingService.makeReading(userId, clubId, reqDto);
+        ClubEventSaveResDto resDto = clubEventService.makeReading(userId, clubId, reqDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
 
-    @ApiOperation(value = "리딩의 상세정보를 조회한다", response = ReadingDetailResDto.class)
+    @ApiOperation(value = "리딩의 상세정보를 조회한다", response = ClubEventDetailResDto.class)
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @GetMapping("/{clubId}/readings/{readingId}")
-    public ResponseEntity<ReadingDetailResDto> getReadingDetail(@ApiIgnore final Authentication authentication,
-                                                                @PathVariable("clubId") final Long clubId,
-                                                                @PathVariable("readingId") final Long readingId) {
+    @GetMapping("/{clubId}/clubevents/{clubEventId}")
+    public ResponseEntity<ClubEventDetailResDto> getEventsDetail(@ApiIgnore final Authentication authentication,
+                                                                 @PathVariable("clubId") final Long clubId,
+                                                                 @PathVariable("clubEventId") final Long clubEventId) {
         Long userId = ((User) authentication.getPrincipal()).getId();
-        ReadingDetailResDto resDto = readingService.getDetails(clubId, readingId, userId);
+        ClubEventDetailResDto resDto = clubEventService.getDetails(clubId, clubEventId, userId);
         return ResponseEntity.status(HttpStatus.OK).body(resDto);
     }
 
     @ApiOperation(value = "리딩에 가입한다")
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/{clubId}/readings/{readingId}/apply")
-    public ResponseEntity<Void> applyReading(@ApiIgnore final Authentication authentication,
-                                             @PathVariable("clubId") final Long clubId,
-                                             @PathVariable("readingId") final Long readingId) {
+    @PostMapping("/{clubId}/clubevents/{clubEventId}/apply")
+    public ResponseEntity<Void> applyEvents(@ApiIgnore final Authentication authentication,
+                                            @PathVariable("clubId") final Long clubId,
+                                            @PathVariable("clubEventId") final Long clubEventId) {
         Long userId = ((User) authentication.getPrincipal()).getId();
-        readingService.applyReading(readingId, clubId, userId);
+        clubEventService.applyReading(clubEventId, clubId, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "리딩을 수정한다.")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PostMapping("/{clubId}/clubevents/{eventId}")
+    public ResponseEntity<Void> updateEvents(@ApiIgnore final Authentication authentication,
+                                             @PathVariable("clubId") final Long clubId,
+                                             @PathVariable("eventId") final Long eventId,
+                                             @RequestBody final ClubEventUpdateReqDto reqDto) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        clubEventService.updateEvent(userId, clubId, eventId, reqDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "리딩을 삭제한다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @DeleteMapping("/{clubId}/clubevents/{eventId}")
+    public ResponseEntity<Void> deleteEvents(@ApiIgnore final Authentication authentication,
+                                             @PathVariable("clubId") final Long clubId,
+                                             @PathVariable("eventId") final Long clubEventId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        clubEventService.deleteEvents(clubEventId, clubId, userId);
         return ResponseEntity.ok().build();
     }
 
