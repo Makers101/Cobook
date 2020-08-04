@@ -234,7 +234,7 @@ public class PostService {
                 .map(t -> saveTag(post, t))
                 .collect(Collectors.toList());
         post.updatePost(requestDto);
-        post.setTags(postTags);
+        post.addTags(postTags);
     }
 
     private PostTag saveTag(Post post, Tag tag) {
@@ -259,6 +259,8 @@ public class PostService {
                 temp.removePostTag(tag);
                 post.deleteTags(tag);
                 deletes.add(tag);
+            } else {
+                tags.remove(temp);
             }
         }
         postTagRepository.deleteAll(deletes);

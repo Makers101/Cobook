@@ -43,4 +43,8 @@ public class Genre {
     public void removeClub(ClubGenre clubGenre) {
         this.clubList.remove(clubGenre);
     }
+
+    public Genre(String genreName) {
+        this.genreName = genreName;
+    }
 }

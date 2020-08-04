@@ -1,12 +1,12 @@
 package com.ssafy.cobook.domain.club;
 
-import com.ssafy.cobook.domain.baseEntity.BaseEntity;
 import com.ssafy.cobook.domain.baseEntity.BaseTimeEntity;
 import com.ssafy.cobook.domain.clubgenre.ClubGenre;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.reading.Reading;
+import com.ssafy.cobook.service.dto.club.ClubUpdateRequestDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -84,5 +84,20 @@ public class Club extends BaseTimeEntity {
 
     public void removeMember(ClubMember clubMember) {
         this.members.remove(clubMember);
+    }
+
+    public void updateInfos(ClubUpdateRequestDto requestDto) {
+        this.name = requestDto.getName();
+        this.description = requestDto.getDescription();
+        this.onelineDescription = requestDto.getOnelineDescription();
+        this.residence = requestDto.getResidence();
+    }
+
+    public void removeGenre(ClubGenre genre) {
+        this.genres.remove(genre);
+    }
+
+    public void addGenres(List<ClubGenre> clubGenres) {
+        this.genres.addAll(clubGenres);
     }
 }
