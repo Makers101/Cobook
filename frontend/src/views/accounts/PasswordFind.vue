@@ -89,7 +89,7 @@ export default {
       axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
         headers: { 'Content-Type': 'application/json' }
       })
-        .then (() => {
+        .then (() => {                                                      
           router.push({ name: 'PasswordFindEmail'})
         })
         .catch (err =>{
