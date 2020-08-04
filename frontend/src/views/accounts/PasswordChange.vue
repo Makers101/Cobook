@@ -105,10 +105,13 @@ export default {
           data: newData,
           location: SERVER.ROUTES.changepassword,
         }
+        { headers: { Authorization: `Token ${state.authToken}` } }
         axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
           headers: { 
             'Content-Type': 'application/json',
-            'jwt' : this.$route.query.jwt }
+            // 'jwt' : this.$route.query.jwt 
+             Authorization: `Token ${this.$route.query.jwt}`
+            }
         })
         .then (() => {
           console.log("clickChangePassword Success")
