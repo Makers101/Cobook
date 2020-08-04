@@ -27,7 +27,6 @@ public class ClubEventByClubResDto {
         this.dateTime = clubEvent.getDateTime();
         this.place = clubEvent.getPlace();
         this.description = clubEvent.getDescription();
-        this.oneLineDescription = clubEvent.getOneLineDescription();
         this.closed = clubEvent.getClosed();
         this.book = clubEvent.getBook();
     }
