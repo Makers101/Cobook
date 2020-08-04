@@ -52,6 +52,9 @@ button {
   font-weight: 600;
 }
 
+.background {
+  background-repeat: repeat;
+}
 
 .background::after {
   content:"";
