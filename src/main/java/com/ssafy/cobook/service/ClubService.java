@@ -240,7 +240,9 @@ public class ClubService {
         Club club = getClub(clubId);
         ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
                 .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
-        if (leader.isNotLeader() || !user.getNickName().equals("코북이")) {
+        if (leader.isNotLeader() ) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
+        } else if (!user.getNickName().equals("코북이")) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
         }
         for (ClubMember clubMember : club.getMembers()) {

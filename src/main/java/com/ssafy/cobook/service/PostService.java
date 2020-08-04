@@ -26,10 +26,10 @@ import com.ssafy.cobook.service.dto.post.*;
 import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.tag.TagResponseDto;
+import com.ssafy.cobook.util.PageRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -287,7 +287,9 @@ public class PostService {
     public void deletePosts(Long userId, Long postId) {
         User user = getUserById(userId);
         Post post = getPostById(postId);
-        if (!post.getUser().equals(user) || !user.getNickName().equals("코북이")) {
+        if (!post.getUser().equals(user)) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_POST);
+        } else if (!user.getNickName().equals("코북이")) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_POST);
         }
         List<PostLike> postLikes = postLikeRepository.findAllByPost(post);
@@ -314,7 +316,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public Page<PostResponseDto> getAllPostsPage(Pageable pageable) {
-        return postRepository.findAll(pageable).map(PostResponseDto::new);
+    public Page<PostResponseDto> getAllPostsPage(PageRequest pageRequest) {
+        return postRepository.findAll(pageRequest.of()).map(PostResponseDto::new);
     }
 }

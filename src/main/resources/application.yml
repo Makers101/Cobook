@@ -9,10 +9,10 @@ jwt:
 spring:
   profiles: local
   datasource:
-    url: jdbc:h2:tcp://localhost/~/cobook
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mariadb://54.180.126.17:3306/cobook
+    username: cobook
+    password: cobook
+    driver-class-name: org.mariadb.jdbc.Driver
   h2:
     console:
       enabled: true
