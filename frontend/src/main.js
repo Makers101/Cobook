@@ -51,6 +51,8 @@ Vue.use(VueMoment);
 
 Vue.config.productionTip = false
 
+window.Kakao.init("18e2e5a6d3d295aaf4cd23e46868e8ab");
+
 new Vue({
   router,
   store,

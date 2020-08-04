@@ -9,6 +9,7 @@ import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.*;
+import com.ssafy.cobook.service.dto.user.oauth.KakaoLoginDto;
 import com.ssafy.cobook.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +68,7 @@ public class UserService {
     @Transactional
     public void checkEmailToken(String token) {
         Long id = Long.valueOf(jwtTokenProvider.getId(token));
-        userRepository.findById(id).orElseThrow(()->new UserException(ErrorCode.WRONG_EMAIL_CHECK_AUTH));
+        userRepository.findById(id).orElseThrow(() -> new UserException(ErrorCode.WRONG_EMAIL_CHECK_AUTH));
         userRepository.updateAccept(id, true);
     }
 
@@ -106,6 +107,7 @@ public class UserService {
         ProfileResponseDto profileResponseDto = new ProfileResponseDto(user, clubList, followerList, followingList);
         return profileResponseDto;
     }
+
     private void preparedAndSend(String recipient, boolean isFind, String token) {
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -135,10 +137,10 @@ public class UserService {
         emailSender.send(messagePreparator);
     }
 
-    public void getPassword(UserEmailSimpleDto userEmailSimpleDto, boolean isFind){
+    public void getPassword(UserEmailSimpleDto userEmailSimpleDto, boolean isFind) {
         String userEmail = userEmailSimpleDto.getEmail();
         User user = userRepository.findByEmail(userEmailSimpleDto.getEmail())
-                .orElseThrow(()->new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
         String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
         preparedAndSend(userEmail, isFind, token);
@@ -155,4 +157,16 @@ public class UserService {
         userRepository.updatePassword(user.getId(), encodePassword);
     }
 
+    public String kakaoLogin(KakaoLoginDto kakaoLoginDto) {
+        String email = kakaoLoginDto.getEmail();
+        User newUser = kakaoLoginDto.toEntity();
+        if (!userRepository.findByEmail(email).isPresent()) {
+            userRepository.save(newUser);
+        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
+        return token;
+    }
 }
