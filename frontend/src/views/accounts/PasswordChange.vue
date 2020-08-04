@@ -30,17 +30,17 @@
         <div class="error-text ml-3" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
       </div>
       <div class="buttons mt-4 mb-3">
-        <button class="btn change-button" :class="{disabled: !isSubmit}" @click="isSubmit && clickChangePassword(passwordChangeData)" >비밀번호 변경하기</button>
+        <button class="btn change-button" :class="{disabled: !isSubmit}" @click="clickChangePassword(passwordChangeData)" >비밀번호 변경하기</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-// import SERVER from '@/api/api'
-// import axios from 'axios'
-// import router from '@/router'
+// import { mapActions } from 'vuex'
+import SERVER from '@/api/api'
+import axios from 'axios'
+import router from '@/router'
 
 export default {
   name: 'PasswordChange',
@@ -96,32 +96,34 @@ export default {
       });
       this.isSubmit = isSubmit;
     },
-    ...mapActions('accountStore', ['clickChangePassword']),
+    // ...mapActions('accountStore', ['clickChangePassword']),
 
     
-    // clickChangePassword(info) {
-    //   if ( this.isSubmit ){
-    //     axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
-    //       headers: { 'Content-Type': 'application/json','jwt' : this.$route.query.jwt, }
-    //     })
-    //     .then (() => {
-    //       router.push({ name: 'PasswordChangeSuccessful' })
-    //     })
-    //     .catch (err =>{
-    //       console.log(err.response)
-    //     })
-    //   }
+    clickChangePassword(newData) {
+      if ( this.isSubmit ){
+        console.log("HELLO")
+        const info = {
+          data: newData,
+          location: SERVER.ROUTES.changepassword,
+          // to: '/'
+        }
+        axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
+          headers: { 
+            'Content-Type': 'application/json',
+            'jwt' : this.$route.query.jwt }
+        })
+        .then (() => {
+          console.log("clickChangePassword Success")
+          router.push({ name: 'PasswordChangeSuccessful' })
+        })
+        .catch (err =>{
+          console.log("HI")
+          console.log(err.response)
+        })
+      }
       
       
-    // },
-    // changePassword(passwordChangeData) {
-    //   const info = {
-    //     data: passwordChangeData,
-    //     location: SERVER.ROUTES.changepassword,
-    //     // to: '/'
-    //   }
-    //   this.sendPasswordEmail(info)
-    // },
+    },
   }
 }
 </script>

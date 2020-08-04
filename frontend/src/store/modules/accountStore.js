@@ -21,7 +21,7 @@ const accountStore = {
         .then(res => {
           console.log("SUCCESS", res.data)
           console.log(commit)
-          router.push({ name: 'SignupEmail' })
+          router.push({ name: 'SignupEmail', params: {signupEmail: info.data} })
 
         })
         .catch(err => {
@@ -40,6 +40,7 @@ const accountStore = {
           console.log(err.response.data)
         })
     },
+    // 비밀번호
     sendPasswordEmail(info) {
       axios.post(SERVER.URL + info.location, info.data)
         .then(() => {
@@ -50,20 +51,21 @@ const accountStore = {
           console.log(err.response.data)
         })
     },
-    changePassword(info) {
-      axios.post(SERVER.URL + info.location, info.data, {
-        headers: {
-          'Content-Type': 'application/json',
-          'jwt': this.$route.query.jwt,
-        }
-      })
-        .then(() => {
-          router.push({ name: 'PasswordChangeSuccessful' })
-        })
-        .catch(err => {
-          console.log(err.response)
-        })
-    },
+    // changePassword(info) {
+    //   axios.post(SERVER.URL + info.location, info.data, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'jwt': this.$route.query.jwt,
+    //       // 'jwt': rootState.route.query.jwt
+    //     }
+    //   })
+    //     .then(() => {
+    //       router.push({ name: 'PasswordChangeSuccessful' })
+    //     })
+    //     .catch(err => {
+    //       console.log(err.response)
+    //     })
+    // },
     signup({ dispatch }, signupData) {
       const info = {
         data: signupData,
@@ -80,34 +82,33 @@ const accountStore = {
       }
       dispatch('postAuthData2', info)
     },
-    clickChangePassword({ dispatch }, passwordChangeData) {
-      const info = {
-        data: passwordChangeData,
-        location: SERVER.ROUTES.changepassword,
-      }
-      dispatch('changePassword', info)
-    }
+    // clickChangePassword({ dispatch }, passwordChangeData) {
+    //   const info = {
+    //     data: passwordChangeData,
+    //     location: SERVER.ROUTES.changepassword,
+    //   }
+    //   dispatch('changePassword', info)
+    // },
     // findPassword({ dispatch }, passwordFindData) {
     //     const info = {
     //         data: passwordFindData,
     //         location: SERVER.ROUTES.password,
     //     }
     //     dispatch('sendPasswordEmail', info)
-    // }
-
-    // findPassword(email) {
-    //     const info = {
-    //         data: email,
-    //     }
-    //     axios.post(SERVER.URL + SERVER.ROUTES.password, info)
-    //         .then (res => {
-    //             console.log(res.data)
-    //             router.push({ name: 'PasswordFindEmail'})
-    //         })
-    //         .catch (err =>{
-    //             console.log(err.response)
-    //         })
     // },
+    findPassword(email) {
+        const info = {
+            data: email,
+        }
+        axios.post(SERVER.URL + SERVER.ROUTES.password, info)
+            .then (res => {
+                console.log(res.data)
+                router.push({ name: 'PasswordFindEmail'})
+            })
+            .catch (err =>{
+                console.log(err.response)
+            })
+    },
 
   },
 }
