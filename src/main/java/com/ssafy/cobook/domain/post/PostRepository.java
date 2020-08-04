@@ -21,7 +21,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAllByUserAndBook(User user, Book book);
 
-    @Query("select p from Post p " +
-            "join fetch p.club join fetch p.book join fetch p.bookMarks join fetch p.postLikes join fetch p.tags")
-    List<Post> findAll();
+//    @Query("select p from Post p " +
+//            "join fetch p.club join fetch p.book join fetch p.bookMarks join fetch p.postLikes join fetch p.tags")
+//    List<Post> findAllFetch();
 }
