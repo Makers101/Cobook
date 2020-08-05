@@ -261,7 +261,11 @@ export default {
     ...mapActions(['createNoti']),
     ...mapActions('clubStore', ['findClub', 'updateRecruit', 'applyClub', 'secedeClub', 'deleteClub']),
     selectClubEvent(clubEventId) {
-      router.push({ name: 'ClubEventDetail', params: { clubId: this.$route.params.clubId, clubEventId: clubEventId }})
+      if (this.isMember || this.isLeader) {
+        router.push({ name: 'ClubEventDetail', params: { clubId: this.$route.params.clubId, clubEventId: clubEventId }})
+      } else {
+        alert('아쉽지만 클럽 멤버만 접근 가능합니다.')
+      }
     },
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
