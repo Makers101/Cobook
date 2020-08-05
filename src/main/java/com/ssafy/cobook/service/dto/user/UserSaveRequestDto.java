@@ -31,7 +31,7 @@ public class UserSaveRequestDto {
                 .email(email)
                 .password(password)
                 .nickName(nickName)
-                .platformType(platformType)
+                .platformType(PlatformType.valueOf("NONE"))
                 .roles(Collections.singletonList("USER_ROLE"))
                 .build();
     }

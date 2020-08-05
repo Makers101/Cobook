@@ -19,6 +19,7 @@ public class KakaoLoginDto {
         return User.builder()
                 .email(email)
                 .nickName(nickname)
+                .accept(true)
                 .platformType(PlatformType.valueOf("KAKAO"))
                 .roles(Collections.singletonList("USER_ROLE"))
                 .build();
