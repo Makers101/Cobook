@@ -3,10 +3,12 @@ package com.ssafy.cobook.service.dto.onedayevent;
 import com.ssafy.cobook.domain.onedayevent.OneDayEvent;
 import com.ssafy.cobook.service.dto.book.BookSimpleResDto;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OneDayEventResponseDto {
 

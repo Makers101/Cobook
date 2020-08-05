@@ -4,6 +4,8 @@ import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.club.ClubRepository;
 import com.ssafy.cobook.domain.clubevent.ClubEvent;
 import com.ssafy.cobook.domain.clubevent.ClubEventRepository;
+import com.ssafy.cobook.domain.clubeventquestion.ClubEventQuestion;
+import com.ssafy.cobook.domain.clubeventquestion.ClubEventQuestionRepository;
 import com.ssafy.cobook.domain.clubgenre.ClubGenre;
 import com.ssafy.cobook.domain.clubgenre.ClubGenreRepository;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
@@ -46,6 +48,7 @@ public class ClubService {
     private final ClubGenreRepository clubGenreRepository;
     private final FollowRepository followRepository;
     private final ClubEventRepository clubEventRepository;
+    private final ClubEventQuestionRepository questionRepository;
 
     @Transactional
     public ClubCreateResDto create(Long userId, ClubCreateReqDto reqDto) throws IOException {
@@ -237,39 +240,50 @@ public class ClubService {
         ClubMember leader = clubMemberRepository.findByUserAndClub(user, club)
                 .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB));
         if (user.getNickName().equals("코북이")) {
-            for (ClubMember clubMember : club.getMembers()) {
+            List<ClubMember> members = club.getMembers();
+            for (ClubMember clubMember : members) {
                 clubMember.removeUser();
             }
-            clubMemberRepository.deleteAll(club.getMembers());
-            for (ClubEvent reading : club.getClubEvents()) {
-                reading.delete();
+            clubMemberRepository.deleteAll(members);
+            List<ClubEvent> events = club.getClubEvents();
+            for (ClubEvent clubEvent : events) {
+                List<ClubEventQuestion> questions = clubEvent.getQuestions();
+                questionRepository.deleteAll(questions);
+                clubEvent.delete();
             }
-            clubEventRepository.deleteAll(club.getClubEvents());
-            for (ClubGenre clubGenre : club.getGenres()) {
+            clubEventRepository.deleteAll(events);
+            List<ClubGenre> genres = club.getGenres();
+            for (ClubGenre clubGenre : genres) {
                 clubGenre.remove();
             }
-            clubGenreRepository.deleteAll(club.getGenres());
+            clubGenreRepository.deleteAll(genres);
             clubRepository.delete(club);
             return;
         }
         if (leader.isNotLeader()) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_CLUB);
         }
-        for (ClubMember clubMember : club.getMembers()) {
+        List<ClubMember> members = club.getMembers();
+        for (ClubMember clubMember : members) {
             clubMember.removeUser();
         }
-        clubMemberRepository.deleteAll(club.getMembers());
-        for (ClubEvent reading : club.getClubEvents()) {
-            reading.delete();
+        clubMemberRepository.deleteAll(members);
+        List<ClubEvent> events = club.getClubEvents();
+        for (ClubEvent clubEvent : events) {
+            List<ClubEventQuestion> questions = clubEvent.getQuestions();
+            questionRepository.deleteAll(questions);
+            clubEvent.delete();
         }
-        clubEventRepository.deleteAll(club.getClubEvents());
-        for (ClubGenre clubGenre : club.getGenres()) {
+        clubEventRepository.deleteAll(events);
+        List<ClubGenre> genres = club.getGenres();
+        for (ClubGenre clubGenre : genres) {
             clubGenre.remove();
         }
-        clubGenreRepository.deleteAll(club.getGenres());
+        clubGenreRepository.deleteAll(genres);
         clubRepository.delete(club);
     }
 
+    @Transactional
     public void updateClub(Long userId, Long clubId, ClubUpdateRequestDto requestDto) {
         User user = getUser(userId);
         Club club = getClub(clubId);
@@ -280,23 +294,16 @@ public class ClubService {
         }
         club.updateInfos(requestDto);
         List<ClubGenre> originGenres = club.getGenres();
+        clubGenreRepository.deleteAll(originGenres);
         List<Genre> genres = requestDto.getGenres().stream()
                 .map(this::getGenre)
                 .collect(Collectors.toList());
-        List<ClubGenre> deletes = new ArrayList<>();
         for (ClubGenre genre : originGenres) {
             Genre temp = genre.getGenre();
-            if (!genres.contains(temp)) {
-                temp.removeClub(genre);
-                club.removeGenre(genre);
-                deletes.add(genre);
-            } else {
-                genres.remove(temp);
-            }
+            temp.removeClub(genre);
         }
-        clubGenreRepository.deleteAll(deletes);
         List<ClubGenre> clubGenres = genres.stream()
-                .map(g-> saveGenre(club, g))
+                .map(g -> saveGenre(club, g))
                 .collect(Collectors.toList());
         club.addGenres(clubGenres);
     }
