@@ -91,6 +91,9 @@ export default {
   },
 
 }
+document.addEventListener('wheel', (e) => {
+    document.getElementById('scroll-area').scrollLeft += e.deltaY;
+})
 
 </script>
 
