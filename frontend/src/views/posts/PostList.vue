@@ -14,7 +14,11 @@
                       <div class="text-left p-0 m-0"><i class="fas fa-quote-left quote"></i></div>
                       <p class="m-0" @click="postDetail(post.id)">{{ post.onelineReview }}</p> 
                       <div class="text-right p-0 m-0"><i class="fas fa-quote-right quote"></i></div>
-                      <small @click="postDetail(post.id)">{{ post.user.nickName }}</small> 
+                      <small @click="postDetail(post.id)">
+                        <span v-if="post.user.profileImg"><img class="profile-img mr-2" :src="post.user.profileImg"></span>
+                        <span v-else ><img class="profile-img mr-2" src="https://user-images.githubusercontent.com/25967949/89418040-79e86500-d76a-11ea-999e-5000f1e8f1d4.png"></span>
+                        <span>{{ post.user.nickName }}</span>
+                      </small> 
                     </div>
                   </div>
                 </div>
@@ -88,14 +92,15 @@ export default {
   created() {
     this.fetchPosts()
     this.findMyAccount()
-  },
-
+  }
 }
 document.addEventListener('wheel', (e) => {
-    document.getElementById('scroll-area').scrollLeft += e.deltaY;
+  document.getElementById('scroll-area').scrollLeft += e.deltaY;
 })
 
 </script>
+
+
 
 <style scoped>
 .row {
@@ -278,6 +283,12 @@ img {
 .quote {
   color: white;
   font-size: 0.2em;
+}
+
+.profile-img {
+  width: 25px;
+  height: auto;
+  border-radius: 50%;
 }
 
 </style>
