@@ -1,9 +1,23 @@
 <template>
   <div class="custom-container mt-3 mb-5">
-    <!-- clubEvent-header -->
+
+    <!-- clubEvent-detail-header -->
     <div class="row">
-      <img class="book-image col-2" :src="selectedClubEvent.book.bookImg" alt="" v-if="selectedClubEvent.book.bookImg">
-      <img class="book-image col-2" src="http://placehold.jp/300x200.png?text=sample" alt="" v-else>
+      <div class="bookImg-container pointer col-2 p-0">
+        <img
+          class="book-image img-fluid"
+          :src="selectedClubEvent.book.bookImg"
+          :alt="selectedClubEvent.book.title"
+          v-if="selectedClubEvent.book.bookImg">
+        <img 
+          class="book-image img-fluid"
+          :src="'http://placehold.jp/300x200.png?text=' + selectedClubEvent.book.title"
+          :alt="selectedClubEvent.book.title"
+          v-else>
+        <div class="book-image overlay p-0">
+          <div class="text">{{ selectedClubEvent.book.title }}</div>
+        </div>
+      </div>
       <div class="col-10 py-2 d-flex flex-column justify-content-between">
         <div>
           <div class="d-flex justify-content-start align-items-center mb-2">
@@ -11,28 +25,30 @@
             <span class="badge mb-0 ml-2 clubEvent-closed-true" v-if="selectedClubEvent.closed">종료</span>
             <span class="badge mb-0 ml-2 clubEvent-closed-false" v-else>예정</span>
           </div>
-          <p class="text-left">{{ selectedClubEvent.book.title }}</p>
+          <div class="d-flex justify-content-start align-items-center pointer" @click="toSelectedClub(selectedClub.id)">
+            <img
+              class="club-image"
+              :src="selectedClub.clubImg"
+              :alt="selectedClub.name">
+            <p class="ml-1 mb-0 font-weight-bold club-name">{{ selectedClub.name }}</p>
+          </div>
         </div>
-        
         <div>
           <div class="d-flex justify-content-between">
             <div class="d-flex flex-column align-items-start justify-content-end">
-              <p class="mb-0"><i class="fas fa-map-marker-alt"></i> {{ selectedClubEvent.place }}</p>
-              <p class="mb-0">{{ selectedClubEvent.dateTime | moment('YYYY-MM-DD HH:mm') }}</p>
-
-              <!-- <p class="mb-0">{{ selectedClubEvent.dateTime.slice(0, 10) }} / {{ selectedClubEvent.dateTime.slice(11, 16) }}</p> -->
-              <!-- <p class="mb-0"></p> -->
+              <p class="mb-1 font-weight-bold"><i class="fas fa-map-marker-alt"></i> {{ selectedClubEvent.place }}</p>
+              <p class="mb-0 font-weight-bold">{{ selectedClubEvent.dateTime | moment('YYYY년 MM월 DD일 HH시 mm분') }}</p>
             </div>
             <div class="d-flex justify-content-end align-items-end">
-              <button class="btn btn-secondary mr-2" v-if="isLeader">클럽 이벤트 설정</button>
+              <button class="btn btn-secondary" v-if="isLeader">클럽 이벤트 설정</button>
               <button
-                class="btn btn-warning mr-2"
+                class="btn btn-warning"
                 v-if="selectedClubEvent.isMember & !isParticipant & !isLeader"
                 @click="clickParticipateClubEvent('apply')">
                 참가 신청
               </button>
               <button
-                class="btn btn-warning mr-2"
+                class="btn btn-warning"
                 v-if="selectedClubEvent.isMember & isParticipant & !isLeader"
                 @click="clickParticipateClubEvent('cancel')">
                 참가 취소
@@ -46,20 +62,41 @@
 
     <hr>
 
-    <!-- clubEvent-members -->
+    <!-- clubEvent-detail-members -->
     <div>
       <h4 class="text-left font-weight-bold mb-3">클럽 이벤트 멤버({{ selectedClubEvent.participantCnt }})</h4>
       <div class="d-flex justify-content-start">
         <div class="profile-container pointer mr-3" @click="selectUser(selectedClubEvent.leader.id)">
-          <img class="rounded-circle image" :src="selectedClubEvent.leader.profileImg" alt="" v-if="selectedClubEvent.leader.profileImg">
-          <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
+          <img
+            class="rounded-circle profile-image"
+            :src="selectedClubEvent.leader.profileImg"
+            :alt="selectedClubEvent.leader.nickName"
+            v-if="selectedClubEvent.leader.profileImg">
+          <img
+            class="rounded-circle profile-image"
+            :src="'http://placehold.jp/150x150.png?text=' + selectedClubEvent.leader.nickName"
+            :alt="selectedClubEvent.leader.nickName"
+            v-else>
           <div class="overlay rounded-circle">
             <div class="text">{{ selectedClubEvent.leader.nickName }}</div>
           </div>
         </div>
-        <div class="profile-container pointer mr-3" v-for="participant in selectedClubEvent.participants" :key="participant.id" @click="selectUser(participant.id)">
-          <img class="rounded-circle image" :src="participant.profileImg" alt="" v-if="participant.profileImg">
-          <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
+
+        <div
+          class="profile-container pointer mr-3"
+          v-for="participant in selectedClubEvent.participants"
+          :key="participant.id"
+          @click="selectUser(participant.id)">
+          <img
+            class="rounded-circle profile-image"
+            :src="participant.profileImg"
+            :alt="participant.nickName"
+            v-if="participant.profileImg">
+          <img
+            class="rounded-circle profile-image"
+            :src="'http://placehold.jp/150x150.png?text=' + participant.nickName"
+            :alt="participant.nickName"
+            v-else>
           <div class="overlay rounded-circle">
             <div class="text">{{ participant.nickName }}</div>
           </div>
@@ -69,7 +106,7 @@
 
     <hr>
 
-    <!-- clubEvent-description -->
+    <!-- clubEvent-detail-description -->
     <div>
       <h4 class="text-left font-weight-bold mb-3">클럽 이벤트 설명</h4>
       <p class="text-left px-2 description">{{ selectedClubEvent.description }}</p>
@@ -77,23 +114,27 @@
 
     <hr>
 
-    <!-- clubEvent-question -->
+    <!-- clubEvent-detail-question -->
     <div>
       <h4 class="text-left font-weight-bold mb-3">질문지</h4>
       <ul class="ml-4" v-if="selectedClubEvent.questions.length !== 0">
-        <li class="text-left" v-for="question in selectedClubEvent.questions" :key="question.id">{{ question.question }}</li>
+        <li
+          class="text-left"
+          v-for="question in selectedClubEvent.questions"
+          :key="question.id">
+          {{ question.question }}
+        </li>
       </ul>
-
       <div class="no-content d-flex justify-content-center align-items-center" v-else>
         <p class="mb-0">아직 질문지가 없습니다 ㄴ(°0°)ㄱ</p>
       </div>
     </div>
 
     <hr>
-    <!-- clubEvent-posts -->
+
+    <!-- clubEvent-detail-posts -->
     <div>
       <h4 class="text-left font-weight-bold mb-3">멤버의 책 리뷰</h4>
-      
       <div class="row rows-cols-1 row-cols-md-3" v-if="selectedClubEvent.memberPosts.length !== 0">
         <div 
           class="col-12 col-sm-4 mb-4 pointer"
@@ -102,12 +143,17 @@
           @click="toPostDetail(post.id)">
           <div class="card h-100">
             <div style="max-height:70px;overflow:hidden;">
-              <img class="bg-image" :src="`${ selectedClubEvent.book.bookImg }`" v-if="selectedClubEvent.book.bookImg">
-              <h5 
-                class="card-img-top color-light-black px-5 post-user" 
-                alt="book"
-                v-if="post.nickName" 
-              >
+              <img
+                class="bg-image"
+                :src="selectedClubEvent.book.bookImg"
+                :alt="selectedClubEvent.book.title"
+                v-if="selectedClubEvent.book.bookImg">
+              <img
+                class="bg-image"
+                :src="'http://placehold.jp/300x200.png?text=' + selectedClubEvent.book.title"
+                :alt="selectedClubEvent.book.title"
+                v-else>
+              <h5 class="card-img-top color-light-black px-5 post-user" v-if="post.nickName">
                 {{ post.nickName }}
               </h5>
             </div>
@@ -126,7 +172,6 @@
           </div>
         </div>            
       </div>
-      
       <div class="no-content d-flex justify-content-center align-items-center" v-else>
         <p class="mb-0">아직 멤버의 책 리뷰가 없습니다 ㄴ(°0°)ㄱ</p>
       </div>
@@ -134,7 +179,7 @@
 
     <hr>
 
-    <!-- clubEvent-reviews -->
+    <!-- clubEvent-detail-reviews -->
     <h4 class="text-left font-weight-bold mb-3">클럽 이벤트 기록</h4>
     <div class="no-content d-flex justify-content-center align-items-center" v-if="!selectedClubEvent.reviews">
       <p class="mb-0">아직 클럽 이벤트 기록이 없습니다 ㄴ(°0°)ㄱ</p>
@@ -157,7 +202,7 @@ export default {
   },
   computed: {
     ...mapState(['myaccount']),
-    ...mapState('clubStore', ['selectedClubEvent']),
+    ...mapState('clubStore', ['selectedClub', 'selectedClubEvent']),
     isParticipant: function() {
       let result = false
       this.selectedClubEvent.participants.forEach(participant => {
@@ -176,7 +221,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('clubStore', ['findClubEvent', 'participateClubEvent']),
+    ...mapActions('clubStore', ['findClub', 'findClubEvent', 'participateClubEvent']),
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
     },
@@ -197,9 +242,13 @@ export default {
     },
     toPostDetail(postId) {
       router.push({ name: 'PostDetail', params: { postId: postId }})
+    },
+    toSelectedClub(clubId) {
+      router.push({ name: 'ClubDetail', params: { clubId: clubId}})
     }
   },
   created() {
+    this.findClub(this.params.clubId)
     this.findClubEvent(this.params)
   }
 }
@@ -207,8 +256,11 @@ export default {
 
 <style scoped>
   .book-image {
+    padding: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
     border-radius: 25px;
-    padding: 8px;
   }
 
   .clubEvent-closed-false {
@@ -229,6 +281,10 @@ export default {
     position: relative;
   }
 
+  .bookImg-container {
+    position: relative;
+  }
+
   .overlay {
     position: absolute;
     top: 0;
@@ -246,7 +302,11 @@ export default {
     opacity: 0.8;
   }
 
-  .image {
+  .bookImg-container:hover .overlay {
+    opacity: 0.8;
+  }
+
+  .profile-image {
     display: block;
     width: 150px;
     height: 150px;
@@ -270,25 +330,34 @@ export default {
     height: 8rem;
   }
 
-.bg-image {
-  position: static;
-  width: 100%;
-  max-height: initial; 
-  margin-top: 0%;
-  filter: blur(5px);
-}
+  .bg-image {
+    position: static;
+    width: 100%;
+    max-height: initial; 
+    margin-top: 0%;
+    filter: blur(5px);
+  }
 
-.post-user {
-  position: absolute;
-  top: 10%;
-  left: 0;
-  text-shadow: 1px 1px 2px white;
-  font-weight: 900;
-  word-break: keep-all;
-}
+  .post-user {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    text-shadow: 1px 1px 2px white;
+    font-weight: 900;
+    word-break: keep-all;
+  }
 
-.description {
-  white-space: pre-line;
-}
+  .description {
+    white-space: pre-line;
+  }
 
+  .club-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+  }
+
+  .club-name:hover {
+    color: #88A498;
+  }
 </style>
