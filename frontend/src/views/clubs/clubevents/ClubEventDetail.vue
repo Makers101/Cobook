@@ -1,6 +1,7 @@
 <template>
-  <div class="custom-container mt-3 mb-5">
-
+  <div class="custom-container mt-3 mb-5"  v-if="selectedClubEvent">
+    <div v-if="isLeader || isParticipant">
+    
     <!-- clubEvent-detail-header -->
     <div class="row">
       <div class="bookImg-container pointer col-2 p-0">
@@ -25,12 +26,17 @@
             <span class="badge mb-0 ml-2 clubEvent-closed-true" v-if="selectedClubEvent.closed">종료</span>
             <span class="badge mb-0 ml-2 clubEvent-closed-false" v-else>예정</span>
           </div>
-          <div class="d-flex justify-content-start align-items-center pointer" @click="toSelectedClub(selectedClub.id)">
+          <div class="d-flex justify-content-start align-items-center">
             <img
-              class="club-image"
+              class="club-image pointer"
               :src="selectedClub.clubImg"
-              :alt="selectedClub.name">
-            <p class="ml-1 mb-0 font-weight-bold club-name">{{ selectedClub.name }}</p>
+              :alt="selectedClub.name"
+              @click="toSelectedClub(selectedClub.id)">
+            <p
+              class="ml-1 mb-0 font-weight-bold club-name pointer"
+              @click="toSelectedClub(selectedClub.id)">
+              {{ selectedClub.name }}
+            </p>
           </div>
         </div>
         <div>
@@ -134,7 +140,10 @@
 
     <!-- clubEvent-detail-posts -->
     <div>
-      <h4 class="text-left font-weight-bold mb-3">멤버의 책 리뷰</h4>
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="text-left font-weight-bold mb-3">멤버의 책 리뷰</h4>
+        <button class="btn btn-green" @click="toPostCreate(selectedClubEvent.book.id)">책 리뷰 작성하기</button>
+      </div>
       <div class="row rows-cols-1 row-cols-md-3" v-if="selectedClubEvent.memberPosts.length !== 0">
         <div 
           class="col-12 col-sm-4 mb-4 pointer"
@@ -184,6 +193,15 @@
     <div class="no-content d-flex justify-content-center align-items-center" v-if="!selectedClubEvent.reviews">
       <p class="mb-0">아직 클럽 이벤트 기록이 없습니다 ㄴ(°0°)ㄱ</p>
     </div>
+    </div>
+    <div v-else class="mt-5">
+      <img
+        src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png"
+        width="150px"
+        class="mt-3">
+      <h3 class="my-3">아쉽지만 클럽 멤버만 접근 가능합니다.</h3>
+      <button class="btn btn-green" @click="toSelectedClub(selectedClub.id)">클럽으로 돌아가기</button>
+    </div>
   </div>
 </template>
 
@@ -203,7 +221,7 @@ export default {
   computed: {
     ...mapState(['myaccount']),
     ...mapState('clubStore', ['selectedClub', 'selectedClubEvent']),
-    isParticipant: function() {
+    isParticipant() {
       let result = false
       this.selectedClubEvent.participants.forEach(participant => {
         if (participant.id === this.myaccount.id) {
@@ -212,7 +230,7 @@ export default {
       })
       return result
     },
-    isLeader: function() {
+    isLeader() {
       if (this.selectedClubEvent.leader.id === this.myaccount.id) {
         return true
       } else {
@@ -221,7 +239,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('clubStore', ['findClub', 'findClubEvent', 'participateClubEvent']),
+    ...mapActions('clubStore', ['findClub', 'findClubEvent', 'participateClubEvent', 'toPostCreate']),
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
     },
