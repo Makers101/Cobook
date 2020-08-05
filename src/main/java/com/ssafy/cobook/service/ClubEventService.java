@@ -142,6 +142,7 @@ public class ClubEventService {
         }
     }
 
+    @Transactional
     public void updateEvent(Long userId, Long clubId, Long eventId, ClubEventUpdateReqDto reqDto) {
         User user = getUser(userId);
         Club club = getClub(clubId);
@@ -159,7 +160,8 @@ public class ClubEventService {
         }
         event.updateInfo(reqDto);
         Book book = getBook(reqDto.getBooKId());
-        clubEventQuestionRepository.deleteAll(event.getQuestions());
+        List<ClubEventQuestion> origin = event.getQuestions();
+        clubEventQuestionRepository.deleteAll(origin);
         List<ClubEventQuestion> questions = reqDto.getQuestion().stream()
                 .map(q -> clubEventQuestionRepository.save(new ClubEventQuestion(event, q)))
                 .collect(Collectors.toList());
@@ -167,9 +169,9 @@ public class ClubEventService {
         if (!book.getId().equals(event.getBook().getId())) {
             event.changeBook(book);
         }
-
     }
 
+    @Transactional
     public void deleteEvents(Long eventId, Long clubId, Long userId) {
         User user = getUser(userId);
         Club club = getClub(clubId);
@@ -185,7 +187,10 @@ public class ClubEventService {
         if( member.isNotLeader()) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
         }
-        event.delete();
         club.removeEvents(event);
+        List<ClubEventQuestion> questions = event.getQuestions();
+        clubEventQuestionRepository.deleteAll(questions);
+        event.delete();
+        clubEventRepository.delete(event);
     }
 }
