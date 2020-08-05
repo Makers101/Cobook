@@ -50,7 +50,9 @@
         <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileBookmark', params: { userId:this.$route.params.userId }}"> Book Mark</router-link>
         <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileOverview', params: { userId:this.$route.params.userId }}"> Overview</router-link>
       </div>
-      <router-view/>
+      <transition name="show">
+        <router-view></router-view>
+      </transition>
     </div>
   </div>
 </div>
@@ -72,13 +74,22 @@ export default {
       showFollowerForm: false,
       showFollowingForm: false,
       currentlyFollowing: null,
+      transitionName: ''
     }
   },
   components: {
     FollowerForm,
     FollowingForm
   },
-
+  // watch: {
+  //   $route(to, from) {
+  //     if (to.meta.index > from.meta.index){
+  //       this.trnasitionName='slide-left';
+  //     } else {
+  //       this.transitionName='slide-right';
+  //     }
+  //   }
+  // },
   methods: {
     ...mapActions(['createNoti']),
     ...mapActions('profileStore', ['findProfile', 'clickFollow', 'fetchFollowerList', 'fetchFollowingList']),
@@ -143,10 +154,6 @@ export default {
     this.$router.push({ name: 'ProfileFeed',  params: { userId:this.$route.params.userId }})
   },
 
-  updated() {
-     
-  },
-
   beforeRouteUpdate (to, from, next) {
     this.showFollowerForm = false
     this.showFollowingForm = false
@@ -187,6 +194,16 @@ export default {
 
 .profile-description {
   white-space: pre-line;
+}
+
+.show-enter-active,
+.show-leave-enter {
+    transform: translateX(0);
+    transition: all .3s linear;
+}
+.show-enter,
+.show-leave-to {
+    transform: translateX(100%);
 }
 
 </style>
