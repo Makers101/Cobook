@@ -1,21 +1,21 @@
 <template>
   <div class="custom-container mb-5">
 
-    <!-- reading-create_banner -->
-    <div class="reading-banner">
+    <!-- clubEvent-create_banner -->
+    <div class="clubEvent-banner">
       <img
-        class="reading-banner-img"
+        class="clubEvent-banner-img"
         src="https://user-images.githubusercontent.com/57381062/88908347-b57bbe80-d294-11ea-9d31-a88d3d0b3b23.jpg"
         alt="">
-      <div class="reading-banner-text">
-        <h3 class="font-weight-bold">리딩 만들기</h3>
+      <div class="clubEvent-banner-text">
+        <h3 class="font-weight-bold">클럽 이벤트 만들기</h3>
         <p class="mb-0">
-          리딩을 만들어 멤버들과 함께 책을 읽고 좋은 대화를 나눠보세요 :)
+          클럽 이벤트를 만들어 멤버들과 함께 책을 읽고 좋은 대화를 나눠보세요 :)
         </p>
       </div>
     </div>
   
-    <!-- reading-create-form -->
+    <!-- clubEvent-create-form -->
     <v-app>
       <v-card>
         <template v-slot:progress>
@@ -37,18 +37,18 @@
                 cols="12"
               >
                 <v-text-field
-                  v-model="readingCreateData.name"
+                  v-model="clubEventCreateData.name"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="30"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="리딩명"
+                  label="클럽 이벤트 명"
                 ></v-text-field>
               </v-col>
 
               <v-col cols="12">
                 <v-autocomplete
-                  v-model="readingCreateData.bookId"
+                  v-model="clubEventCreateData.bookId"
                   v-if="books"
                   :items="books"
                   hide-selected
@@ -87,12 +87,12 @@
                 md="12"
               >
                 <v-textarea
-                  v-model="readingCreateData.description"
+                  v-model="clubEventCreateData.description"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="100"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="리딩 설명"
+                  label="클럽 이벤트 설명"
                 ></v-textarea>
               </v-col>
 
@@ -101,12 +101,12 @@
                 md="12"
               >
                 <v-text-field
-                  v-model="readingCreateData.place"
+                  v-model="clubEventCreateData.place"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="10"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="리딩 장소"
+                  label="클럽 이벤트 장소"
                 ></v-text-field>
               </v-col>
 
@@ -175,7 +175,7 @@
               </v-col>
               <v-col>
                 <v-combobox
-                  v-model="readingCreateData.questions"
+                  v-model="clubEventCreateData.questions"
                   color="blue-grey lighten-2"
                   label="질문지"
                   multiple
@@ -203,7 +203,7 @@
               class="button btn-green"
               @click="clickCreate"
             >
-              리딩 생성
+              클럽 이벤트 생성
             </v-btn>
           </v-card-actions>
         </v-form>
@@ -215,10 +215,10 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 export default {
-  name: 'ReadingCreate',
+  name: 'ClubEventCreate',
   data() {
     return {
-      readingCreateData: {
+      clubEventCreateData: {
         name: null,
         description: null,
         place: null,
@@ -252,7 +252,7 @@ export default {
     ...mapState(['books']),
   },
   methods: {
-    ...mapActions('clubStore', ['createReading']),
+    ...mapActions('clubStore', ['createClubEvent']),
     remove (data, item) {
       const index = data.indexOf(item.id)
       if (index >= 0) data.splice(index, 1)
@@ -266,30 +266,30 @@ export default {
       this.$refs.form.validate()
     },
     clickCreate() {
-      this.readingCreateData.datetime = this.date + 'T' + this.time
+      this.clubEventCreateData.datetime = this.date + 'T' + this.time
       const dataContainer = {
-        readingCreateData: this.readingCreateData,
+        clubEventCreateData: this.clubEventCreateData,
         clubId: this.$route.params.clubId
       }
-      this.createReading(dataContainer)
+      this.createClubEvent(dataContainer)
     }
   }
 }
 </script>
 
 <style scoped>
-  .reading-banner {
+  .clubEvent-banner {
     position: relative;
   }
 
-  .reading-banner-img {
+  .clubEvent-banner-img {
     width: 100%;
     height: 200px;
     vertical-align: middle;
     filter: brightness(0.7)
   }
   
-  .reading-banner-text {
+  .clubEvent-banner-text {
     color: #F8F8F8;
     text-align: center;
     text-shadow: 2px 2px 2px rgb(100, 100, 100);
