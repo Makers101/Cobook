@@ -6,12 +6,14 @@ import com.ssafy.cobook.service.dto.book.BookSimpleResDto;
 import com.ssafy.cobook.service.dto.post.PostByMembersResDto;
 import com.ssafy.cobook.service.dto.question.QuestionResDto;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OneDayEventDetailsDto {
 

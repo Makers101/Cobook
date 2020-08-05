@@ -1,6 +1,5 @@
 package com.ssafy.cobook.service.dto.onedayevent;
 
-import com.ssafy.cobook.domain.onedayevent.OneDayEvent;
 import com.ssafy.cobook.domain.onedayeventmember.OneDayEventMember;
 import com.ssafy.cobook.domain.user.User;
 import lombok.AccessLevel;
