@@ -4,6 +4,7 @@ import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.book.BookRepository;
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.club.ClubRepository;
+import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -351,5 +353,23 @@ public class PostService {
 
     public Page<PostResponseDto> getAllPostsPage(PageRequest pageRequest) {
         return postRepository.findAll(pageRequest.of()).map(PostResponseDto::new);
+    }
+
+    public List<PostResponseDto> getFollowerPosts(Long userId) {
+        User user = getUserById(userId);
+        List<User> follwer = followRepository.findAllByFromUser(user).stream()
+                .map(Follow::getToUser)
+                .collect(Collectors.toList());
+        List<List<Post>> posts = follwer.stream()
+                .map(User::getPosts)
+                .collect(Collectors.toList());
+        List<PostResponseDto> ret = new ArrayList<>();
+        for (List<Post> post : posts) {
+            ret.addAll(post.stream()
+                    .map(PostResponseDto::new)
+                    .collect(Collectors.toList()));
+        }
+        Collections.sort(ret);
+        return ret;
     }
 }
