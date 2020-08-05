@@ -27,8 +27,8 @@ import ClubDetail from '@/views/clubs/ClubDetail'
 import ClubCreate from '@/views/clubs/ClubCreate'
 import ClubUpdate from '@/views/clubs/ClubUpdate'
 import ClubCandidates from '@/views/clubs/ClubCandidates'
-import ReadingDetail from '@/views/clubs/readings/ReadingDetail'
-import ReadingCreate from '@/views/clubs/readings/ReadingCreate'
+import ClubEventDetail from '@/views/clubs/clubevents/ClubEventDetail'
+import ClubEventCreate from '@/views/clubs/clubevents/ClubEventCreate'
 // meetups
 import MeetupList from '@/views/meetups/MeetupList'
 
@@ -165,14 +165,14 @@ Vue.use(VueRouter)
     component: ClubCandidates
   },
   {
-    path: '/clubs/:clubId/readings/create',
-    name: 'ReadingCreate',
-    component: ReadingCreate
+    path: '/clubs/:clubId/clubevents/create',
+    name: 'ClubEventCreate',
+    component: ClubEventCreate
   },
   {
-    path: '/clubs/:clubId/readings/:readingId',
-    name: 'ReadingDetail',
-    component: ReadingDetail
+    path: '/clubs/:clubId/clubevents/:clubEventId',
+    name: 'ClubEventDetail',
+    component: ClubEventDetail
   },
   // meetups
   {
