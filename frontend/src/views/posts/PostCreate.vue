@@ -121,6 +121,15 @@
                   persistent-hint
                   small-chips
                 >
+                  <template v-slot:selection="data">
+                    <v-chip
+                      v-bind="data.attrs"
+                      close
+                      @click:close="remove(postCreateData.tags, data.item)"
+                    >
+                      {{ data.item }}
+                    </v-chip>
+                  </template>
                   <template v-slot:no-data>
                     <v-list-item>
                       <v-list-item-content>
@@ -208,6 +217,10 @@ export default {
   },
   methods: {
     ...mapActions('postStore', ['fetchTags', 'createPost']),
+    remove (data, item) {
+      const index = data.indexOf(item)
+      if (index >= 0) data.splice(index, 1)
+    },
     makeTwoline() {
       this.oneline = false
     },
