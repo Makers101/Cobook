@@ -2,7 +2,7 @@ module.exports = {
   "transpileDependencies": [
     "vuetify"
   ],
-  outputDir : '../src/main/resources/static',
+  outputDir : '/var/www/cobook',
 
   devServer: {
     disableHostCheck: true
