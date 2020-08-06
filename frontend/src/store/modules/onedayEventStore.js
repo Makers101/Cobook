@@ -5,9 +5,9 @@ import SERVER from '@/api/api'
 const onedayEventStore = {
     namespaced: true,
     state: {
-			onedayEvents: null,
-			filteredOnedayEvents: null,
-			selectedOnedayEvent: null
+      onedayEvents: null,
+      filteredOnedayEvents: null,
+      selectedOnedayEvent: null
     },
     getters: {
     },
@@ -31,15 +31,13 @@ const onedayEventStore = {
           })
           .catch(err => console.log(err.response.data))
 			},
-			// createOnedayEvent({ rootGetters, dispatch }, ) {
-			// 	axios.post(
-			// 		SERVER.URL + SERVER.URL + SERVER.ROUTES.onedayevents,
-			// 		,
-			// 		rootGetters.config
-			// 		)
-			// 		.then()
-
-			// }
+			createOnedayEvent({ rootGetters }, onedayEventCreateData) {
+        axios.post(SERVER.URL + SERVER.ROUTES.onedayevents, onedayEventCreateData, rootGetters.config)
+          .then(res => {
+            router.push({ name: 'OnedayEventDetail', params: { onedayEventId: res.data.oneDayEventId }})
+          })
+          .catch(err => console.log(err.response.data))
+			}
 		},
 }
 
