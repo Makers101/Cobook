@@ -14,6 +14,7 @@
     "scrollmonitor": "^1.2.4",
     "vue": "^2.6.11",
     "vue-cookies": "^1.7.3",
+    "vue-google-oauth2": "^1.5.5",
     "vue-infinite-loading": "^2.4.5",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.2.0",
