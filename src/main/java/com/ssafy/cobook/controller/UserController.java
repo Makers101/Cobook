@@ -1,12 +1,9 @@
 package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.domain.user.User;
-import com.ssafy.cobook.exception.ErrorCode;
-import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.UserService;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.*;
-import com.ssafy.cobook.service.dto.user.oauth.KakaoLoginDto;
 import com.ssafy.cobook.util.JwtTokenProvider;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -18,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import springfox.documentation.annotations.ApiIgnore;

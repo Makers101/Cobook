@@ -15,9 +15,9 @@ public class OneDayEventUpdateReqDto {
     @ApiModelProperty(position = 1)
     private Long booKId;
     @ApiModelProperty(position = 2)
-    private String title;
+    private String name;
     @ApiModelProperty(position = 3)
-    private LocalDateTime dateTime;
+    private LocalDateTime datetime;
     @ApiModelProperty(position = 4)
     private String place;
     @ApiModelProperty(position = 5)
@@ -25,6 +25,6 @@ public class OneDayEventUpdateReqDto {
     @ApiModelProperty(position = 6)
     private Integer capacity;
     @ApiModelProperty(position = 7)
-    private List<String> question;
+    private List<String> questions;
 
 }

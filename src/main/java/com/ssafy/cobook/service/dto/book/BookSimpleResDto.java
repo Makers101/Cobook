@@ -12,10 +12,12 @@ public class BookSimpleResDto {
     private Long id;
     private String title;
     private String bookImg;
+    private String genre;
 
     public BookSimpleResDto(Book book) {
         this.id = book.getId();
         this.title = book.getTitle();
         this.bookImg = book.getBookImg();
+        this.genre = book.getGenre().getGenreName();
     }
 }
