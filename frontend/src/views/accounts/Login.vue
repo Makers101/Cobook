@@ -124,7 +124,9 @@
                     .then((res) => {
                         console.log(res);
                         cookies.set("auth-token", res.data);
+                        
                         this.$router.push("/");
+                        this.findMyAccount();
                     });
             },
             kakaoLogin() {
@@ -155,8 +157,8 @@
                             axios
                                 .post(SERVER.URL + SERVER.ROUTES.social, userInfo)
                                 .then((res) => {
-                                    console.log(res);
                                     cookies.set("auth-token", res.data);
+                                    this.findMyAccount();
                                     this.$router.push("/");
                                 });
                         }
@@ -216,6 +218,7 @@
                 this.$router.push({name: "PasswordFind"});
             },
             ...mapActions("accountStore", ["login"]),
+            ...mapActions(["findMyAccount"])
         },
     };
 </script>
