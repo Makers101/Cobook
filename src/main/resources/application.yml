@@ -34,19 +34,6 @@ spring:
           starttls:
             enable: true
     protocol: smtp
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 722675530533-8lddsa5lo60rlmmlijrno06n5elge0tn.apps.googleusercontent.com
-            client-secret: bFE2aTcKEFwHSDhrMyUrUJz2
-
-custom:
-  oauth2:
-    kakao:
-      client-id: 8160c09915d18b2d717f58f39f209d61
-      client-secret: pW1lBMjL9wgNJYGnKeuMG1IjnrgpIFHu
 ---
 #spring:
 #  profiles: dev

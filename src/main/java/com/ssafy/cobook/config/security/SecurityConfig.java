@@ -80,28 +80,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/swagger-ui.html", "/webjars/**", "/swagger/**", "/configuration/**");
     }
 
-    private ClientRegistration getRegistration(OAuth2ClientProperties clientProperties, String client) {
-        if ("google".equals(client)) {
-            OAuth2ClientProperties.Registration registration = clientProperties.getRegistration().get("google");
-            return CommonOAuth2Provider.GOOGLE.getBuilder(client).clientId(registration.getClientId()).clientSecret(registration.getClientSecret()).scope("email", "profile").build();
-        }
-        return null;
-    }
-
-    @Bean
-    public ClientRegistrationRepository clientRegistrationRepository(
-            OAuth2ClientProperties oAuth2ClientProperties,
-            @Value("${custom.oauth2.kakao.client-id}") String kakaoClientId,
-            @Value("${custom.oauth2.kakao.client-secret}") String kakaoClientSecret) {
-        List<ClientRegistration> registrations = oAuth2ClientProperties
-                .getRegistration().keySet().stream()
-                .map(client -> getRegistration(oAuth2ClientProperties, client))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        registrations.add(CustomOAuth2Provider.KAKAO.getBuilder("kakao")
-                .clientId(kakaoClientId)
-                .clientSecret(kakaoClientSecret)
-                .jwkSetUri("temp").build());
-        return new InMemoryClientRegistrationRepository(registrations);
-    }
 }
