@@ -140,7 +140,7 @@ public class OneDayEventService {
             throw new BaseException(ErrorCode.UNEXPECTED_EVENT);
         }
         event.updateInfo(requestDto);
-        Book book = getBook(requestDto.getBooKId());
+        Book book = getBook(requestDto.getBookId());
         questionRepository.deleteAll(event.getQuestions());
         List<OneDayEventQuestion> questions = requestDto.getQuestions().stream()
                 .map(q -> questionRepository.save(new OneDayEventQuestion(event, q)))

@@ -13,7 +13,7 @@ import java.util.List;
 public class ClubEventUpdateReqDto {
 
     @ApiModelProperty(position = 1)
-    private Long booKId;
+    private Long bookId;
     @ApiModelProperty(position = 2)
     private String name;
     @ApiModelProperty(position = 3)
