@@ -41,15 +41,15 @@
         >
           <button 
             class="btn btn btn-toggle-false mx-1"
-            @click="selectFilter(genre.id)"
-            v-show="filters.genre_filter.has(genre.id)"
+            @click="selectFilter(genre.name)"
+            v-show="filters.genre_filter.has(genre.name)"
           >
             #{{ genre.name }}
           </button>
           <button 
             class="btn btn btn-toggle-true mx-1"
-            @click="selectFilter(genre.id)"
-            v-show="!filters.genre_filter.has(genre.id)"
+            @click="selectFilter(genre.name)"
+            v-show="!filters.genre_filter.has(genre.name)"
           >
             #{{ genre.name }}
           </button>
@@ -73,8 +73,9 @@
               <span class="badge mb-0 onedayEvent-recruit" v-if="onedayEvent.participantCnt < onedayEvent.capacity + 1">모집중</span>
               <!-- <span class="badge mb-0 onedayEvent-closed-false" v-else>풀방</span> -->
             </div>
-            <div class="col-6 text-left d-flex flex-column p-2">
-              <p class="onedayEvent-title font-weight-bold" lt="book">{{ onedayEvent.title }}</p>
+            <div class="col-6 text-left d-flex flex-column align-items-start p-2">
+              <p class="onedayEvent-name font-weight-bold" lt="book">{{ onedayEvent.name }}</p>
+              <span class="badge badge-genre">{{ onedayEvent.book.genre }}</span>
               <div class="mt-auto">
                 <p class="mb-0"><small><i class="fas fa-users"></i> {{ onedayEvent.participantCnt}} / {{ onedayEvent.capacity + 1 }}</small></p>
                 <p class="mb-0"><small><i class="fas fa-map-marker-alt"></i> {{ onedayEvent.place }}</small></p>
@@ -97,7 +98,7 @@ export default {
   data() {
     return {
       filters: {
-        // recruit_filter: false,
+        recruit_filter: false,
         genre_filter: new Set()
       }
     }
@@ -198,7 +199,7 @@ export default {
     padding: 6px;
   }
 
-  .onedayEvent-title {
+  .onedayEvent-name {
     word-break: keep-all;
   }
 

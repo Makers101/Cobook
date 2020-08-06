@@ -332,8 +332,8 @@ export default {
         }
         this.clubEventUpdateData.place = this.selectedClubEvent.place
         
-        this.date = this.selectedClubEvent.dateTime.slice(0, 10)
-        this.time = this.selectedClubEvent.dateTime.slice(11, 16)
+        this.date = this.selectedClubEvent.datetime.slice(0, 10)
+        this.time = this.selectedClubEvent.datetime.slice(11, 16)
         
         this.selectedClubEvent.questions.forEach(question => {
           this.clubEventUpdateData.questions.push(question.question)

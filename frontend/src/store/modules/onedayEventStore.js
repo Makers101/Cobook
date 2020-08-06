@@ -45,14 +45,67 @@ const onedayEventStore = {
           })
           .catch(err => console.log(err.response.data))
       },
+      updateOnedayEvent({ rootGetters, dispatch }, dataContainer) {
+        console.log(dataContainer)
+        axios.put(
+          SERVER.URL + SERVER.ROUTES.onedayevents + '/' + dataContainer.onedayEventId,
+          dataContainer.onedayEventUpdateData,
+          rootGetters.config
+        )
+          .then(() => {
+            dispatch('findOndayEvent', dataContainer.oneDayEventId)
+            router.push({ name: 'OnedayEventDetail', params: { oneDayEventId: dataContainer.oneDayEventId }})
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
       deleteOnedayEvent({ rootGetters }, onedayEventId) {
         axios.delete(SERVER.URL + SERVER.ROUTES.onedayevents + '/' + onedayEventId, rootGetters.config)
           .then(() => {
             router.push({ name: 'OnedayEventList' })
           })
           .catch(err => console.log(err.response.data))
+      },
+      participateOnedayEvent({ rootGetters, dispatch }, onedayEventId) {
+        axios.post(
+          SERVER.URL + SERVER.ROUTES.onedayevents + '/' + onedayEventId + '/apply',
+          null,
+          rootGetters.config
+        )
+          .then(() => {
+            dispatch('findOnedayEvent', onedayEventId)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      filterOnedayEvents({ state }, filters) {
+        let new_onedayEvents1 = []
+        if (filters.recruit_filter) {
+          state.onedayEvents.forEach(onedayEvent => {
+            if (onedayEvent.participantCnt < (onedayEvent.capacity + 1)) {
+              new_onedayEvents1.push(onedayEvent)
+            }
+          })
+        } else {
+          new_onedayEvents1 = state.onedayEvents
+        }
+
+        console.log(new_onedayEvents1)
+        if (filters.genre_filter.size !== 0) {
+          let new_onedayEvents2 = new Set()
+          new_onedayEvents1.forEach(onedayEvent => {
+              if (filters.genre_filter.has(onedayEvent.book.genre)) {
+                new_onedayEvents2.add(onedayEvent)
+              }
+            })
+          state.filteredOnedayEvents = new_onedayEvents2
+        } else {
+          state.filteredOnedayEvents = new_onedayEvents1
+        }
       }
-		},
+    },
 }
 
 export default onedayEventStore

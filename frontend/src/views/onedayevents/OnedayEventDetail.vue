@@ -25,12 +25,15 @@
             <span class="badge mb-0 ml-2 onedayEvent-closed-true" v-if="selectedOnedayEvent.closed">종료</span>
             <span class="badge mb-0 ml-2 onedayEvent-closed-false" v-else>예정</span>
           </div>
+          <div class="d-flex justify-content-start align-items-center">
+            <span class="badge badge-genre ml-1">{{ selectedOnedayEvent.book.genre }}</span>
+          </div>
         </div>
         <div>
           <div class="d-flex justify-content-between">
             <div class="d-flex flex-column align-items-start justify-content-end">
               <p class="mb-1 font-weight-bold"><i class="fas fa-map-marker-alt"></i> {{ selectedOnedayEvent.place }}</p>
-              <p class="mb-0 font-weight-bold">{{ selectedOnedayEvent.dateTime | moment('YYYY년 MM월 DD일 HH시 mm분') }}</p>
+              <p class="mb-0 font-weight-bold">{{ selectedOnedayEvent.datetime | moment('YYYY년 MM월 DD일 HH시 mm분') }}</p>
             </div>
             <div class="d-flex justify-content-end align-items-end">
               <button
@@ -58,7 +61,7 @@
 
               <button
                 class="btn btn-warning"
-                v-if="!isParticipant && !isLeader"
+                v-if="!isParticipant && !isLeader && isRecruit"
                 @click="clickParticipateOnedayEvent('apply')">
                 참가 신청
               </button>
@@ -79,7 +82,7 @@
 
     <!-- onedayEvent-detail-members -->
     <div>
-      <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }})</h4>
+      <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity + 1 }})</h4>
       <div class="d-flex justify-content-start">
         <div class="profile-container pointer mr-3" @click="selectUser(selectedOnedayEvent.leader.id)">
           <img
@@ -213,6 +216,13 @@ export default {
   computed: {
     ...mapState(['myaccount']),
     ...mapState('onedayEventStore', ['selectedOnedayEvent']),
+    isRecruit() {
+      if (this.selectedOnedayEvent.participantCnt === (this.selectedOnedayEvent.capacity + 1)) {
+        return false
+      } else {
+        return true
+      }
+    },
     isParticipant() {
       let result = false
       this.selectedOnedayEvent.participants.forEach(participant => {
@@ -368,5 +378,11 @@ export default {
 
   .description {
     white-space: pre-line;
+  }
+
+  .badge-genre {
+    background-color: #88A498;
+    color: #F8F8F8;
+    padding: 6px;
   }
 </style>

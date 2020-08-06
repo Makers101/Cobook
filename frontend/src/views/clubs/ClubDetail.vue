@@ -189,8 +189,9 @@
                 <span class="badge mb-0 clubEvent-closed-true" v-if="clubEvent.recruit">종료</span>
                 <span class="badge mb-0 clubEvent-closed-false" v-else>예정</span>
               </div>
-              <div class="col-6 text-left d-flex flex-column p-2">
+              <div class="col-6 text-left d-flex flex-column align-items-start p-2">
                 <p class="clubEvent-name font-weight-bold" lt="book">{{ clubEvent.name }}</p>
+                <span class="badge badge-genre">{{ clubEvent.book.genre }}</span>
                 <div class="mt-auto">
                   <p class="mb-0"><small><i class="fas fa-users"></i> {{ clubEvent.participantCnt}}</small></p>
                   <p class="mb-0"><small><i class="fas fa-map-marker-alt"></i> {{ clubEvent.place }}</small></p>
@@ -423,5 +424,11 @@ export default {
   .setting-btn:focus {
     background-color: #707070 !important;
     outline: none;
+  }
+
+  .badge-genre {
+    background-color: #88A498;
+    color: #F8F8F8;
+    padding: 6px;
   }
 </style>

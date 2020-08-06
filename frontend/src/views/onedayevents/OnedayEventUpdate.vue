@@ -1,21 +1,21 @@
 <template>
-  <div class="custom-container mb-5">
+  <div class="custom-container mb-5" v-if="selectedOnedayEvent">
 
-    <!-- onedayEvent-create-banner -->
+    <!-- onedayEvent-update-banner -->
     <div class="onedayEvent-banner">
       <img
         class="onedayEvent-banner-img"
-        src="https://user-images.githubusercontent.com/57381062/89494349-f6258b80-d7f0-11ea-9168-2feced39fab5.jpg"
+        src="https://user-images.githubusercontent.com/57381062/88908347-b57bbe80-d294-11ea-9d31-a88d3d0b3b23.jpg"
         alt="onedayEvent-banner">
       <div class="onedayEvent-banner-text">
-        <h3 class="font-weight-bold">원데이 이벤트 만들기</h3>
+        <h3 class="font-weight-bold">원데이 이벤트 수정</h3>
         <p class="mb-0">
-          원데이 이벤트를 만들어 다른 유저와 함께 책을 읽고 좋은 대화를 나눠보세요 :)
+          원데이 이벤트의 기본 정보를 수정해보세요 :)
         </p>
       </div>
     </div>
   
-    <!-- onedayEvent-create-form -->
+    <!-- onedayEvent-update-form -->
     <v-app>
       <v-card>
         <template v-slot:progress>
@@ -34,10 +34,10 @@
           <v-container>
             <v-row>
 
-              <!-- onedayEvent-create-name -->
+              <!-- onedayEvent-update-name -->
               <v-col cols="12">
                 <v-text-field
-                  v-model="onedayEventCreateData.name"
+                  v-model="onedayEventUpdateData.name"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="30"
@@ -46,10 +46,10 @@
                 ></v-text-field>
               </v-col>
 
-              <!-- onedayEvent-create-book -->
+              <!-- onedayEvent-update-book -->
               <v-col cols="12">
                 <v-autocomplete
-                  v-model="onedayEventCreateData.bookId"
+                  v-model="onedayEventUpdateData.bookId"
                   v-if="books"
                   :items="books"
                   hide-selected
@@ -81,10 +81,10 @@
                 </v-autocomplete>
               </v-col>
 
-              <!-- onedayEvent-create-description -->
+              <!-- onedayEvent-update-description -->
               <v-col cols="12">
                 <v-textarea
-                  v-model="onedayEventCreateData.description"
+                  v-model="onedayEventUpdateData.description"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="100"
@@ -93,13 +93,13 @@
                 ></v-textarea>
               </v-col>
 
-              <!-- onedayEvent-create-place -->
+              <!-- onedayEvent-update-place -->
               <v-col class="mt-5" cols="12">
                 <div class="d-flex justify-content-start">
                   <label class="v-label theme--light">원데이 이벤트 장소</label>
                 </div>
                 <v-radio-group
-                  v-model="onedayEventCreateData.place"
+                  v-model="onedayEventUpdateData.place"
                   :rules="[v => !!v || '필수항목입니다.']"
                 >
                   <div class="d-flex justify-content-start align-items-center">
@@ -120,7 +120,7 @@
                 </v-radio-group>
               </v-col>
 
-              <!-- onedayEvent-create-date -->
+              <!-- onedayEvent-update-date -->
               <v-col class="pb-0" cols="12">
                 <div class="d-flex justify-content-start">
                   <label class="v-label theme--light">원데이 이벤트 일시</label>
@@ -156,7 +156,7 @@
                 </v-menu>
               </v-col>
 
-              <!-- onedayEvent-create-time -->
+              <!-- onedayEvent-update-time -->
               <v-col cols="6">
                 <v-menu
                   ref="menu"
@@ -195,11 +195,11 @@
                 </v-menu>
               </v-col>
 
-              <!-- onedayEvent-create-capacity -->
+              <!-- onedayEvent-update-capacity -->
               <v-col class="mt-5" cols="12">
                 <v-card-text class="p-0">
                   <v-slider
-                    v-model="onedayEventCreateData.capacity"
+                    v-model="onedayEventUpdateData.capacity"
                     label="모집 인원"
                     :max="10"
                     :min="1"
@@ -210,15 +210,15 @@
                   ></v-slider>
                 </v-card-text>
               </v-col>
-              
-              <!-- onedayEvent-create-questions -->
+
+              <!-- onedayEvent-update-questions -->
               <v-col class="mt-5" cols="12">
                 <div class="d-flex justify-content-start">
                   <label class="v-label theme--light mb-0">질문지</label>
                 </div>
                 <v-combobox
                   class="pt-0"
-                  v-model="onedayEventCreateData.questions"
+                  v-model="onedayEventUpdateData.questions"
                   color="blue-grey lighten-2"
                   multiple
                   chips
@@ -229,24 +229,25 @@
                     <v-chip
                       v-bind="data.attrs"
                       close
-                      @click:close="remove(onedayEventCreateData.questions, data.item)"
+                      @click:close="remove(onedayEventUpdateData.questions, data.item)"
                     >
                       {{ data.item }}
                     </v-chip>
                   </template>
                 </v-combobox>
               </v-col>
+              
             </v-row>
           </v-container>
           
-          <!-- onedayEvent-create-button -->
+          <!-- onedayEvent-update-button -->
           <v-card-actions class="d-flex justify-content-end">
             <v-btn
               :disabled="!valid"
               class="button btn-green"
-              @click="clickCreate"
+              @click="clickUpdate"
             >
-              원데이 이벤트 생성
+              원데이 이벤트 수정
             </v-btn>
           </v-card-actions>
         </v-form>
@@ -258,10 +259,11 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 export default {
-  name: 'OnedayEventCreate',
+  name: 'OnedayEventUpdate',
   data() {
     return {
-      onedayEventCreateData: {
+      onedayEventId: this.$route.params.onedayEventId,
+      onedayEventUpdateData: {
         name: null,
         description: null,
         place: null,
@@ -283,10 +285,11 @@ export default {
   },
   computed: {
     ...mapState(['books']),
+    ...mapState('onedayEventStore', ['selectedOnedayEvent']),
     offlineEnabled() {
-      if (this.onedayEventCreateData.place === null && this.offlinePlace === null) {
+      if (this.onedayEventUpdateData.place === null && this.offlinePlace === null) {
         return false
-      } else if (this.onedayEventCreateData.place === '온라인' && this.offlinePlace !== '온라인') {
+      } else if (this.onedayEventUpdateData.place === '온라인' && this.offlinePlace !== '온라인') {
         return false
       } else {
         return true
@@ -306,7 +309,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('onedayEventStore', ['createOnedayEvent']),
+    ...mapActions('onedayEventStore', ['findOnedayEvent', 'updateOnedayEvent']),
     remove (data, item) {
       const index = data.indexOf(item)
       if (index >= 0) data.splice(index, 1)
@@ -319,13 +322,38 @@ export default {
     validate() {
       this.$refs.form.validate()
     },
-    clickCreate() {
-      this.onedayEventCreateData.datetime = this.date + 'T' + this.time
+    clickUpdate() {
+      this.onedayEventUpdateData.datetime = this.date + 'T' + this.time
       if (this.offlineEnabled) {
-        this.onedayEventCreateData.place = this.offlinePlace
+        this.onedayEventUpdateData.place = this.offlinePlace
       }
-      this.createOnedayEvent(this.onedayEventCreateData)
+      const dataContainer = {
+        onedayEventUpdateData: this.onedayEventUpdateData,
+        onedayEventId: this.onedayEventId
+      }
+      this.updateOnedayEvent(dataContainer)
     }
+  },
+  mounted() {
+    this.findOnedayEvent(this.onedayEventId)
+      .then(() => {
+        this.onedayEventUpdateData.name = this.selectedOnedayEvent.name
+        this.onedayEventUpdateData.description = this.selectedOnedayEvent.description
+        this.onedayEventUpdateData.bookId = this.selectedOnedayEvent.book.id
+        this.onedayEventUpdateData.capacity = this.selectedOnedayEvent.capacity
+    
+        if (this.selectedOnedayEvent.place !== '온라인') {
+          this.offlinePlace = this.selectedOnedayEvent.place
+        }
+        this.onedayEventUpdateData.place = this.selectedOnedayEvent.place
+        
+        this.date = this.selectedOnedayEvent.datetime.slice(0, 10)
+        this.time = this.selectedOnedayEvent.datetime.slice(11, 16)
+        
+        this.selectedOnedayEvent.questions.forEach(question => {
+          this.onedayEventUpdateData.questions.push(question.question)
+        })
+      })
   }
 }
 </script>
@@ -351,5 +379,4 @@ export default {
     left: 50%;
     transform: translate( -50%, -50% );
   }
-
 </style>
