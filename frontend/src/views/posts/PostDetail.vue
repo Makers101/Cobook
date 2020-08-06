@@ -133,7 +133,7 @@
               <!-- 댓글 부분 -->
               <!-- commentList -->
               <h5 class="text-left">댓글</h5>
-              <div class="comment-list w-100" style="height:650px">
+              <div class="comment-list w-100" style="height:700px">
                 <div
                 v-for="comment in comments"
                 :key="`comment-${comment.id}`">
@@ -168,13 +168,10 @@
                 </div>
               </div>
               </div>
-              <div class="button-section">
-                <hr style="background-color:#efefef">
-
-              </div>
+        
+              <hr class="mt-1" style="background-color:#efefef">
               
               <div class="comment mt-auto w-100" id="comment">
-                <hr style="background-color:#efefef">
                 <!-- 댓글 작성 -->
                 <div class="input-group row no-gutters commentSection" style="height:70px;">
                   <textarea
