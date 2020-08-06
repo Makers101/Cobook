@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OneDayEventResponseDto {
+public class OneDayEventResponseDto implements Comparable<OneDayEventResponseDto> {
 
     private Long id;
     private String title;
@@ -32,5 +32,10 @@ public class OneDayEventResponseDto {
         this.capacity = oneDayEvent.getCapacity();
         this.closed = oneDayEvent.getClosed();
         this.book = new BookSimpleResDto(oneDayEvent.getBook());
+    }
+
+    @Override
+    public int compareTo(OneDayEventResponseDto o) {
+        return -this.datetime.compareTo(o.datetime);
     }
 }

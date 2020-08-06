@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ClubEventSimpleResDto {
+public class ClubEventSimpleResDto implements Comparable<ClubEventSimpleResDto> {
 
     private Long id;
     private String name;
@@ -28,5 +28,10 @@ public class ClubEventSimpleResDto {
         this.participantCnt = clubEvent.getMembers().size();
         this.closed = clubEvent.getClosed();
         this.book = new BookSimpleResDto(clubEvent.getBook());
+    }
+
+    @Override
+    public int compareTo(ClubEventSimpleResDto o) {
+        return -this.datetime.compareTo(o.datetime);
     }
 }
