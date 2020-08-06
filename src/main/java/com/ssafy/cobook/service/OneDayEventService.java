@@ -46,7 +46,7 @@ public class OneDayEventService {
 
     @Transactional
     public OneDayEventSaveResDto saveEvent(Long userId, OneDayEventSaveReqDto requestDto) {
-        if (eventRepository.findByTitle(requestDto.getTitle()).isPresent()) {
+        if (eventRepository.findByTitle(requestDto.getName()).isPresent()) {
             throw new BaseException(ErrorCode.EXIST_CLUB_NAME);
         }
         User user = getUser(userId);

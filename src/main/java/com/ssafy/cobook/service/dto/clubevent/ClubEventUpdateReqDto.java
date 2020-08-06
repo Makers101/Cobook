@@ -15,13 +15,13 @@ public class ClubEventUpdateReqDto {
     @ApiModelProperty(position = 1)
     private Long booKId;
     @ApiModelProperty(position = 2)
-    private String title;
+    private String name;
     @ApiModelProperty(position = 3)
-    private LocalDateTime dateTime;
+    private LocalDateTime datetime;
     @ApiModelProperty(position = 4)
     private String place;
     @ApiModelProperty(position = 5)
     private String description;
     @ApiModelProperty(position = 6)
-    private List<String> question;
+    private List<String> questions;
 }

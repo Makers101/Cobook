@@ -68,8 +68,8 @@ public class OneDayEvent {
     }
 
     public void updateInfo(OneDayEventUpdateReqDto requestDto) {
-        this.title = requestDto.getTitle();
-        this.dateTime = requestDto.getDateTime();
+        this.title = requestDto.getName();
+        this.dateTime = requestDto.getDatetime();
         this.place = requestDto.getPlace();
         this.description = requestDto.getDescription();
         this.capacity = requestDto.getCapacity();

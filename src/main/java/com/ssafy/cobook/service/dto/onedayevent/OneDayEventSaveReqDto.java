@@ -14,7 +14,7 @@ import java.util.List;
 public class OneDayEventSaveReqDto {
 
     @ApiModelProperty(position = 1)
-    private String title;
+    private String name;
     @ApiModelProperty(position = 2)
     private String description;
     @ApiModelProperty(position = 3)
@@ -30,7 +30,7 @@ public class OneDayEventSaveReqDto {
 
     public OneDayEvent toEntity() {
         return OneDayEvent.builder()
-                .title(title)
+                .title(name)
                 .description(description)
                 .dateTime(datetime)
                 .place(place)

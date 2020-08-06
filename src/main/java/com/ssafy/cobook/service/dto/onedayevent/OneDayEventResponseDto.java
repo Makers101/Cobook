@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class OneDayEventResponseDto implements Comparable<OneDayEventResponseDto> {
 
     private Long id;
-    private String title;
+    private String name;
     private LocalDateTime datetime;
     private String place;
     private String description;
@@ -24,7 +24,7 @@ public class OneDayEventResponseDto implements Comparable<OneDayEventResponseDto
 
     public OneDayEventResponseDto(OneDayEvent oneDayEvent) {
         this.id = oneDayEvent.getId();
-        this.title = oneDayEvent.getTitle();
+        this.name = oneDayEvent.getTitle();
         this.datetime = oneDayEvent.getDateTime();
         this.place = oneDayEvent.getPlace();
         this.description = oneDayEvent.getDescription();
