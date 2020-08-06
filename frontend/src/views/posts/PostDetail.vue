@@ -8,10 +8,10 @@
           </header>
           <article>
             <!-- 페이지1 -->
-            <div class="page1 d-flex flex-column w-100" style="height:700px;">
+            <div class="page1 d-flex flex-column w-100" style="height:750px;">
                 <div class="w-100">
                   <!-- 책 제목 -->
-                  <h2 class="chapter-title pt-0">{{ selectedPost.book.title }}</h2>
+                  <h2 class="chapter-title book-title pt-0">{{ selectedPost.book.title }}</h2>
                   <!-- 책 이미지 및 정보 -->
                   <div class="row no-gutters">
                     <div class="col-3">
@@ -27,12 +27,12 @@
                     <!-- 한줄평 -->
                     <div class="mt-3 w-100">        
                       <div class="px-2 pt-2 large-text text-left"><i class="fas fa-quote-left"></i></div>
-                      <p class="pl-2 pr-5 text-center">{{ selectedPost.onelineReview }}</p>
+                      <p class="px-4 text-center post-onelinereview">{{ selectedPost.onelineReview }}</p>
                       <div class="px-2 pb-2 large-text text-right"><i class="fas fa-quote-right"></i></div>
                     </div>
                     <!-- 상세 리뷰 -->
                     <div class="mx-0 mt-3 w-100" v-if="selectedPost.review">
-                      <p class="text-center pr-5">
+                      <p class="text-center">
                         <span class="rounded-circle">
                           <img
                             v-if="!selectedPost.user.profileImg"
@@ -82,11 +82,73 @@
                 
             </div>
             <!-- 페이지2 -->
-            <div class="page2" style="height:700px;">
+            <div class="page2 d-flex flex-column " style="height:750px;"> 
+              <div class="w-100 page2-header">
+                <p class="text-left">
+                  <span class="rounded-circle">
+                    <img
+                      v-if="!selectedPost.user.profileImg"
+                      class="img-fluid feed-profile-img mr-1" 
+                      src="@/assets/anonymous.png" 
+                      alt="유저 프로필 사진">
+                    <img 
+                      v-else
+                      class="img-fluid feed-profile-img mr-1" 
+                      :src="selectedPost.user.profileImg" alt="작성자 프로필 사진">
+                  </span>
+                  <strong>
+                    <span class="pointer" @click="selectUser(selectedPost.user.id)">{{ selectedPost.user.nickName }}님</span>
+                  </strong>
+                </p>
+              </div>
+              <hr style="background-color:#efefef">
               <!-- 댓글 부분 -->
-              <div class="comment mb-5" id="comment">
-                <h5 class="text-left mb-3">댓글</h5>
-                <div class="input-group row no-gutters mb-3 commentSection">
+              <!-- commentList -->
+              <div class="comment-list w-100" style="height:400px">
+                <div
+                v-for="comment in comments"
+                :key="`comment-${comment.id}`">
+                <div class="d-flex justify-content-between">
+                  <div class="m-0">
+                    <span class="rounded-circle">
+                      <img
+                        v-if="!selectedPost.user.profileImg"
+                        class="img-fluid feed-profile-img" 
+                        src="@/assets/anonymous.png" 
+                        alt="유저 프로필 사진">
+                      <img 
+                        v-else
+                        class="img-fluid feed-profile-img" 
+                        :src="comment.user.profileImg" alt="작성자 프로필 사진">
+                    </span>
+                    <span class="ml-2 pointer" @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
+                    <span v-if="comment.isClub" class="badge bg-green">Club</span>
+                  </div>
+                  <div class="m-0">
+                      <!-- @click="deleteComment({post.id, comment.id" -->
+                    <div
+                      class="btn text-danger btn-sm"
+                      v-if="comment.user.id === myaccount.id"
+                      
+                    > 삭제</div>
+                  </div>
+                </div>
+                <div class="col-12 text-left wrapping py-0 mb-3">
+                  <div>{{ comment.content }}</div>
+                  <div><small style="color:#979797">{{ comment.createdAt | moment("from", "now") }}</small></div>
+                </div>
+              </div>
+              </div>
+              <div class="button-section">
+                <hr style="background-color:#efefef">
+
+              </div>
+              
+              <div class="comment mt-auto w-100" id="comment">
+                <hr style="background-color:#efefef">
+                <!-- <h5 class="text-left mb-3">댓글</h5> -->
+                <!-- 댓글 작성 -->
+                <div class="input-group row no-gutters commentSection" style="height:70px;">
                   <textarea
                     class="col-11 textareaSection p-3" 
                     @keyup.enter="enterComment" 
@@ -94,7 +156,8 @@
                     v-model="commentCreateData.content" 
                     type="content" 
                     placeholder="댓글을 작성하세요 :)" 
-                    rows="3" 
+                    rows="1" 
+                    autofocus
                   ></textarea>
                   <button 
                     :class="{ 'btn-green': btnActive, 'pointer': btnActive }"
@@ -104,40 +167,7 @@
                   >
                   작성</button>
                 </div>
-                <div
-                  v-for="comment in comments"
-                  :key="`comment-${comment.id}`"
-                >
-                  <div class="d-flex justify-content-between p-2 pl-3">
-                    <div class="m-0">
-                      <span class="rounded-circle">
-                        <img
-                          v-if="!selectedPost.user.profileImg"
-                          class="img-fluid feed-profile-img" 
-                          src="@/assets/anonymous.png" 
-                          alt="유저 프로필 사진">
-                        <img 
-                          v-else
-                          class="img-fluid feed-profile-img" 
-                          :src="comment.user.profileImg" alt="작성자 프로필 사진">
-                      </span>
-                      <span class="ml-2 pointer" @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
-                      <span v-if="comment.isClub" class="badge bg-green">Club</span>
-                    </div>
-                    <div class="m-0">
-                       <!-- @click="deleteComment({post.id, comment.id" -->
-                      <div
-                        class="btn text-danger btn-sm"
-                        v-if="comment.user.id === myaccount.id"
-                       
-                      > 삭제 </div>
-                    </div>
-                  </div>
-                  <div class="col-12 text-left wrapping">
-                    <div>{{ comment.content }}</div>
-                  </div>
-                  <hr>
-                </div>
+
               </div>
             </div>
               
@@ -294,6 +324,7 @@ export default {
   height: 25px;
   width: 25px;
   border-radius: 50%;
+  border: 1px solid black;
 }
 
 .small-text {
@@ -491,9 +522,6 @@ body {
     max-width: 28.125em;
 }
 
-.open-book article p {
-    text-indent: 2em;
-}
 
 .open-book .chapter-title + p:first-of-type {
     text-indent: 0;
@@ -711,10 +739,6 @@ body {
     }
 
     /* Body Copy */
-    .open-book article p {
-        text-indent: 3em;
-    }
-
     .open-book article > ul,
     .open-book article > ol {
         padding-left: 4em;
@@ -724,6 +748,10 @@ body {
 .post-review {
   overflow-y: auto;
   height: 200px;
+}
+
+.post-onelinereview, .post-review, .book-title{
+  word-break: keep-all;
 }
 
 </style>
