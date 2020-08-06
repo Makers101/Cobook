@@ -17,7 +17,7 @@ export default {
     // accounts
     myaccount: '/users',
     signup: '/users/signup',
-    signupKakao: '/users/social/kakao',
+    social: 'users/social',
     login: '/users/signin',
     password: '/users/password',
     changepassword: '/users/resetPassword/update',

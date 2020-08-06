@@ -81,7 +81,7 @@ export default {
       return re.test(email);
     },
     signupKakao(info) {
-      axios.post(SERVER.URL + SERVER.ROUTES.signupKakao, info)
+      axios.post(SERVER.URL + SERVER.ROUTES.social, info)
         .then(res => {
           cookies.set("auth-token", res.data);
           router.push('/')

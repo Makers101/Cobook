@@ -77,10 +77,11 @@ public class User implements UserDetails {
     private List<OneDayEventMember> oneDayEventMembers = new ArrayList<>();
 
     @Builder
-    public User(String email, String password, String nickName, PlatformType platformType, List<String> roles) {
+    public User(String email, String password, String nickName, Boolean accept, PlatformType platformType, List<String> roles) {
         this.email = email;
         this.password = password;
         this.nickName = nickName;
+        this.accept = accept;
         this.platformType = platformType;
         this.roles = roles;
     }

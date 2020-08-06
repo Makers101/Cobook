@@ -9,7 +9,6 @@ import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.*;
-import com.ssafy.cobook.service.dto.user.oauth.KakaoLoginDto;
 import com.ssafy.cobook.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -157,9 +156,10 @@ public class UserService {
         userRepository.updatePassword(user.getId(), encodePassword);
     }
 
-    public String kakaoLogin(KakaoLoginDto kakaoLoginDto) {
-        String email = kakaoLoginDto.getEmail();
-        User newUser = kakaoLoginDto.toEntity();
+    public String socialLogin(OAuth2LoginDto oAuth2LoginDto) {
+        String email = oAuth2LoginDto.getEmail();
+        String platformType = oAuth2LoginDto.getPlatformType();
+        User newUser = oAuth2LoginDto.toEntity(platformType);
         if (!userRepository.findByEmail(email).isPresent()) {
             userRepository.save(newUser);
         }
