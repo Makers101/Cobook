@@ -159,7 +159,7 @@ public class ClubEventService {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
         }
         event.updateInfo(reqDto);
-        Book book = getBook(reqDto.getBooKId());
+        Book book = getBook(reqDto.getBookId());
         List<ClubEventQuestion> origin = event.getQuestions();
         clubEventQuestionRepository.deleteAll(origin);
         List<ClubEventQuestion> questions = reqDto.getQuestions().stream()
