@@ -162,7 +162,7 @@ public class ClubEventService {
         Book book = getBook(reqDto.getBooKId());
         List<ClubEventQuestion> origin = event.getQuestions();
         clubEventQuestionRepository.deleteAll(origin);
-        List<ClubEventQuestion> questions = reqDto.getQuestion().stream()
+        List<ClubEventQuestion> questions = reqDto.getQuestions().stream()
                 .map(q -> clubEventQuestionRepository.save(new ClubEventQuestion(event, q)))
                 .collect(Collectors.toList());
         event.setQuestions(questions);

@@ -20,7 +20,7 @@ public class ClubEventDetailResDto {
     private Long id;
     private String name;
     private String description;
-    private LocalDateTime dateTime;
+    private LocalDateTime datetime;
     private String place;
     private Integer participantCnt;
     private Boolean closed;
@@ -34,7 +34,7 @@ public class ClubEventDetailResDto {
     public ClubEventDetailResDto(ClubEvent clubEvent, List<PostByMembersResDto> memberPosts, boolean isMember) {
         this.id = clubEvent.getId();
         this.name = clubEvent.getTitle();
-        this.dateTime = clubEvent.getDateTime();
+        this.datetime = clubEvent.getDateTime();
         this.place = clubEvent.getPlace();
         this.description = clubEvent.getDescription();
         this.closed = clubEvent.getClosed();

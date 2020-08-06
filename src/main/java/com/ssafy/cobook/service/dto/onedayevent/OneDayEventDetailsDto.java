@@ -20,7 +20,7 @@ public class OneDayEventDetailsDto {
     private Long id;
     private String name;
     private String description;
-    private LocalDateTime dateTime;
+    private LocalDateTime datetime;
     private String place;
     private Integer participantCnt;
     private Boolean closed;
@@ -35,7 +35,7 @@ public class OneDayEventDetailsDto {
     public OneDayEventDetailsDto(OneDayEvent oneDayEvent, List<PostByMembersResDto> memberPosts, boolean isMember) {
         this.id = oneDayEvent.getId();
         this.name = oneDayEvent.getTitle();
-        this.dateTime = oneDayEvent.getDateTime();
+        this.datetime = oneDayEvent.getDateTime();
         this.place = oneDayEvent.getPlace();
         this.description = oneDayEvent.getDescription();
         this.closed = oneDayEvent.getClosed();

@@ -142,7 +142,7 @@ public class OneDayEventService {
         event.updateInfo(requestDto);
         Book book = getBook(requestDto.getBooKId());
         questionRepository.deleteAll(event.getQuestions());
-        List<OneDayEventQuestion> questions = requestDto.getQuestion().stream()
+        List<OneDayEventQuestion> questions = requestDto.getQuestions().stream()
                 .map(q -> questionRepository.save(new OneDayEventQuestion(event, q)))
                 .collect(Collectors.toList());
         event.setQuestions(questions);
