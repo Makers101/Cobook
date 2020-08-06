@@ -82,12 +82,10 @@
                     </div>
                     
                   </div>
-                  <div class="p-3 mt-3 rounded post-review" style="height:400px; border: 1px solid black">
+                  <div class="px-3 py-1 mt-3 rounded post-review" style="height:400px; border: 1px solid black">
                     <!-- 상세 리뷰 -->
                     <div class="mx-0 w-100" v-if="selectedPost.review">
-                      <div >
-                        <div class="review" v-html="selectedPost.review"></div>
-                      </div>
+                      <div class="review" v-html="selectedPost.review"></div>
                     </div>
                     <div v-else>
                       <img src="https://user-images.githubusercontent.com/25967949/89524240-2e43c300-d81f-11ea-9a05-b1b45d70172f.png">
@@ -113,7 +111,7 @@
             </div>
             <!-- 페이지2 -->
             <div class="page2 d-flex flex-column " style="height:750px;"> 
-              <div class="w-100 page2-header">
+              <!-- <div class="w-100 page2-header">
                 <p class="text-left">
                   <span class="rounded-circle">
                     <img
@@ -130,11 +128,12 @@
                     <span class="pointer" @click="selectUser(selectedPost.user.id)">{{ selectedPost.user.nickName }}님</span>
                   </strong>
                 </p>
-              </div>
-              <hr style="background-color:#efefef">
+              </div> 
+              <hr style="background-color:#efefef"> -->
               <!-- 댓글 부분 -->
               <!-- commentList -->
-              <div class="comment-list w-100" style="height:400px">
+              <h5 class="text-left">댓글</h5>
+              <div class="comment-list w-100" style="height:650px">
                 <div
                 v-for="comment in comments"
                 :key="`comment-${comment.id}`">
@@ -159,7 +158,7 @@
                     <div
                       class="btn text-danger btn-sm"
                       v-if="comment.user.id === myaccount.id"
-                      
+                      @click="deleteComment({ postId: commentCreateData.postId, commentId: comment.id })"
                     > 삭제</div>
                   </div>
                 </div>
@@ -176,7 +175,6 @@
               
               <div class="comment mt-auto w-100" id="comment">
                 <hr style="background-color:#efefef">
-                <!-- <h5 class="text-left mb-3">댓글</h5> -->
                 <!-- 댓글 작성 -->
                 <div class="input-group row no-gutters commentSection" style="height:70px;">
                   <textarea
@@ -894,11 +892,8 @@ body {
 }
 
 
-
-
-.post-review {
+.post-review, .comment-list {
   overflow-y: auto;
-  /* height: 450px; */
 }
 
 .post-onelinereview, .post-review, .book-title{
