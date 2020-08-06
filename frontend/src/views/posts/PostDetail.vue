@@ -10,70 +10,98 @@
             <!-- 페이지1 -->
             <div class="page1 d-flex flex-column w-100" style="height:750px;">
                 <div class="w-100">
-                  <!-- 책 제목 -->
-                  <h2 class="chapter-title book-title pt-0">{{ selectedPost.book.title }}</h2>
+                  <!-- 한줄평-->
+                  <h2 class="chapter-title book-title pt-0">{{ selectedPost.onelineReview }}</h2>
                   <!-- 책 이미지 및 정보 -->
                   <div class="row no-gutters">
                     <div class="col-3">
                       <img style="height: 15vh;" :src="selectedPost.book.bookImg" alt="책 이미지">
                     </div>
                     <div class="col-9 text-left pr-3 align-self-center">
+                      <p><mark>{{ selectedPost.book.title }}</mark></p>
                       <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953039-4a9da800-d2d3-11ea-8f6b-5792b4f87c45.png" width="20px"> {{ selectedPost.book.author }} </p>
                       <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px"> {{ selectedPost.book.publisher }}</p>
                       <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> {{ selectedPost.book.pubDate.slice(0,4) }}년 {{ selectedPost.book.pubDate.slice(5,7) }}월 {{ selectedPost.book.pubDate.slice(8,10) }}일</p>
                     </div>
                   </div>
-                  <div class="d-flex flex-column justify-content-around" style="height:450px">
-                    <!-- 한줄평 -->
-                    <div class="mt-3 w-100">        
-                      <div class="px-2 pt-2 large-text text-left"><i class="fas fa-quote-left"></i></div>
-                      <p class="px-4 text-center post-onelinereview">{{ selectedPost.onelineReview }}</p>
-                      <div class="px-2 pb-2 large-text text-right"><i class="fas fa-quote-right"></i></div>
+                  <!-- 작성자 정보 및 좋아요/ 북마크 -->
+                  <div class="d-flex justify-content-between mt-3">
+                    <!-- 작성자 정보 -->
+                    <div class="m-0">
+                      <span class="rounded-circle">
+                        <img
+                          v-if="!selectedPost.user.profileImg"
+                          class="img-fluid feed-profile-img mr-1" 
+                          src="@/assets/anonymous.png" 
+                          alt="유저 프로필 사진">
+                        <img 
+                          v-else
+                          class="img-fluid feed-profile-img mr-1" 
+                          :src="selectedPost.user.profileImg" alt="작성자 프로필 사진">
+                      </span>
+                      <strong>
+                        <span class="pointer" @click="selectUser(selectedPost.user.id)">{{ selectedPost.user.nickName }}님</span>
+                      </strong>
                     </div>
-                    <!-- 상세 리뷰 -->
-                    <div class="mx-0 mt-3 w-100" v-if="selectedPost.review">
-                      <p class="text-center">
-                        <span class="rounded-circle">
-                          <img
-                            v-if="!selectedPost.user.profileImg"
-                            class="img-fluid feed-profile-img mr-1" 
-                            src="@/assets/anonymous.png" 
-                            alt="유저 프로필 사진">
-                          <img 
-                            v-else
-                            class="img-fluid feed-profile-img mr-1" 
-                            :src="selectedPost.user.profileImg" alt="작성자 프로필 사진">
-                        </span>
-                        <strong>
-                          <span class="pointer" @click="selectUser(selectedPost.user.id)">{{ selectedPost.user.nickName }}</span>
-                          <span>님의 리뷰</span>
-                        </strong>
-                      </p>
-                      <div class="post-review mt-3">
-                        <div class="review" v-html="selectedPost.review"></div>
-                      </div>
-                    </div>
-                    <!-- 좋아요 및 뱃지 -->
-                    <div class="w-100 mt-3">
-                      <div class="post-footer pt-2 d-flex justify-content-between">
-                        <!-- 좋아요 -->
-                        <span class="pointer m-0" @click="clickLike(selectedPost)">
-                          <span v-if="checkHeart(selectedPost)"><i class="fas fa-heart mr-2 heartselected"></i>
-                            <small class="mr-3"><span>{{ myaccount.nickName}}님</span>
-                            <span v-if="selectedPost.likeUsers.length -1 > 0"> 외 {{ selectedPost.likeUsers.length - 1}}명이 좋아합니다.</span>
-                            <span v-else>이 좋아합니다.</span>
-                            </small>
+                    <div class="m-0 d-flex justify-content-between">
+                      <!-- 좋아요 -->
+                      <div class="pointer m-0" @click="clickLike(selectedPost)">
+                        <p v-if="checkHeart(selectedPost)">
+                          <span 
+                            v-if="selectedPost.likeUsers.length -1 > 0" 
+                            :tooltip="myaccount.nickName + '님 외 ' + (selectedPost.likeUsers.length -1 )+ '명이 좋아합니다.'" 
+                            flow="down">
+                            <i class="fas fa-heart mr-2 heartselected"></i>
                           </span>
-                          <span v-else><i class="fas fa-heart mr-2"></i><small class="mr-3">{{ selectedPost.likeUsers.length }}명이 좋아합니다.</small></span>
+                          <span 
+                            v-else 
+                            :tooltip="myaccount.nickName+`님이 좋아합니다.`" 
+                            flow="down">
+                              <i class="fas fa-heart mr-2 heartselected"></i>
+                          </span>
+                        </p>
+                        <p v-else>
+                          <span :tooltip="selectedPost.likeUsers.length+`명이 좋아합니다.`" flow="down">
+                            <i class="fas fa-heart mr-2"></i>
+                          </span>
+                        </p>
+                      </div>
+                      <!-- 북마크 -->
+                      <p class="pointer" @click="clickBookmark(selectedPost)">
+                        <span v-if="checkBookmark(selectedPost)">
+                          <span :tooltip="selectedPost.bookmarkUsers.length + '명이 북마크하였습니다.'" flow="down">
+                            <i class="fas fa-bookmark mr-2 color-green" id="bookmark"></i>
+                          </span>
                         </span>
-                        <!-- 뱃지 -->
-                        <div>
-                          <span
-                          class="badge bg-green rounded-pill px-3 py-2 mr-2"
-                          v-for="tag in selectedPost.tags"
-                          :key="`tag-${tag.id}`"
-                          >#{{ tag.name }}</span>
-                        </div>
+                        <span v-else>
+                          <span :tooltip="selectedPost.bookmarkUsers.length + `명이 북마크하였습니다.`" flow="down">
+                            <i class="fas fa-bookmark mr-2" id="bookmark"></i>
+                          </span>
+                        </span>
+                      </p>
+                    </div>
+                    
+                  </div>
+                  <div class="px-3 py-1 mt-3 rounded post-review" style="height:400px; border: 1px solid black">
+                    <!-- 상세 리뷰 -->
+                    <div class="mx-0 w-100" v-if="selectedPost.review">
+                      <div class="review" v-html="selectedPost.review"></div>
+                    </div>
+                    <div v-else>
+                      <img src="https://user-images.githubusercontent.com/25967949/89524240-2e43c300-d81f-11ea-9a05-b1b45d70172f.png">
+                      <h5>작성된 상세 리뷰가 없습니다.</h5>
+                    </div>
+                  </div>
+                  <!-- 뱃지 -->
+                  <div class="w-100 mt-3">
+                    <div class="post-footer pt-2 d-flex justify-content-between">
+                      <!-- 뱃지 -->
+                      <div>
+                        <span
+                        class="badge bg-green rounded-pill px-3 py-2 mr-2"
+                        v-for="tag in selectedPost.tags"
+                        :key="`tag-${tag.id}`"
+                        >#{{ tag.name }}</span>
                       </div>
                     </div>
                   </div>
@@ -83,7 +111,7 @@
             </div>
             <!-- 페이지2 -->
             <div class="page2 d-flex flex-column " style="height:750px;"> 
-              <div class="w-100 page2-header">
+              <!-- <div class="w-100 page2-header">
                 <p class="text-left">
                   <span class="rounded-circle">
                     <img
@@ -100,53 +128,60 @@
                     <span class="pointer" @click="selectUser(selectedPost.user.id)">{{ selectedPost.user.nickName }}님</span>
                   </strong>
                 </p>
-              </div>
-              <hr style="background-color:#efefef">
-              <!-- 댓글 부분 -->
-              <!-- commentList -->
-              <div class="comment-list w-100" style="height:400px">
-                <div
-                v-for="comment in comments"
-                :key="`comment-${comment.id}`">
-                <div class="d-flex justify-content-between">
-                  <div class="m-0">
-                    <span class="rounded-circle">
-                      <img
-                        v-if="!selectedPost.user.profileImg"
-                        class="img-fluid feed-profile-img" 
-                        src="@/assets/anonymous.png" 
-                        alt="유저 프로필 사진">
-                      <img 
-                        v-else
-                        class="img-fluid feed-profile-img" 
-                        :src="comment.user.profileImg" alt="작성자 프로필 사진">
-                    </span>
-                    <span class="ml-2 pointer" @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
-                    <span v-if="comment.isClub" class="badge bg-green">Club</span>
-                  </div>
-                  <div class="m-0">
-                      <!-- @click="deleteComment({post.id, comment.id" -->
-                    <div
-                      class="btn text-danger btn-sm"
-                      v-if="comment.user.id === myaccount.id"
-                      
-                    > 삭제</div>
+              </div> 
+              <hr style="background-color:#efefef"> -->
+              <!-- 댓글 -->
+              <h5 class="text-left">댓글</h5>
+              <!-- 댓글 리스트 -->
+              <div class="comment-list w-100" style="height:700px">
+                <div v-if="comments.length">
+                  <div
+                  v-for="comment in comments"
+                  :key="`comment-${comment.id}`">
+                    <div class="d-flex justify-content-between">
+                      <div class="m-0">
+                        <span class="rounded-circle">
+                          <img
+                            v-if="!selectedPost.user.profileImg"
+                            class="img-fluid feed-profile-img" 
+                            src="@/assets/anonymous.png" 
+                            alt="유저 프로필 사진">
+                          <img 
+                            v-else
+                            class="img-fluid feed-profile-img" 
+                            :src="comment.user.profileImg" alt="작성자 프로필 사진">
+                        </span>
+                        <span class="ml-2 pointer" @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
+                        <span v-if="comment.isClub" class="badge bg-green">Club</span>
+                      </div>
+                      <div class="m-0">
+                          <!-- @click="deleteComment({post.id, comment.id" -->
+                        <div
+                          class="btn text-danger btn-sm"
+                          v-if="comment.user.id === myaccount.id"
+                          @click="deleteComment({ postId: commentCreateData.postId, commentId: comment.id })"
+                        > 삭제
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 text-left wrapping py-0 mb-3">
+                      <div>{{ comment.content }}</div>
+                      <div><small style="color:#979797">{{ comment.createdAt | moment("from", "now") }}</small></div>
+                    </div>
                   </div>
                 </div>
-                <div class="col-12 text-left wrapping py-0 mb-3">
-                  <div>{{ comment.content }}</div>
-                  <div><small style="color:#979797">{{ comment.createdAt | moment("from", "now") }}</small></div>
-                </div>
-              </div>
-              </div>
-              <div class="button-section">
-                <hr style="background-color:#efefef">
+                <div v-else class="d-flex align-items-center">
+                  <div style="margin-top:120px;">
+                    <img src="https://user-images.githubusercontent.com/25967949/89524240-2e43c300-d81f-11ea-9a05-b1b45d70172f.png">
+                    <h5>작성된 댓글이 없습니다.</h5>
+                  </div>
 
+                </div>
               </div>
+        
+              <hr class="mt-1" style="background-color:#efefef">
               
               <div class="comment mt-auto w-100" id="comment">
-                <hr style="background-color:#efefef">
-                <!-- <h5 class="text-left mb-3">댓글</h5> -->
                 <!-- 댓글 작성 -->
                 <div class="input-group row no-gutters commentSection" style="height:70px;">
                   <textarea
@@ -745,9 +780,127 @@ body {
     }
 
 }
-.post-review {
+/* tooltip */
+[tooltip] {
+  position: relative; /* opinion 1 */
+}
+/* START TOOLTIP STYLES */
+[tooltip] {
+  position: relative; /* opinion 1 */
+}
+/* Applies to all tooltips */
+[tooltip]::before,
+[tooltip]::after {
+  text-transform: none; /* opinion 2 */
+  font-size: .8em; /* opinion 3 */
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+  position: absolute;
+  display: none;
+  opacity: 0;
+}
+[tooltip]::before {
+  content: '';
+  border: 5px solid transparent; /* opinion 4 */
+  z-index: 1001; /* absurdity 1 */
+}
+[tooltip]::after {
+  content: attr(tooltip); /* magic! */
+  
+  /* most of the rest of this is opinion */
+  font-family:  'Noto Sans KR', Helvetica, sans-serif;
+  text-align: center;
+  
+  /* 
+    Let the content set the size of the tooltips 
+    but this will also keep them from being obnoxious
+    */
+  min-width: 3em;
+  max-width: 21em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 1ch 1.5ch;
+  border-radius: .3ch;
+  box-shadow: 0 1em 2em -.5em rgba(0, 0, 0, 0.35);
+  background: #333;
+  color: #fff;
+  z-index: 1000; /* absurdity 2 */
+}
+/* Make the tooltips respond to hover */
+[tooltip]:hover::before,
+[tooltip]:hover::after {
+  display: block;
+}
+/* don't show empty tooltips */
+[tooltip='']::before,
+[tooltip='']::after {
+  display: none !important;
+}
+/* FLOW: RIGHT */
+[tooltip][flow^="right"]::before {
+  top: 50%;
+  border-left-width: 0;
+  border-right-color: #333;
+  right: calc(0em - 5px);
+  transform: translate(.5em, -50%);
+}
+[tooltip][flow^="right"]::after {
+  top: 50%;
+  left: calc(100% + 5px);
+  transform: translate(.5em, -50%);
+}
+
+
+/* FLOW: DOWN */
+[tooltip][flow^="down"]::before {
+  top: 100%;
+  border-top-width: 0;
+  border-bottom-color: #333;
+}
+[tooltip][flow^="down"]::after {
+  top: calc(100% + 5px);
+}
+[tooltip][flow^="down"]::before,
+[tooltip][flow^="down"]::after {
+  left: 50%;
+  transform: translate(-50%, .5em);
+}
+
+
+/* KEYFRAMES */
+@keyframes tooltips-vert {
+  to {
+    opacity: .9;
+    transform: translate(-50%, 0);
+  }
+}
+@keyframes tooltips-horz {
+  to {
+    opacity: .9;
+    transform: translate(0, -50%);
+  }
+}
+/* FX All The Things */ 
+[tooltip]:not([flow]):hover::before,
+[tooltip]:not([flow]):hover::after,
+[tooltip][flow^="up"]:hover::before,
+[tooltip][flow^="up"]:hover::after,
+[tooltip][flow^="down"]:hover::before,
+[tooltip][flow^="down"]:hover::after {
+  animation: tooltips-vert 300ms ease-out forwards;
+}
+[tooltip][flow^="left"]:hover::before,
+[tooltip][flow^="left"]:hover::after,
+[tooltip][flow^="right"]:hover::before,
+[tooltip][flow^="right"]:hover::after {
+  animation: tooltips-horz 300ms ease-out forwards;
+}
+
+
+.post-review, .comment-list {
   overflow-y: auto;
-  height: 200px;
 }
 
 .post-onelinereview, .post-review, .book-title{
