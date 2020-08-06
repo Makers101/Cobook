@@ -207,6 +207,15 @@ const clubStore = {
           .catch(err => {
             console.log(err.response.data)
           })
+      },
+      deleteClubEvent({ rootGetters }, params) {
+        axios.delete(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/clubevents/' + params.clubEventId, rootGetters.config)
+          .then(() => {
+            router.push({ name: 'ClubDetail', params: { clubId: params.clubId } })
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
       }
     }
 }

@@ -46,7 +46,29 @@
               <p class="mb-0 font-weight-bold">{{ selectedClubEvent.dateTime | moment('YYYY년 MM월 DD일 HH시 mm분') }}</p>
             </div>
             <div class="d-flex justify-content-end align-items-end">
-              <button class="btn btn-secondary" v-if="isLeader">클럽 이벤트 설정</button>
+              <button
+                class="btn btn-secondary dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                v-if="isLeader">
+                이벤트 설정
+              </button>
+              <div class="dropdown-menu py-0">
+                <button 
+                  class="dropdown-item setting-btn text-center"
+                  type="button"
+                  @click="toClubEventUpdate(selectedClubEvent.id)">
+                  이벤트 정보 수정
+                </button>
+                <button 
+                  class="dropdown-item setting-btn text-center"
+                  type="button"
+                  @click="clickClubEventDelete()">
+                  이벤트 삭제
+                </button>
+              </div>
+
               <button
                 class="btn btn-warning"
                 v-if="selectedClubEvent.isMember & !isParticipant & !isLeader"
@@ -239,7 +261,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('clubStore', ['findClub', 'findClubEvent', 'participateClubEvent']),
+    ...mapActions('clubStore', ['findClub', 'findClubEvent', 'participateClubEvent', 'deleteClubEvent']),
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
     },
@@ -266,6 +288,16 @@ export default {
     },
     toPostCreate(bookId) {
       router.push({ name: 'PostCreate', params: { selectedBookId: bookId }})
+    },
+    toClubEventUpdate(clubEventId) {
+      router.push({ name: 'ClubEventUpdate', params: { clubEventId: clubEventId }})
+    },
+    clickClubEventDelete() {
+      if (confirm('클럽 이벤트를 삭제하시겠습니까?') === true) {
+        this.deleteClubEvent(this.params)
+      } else {
+        return false
+      }
     }
   },
   created() {

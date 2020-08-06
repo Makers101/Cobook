@@ -45,7 +45,7 @@
             <!-- club-detail-buttons -->
             <div>
               <button
-                class="btn btn-secondary dropdown-toggle mr-2"
+                class="btn btn-secondary dropdown-toggle"
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
@@ -96,13 +96,13 @@
                 </button>
               </div>
               <button
-                class="btn btn-warning mr"
+                class="btn btn-warning"
                 v-if="selectedClub.recruit && !isMember && !isLeader &&!isCandidate"
                 @click="clickApplyClub('apply', selectedClub.id)">
                 가입 신청
               </button>
               <button
-                class="btn btn-warning mr"
+                class="btn btn-warning"
                 v-if="selectedClub.recruit && isCandidate"
                 @click="clickApplyClub('cancel', selectedClub.id)">
                 가입 취소
