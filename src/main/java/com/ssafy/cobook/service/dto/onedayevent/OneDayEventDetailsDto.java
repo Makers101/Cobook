@@ -26,6 +26,7 @@ public class OneDayEventDetailsDto {
     private Boolean closed;
     private Boolean isMember;
     private BookSimpleResDto book;
+    private Integer capacity;
     private List<QuestionResDto> questions;
     private OneDayEventMemberResponseDto leader;
     private List<OneDayEventMemberResponseDto> participants;
@@ -54,6 +55,7 @@ public class OneDayEventDetailsDto {
         this.memberPosts = memberPosts;
         this.isMember = isMember;
         this.participantCnt = participants.size() + 1;
+        this.capacity = oneDayEvent.getCapacity();
     }
 
 }
