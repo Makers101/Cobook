@@ -208,6 +208,20 @@ const clubStore = {
             console.log(err.response.data)
           })
       },
+      updateClubEvent({ rootGetters, dispatch }, dataContainer) {
+        axios.put(
+          SERVER.URL + SERVER.ROUTES.clubs + '/' + dataContainer.params.clubId + '/clubevents/' + dataContainer.params.clubEventId,
+          dataContainer.clubEventUpdateData,
+          rootGetters.config)
+          .then(() => {
+            dispatch('findClubEvent', dataContainer.params)
+            router.push({ name: 'ClubEventDetail', params: { clubId: dataContainer.params.clubId, clubEventId: dataContainer.params.clubEventId }})
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+
+      },
       deleteClubEvent({ rootGetters }, params) {
         axios.delete(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/clubevents/' + params.clubEventId, rootGetters.config)
           .then(() => {

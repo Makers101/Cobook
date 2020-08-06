@@ -1,21 +1,21 @@
 <template>
-  <div class="custom-container mb-5" v-if="selectedClubEvent">
+  <div class="custom-container mb-5">
 
-    <!-- clubEvent-update-banner -->
-    <div class="clubEvent-banner">
+    <!-- onedayEvent-create-banner -->
+    <div class="onedayEvent-banner">
       <img
-        class="clubEvent-banner-img"
-        src="https://user-images.githubusercontent.com/57381062/88908347-b57bbe80-d294-11ea-9d31-a88d3d0b3b23.jpg"
-        alt="clubEvent-banner">
-      <div class="clubEvent-banner-text">
-        <h3 class="font-weight-bold">클럽 이벤트 수정</h3>
+        class="onedayEvent-banner-img"
+        src="https://user-images.githubusercontent.com/57381062/89494349-f6258b80-d7f0-11ea-9168-2feced39fab5.jpg"
+        alt="onedayEvent-banner">
+      <div class="onedayEvent-banner-text">
+        <h3 class="font-weight-bold">원데이 이벤트 만들기</h3>
         <p class="mb-0">
-          클럽 이벤트의 기본 정보를 수정해보세요 :)
+          원데이 이벤트를 만들어 다른 유저와 함께 책을 읽고 좋은 대화를 나눠보세요 :)
         </p>
       </div>
     </div>
   
-    <!-- clubEvent-update-form -->
+    <!-- onedayEvent-create-form -->
     <v-app>
       <v-card>
         <template v-slot:progress>
@@ -34,22 +34,22 @@
           <v-container>
             <v-row>
 
-              <!-- clubEvent-update-name -->
+              <!-- onedayEvent-create-name -->
               <v-col cols="12">
                 <v-text-field
-                  v-model="clubEventUpdateData.name"
+                  v-model="onedayEventCreateData.title"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="30"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽 이벤트 명"
+                  label="원데이 이벤트 명"
                 ></v-text-field>
               </v-col>
 
-              <!-- clubEvent-update-book -->
+              <!-- onedayEvent-create-book -->
               <v-col cols="12">
                 <v-autocomplete
-                  v-model="clubEventUpdateData.bookId"
+                  v-model="onedayEventCreateData.bookId"
                   v-if="books"
                   :items="books"
                   hide-selected
@@ -81,25 +81,25 @@
                 </v-autocomplete>
               </v-col>
 
-              <!-- clubEvent-update-description -->
+              <!-- onedayEvent-create-description -->
               <v-col cols="12">
                 <v-textarea
-                  v-model="clubEventUpdateData.description"
+                  v-model="onedayEventCreateData.description"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="100"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽 이벤트 설명"
+                  label="원데이 이벤트 설명"
                 ></v-textarea>
               </v-col>
 
-              <!-- clubEvent-update-place -->
+              <!-- onedayEvent-create-place -->
               <v-col class="mt-5" cols="12">
                 <div class="d-flex justify-content-start">
-                  <label class="v-label theme--light">클럽 이벤트 장소</label>
+                  <label class="v-label theme--light">원데이 이벤트 장소</label>
                 </div>
                 <v-radio-group
-                  v-model="clubEventUpdateData.place"
+                  v-model="onedayEventCreateData.place"
                   :rules="[v => !!v || '필수항목입니다.']"
                 >
                   <div class="d-flex justify-content-start align-items-center">
@@ -111,7 +111,7 @@
                       class="mx-3 mb-2"
                       v-model="offlinePlace"
                       :disabled="!offlineEnabled"
-                      label="클럽 이벤트 장소"
+                      label="원데이 이벤트 장소"
                       counter
                       maxlength="30"
                       :rules="placeRules"
@@ -120,15 +120,15 @@
                 </v-radio-group>
               </v-col>
 
-              <!-- clubEvent-update-date -->
+              <!-- onedayEvent-create-date -->
               <v-col class="pb-0" cols="12">
                 <div class="d-flex justify-content-start">
-                  <label class="v-label theme--light">클럽 이벤트 일시</label>
+                  <label class="v-label theme--light">원데이 이벤트 일시</label>
                 </div>
               </v-col>
               <v-col cols="6">
                 <v-menu
-                  v-model="clubEventDate"
+                  v-model="onedayEventDate"
                   :close-on-content-click="false"
                   :nudge-right="40"
                   transition="scale-transition"
@@ -149,18 +149,18 @@
                   </template>
                   <v-date-picker
                     v-model="date"
-                    @input="clubEventDate = false"
+                    @input="onedayEventDate = false"
                     color="blue-grey lighten-2"
                   >
                   </v-date-picker>
                 </v-menu>
               </v-col>
 
-              <!-- clubEvent-update-time -->
+              <!-- onedayEvent-create-time -->
               <v-col cols="6">
                 <v-menu
                   ref="menu"
-                  v-model="clubEventTime"
+                  v-model="onedayEventTime"
                   color="blue-grey lighten-2"
                   :close-on-content-click="false"
                   :nudge-right="40"
@@ -183,7 +183,7 @@
                     ></v-text-field>
                   </template>
                   <v-time-picker
-                    v-if="clubEventTime"
+                    v-if="onedayEventTime"
                     color="blue-grey lighten-2"
                     v-model="time"
                     full-width
@@ -195,14 +195,30 @@
                 </v-menu>
               </v-col>
 
-              <!-- clubEvent-update-questions -->
+              <!-- onedayEvent-create-capacity -->
+              <v-col class="mt-5" cols="12">
+                <v-card-text class="p-0">
+                  <v-slider
+                    v-model="onedayEventCreateData.capacity"
+                    label="모집 인원"
+                    :max="10"
+                    :min="1"
+                    step="1"
+                    :rules="[v => !!v || '필수항목입니다.']"
+                    thumb-label="always"
+                    ticks
+                  ></v-slider>
+                </v-card-text>
+              </v-col>
+              
+              <!-- onedayEvent-create-questions -->
               <v-col class="mt-5" cols="12">
                 <div class="d-flex justify-content-start">
                   <label class="v-label theme--light mb-0">질문지</label>
                 </div>
                 <v-combobox
                   class="pt-0"
-                  v-model="clubEventUpdateData.questions"
+                  v-model="onedayEventCreateData.questions"
                   color="blue-grey lighten-2"
                   multiple
                   chips
@@ -213,25 +229,24 @@
                     <v-chip
                       v-bind="data.attrs"
                       close
-                      @click:close="remove(clubEventUpdateData.questions, data.item)"
+                      @click:close="remove(onedayEventCreateData.questions, data.item)"
                     >
                       {{ data.item }}
                     </v-chip>
                   </template>
                 </v-combobox>
               </v-col>
-              
             </v-row>
           </v-container>
           
-          <!-- clubEvent-update-button -->
+          <!-- onedayEvent-create-button -->
           <v-card-actions class="d-flex justify-content-end">
             <v-btn
               :disabled="!valid"
               class="button btn-green"
-              @click="clickUpdate"
+              @click="clickCreate"
             >
-              클럽 이벤트 수정
+              원데이 이벤트 생성
             </v-btn>
           </v-card-actions>
         </v-form>
@@ -243,19 +258,16 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 export default {
-  name: 'ClubEventUpdate',
+  name: 'OnedayEventCreate',
   data() {
     return {
-      params: {
-        clubId: this.$route.params.clubId,
-        clubEventId: this.$route.params.clubEventId
-      },
-      clubEventUpdateData: {
-        name: null,
+      onedayEventCreateData: {
+        title: null,
         description: null,
         place: null,
         datetime: null,
         bookId: null,
+        capacity: null,
         questions: []
       },
       date: new Date().toISOString().substr(0, 10),
@@ -263,19 +275,18 @@ export default {
       valid: true,
       lazy:false,
       searchBook: null,
-      clubEventDate: false,
-      clubEventTime: false,
+      onedayEventDate: false,
+      onedayEventTime: false,
       search: null,
       offlinePlace: null
     }
   },
   computed: {
     ...mapState(['books']),
-    ...mapState('clubStore', ['selectedClubEvent']),
     offlineEnabled() {
-      if (this.clubEventUpdateData.place === null && this.offlinePlace === null) {
+      if (this.onedayEventCreateData.place === null && this.offlinePlace === null) {
         return false
-      } else if (this.clubEventUpdateData.place === '온라인' && this.offlinePlace !== '온라인') {
+      } else if (this.onedayEventCreateData.place === '온라인' && this.offlinePlace !== '온라인') {
         return false
       } else {
         return true
@@ -295,7 +306,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('clubStore', ['findClubEvent', 'updateClubEvent']),
+    ...mapActions('onedayEventStore', ['createOnedayEvent']),
     remove (data, item) {
       const index = data.indexOf(item)
       if (index >= 0) data.splice(index, 1)
@@ -308,54 +319,30 @@ export default {
     validate() {
       this.$refs.form.validate()
     },
-    clickUpdate() {
-      this.clubEventUpdateData.datetime = this.date + 'T' + this.time
+    clickCreate() {
+      this.onedayEventCreateData.datetime = this.date + 'T' + this.time
       if (this.offlineEnabled) {
-        this.clubEventUpdateData.place = this.offlinePlace
+        this.onedayEventCreateData.place = this.offlinePlace
       }
-      const dataContainer = {
-        clubEventUpdateData: this.clubEventUpdateData,
-        params: this.params
-      }
-      this.updateClubEvent(dataContainer)
+      this.createOnedayEvent(this.onedayEventCreateData)
     }
-  },
-  mounted() {
-    this.findClubEvent(this.params)
-      .then(() => {
-        this.clubEventUpdateData.name = this.selectedClubEvent.name
-        this.clubEventUpdateData.description = this.selectedClubEvent.description
-        this.clubEventUpdateData.bookId = this.selectedClubEvent.book.id
-    
-        if (this.selectedClubEvent.place !== '온라인') {
-          this.offlinePlace = this.selectedClubEvent.place
-        }
-        this.clubEventUpdateData.place = this.selectedClubEvent.place
-        
-        this.date = this.selectedClubEvent.dateTime.slice(0, 10)
-        this.time = this.selectedClubEvent.dateTime.slice(11, 16)
-        
-        this.selectedClubEvent.questions.forEach(question => {
-          this.clubEventUpdateData.questions.push(question.question)
-        })
-      })
   }
 }
 </script>
 
 <style scoped>
-  .clubEvent-banner {
+  .onedayEvent-banner {
     position: relative;
   }
 
-  .clubEvent-banner-img {
+  .onedayEvent-banner-img {
     width: 100%;
     height: 200px;
     vertical-align: middle;
     filter: brightness(0.7)
   }
   
-  .clubEvent-banner-text {
+  .onedayEvent-banner-text {
     color: #F8F8F8;
     text-align: center;
     text-shadow: 2px 2px 2px rgb(100, 100, 100);
@@ -364,4 +351,5 @@ export default {
     left: 50%;
     transform: translate( -50%, -50% );
   }
+
 </style>

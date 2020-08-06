@@ -190,14 +190,11 @@
                 <span class="badge mb-0 clubEvent-closed-false" v-else>예정</span>
               </div>
               <div class="col-6 text-left d-flex flex-column p-2">
-                <p class="color-light-black book-title" lt="book">{{ clubEvent.book.title }}</p>
-                <small>{{ clubEvent.name }}</small>
+                <p class="clubEvent-name font-weight-bold" lt="book">{{ clubEvent.name }}</p>
                 <div class="mt-auto">
-                  <div class="d-flex justify-content-between">
-                    <span><small><i class="fas fa-users"></i> {{ clubEvent.participantCnt}}</small></span>
-                    <span><small><i class="fas fa-map-marker-alt"></i> {{ clubEvent.place }}</small></span>
-                  </div>
-                  <span class="clubEvent-date"><small>{{ clubEvent.datetime | moment('YYYY-MM-DD HH:mm') }}</small></span>
+                  <p class="mb-0"><small><i class="fas fa-users"></i> {{ clubEvent.participantCnt}}</small></p>
+                  <p class="mb-0"><small><i class="fas fa-map-marker-alt"></i> {{ clubEvent.place }}</small></p>
+                  <p class="clubEvent-date mb-0"><small>{{ clubEvent.datetime | moment('YYYY-MM-DD HH:mm') }}</small></p>
                 </div>
               </div>
             </div>
@@ -400,7 +397,7 @@ export default {
     max-height: 200px;
   }
 
-  .book-title {
+  .clubEvent-name {
     word-break: keep-all;
   }
 
