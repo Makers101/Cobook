@@ -37,7 +37,7 @@
               <!-- onedayEvent-create-name -->
               <v-col cols="12">
                 <v-text-field
-                  v-model="onedayEventCreateData.title"
+                  v-model="onedayEventCreateData.name"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="30"
@@ -262,7 +262,7 @@ export default {
   data() {
     return {
       onedayEventCreateData: {
-        title: null,
+        name: null,
         description: null,
         place: null,
         datetime: null,
