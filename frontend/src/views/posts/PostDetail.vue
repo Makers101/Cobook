@@ -1,14 +1,176 @@
 <template>
+
   <div>
     <div id="wrapper">
       <div id="container">
         <section class="open-book">
           <header>
-            <h1>Book Layout</h1>
-            <h6>Chae Lin</h6>
           </header>
           <article>
-            <h2 class="chapter-title">책이름</h2>
+            <!-- 페이지1 -->
+            <div class="page1 d-flex flex-column w-100" style="height:750px;">
+                <div class="w-100">
+                  <!-- 책 제목 -->
+                  <h2 class="chapter-title book-title pt-0">{{ selectedPost.book.title }}</h2>
+                  <!-- 책 이미지 및 정보 -->
+                  <div class="row no-gutters">
+                    <div class="col-3">
+                      <img style="height: 15vh;" :src="selectedPost.book.bookImg" alt="책 이미지">
+                    </div>
+                    <div class="col-9 text-left pr-3 align-self-center">
+                      <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953039-4a9da800-d2d3-11ea-8f6b-5792b4f87c45.png" width="20px"> {{ selectedPost.book.author }} </p>
+                      <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px"> {{ selectedPost.book.publisher }}</p>
+                      <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> {{ selectedPost.book.pubDate.slice(0,4) }}년 {{ selectedPost.book.pubDate.slice(5,7) }}월 {{ selectedPost.book.pubDate.slice(8,10) }}일</p>
+                    </div>
+                  </div>
+                  <div class="d-flex flex-column justify-content-around" style="height:450px">
+                    <!-- 한줄평 -->
+                    <div class="mt-3 w-100">        
+                      <div class="px-2 pt-2 large-text text-left"><i class="fas fa-quote-left"></i></div>
+                      <p class="px-4 text-center post-onelinereview">{{ selectedPost.onelineReview }}</p>
+                      <div class="px-2 pb-2 large-text text-right"><i class="fas fa-quote-right"></i></div>
+                    </div>
+                    <!-- 상세 리뷰 -->
+                    <div class="mx-0 mt-3 w-100" v-if="selectedPost.review">
+                      <p class="text-center">
+                        <span class="rounded-circle">
+                          <img
+                            v-if="!selectedPost.user.profileImg"
+                            class="img-fluid feed-profile-img mr-1" 
+                            src="@/assets/anonymous.png" 
+                            alt="유저 프로필 사진">
+                          <img 
+                            v-else
+                            class="img-fluid feed-profile-img mr-1" 
+                            :src="selectedPost.user.profileImg" alt="작성자 프로필 사진">
+                        </span>
+                        <strong>
+                          <span class="pointer" @click="selectUser(selectedPost.user.id)">{{ selectedPost.user.nickName }}</span>
+                          <span>님의 리뷰</span>
+                        </strong>
+                      </p>
+                      <div class="post-review mt-3">
+                        <div class="review" v-html="selectedPost.review"></div>
+                      </div>
+                    </div>
+                    <!-- 좋아요 및 뱃지 -->
+                    <div class="w-100 mt-3">
+                      <div class="post-footer pt-2 d-flex justify-content-between">
+                        <!-- 좋아요 -->
+                        <span class="pointer m-0" @click="clickLike(selectedPost)">
+                          <span v-if="checkHeart(selectedPost)"><i class="fas fa-heart mr-2 heartselected"></i>
+                            <small class="mr-3"><span>{{ myaccount.nickName}}님</span>
+                            <span v-if="selectedPost.likeUsers.length -1 > 0"> 외 {{ selectedPost.likeUsers.length - 1}}명이 좋아합니다.</span>
+                            <span v-else>이 좋아합니다.</span>
+                            </small>
+                          </span>
+                          <span v-else><i class="fas fa-heart mr-2"></i><small class="mr-3">{{ selectedPost.likeUsers.length }}명이 좋아합니다.</small></span>
+                        </span>
+                        <!-- 뱃지 -->
+                        <div>
+                          <span
+                          class="badge bg-green rounded-pill px-3 py-2 mr-2"
+                          v-for="tag in selectedPost.tags"
+                          :key="`tag-${tag.id}`"
+                          >#{{ tag.name }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                
+            </div>
+            <!-- 페이지2 -->
+            <div class="page2 d-flex flex-column " style="height:750px;"> 
+              <div class="w-100 page2-header">
+                <p class="text-left">
+                  <span class="rounded-circle">
+                    <img
+                      v-if="!selectedPost.user.profileImg"
+                      class="img-fluid feed-profile-img mr-1" 
+                      src="@/assets/anonymous.png" 
+                      alt="유저 프로필 사진">
+                    <img 
+                      v-else
+                      class="img-fluid feed-profile-img mr-1" 
+                      :src="selectedPost.user.profileImg" alt="작성자 프로필 사진">
+                  </span>
+                  <strong>
+                    <span class="pointer" @click="selectUser(selectedPost.user.id)">{{ selectedPost.user.nickName }}님</span>
+                  </strong>
+                </p>
+              </div>
+              <hr style="background-color:#efefef">
+              <!-- 댓글 부분 -->
+              <!-- commentList -->
+              <div class="comment-list w-100" style="height:400px">
+                <div
+                v-for="comment in comments"
+                :key="`comment-${comment.id}`">
+                <div class="d-flex justify-content-between">
+                  <div class="m-0">
+                    <span class="rounded-circle">
+                      <img
+                        v-if="!selectedPost.user.profileImg"
+                        class="img-fluid feed-profile-img" 
+                        src="@/assets/anonymous.png" 
+                        alt="유저 프로필 사진">
+                      <img 
+                        v-else
+                        class="img-fluid feed-profile-img" 
+                        :src="comment.user.profileImg" alt="작성자 프로필 사진">
+                    </span>
+                    <span class="ml-2 pointer" @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
+                    <span v-if="comment.isClub" class="badge bg-green">Club</span>
+                  </div>
+                  <div class="m-0">
+                      <!-- @click="deleteComment({post.id, comment.id" -->
+                    <div
+                      class="btn text-danger btn-sm"
+                      v-if="comment.user.id === myaccount.id"
+                      
+                    > 삭제</div>
+                  </div>
+                </div>
+                <div class="col-12 text-left wrapping py-0 mb-3">
+                  <div>{{ comment.content }}</div>
+                  <div><small style="color:#979797">{{ comment.createdAt | moment("from", "now") }}</small></div>
+                </div>
+              </div>
+              </div>
+              <div class="button-section">
+                <hr style="background-color:#efefef">
+
+              </div>
+              
+              <div class="comment mt-auto w-100" id="comment">
+                <hr style="background-color:#efefef">
+                <!-- <h5 class="text-left mb-3">댓글</h5> -->
+                <!-- 댓글 작성 -->
+                <div class="input-group row no-gutters commentSection" style="height:70px;">
+                  <textarea
+                    class="col-11 textareaSection p-3" 
+                    @keyup.enter="enterComment" 
+                    @input="activeBtn"
+                    v-model="commentCreateData.content" 
+                    type="content" 
+                    placeholder="댓글을 작성하세요 :)" 
+                    rows="1" 
+                    autofocus
+                  ></textarea>
+                  <button 
+                    :class="{ 'btn-green': btnActive, 'pointer': btnActive }"
+                    class="btn col-1 commentBtn"
+                    :disabled="!btnActive"
+                    @click="clickComment"
+                  >
+                  작성</button>
+                </div>
+
+              </div>
+            </div>
+              
           </article>
           <footer>
             <ol id="page-numbers">
@@ -20,6 +182,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -156,19 +319,12 @@ export default {
 </script>
 
 <style scoped>
-.post-header, .post-content{
-  border: 1px solid #D6CBBD ;
-  border-bottom-style: none;
-}
-
-.post-footer {
-  border: 1px solid #D6CBBD;
-}
 
 .feed-profile-img {
   height: 25px;
   width: 25px;
   border-radius: 50%;
+  border: 1px solid black;
 }
 
 .small-text {
@@ -328,6 +484,7 @@ body {
     background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCA2NCA2NCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNjQgNjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCiAgICA8Zz4NCiAgICAJPHBhdGggZD0iTTAsMzJMMzIsMGwzMiwzMkwzMiw2NEwwLDMyeiBNOCwzMmwyNCwyNGwyNC0yNEwzMiw4TDgsMzJ6IE0xNiwzMmwxNi0xNmwxNiwxNkwzMiw0OEwxNiwzMnogTTI0LDMybDgsOGw4LThsLTgtOEwyNCwzMnoiIC8+DQogICAgPC9nPg0KPC9zdmc+) bottom center no-repeat;
     background-size: 0.5em 0.5em;
     font: 700 7vw/1.25 'Playfair Display', sans-serif;
+    font-size: 1.7em !important;
     letter-spacing: 0.125em;
     margin: 0 0 1em 0;
     padding: 1em 0;
@@ -365,9 +522,6 @@ body {
     max-width: 28.125em;
 }
 
-.open-book article p {
-    text-indent: 2em;
-}
 
 .open-book .chapter-title + p:first-of-type {
     text-indent: 0;
@@ -585,16 +739,19 @@ body {
     }
 
     /* Body Copy */
-    .open-book article p {
-        text-indent: 3em;
-    }
-
     .open-book article > ul,
     .open-book article > ol {
         padding-left: 4em;
     }
 
 }
+.post-review {
+  overflow-y: auto;
+  height: 200px;
+}
 
+.post-onelinereview, .post-review, .book-title{
+  word-break: keep-all;
+}
 
 </style>
