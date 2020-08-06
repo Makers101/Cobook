@@ -20,7 +20,7 @@
     <!-- onedayEvents-menubar -->
     <div class="onedayEvents-menubar my-3 d-flex justify-content-between">
       <div class="onedayEvents-toggle">
-        <!-- <button
+        <button
           class="btn btn-toggle-false mx-1"
           @click="selectFilter('recruit')"
           v-show="filters.recruit_filter"
@@ -33,7 +33,7 @@
           v-show="!filters.recruit_filter"
         >
           #모집중
-        </button> -->
+        </button>
 
         <span             
           v-for="genre in myaccount.likeGenres"
@@ -62,26 +62,23 @@
     <!-- onedayEvents-list -->
     <div class="onedayEvents-list my-2 row">
       <div 
-        class="col-lg-4 col-12 p-3"
+        class="col-lg-4 col-12 p-3 pointer"
         v-for="onedayEvent in filteredOnedayEvents"
-        :key="`onedayEvent_${onedayEvent.id}`">
-
+        :key="`onedayEvent_${onedayEvent.id}`"
+        @click="selectOnedayEvent(onedayEvent.id)">
         <div class="card h-100">
           <div class="row no-gutters">
             <div class="col-6 onedayEvent-left">
               <img class="bg-image" :src="onedayEvent.book.bookImg" width="100%">
-              <span class="badge mb-0 onedayEvent-closed-true" v-if="onedayEvent.recruit">종료</span>
-              <span class="badge mb-0 onedayEvent-closed-false" v-else>예정</span>
+              <span class="badge mb-0 onedayEvent-recruit" v-if="onedayEvent.participantCnt < onedayEvent.capacity + 1">모집중</span>
+              <!-- <span class="badge mb-0 onedayEvent-closed-false" v-else>풀방</span> -->
             </div>
             <div class="col-6 text-left d-flex flex-column p-2">
-              <p class="color-light-black book-title" lt="book">{{ onedayEvent.book.title }}</p>
-              <small>{{ onedayEvent.name }}</small>
+              <p class="onedayEvent-title font-weight-bold" lt="book">{{ onedayEvent.title }}</p>
               <div class="mt-auto">
-                <div class="d-flex justify-content-between">
-                  <span><small><i class="fas fa-users"></i> {{ onedayEvent.participantCnt}}</small></span>
-                  <span><small><i class="fas fa-map-marker-alt"></i> {{ onedayEvent.place }}</small></span>
-                </div>
-                <span class="onedayEvent-date"><small>{{ onedayEvent.datetime | moment('YYYY-MM-DD HH:mm') }}</small></span>
+                <p class="mb-0"><small><i class="fas fa-users"></i> {{ onedayEvent.participantCnt}} / {{ onedayEvent.capacity + 1 }}</small></p>
+                <p class="mb-0"><small><i class="fas fa-map-marker-alt"></i> {{ onedayEvent.place }}</small></p>
+                <p class="onedayEvent-date mb-0"><small>{{ onedayEvent.datetime | moment('YYYY-MM-DD HH:mm') }}</small></p>
               </div>
             </div>
           </div>
@@ -179,7 +176,7 @@ export default {
     position: relative;
   }
 
-  .onedayEvent-closed-false {
+  .onedayEvent-recruit {
     background-color: rgba(221, 118, 0, 0.8); 
     color: #F8F8F8;
     text-align: center;
@@ -201,7 +198,7 @@ export default {
     padding: 6px;
   }
 
-  .book-title {
+  .onedayEvent-title {
     word-break: keep-all;
   }
 
