@@ -4,6 +4,7 @@ import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.book.BookRepository;
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.club.ClubRepository;
+import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -216,36 +218,25 @@ public class PostService {
         if (post.getUser() == null || !post.getUser().equals(user)) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_POST);
         }
+        post.updatePost(requestDto);
         List<PostTag> originTags = post.getTags();
         postTagRepository.deleteAll(originTags);
+        post.removeTags();
+        for (PostTag t : originTags) {
+            Tag temp = t.getTag();
+            temp.removePostTag(t);
+        }
         List<Tag> tags = requestDto.getTags().stream()
                 .map(this::saveTag)
                 .collect(Collectors.toList());
-
-//        List<PostTag> originTags = post.getTags();
-//        List<Tag> tags = requestDto.getTags().stream()
-//                .map(this::saveTag)
-//                .collect(Collectors.toList());
-//        List<PostTag> deletes = new ArrayList<>();
-//        for (PostTag tag : originTags) {
-//            Tag temp = tag.getTag();
-//            if (!tags.contains(temp)) {
-//                temp.removePostTag(tag);
-//                post.deleteTags(tag);
-//                deletes.add(tag);
-//            } else {
-//                tags.remove(temp);
-//            }
-//        }
-//        postTagRepository.deleteAll(deletes);
         List<PostTag> postTags = tags.stream()
                 .map(t -> saveTag(post, t))
                 .collect(Collectors.toList());
-        post.updatePost(requestDto);
-        post.setTags(postTags);
+        post.addTags(postTags);
     }
 
-    private PostTag saveTag(Post post, Tag tag) {
+    @Transactional
+    public PostTag saveTag(Post post, Tag tag) {
         if (postTagRepository.findByPostAndTag(post, tag).isPresent()) {
             return postTagRepository.findByPostAndTag(post, tag).get();
         }
@@ -256,27 +247,21 @@ public class PostService {
     public void updateClubPosts(PostUpdateByClubReqDto requestDto, Long clubId, Long postId) {
         Post post = getPostById(postId);
         Club club = getClub(clubId);
+        post.updatePost(requestDto);
         List<PostTag> originTags = post.getTags();
         postTagRepository.deleteAll(originTags);
+        post.removeTags();
+        for (PostTag t : originTags) {
+            Tag temp = t.getTag();
+            temp.removePostTag(t);
+        }
         List<Tag> tags = requestDto.getTags().stream()
                 .map(this::saveTag)
                 .collect(Collectors.toList());
-//        for (PostTag tag : originTags) {
-//            Tag temp = tag.getTag();
-//            if (!tags.contains(temp)) {
-//                temp.removePostTag(tag);
-//                post.deleteTags(tag);
-//                deletes.add(tag);
-//            } else {
-//                tags.remove(temp);
-//            }
-//        }
-//        postTagRepository.deleteAll(deletes);
         List<PostTag> postTags = tags.stream()
                 .map(t -> saveTag(post, t))
                 .collect(Collectors.toList());
-        post.updatePost(requestDto);
-        post.setTags(postTags);
+        post.addTags(postTags);
     }
 
     @Transactional
@@ -351,5 +336,23 @@ public class PostService {
 
     public Page<PostResponseDto> getAllPostsPage(PageRequest pageRequest) {
         return postRepository.findAll(pageRequest.of()).map(PostResponseDto::new);
+    }
+
+    public List<PostResponseDto> getFollowerPosts(Long userId) {
+        User user = getUserById(userId);
+        List<User> follwer = followRepository.findAllByFromUser(user).stream()
+                .map(Follow::getToUser)
+                .collect(Collectors.toList());
+        List<List<Post>> posts = follwer.stream()
+                .map(User::getPosts)
+                .collect(Collectors.toList());
+        List<PostResponseDto> ret = new ArrayList<>();
+        for (List<Post> post : posts) {
+            ret.addAll(post.stream()
+                    .map(PostResponseDto::new)
+                    .collect(Collectors.toList()));
+        }
+        Collections.sort(ret);
+        return ret;
     }
 }
