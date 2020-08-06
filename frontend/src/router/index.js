@@ -36,6 +36,7 @@ import ClubEventUpdate from '@/views/clubs/clubevents/ClubEventUpdate'
 import OnedayEventList from '@/views/onedayevents/OnedayEventList'
 import OnedayEventDetail from '@/views/onedayevents/OnedayEventDetail'
 import OnedayEventCreate from '@/views/onedayevents/OnedayEventCreate'
+import OnedayEventUpdate from '@/views/onedayevents/OnedayEventUpdate'
 
 //pagenotfound
 import PageNotFound from '@/views/PageNotFound'
@@ -204,6 +205,11 @@ Vue.use(VueRouter)
     path: '/onedayevents/:onedayEventId',
     name: 'OnedayEventDetail',
     component: OnedayEventDetail
+  },
+  {
+    path: '/onedayevents/:onedayEventId/update',
+    name: 'OnedayEventUpdate',
+    component: OnedayEventUpdate
   },
   // 404 Pages
   {
