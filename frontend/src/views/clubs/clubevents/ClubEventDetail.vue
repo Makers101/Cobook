@@ -239,7 +239,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('clubStore', ['findClub', 'findClubEvent', 'participateClubEvent', 'toPostCreate']),
+    ...mapActions('clubStore', ['findClub', 'findClubEvent', 'participateClubEvent']),
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
     },
@@ -263,6 +263,9 @@ export default {
     },
     toSelectedClub(clubId) {
       router.push({ name: 'ClubDetail', params: { clubId: clubId}})
+    },
+    toPostCreate(bookId) {
+      router.push({ name: 'PostCreate', params: { selectedBookId: bookId }})
     }
   },
   created() {

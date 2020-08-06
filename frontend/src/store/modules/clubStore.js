@@ -9,8 +9,7 @@ const clubStore = {
       filteredClubs: null,
       selectedClub: null,
       selectedClubEvent: null,
-      candidates: null,
-      selectedBookId: null
+      candidates: null
     },
     getters: {
     },
@@ -29,9 +28,6 @@ const clubStore = {
       },
       SET_CANDIDATES(state, candidates) {
         state.candidates = candidates
-      },
-      SET_SELECTED_BOOKID(state, bookId) {
-        state.selectedBookId = bookId
       }
     },
     actions: {
@@ -211,13 +207,6 @@ const clubStore = {
           .catch(err => {
             console.log(err.response.data)
           })
-      },
-      toPostCreate({ commit }, bookId) {
-        commit('SET_SELECTED_BOOKID', bookId)
-        router.push({ name: 'PostCreate' })
-      },
-      resetSelectedBookId({ commit }) {
-        commit('SET_SELECTED_BOOKID', null)
       }
     }
 }

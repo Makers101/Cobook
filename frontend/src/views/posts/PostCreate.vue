@@ -214,11 +214,9 @@ export default {
   computed: {
     ...mapState(['books']),
     ...mapState('postStore', ['tags']),
-    ...mapState('clubStore', ['selectedBookId'])
   },
   methods: {
     ...mapActions('postStore', ['fetchTags', 'createPost']),
-    ...mapActions('clubStore', ['resetSelectedBookId']),
     remove (data, item) {
       const index = data.indexOf(item)
       if (index >= 0) data.splice(index, 1)
@@ -272,9 +270,8 @@ export default {
     this.fetchTags()
   },
   mounted() {
-    if (this.selectedBookId) {
-      this.postCreateData.bookId = this.selectedBookId
-      this.resetSelectedBookId()
+    if (this.$route.params.selectedBookId) {
+      this.postCreateData.bookId = this.$route.params.selectedBookId
     }
   }
 }
