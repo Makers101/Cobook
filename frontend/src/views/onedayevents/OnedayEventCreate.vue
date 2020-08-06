@@ -37,7 +37,7 @@
               <!-- onedayEvent-create-name -->
               <v-col cols="12">
                 <v-text-field
-                  v-model="onedayEventCreateData.name"
+                  v-model="onedayEventCreateData.title"
                   color="blue-grey lighten-2"
                   counter
                   maxlength="30"
