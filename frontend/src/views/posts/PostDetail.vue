@@ -10,26 +10,21 @@
             <!-- 페이지1 -->
             <div class="page1 d-flex flex-column w-100" style="height:750px;">
                 <div class="w-100">
-                  <!-- 책 제목 -->
-                  <h2 class="chapter-title book-title pt-0">{{ selectedPost.book.title }}</h2>
+                  <!-- 한줄평-->
+                  <h2 class="chapter-title book-title pt-0">{{ selectedPost.onelineReview }}</h2>
                   <!-- 책 이미지 및 정보 -->
                   <div class="row no-gutters">
                     <div class="col-3">
                       <img style="height: 15vh;" :src="selectedPost.book.bookImg" alt="책 이미지">
                     </div>
                     <div class="col-9 text-left pr-3 align-self-center">
+                      <p><mark>{{ selectedPost.book.title }}</mark></p>
                       <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953039-4a9da800-d2d3-11ea-8f6b-5792b4f87c45.png" width="20px"> {{ selectedPost.book.author }} </p>
                       <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px"> {{ selectedPost.book.publisher }}</p>
                       <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> {{ selectedPost.book.pubDate.slice(0,4) }}년 {{ selectedPost.book.pubDate.slice(5,7) }}월 {{ selectedPost.book.pubDate.slice(8,10) }}일</p>
                     </div>
                   </div>
                   <div class="d-flex flex-column justify-content-around" style="height:450px">
-                    <!-- 한줄평 -->
-                    <div class="mt-3 w-100">        
-                      <div class="px-2 pt-2 large-text text-left"><i class="fas fa-quote-left"></i></div>
-                      <p class="px-4 text-center post-onelinereview">{{ selectedPost.onelineReview }}</p>
-                      <div class="px-2 pb-2 large-text text-right"><i class="fas fa-quote-right"></i></div>
-                    </div>
                     <!-- 상세 리뷰 -->
                     <div class="mx-0 mt-3 w-100" v-if="selectedPost.review">
                       <p class="text-center">
