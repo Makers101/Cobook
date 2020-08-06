@@ -40,8 +40,25 @@
                           :src="selectedPost.user.profileImg" alt="작성자 프로필 사진">
                       </span>
                       <strong>
-                        <span class="pointer" @click="selectUser(selectedPost.user.id)">{{ selectedPost.user.nickName }}님</span>
+                        <span class="pointer" @click="selectUser(selectedPost.user.id)">{{ selectedPost.user.nickName }}</span>
                       </strong>
+                      <!-- 수정하기 및 삭제하기 버튼 -->
+                      <div class="btn-group ml-2" v-if="myaccount.id===selectedPost.user.id">
+                        <button class="btn-green dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        </button>
+                        <div class="dropdown-menu text-center py-0">
+                          <p
+                            class="dropdown-item m-0 pointer setting-btn"
+                            @click="clickUpdatePost(selectedPost.id)"
+                          >수정하기
+                          </p>
+                          <p
+                            class="dropdown-item m-0 pointer setting-btn"
+                            @click="clickDeletePost(selectedPost.id)"
+                          >삭제하기
+                          </p>
+                        </div>
+                      </div>
                     </div>
                     <div class="m-0 d-flex justify-content-between">
                       <!-- 좋아요 -->
@@ -79,6 +96,8 @@
                           </span>
                         </span>
                       </p>
+                      <!-- 공유하기 -->
+                      <div class="pointer" @click="copyUrl"><i class="fas fa-share-alt"></i></div>
                     </div>
                     
                   </div>
