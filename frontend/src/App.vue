@@ -38,7 +38,7 @@
                 </router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" :to="{ name: 'MeetupList' }">
+                <router-link class="nav-link" :to="{ name: 'OnedayEventList' }">
                   <!-- <img class="img-fluid club-img" src="https://user-images.githubusercontent.com/57381062/88909365-f7f1cb00-d295-11ea-859e-656c0633bf2e.png" alt="밋업 이미지"> -->
                   원데이이벤트
                 </router-link>

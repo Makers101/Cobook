@@ -32,8 +32,8 @@ import ClubEventDetail from '@/views/clubs/clubevents/ClubEventDetail'
 import ClubEventCreate from '@/views/clubs/clubevents/ClubEventCreate'
 import ClubEventUpdate from '@/views/clubs/clubevents/ClubEventUpdate'
 
-// meetups
-import MeetupList from '@/views/meetups/MeetupList'
+// onedayevents
+import OnedayEventList from '@/views/onedayevents/OnedayEventList'
 
 //pagenotfound
 import PageNotFound from '@/views/PageNotFound'
@@ -187,11 +187,11 @@ Vue.use(VueRouter)
     name: 'ClubEventUpdate',
     component: ClubEventUpdate
   },
-  // meetups
+  // onedayevents
   {
-    path: '/meetups',
-    name: 'MeetupList',
-    component: MeetupList
+    path: '/onedayevents',
+    name: 'OnedayEventList',
+    component: OnedayEventList
   },
   // 404 Pages
   {

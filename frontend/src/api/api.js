@@ -9,6 +9,9 @@ export default {
 
     // clubs
     clubs: '/clubs',
+    
+    // onedayevents
+    onedayevents: '/onedayevents',
 
     // posts
     posts: '/posts',
