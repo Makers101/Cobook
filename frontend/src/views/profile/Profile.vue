@@ -50,7 +50,7 @@
         <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileBookmark', params: { userId:this.$route.params.userId }}"> Book Mark</router-link>
         <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileOverview', params: { userId:this.$route.params.userId }}"> Overview</router-link>
       </div>
-      <transition name="show">
+      <transition name="slide" mode="out-in">
         <router-view></router-view>
       </transition>
     </div>
@@ -196,14 +196,37 @@ export default {
   white-space: pre-line;
 }
 
-.show-enter-active,
-.show-leave-enter {
-    transform: translateX(0);
-    transition: all .3s linear;
-}
-.show-enter,
-.show-leave-to {
-    transform: translateX(100%);
-}
+.slide-leave-active {
+        transition: opacity 0.3s ease;
+        opacity: 0;
+        animation: slide-out 0.3s ease-out forwards;
+    }
+
+    .slide-leave {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .slide-enter-active {
+        animation: slide-in 0.3s ease-out forwards;
+    }
+
+    @keyframes slide-out {
+        0% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(-30px);
+        }
+    }
+
+    @keyframes slide-in {
+        0% {
+            transform: translateY(-30px);
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
 
 </style>
