@@ -6,7 +6,7 @@
       <img
         class="clubEvent-banner-img"
         src="https://user-images.githubusercontent.com/57381062/88908347-b57bbe80-d294-11ea-9d31-a88d3d0b3b23.jpg"
-        alt="">
+        alt="clubEvent-banner">
       <div class="clubEvent-banner-text">
         <h3 class="font-weight-bold">클럽 이벤트 만들기</h3>
         <p class="mb-0">
@@ -33,9 +33,9 @@
         >
           <v-container>
             <v-row>
-              <v-col
-                cols="12"
-              >
+
+              <!-- clubEvent-create-name -->
+              <v-col cols="12">
                 <v-text-field
                   v-model="clubEventCreateData.name"
                   color="blue-grey lighten-2"
@@ -46,6 +46,7 @@
                 ></v-text-field>
               </v-col>
 
+              <!-- clubEvent-create-book -->
               <v-col cols="12">
                 <v-autocomplete
                   v-model="clubEventCreateData.bookId"
@@ -53,9 +54,7 @@
                   :items="books"
                   hide-selected
                   color="blue-grey lighten-2"
-                  :rules="[
-                    v => (v.length !== 0) || '필수항목입니다.'
-                  ]"
+                  :rules="[v => (v.length !== 0) || '필수항목입니다.']"
                   label="책 검색"
                   item-text="title"
                   item-value="id"
@@ -72,7 +71,7 @@
                     </template>
                     <template v-else class="row">
                       <v-list-item-content class="offset-1 col-1">
-                        <img class="w-100" :src="data.item.bookImg">
+                        <img class="w-100" :src="data.item.bookImg" :alt="data.item.title">
                       </v-list-item-content>
                       <v-list-item-content class="col-10">
                         <v-list-item-title v-text="data.item.title"></v-list-item-title>
@@ -82,10 +81,8 @@
                 </v-autocomplete>
               </v-col>
 
-              <v-col
-                cols="12"
-                md="12"
-              >
+              <!-- clubEvent-create-description -->
+              <v-col cols="12">
                 <v-textarea
                   v-model="clubEventCreateData.description"
                   color="blue-grey lighten-2"
@@ -96,23 +93,42 @@
                 ></v-textarea>
               </v-col>
 
-              <v-col
-                cols="12"
-                md="12"
-              >
-                <v-text-field
+              <!-- clubEvent-create-place -->
+              <v-col class="mt-5" cols="12">
+                <div class="d-flex justify-content-start">
+                  <label class="v-label theme--light">클럽 이벤트 장소</label>
+                </div>
+                <v-radio-group
                   v-model="clubEventCreateData.place"
-                  color="blue-grey lighten-2"
-                  counter
-                  maxlength="10"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽 이벤트 장소"
-                ></v-text-field>
+                >
+                  <div class="d-flex justify-content-start align-items-center">
+                    <v-radio label="온라인" value="온라인"></v-radio>
+                  </div>
+                  <div class="d-flex justify-content-start align-items-center">
+                    <v-radio label="오프라인" :value="offlinePlace"></v-radio>
+                    <v-text-field
+                      class="mx-3 mb-2"
+                      v-model="offlinePlace"
+                      :disabled="!offlineEnabled"
+                      label="클럽 이벤트 장소"
+                      counter
+                      maxlength="30"
+                      :rules="placeRules"
+                    ></v-text-field>
+                  </div>
+                </v-radio-group>
               </v-col>
 
+              <!-- clubEvent-create-date -->
+              <v-col class="pb-0" cols="12">
+                <div class="d-flex justify-content-start">
+                  <label class="v-label theme--light">클럽 이벤트 일시</label>
+                </div>
+              </v-col>
               <v-col cols="6">
                 <v-menu
-                  v-model="menu1"
+                  v-model="clubEventDate"
                   :close-on-content-click="false"
                   :nudge-right="40"
                   transition="scale-transition"
@@ -133,16 +149,18 @@
                   </template>
                   <v-date-picker
                     v-model="date"
-                    @input="menu1 = false"
+                    @input="clubEventDate = false"
                     color="blue-grey lighten-2"
                   >
                   </v-date-picker>
                 </v-menu>
               </v-col>
+
+              <!-- clubEvent-create-time -->
               <v-col cols="6">
                 <v-menu
                   ref="menu"
-                  v-model="menu2"
+                  v-model="clubEventTime"
                   color="blue-grey lighten-2"
                   :close-on-content-click="false"
                   :nudge-right="40"
@@ -165,38 +183,48 @@
                     ></v-text-field>
                   </template>
                   <v-time-picker
-                    v-if="menu2"
+                    v-if="clubEventTime"
                     color="blue-grey lighten-2"
                     v-model="time"
                     full-width
+                    ampm-in-title
+                    :allowed-minutes="m => m % 30 === 0"
+                    format="24hr"
                     @click:minute="$refs.menu.save(time)"
                   ></v-time-picker>
                 </v-menu>
               </v-col>
-              <v-col>
+
+              <!-- clubEvent-create-questions -->
+              <v-col class="mt-5" cols="12">
+                <div class="d-flex justify-content-start">
+                  <label class="v-label theme--light mb-0">질문지</label>
+                </div>
                 <v-combobox
+                  class="pt-0"
                   v-model="clubEventCreateData.questions"
                   color="blue-grey lighten-2"
-                  label="질문지"
                   multiple
                   chips
                   hint="질문지는 여러 개 작성이 가능합니다 :)"
+                  placeholder="작성 후 Enter를 누르세요 :)"
                 >
-                  <!-- <template v-slot:no-data>
-                    <v-list-item>
-                      <v-list-item-content>
-                        <v-list-item-title>
-                          질문을 작성해주세요!
-                        </v-list-item-title>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </template> -->
+                  <template v-slot:selection="data">
+                    <v-chip
+                      v-bind="data.attrs"
+                      close
+                      @click:close="remove(clubEventCreateData.questions, data.item)"
+                    >
+                      {{ data.item }}
+                    </v-chip>
+                  </template>
                 </v-combobox>
               </v-col>
               
             </v-row>
           </v-container>
           
+          <!-- clubEvent-create-button -->
           <v-card-actions class="d-flex justify-content-end">
             <v-btn
               :disabled="!valid"
@@ -231,30 +259,40 @@ export default {
       valid: true,
       lazy:false,
       searchBook: null,
-      
-      menu1: false,
-      // modal: false,
-
-      menu2: false,
-      // modal2: false,
-      // items: ['Gaming', 'Programming', 'Vue', 'Vuetify'],
+      clubEventDate: false,
+      clubEventTime: false,
       search: null,
+      offlinePlace: null
     }
   },
-  // watch: {
-  //   model (val) {
-  //     if (val.length > 5) {
-  //       this.$nextTick(() => this.model.pop())
-  //     }
-  //   },
-  // },
   computed: {
     ...mapState(['books']),
+    offlineEnabled() {
+      if (this.clubEventCreateData.place === null && this.offlinePlace === null) {
+        return false
+      } else if (this.clubEventCreateData.place === '온라인' && this.offlinePlace !== '온라인') {
+        return false
+      } else {
+        return true
+      }
+    },
+    placeRules() {
+      const tempRules = []
+      if (this.offlineEnabled) {
+        const rule = v => !!v || '필수항목입니다.'
+        tempRules.push(rule)
+      }
+      if (this.offlinePlace) {
+        const rule = v => v !== '온라인' || '오프라인 장소를 작성해주세요 :)'
+        tempRules.push(rule)
+      }
+      return tempRules
+    }
   },
   methods: {
     ...mapActions('clubStore', ['createClubEvent']),
     remove (data, item) {
-      const index = data.indexOf(item.id)
+      const index = data.indexOf(item)
       if (index >= 0) data.splice(index, 1)
     },
     isBookNull() {
@@ -267,6 +305,9 @@ export default {
     },
     clickCreate() {
       this.clubEventCreateData.datetime = this.date + 'T' + this.time
+      if (this.offlineEnabled) {
+        this.clubEventCreateData.place = this.offlinePlace
+      }
       const dataContainer = {
         clubEventCreateData: this.clubEventCreateData,
         clubId: this.$route.params.clubId

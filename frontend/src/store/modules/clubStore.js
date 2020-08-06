@@ -9,7 +9,7 @@ const clubStore = {
       filteredClubs: null,
       selectedClub: null,
       selectedClubEvent: null,
-      candidates: null,
+      candidates: null
     },
     getters: {
     },
@@ -203,6 +203,15 @@ const clubStore = {
         axios.delete(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId + '/members', rootGetters.config)
           .then(() => {
             dispatch('findClub', clubId)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      deleteClubEvent({ rootGetters }, params) {
+        axios.delete(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/clubevents/' + params.clubEventId, rootGetters.config)
+          .then(() => {
+            router.push({ name: 'ClubDetail', params: { clubId: params.clubId } })
           })
           .catch(err => {
             console.log(err.response.data)

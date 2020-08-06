@@ -30,6 +30,8 @@ import ClubUpdate from '@/views/clubs/ClubUpdate'
 import ClubCandidates from '@/views/clubs/ClubCandidates'
 import ClubEventDetail from '@/views/clubs/clubevents/ClubEventDetail'
 import ClubEventCreate from '@/views/clubs/clubevents/ClubEventCreate'
+import ClubEventUpdate from '@/views/clubs/clubevents/ClubEventUpdate'
+
 // meetups
 import MeetupList from '@/views/meetups/MeetupList'
 
@@ -179,6 +181,11 @@ Vue.use(VueRouter)
     path: '/clubs/:clubId/clubevents/:clubEventId',
     name: 'ClubEventDetail',
     component: ClubEventDetail
+  },
+  {
+    path: '/clubs/:clubId/clubevents/:clubEventId/update',
+    name: 'ClubEventUpdate',
+    component: ClubEventUpdate
   },
   // meetups
   {
