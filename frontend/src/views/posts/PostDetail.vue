@@ -82,7 +82,7 @@
                     </div>
                     
                   </div>
-                  <div class="px-3 py-1 mt-3 rounded post-review" style="height:400px; border: 1px solid black">
+                  <div class="px-3 py-1 mt-3 rounded post-review scroll-sect" style="height:400px; border: 1px solid black">
                     <!-- 상세 리뷰 -->
                     <div class="mx-0 w-100" v-if="selectedPost.review">
                       <div class="review" v-html="selectedPost.review"></div>
@@ -133,7 +133,7 @@
               <!-- 댓글 -->
               <h5 class="text-left">댓글</h5>
               <!-- 댓글 리스트 -->
-              <div class="comment-list w-100" style="height:700px">
+              <div class="comment-list w-100 scroll-sect" style="height:700px">
                 <div v-if="comments.length">
                   <div
                   v-for="comment in comments"
@@ -905,6 +905,33 @@ body {
 
 .post-onelinereview, .post-review, .book-title{
   word-break: keep-all;
+}
+
+
+.scroll-sect::-webkit-scrollbar {
+  width: 8px; height: 8px; border: 3px solid white; 
+} 
+
+.scroll-sect::-webkit-scrollbar-button,.scroll-sect::-webkit-scrollbar-button:END {
+  background-color: white;
+}
+
+.scroll-sect::-webkit-scrollbar-button:start:decrement{
+}
+
+.scroll-sect::-webkit-scrollbar-track {
+  background: white; 
+  -webkit-border-radius: 10px white; 
+  border-radius:10px white;
+  /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.2) */
+}
+
+.scroll-sect::-webkit-scrollbar-thumb {
+  height: 10px; 
+  width: 50px; 
+  background: #345389; 
+  -webkit-border-radius: 15px; border-radius: 15px; 
+  /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
 }
 
 </style>
