@@ -78,7 +78,9 @@ public class OneDayEventService {
 
     public List<OneDayEventResponseDto> getAllEvents() {
         return eventRepository.findAll().stream()
+                .filter(e-> !e.getClosed())
                 .map(OneDayEventResponseDto::new)
+                .sorted()
                 .collect(Collectors.toList());
     }
 
