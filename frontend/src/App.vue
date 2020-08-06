@@ -100,17 +100,17 @@
                 >
                   <i class="fas fa-bell"></i>
                 </div>
-                <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
+                <!-- <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
                   <div
                     class="dropdown-item setting-btn"
-                    v-for="noti in notis"
-                    :key="`noti-${noti.id}`"
+                    v-for="(noti, idx) in notis"
+                    :key="`noti-${idx}`"
                     @click="toRoute(noti)"
                   >
-                    <p v-if="noti.type==='club'">{{ findUsers[noti.from] }}님이 '{{ findClubs[noti.dataId] }}' club에 가입신청했습니다.</p>
+                    <p v-if="noti.type==='club'">{{ findUsers[noti.from] }}님이 '{{ findClubs[noti.clubId] }}' club에 가입신청했습니다.</p>
                     <p v-if="noti.type==='follow'">{{ findUsers[noti.from] }}님이 팔로우했습니다.</p>
                   </div>
-                </div>
+                </div> -->
               </li>
               <li class="nav-item dropdown">
                 <div 
@@ -149,50 +149,21 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import axios from 'axios'
-import firebase from 'firebase/app'
-import 'firebase/messaging'
+// import firebase from 'firebase/app'
+// import 'firebase/database'
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA9KKQn0uKuErmQMJsMbhw25-iG8chHLdI",
-  authDomain: "co-book-original.firebaseapp.com",
-  databaseURL: "https://co-book-original.firebaseio.com",
-  projectId: "co-book-original",
-  storageBucket: "co-book-original.appspot.com",
-  messagingSenderId: "21513194733",
-  appId: "1:21513194733:web:5ac45b8faee796d5b910e4",
-  measurementId: "G-YNYKTYY7B8"
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyA9KKQn0uKuErmQMJsMbhw25-iG8chHLdI",
+//   authDomain: "co-book-original.firebaseapp.com",
+//   databaseURL: "https://co-book-original.firebaseio.com",
+//   projectId: "co-book-original",
+//   storageBucket: "co-book-original.appspot.com",
+//   messagingSenderId: "21513194733",
+//   appId: "1:21513194733:web:5ac45b8faee796d5b910e4",
+//   measurementId: "G-YNYKTYY7B8"
+// };
 
-firebase.initializeApp(firebaseConfig);
-
-const messaging = firebase.messaging()
-
-messaging.usePublicVapidKey('BIegkPtJOMcpiYaMiA0VDJkcIwlLQn72_o0eBrRjbFPMTUJ1DnICDSSE79kUg8-wV1eDAshPjvgIRYU2cNCOMqI')
-
-// 알림 수신을 위한 사용자 권한 요청
-Notification.requestPermission()
-  .then((permission) => {
-    console.log('permission ', permission)
-    if (permission !== 'granted') {
-      alert('알림을 허용하지 않으면 실시간 알림을 받으실 수 없습니다.')
-    }
-    return messaging.getToken()
-  })
-    .then(token => {
-      console.log('토큰')
-      console.log(token)
-    })
-  .catch(err => {
-    console.log(err)
-  })
-
-// Handle received push notification at foreground
-messaging.onMessage(payload => {
-  console.log(payload)
-  alert(payload.data.message)
-})
-
+// firebase.initializeApp(firebaseConfig);
 
 export default {
   name: 'App',
@@ -203,10 +174,11 @@ export default {
       searchedUsers: null,
       findUsers: null,
       findClubs: null,
+      notis: null,
     }
   },
   computed: {
-    ...mapState(['genres', 'myaccount', 'books', 'users', 'notis']),
+    ...mapState(['genres', 'myaccount', 'books', 'users']),
   },
   methods: {
     ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'fetchNotis', 'logout']),
@@ -241,25 +213,36 @@ export default {
         this.$router.push({name: 'Profile', params: { userId: noti.dataId }})
       }
     },
+    // clickNoti() {
+    //   const text = {
+    //     // "token" : 'dwyx4pmx5p90GVEFWkl6Hu:APA91bGV0Da1jxCWuW70-akuu7PSJnOsIu75js9eQFjzUUVjkctHm8fYUyMoSrWbRlKvH5IWuh2VHpNOXlkpwNokwbIkbmB_sH6l-5VU4ExWf0iiFQAToMq0PUnMMo-MDYvSLTpovjui',
+    //     "to": "dwyx4pmx5p90GVEFWkl6Hu:APA91bGV0Da1jxCWuW70-akuu7PSJnOsIu75js9eQFjzUUVjkctHm8fYUyMoSrWbRlKvH5IWuh2VHpNOXlkpwNokwbIkbmB_sH6l-5VU4ExWf0iiFQAToMq0PUnMMo-MDYvSLTpovjui",
+    //     "data": {
+    //       "message": "FCM Message",
+    //       // "body": "This is a message from FCM"
+    //     }
+    //   }
+    //   const header = {
+    //     headers: {
+    //       "Accept": "application/json",
+    //       "Content-Type": "application/json",
+    //       "Authorization": "key=AAAABQJJTO0:APA91bF0ju8l8DHn82GuJndzCtFh178p5cKwSs32GdnJOIk3Rgl8gRJ5jf674Vj6tFQrhCy4WelWgqdSuQ9F2imhAnAgentNfktHjnPN1L_uNCZavDJjsUYqPS07zM9gbmSzfUZqBfYG"
+    //     }
+    //   }
+    //   axios.post('https://fcm.googleapis.com/fcm/send', text, header)
+    //     .then(res => console.log(res))
+    //     .catch(err => console.log(err))
+    // }
+    // Firebase
+    // clickNoti() {
+    //   // console.log(firebase.database())
+    //   firebase.database().ref('noti/' + this.myaccount.id).on('value', data => {
+    //     this.notis = Object.values(data.val()).reverse()
+    //     console.log(this.notis)
+    //   })
+    // }
     clickNoti() {
-      const text = {
-        // "token" : 'dwyx4pmx5p90GVEFWkl6Hu:APA91bGV0Da1jxCWuW70-akuu7PSJnOsIu75js9eQFjzUUVjkctHm8fYUyMoSrWbRlKvH5IWuh2VHpNOXlkpwNokwbIkbmB_sH6l-5VU4ExWf0iiFQAToMq0PUnMMo-MDYvSLTpovjui',
-        "to": "dwyx4pmx5p90GVEFWkl6Hu:APA91bGV0Da1jxCWuW70-akuu7PSJnOsIu75js9eQFjzUUVjkctHm8fYUyMoSrWbRlKvH5IWuh2VHpNOXlkpwNokwbIkbmB_sH6l-5VU4ExWf0iiFQAToMq0PUnMMo-MDYvSLTpovjui",
-        "data": {
-          "message": "FCM Message",
-          // "body": "This is a message from FCM"
-        }
-      }
-      const header = {
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-          "Authorization": "key=AAAABQJJTO0:APA91bF0ju8l8DHn82GuJndzCtFh178p5cKwSs32GdnJOIk3Rgl8gRJ5jf674Vj6tFQrhCy4WelWgqdSuQ9F2imhAnAgentNfktHjnPN1L_uNCZavDJjsUYqPS07zM9gbmSzfUZqBfYG"
-        }
-      }
-      axios.post('https://fcm.googleapis.com/fcm/send', text, header)
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+      console.log(1)
     }
   },
   watch: {
