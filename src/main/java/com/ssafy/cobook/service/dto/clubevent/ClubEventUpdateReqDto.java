@@ -23,7 +23,5 @@ public class ClubEventUpdateReqDto {
     @ApiModelProperty(position = 5)
     private String description;
     @ApiModelProperty(position = 6)
-    private Integer capacity;
-    @ApiModelProperty(position = 7)
     private List<String> question;
 }

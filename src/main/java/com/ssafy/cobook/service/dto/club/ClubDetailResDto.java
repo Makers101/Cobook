@@ -61,6 +61,7 @@ public class ClubDetailResDto {
                 .collect(Collectors.toList());
         this.clubEvents = club.getClubEvents().stream()
                 .map(ClubEventSimpleResDto::new)
+                .sorted()
                 .collect(Collectors.toList());
         this.memberCnt = members.size() + 1;
         this.candidates = club.getMembers().stream()
