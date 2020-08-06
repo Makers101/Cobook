@@ -181,10 +181,10 @@ public class ClubController {
 
     @ApiOperation(value = "리딩을 수정한다.")
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/{clubId}/clubevents/{eventId}")
+    @PutMapping("/{clubId}/clubevents/{clubEventId}")
     public ResponseEntity<Void> updateEvents(@ApiIgnore final Authentication authentication,
                                              @PathVariable("clubId") final Long clubId,
-                                             @PathVariable("eventId") final Long eventId,
+                                             @PathVariable("clubEventId") final Long eventId,
                                              @RequestBody final ClubEventUpdateReqDto reqDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         clubEventService.updateEvent(userId, clubId, eventId, reqDto);
@@ -193,10 +193,10 @@ public class ClubController {
 
     @ApiOperation(value = "리딩을 삭제한다")
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @DeleteMapping("/{clubId}/clubevents/{eventId}")
+    @DeleteMapping("/{clubId}/clubevents/{clubEventId}")
     public ResponseEntity<Void> deleteEvents(@ApiIgnore final Authentication authentication,
                                              @PathVariable("clubId") final Long clubId,
-                                             @PathVariable("eventId") final Long clubEventId) {
+                                             @PathVariable("clubEventId") final Long clubEventId) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         clubEventService.deleteEvents(clubEventId, clubId, userId);
         return ResponseEntity.ok().build();
