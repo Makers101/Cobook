@@ -16,7 +16,7 @@
                       <div class="text-right p-0 m-0"><i class="fas fa-quote-right quote"></i></div>
                       <small @click="postDetail(post.id)">
                         <span v-if="post.user.profileImg"><img class="profile-img mr-2" :src="post.user.profileImg"></span>
-                        <span v-else ><img class="profile-img mr-2" src="https://user-images.githubusercontent.com/25967949/89418040-79e86500-d76a-11ea-999e-5000f1e8f1d4.png"></span>
+                        <span v-else ><img class="profile-img mr-2" src="http://bit.do/anonymouseuser"></span>
                         <span>{{ post.user.nickName }}</span>
                       </small> 
                     </div>
@@ -92,11 +92,14 @@ export default {
   created() {
     this.fetchPosts()
     this.findMyAccount()
+  },
+  mounted() {
+    const scrollArea = document.querySelector('#scroll-area')
+    scrollArea.addEventListener('wheel', (e) => {
+      scrollArea.scrollLeft += e.deltaY;
+    })
   }
 }
-document.addEventListener('wheel', (e) => {
-  document.getElementById('scroll-area').scrollLeft += e.deltaY;
-})
 
 </script>
 
