@@ -1,7 +1,7 @@
 <template>
   <div class="custom-container mb-5">
 
-    <!-- clubEvent-create_banner -->
+    <!-- clubEvent-create-banner -->
     <div class="clubEvent-banner">
       <img
         class="clubEvent-banner-img"
