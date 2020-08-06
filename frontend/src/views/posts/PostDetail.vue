@@ -130,43 +130,53 @@
                 </p>
               </div> 
               <hr style="background-color:#efefef"> -->
-              <!-- 댓글 부분 -->
-              <!-- commentList -->
+              <!-- 댓글 -->
               <h5 class="text-left">댓글</h5>
+              <!-- 댓글 리스트 -->
               <div class="comment-list w-100" style="height:700px">
-                <div
-                v-for="comment in comments"
-                :key="`comment-${comment.id}`">
-                <div class="d-flex justify-content-between">
-                  <div class="m-0">
-                    <span class="rounded-circle">
-                      <img
-                        v-if="!selectedPost.user.profileImg"
-                        class="img-fluid feed-profile-img" 
-                        src="@/assets/anonymous.png" 
-                        alt="유저 프로필 사진">
-                      <img 
-                        v-else
-                        class="img-fluid feed-profile-img" 
-                        :src="comment.user.profileImg" alt="작성자 프로필 사진">
-                    </span>
-                    <span class="ml-2 pointer" @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
-                    <span v-if="comment.isClub" class="badge bg-green">Club</span>
-                  </div>
-                  <div class="m-0">
-                      <!-- @click="deleteComment({post.id, comment.id" -->
-                    <div
-                      class="btn text-danger btn-sm"
-                      v-if="comment.user.id === myaccount.id"
-                      @click="deleteComment({ postId: commentCreateData.postId, commentId: comment.id })"
-                    > 삭제</div>
+                <div v-if="comments.length">
+                  <div
+                  v-for="comment in comments"
+                  :key="`comment-${comment.id}`">
+                    <div class="d-flex justify-content-between">
+                      <div class="m-0">
+                        <span class="rounded-circle">
+                          <img
+                            v-if="!selectedPost.user.profileImg"
+                            class="img-fluid feed-profile-img" 
+                            src="@/assets/anonymous.png" 
+                            alt="유저 프로필 사진">
+                          <img 
+                            v-else
+                            class="img-fluid feed-profile-img" 
+                            :src="comment.user.profileImg" alt="작성자 프로필 사진">
+                        </span>
+                        <span class="ml-2 pointer" @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
+                        <span v-if="comment.isClub" class="badge bg-green">Club</span>
+                      </div>
+                      <div class="m-0">
+                          <!-- @click="deleteComment({post.id, comment.id" -->
+                        <div
+                          class="btn text-danger btn-sm"
+                          v-if="comment.user.id === myaccount.id"
+                          @click="deleteComment({ postId: commentCreateData.postId, commentId: comment.id })"
+                        > 삭제
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 text-left wrapping py-0 mb-3">
+                      <div>{{ comment.content }}</div>
+                      <div><small style="color:#979797">{{ comment.createdAt | moment("from", "now") }}</small></div>
+                    </div>
                   </div>
                 </div>
-                <div class="col-12 text-left wrapping py-0 mb-3">
-                  <div>{{ comment.content }}</div>
-                  <div><small style="color:#979797">{{ comment.createdAt | moment("from", "now") }}</small></div>
+                <div v-else class="d-flex align-items-center">
+                  <div style="margin-top:120px;">
+                    <img src="https://user-images.githubusercontent.com/25967949/89524240-2e43c300-d81f-11ea-9a05-b1b45d70172f.png">
+                    <h5>작성된 댓글이 없습니다.</h5>
+                  </div>
+
                 </div>
-              </div>
               </div>
         
               <hr class="mt-1" style="background-color:#efefef">
