@@ -1,7 +1,16 @@
 spring:
   profiles:
     active: local
-
+server:
+  port: 8090
+#  ssl:
+#    enabled: true
+#    key-store: cobook.jks # 1번에서 생성한 Key store 경로와 파일명을 적어줍니다.
+#    key-store-password: cobook  # 1번에서 생성한 Key store의 비밀번호를 적어줍니다.
+#    key-password: cobook # 1번에서 생성한 키스토어의 마지막의 키 비밀번호
+#    key-alias: cobook-ssl # 키 스토어 별칭
+#    trust-store: cobook.ts # 2번에서 생성한 Trust-Store 경로
+#    trust-store-password: cobook # Trust-Store 비밀번호
 ---
 jwt:
   secret:cobook@$&
@@ -34,6 +43,19 @@ spring:
           starttls:
             enable: true
     protocol: smtp
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 722675530533-8lddsa5lo60rlmmlijrno06n5elge0tn.apps.googleusercontent.com
+            client-secret: bFE2aTcKEFwHSDhrMyUrUJz2
+
+custom:
+  oauth2:
+    kakao:
+      client-id: 8160c09915d18b2d717f58f39f209d61
+      client-secret: pW1lBMjL9wgNJYGnKeuMG1IjnrgpIFHu
 ---
 #spring:
 #  profiles: dev

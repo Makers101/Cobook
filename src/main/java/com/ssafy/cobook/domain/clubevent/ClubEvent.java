@@ -87,8 +87,8 @@ public class ClubEvent {
     }
 
     public void updateInfo(ClubEventUpdateReqDto reqDto) {
-        this.title = reqDto.getTitle();
-        this.dateTime = reqDto.getDateTime();
+        this.title = reqDto.getName();
+        this.dateTime = reqDto.getDatetime();
         this.place = reqDto.getPlace();
         this.description = reqDto.getDescription();
     }
