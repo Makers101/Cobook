@@ -218,36 +218,25 @@ public class PostService {
         if (post.getUser() == null || !post.getUser().equals(user)) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_POST);
         }
+        post.updatePost(requestDto);
         List<PostTag> originTags = post.getTags();
         postTagRepository.deleteAll(originTags);
+        post.removeTags();
+        for (PostTag t : originTags) {
+            Tag temp = t.getTag();
+            temp.removePostTag(t);
+        }
         List<Tag> tags = requestDto.getTags().stream()
                 .map(this::saveTag)
                 .collect(Collectors.toList());
-
-//        List<PostTag> originTags = post.getTags();
-//        List<Tag> tags = requestDto.getTags().stream()
-//                .map(this::saveTag)
-//                .collect(Collectors.toList());
-//        List<PostTag> deletes = new ArrayList<>();
-//        for (PostTag tag : originTags) {
-//            Tag temp = tag.getTag();
-//            if (!tags.contains(temp)) {
-//                temp.removePostTag(tag);
-//                post.deleteTags(tag);
-//                deletes.add(tag);
-//            } else {
-//                tags.remove(temp);
-//            }
-//        }
-//        postTagRepository.deleteAll(deletes);
         List<PostTag> postTags = tags.stream()
                 .map(t -> saveTag(post, t))
                 .collect(Collectors.toList());
-        post.updatePost(requestDto);
-        post.setTags(postTags);
+        post.addTags(postTags);
     }
 
-    private PostTag saveTag(Post post, Tag tag) {
+    @Transactional
+    public PostTag saveTag(Post post, Tag tag) {
         if (postTagRepository.findByPostAndTag(post, tag).isPresent()) {
             return postTagRepository.findByPostAndTag(post, tag).get();
         }
@@ -258,27 +247,21 @@ public class PostService {
     public void updateClubPosts(PostUpdateByClubReqDto requestDto, Long clubId, Long postId) {
         Post post = getPostById(postId);
         Club club = getClub(clubId);
+        post.updatePost(requestDto);
         List<PostTag> originTags = post.getTags();
         postTagRepository.deleteAll(originTags);
+        post.removeTags();
+        for (PostTag t : originTags) {
+            Tag temp = t.getTag();
+            temp.removePostTag(t);
+        }
         List<Tag> tags = requestDto.getTags().stream()
                 .map(this::saveTag)
                 .collect(Collectors.toList());
-//        for (PostTag tag : originTags) {
-//            Tag temp = tag.getTag();
-//            if (!tags.contains(temp)) {
-//                temp.removePostTag(tag);
-//                post.deleteTags(tag);
-//                deletes.add(tag);
-//            } else {
-//                tags.remove(temp);
-//            }
-//        }
-//        postTagRepository.deleteAll(deletes);
         List<PostTag> postTags = tags.stream()
                 .map(t -> saveTag(post, t))
                 .collect(Collectors.toList());
-        post.updatePost(requestDto);
-        post.setTags(postTags);
+        post.addTags(postTags);
     }
 
     @Transactional

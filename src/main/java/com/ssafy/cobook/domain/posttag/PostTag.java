@@ -37,6 +37,5 @@ public class PostTag {
 
     public void removeTag() {
         this.tag.removePostTag(this);
-        this.tag = null;
     }
 }
