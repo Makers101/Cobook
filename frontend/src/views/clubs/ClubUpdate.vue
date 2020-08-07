@@ -167,7 +167,7 @@
                       class="mx-3 mb-2"
                       v-model="offlineResidence"
                       counter
-                      maxlength="10"
+                      maxlength="30"
                       :disabled="!offlineEnabled"
                       label="오프라인 모임 장소"
                       :rules="residenceRules"
