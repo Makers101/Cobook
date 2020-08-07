@@ -78,6 +78,7 @@
 
 <script>
     import {mapActions} from "vuex";
+    import Swal from 'sweetalert2'
     import axios from "axios";
     import SERVER from "@/api/api";
     import cookies from "vue-cookies";
@@ -124,7 +125,21 @@
                     .then((res) => {
                         console.log(res);
                         cookies.set("auth-token", res.data);
-                        
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+                        Toast.fire({
+                            icon: 'success',
+                            title: "로그인에 성공하였습니다."
+                        })
                         this.$router.push("/");
                         this.findMyAccount();
                     });
@@ -158,10 +173,25 @@
                                 .post(SERVER.URL + SERVER.ROUTES.social, userInfo)
                                 .then((res) => {
                                     cookies.set("auth-token", res.data);
-                                    this.findMyAccount();
-                                    this.$router.push("/");
-                                });
-                        }
+                                    const Toast = Swal.mixin({
+                                        toast: true,
+                                        position: 'top-end',
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        timerProgressBar: true,
+                                        onOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                        }
+                                    })
+                                    Toast.fire({
+                                        icon: 'success',
+                                        title: "로그인에 성공하였습니다."
+                                    })
+                                            this.findMyAccount();
+                                            this.$router.push("/");
+                                        });
+                                    }
                     },
                 });
             },

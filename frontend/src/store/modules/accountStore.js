@@ -1,6 +1,8 @@
 import SERVER from '@/api/api'
 import axios from 'axios'
 import router from '@/router'
+import Swal from 'sweetalert2'
+
 // import cookies from 'vue-cookies'
 
 const accountStore = {
@@ -25,7 +27,21 @@ const accountStore = {
 
         })
         .catch(err => {
-          console.log(err.response.data)
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: false,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'error',
+            title: err.response.data.message
+          })
         })
     },
     // Login
@@ -34,17 +50,61 @@ const accountStore = {
         .then(res => {
           console.log("SUCCESS")
           commit('SET_TOKEN', res.data, { root: true })
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'success',
+            title: "로그인에 성공하였습니다."
+          })
+
           router.push('/')
         })
         .catch(err => {
-          console.log(err.response.data)
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: false,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'error',
+            title: err.response.data.message
+          })
         })
     },
     // 비밀번호
     sendPasswordEmail(info) {
       axios.post(SERVER.URL + info.location, info.data)
         .then(() => {
-          console.log("SUCCESS")
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'success',
+            title: "메일을 발송했습니다."
+          })
           router.push('/')
         })
         .catch(err => {
