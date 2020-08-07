@@ -59,7 +59,7 @@ public class NotificationService {
 
         String type = requestDto.getType();
 
-        if (type.equals("follow")) { /
+        if (type.equals("follow")) { 
             // 팔로우인 경우 알람을 저장한다
             // 언팔로우인 경우 이전에 팔로우로 등록한 알람을 삭제한다
             saveNoti.setValueAsync(notificationSaveDto);
