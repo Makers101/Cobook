@@ -67,7 +67,6 @@
         <li><a href="Document/Dev_log/20200725_0726_dev_log.md">7/25 ~ 7/26 - Back-end (OAuth) + Front-end (Feed - Create/Detail + Profile - List/Update + Club - Detail/List + Authentication - Password Change)</a></li>
 </ul>
 </details>
-
 <details>
 <summary>3주차</summary>
 <ul>
@@ -78,6 +77,17 @@
     <li><a href="Document/Dev_log/20200731_dev_log.md">7/31 - Front-end (오류 수정) + 중간 PPT 및 발표 준비 + 중간 시연 영상 제작</a></li>
 </ul>
 </details>
+<details>
+    <summary>4주차</summary>
+    <ul>
+        <li><a href="Document/Dev_log/20200803_dev_log.md">8/3 - Back-end (쿼리 개선 + Meetup - CRUD + Club - CRUD + Authentication - OAuth/Signup) + Front-end(Authentication - Signup fix bug + Password Find + OAuth + Alarm) + 코북이 캐릭터 제작 </a></li>
+        <li><a href="Document/Dev_log/20200804_dev_log.md">8/4 - Back-end (쿼리 개선 + Domain 이름 수정 + OAuth - 카카오) + Front-end (Authentication - 비밀번호 찾기 구현/OAuth + Club - 마무리 + Club 생성 및 수정시 이미지 보여주기 + Navbar - redesign) + Firebase 설정</a></li>
+        <li><a href="Document/Dev_log/20200805_dev_log.md">8/5 - Back-end (쿼리 개선 + 도메인 수정 + Authentication - Google OAuth) + Front-end (Feed - New Design + Profile - transition + Club - CRUD + Firebase) </a></li>
+        <li><a href="Document/Dev_log/20200806_dev_log.md">8/6 - Back-end (서버 및 쿼리 안정화 + Google OAuth 프론트와 연결) & Front-end (Post Detail - New Design + Club - CRUD 완료 + OneDay Event - CRUD) + Firebase</a></li>
+        <li><a href="Document/Dev_log/20200807_dev_log.md">8/7 - Back-end (HTTPS 세팅 + 알림) + Front-end (Authentication - 에러메시지 노출 + Book - new design + Club - fix bug + Oneday Event - fix bug) + Web RTC</a></li>
+</ul></details>
+
+
 
 <br>
 
