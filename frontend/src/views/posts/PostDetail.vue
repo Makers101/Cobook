@@ -101,7 +101,7 @@
                     </div>
                     
                   </div>
-                  <div class="px-3 py-1 mt-3 rounded post-review scroll-sect" style="height:400px; border: 1px solid black">
+                  <div class="px-3 py-1 mt-3 rounded post-review scroll-sect" style="height:350px; border: 1px solid black">
                     <!-- 상세 리뷰 -->
                     <div class="mx-0 w-100" v-if="selectedPost.review">
                       <div class="review" v-html="selectedPost.review"></div>
