@@ -49,6 +49,28 @@
                     label="소개"
                   ></v-textarea>
                 </v-col>
+
+                <!-- 프로필 사진 첨부 -->
+                <v-col cols="12">
+                  <div v-if="myaccount.profileImg && !profileImg">
+                    <img class="img-fluid profile-image rounded" :src="myaccount.profileImg" :alt="myaccount.nickName">
+                  </div>
+                  <div v-if="previewImg && profileImg">
+                    <img class="img-fluid profile-image rounded" :src="previewImg" :alt="myaccount.nickName">
+                  </div>
+                  <v-file-input
+                    v-model="profileImg"
+                    enctype="multipart/form-data"
+                    accept="image/png, image/jpeg, image/bmp"
+                    label="프로필 이미지 변경"
+                    prepend-icon=""
+                    chips
+                    :rules="[v => !v || v.size < 2000000 || '이미지 크기는 최대 2MB 입니다.' ]"
+                    @change="previewImage"
+                  >
+                  </v-file-input>
+                </v-col>
+
                 <!-- 장르란 -->
                 <v-col cols="12">
                   <v-autocomplete
@@ -94,30 +116,9 @@
                     </template>
                   </v-autocomplete>
                 </v-col>
-
-                <!-- 프로필 사진 첨부 -->
-                <v-col cols="12">
-                  <div v-if="myaccount.profileImg && !profileImg">
-                    <img class="img-fluid profile-image rounded" :src="myaccount.profileImg" :alt="myaccount.nickName">
-                  </div>
-                  <div v-if="previewImg && profileImg">
-                    <img class="img-fluid profile-image rounded" :src="previewImg" :alt="myaccount.nickName">
-                  </div>
-                  <v-file-input
-                    v-model="profileImg"
-                    enctype="multipart/form-data"
-                    accept="image/png, image/jpeg, image/bmp"
-                    label="프로필 이미지 변경"
-                    prepend-icon=""
-                    chips
-                    :rules="[v => !v || v.size < 2000000 || '이미지 크기는 최대 2MB 입니다.' ]"
-                    @change="previewImage"
-                  >
-                  </v-file-input>
-                </v-col>
-                <!-- Submit 버튼 -->
-                
               </v-row>
+
+              <!-- Submit 버튼 -->
               <v-card-actions class="d-flex justify-content-end">
                 <v-btn
                   :disabled="!valid"
@@ -154,6 +155,7 @@ export default {
       valid: true,
       lazy: false,
       searchGenre: null,
+      clicked: false
     }
   },
   computed: {
@@ -174,7 +176,7 @@ export default {
       this.$refs.form.validate()
     },
     clickUpdate() {
-      // console.log(this.profileImg)
+      this.clicked = true
       if (this.profileImg) {
         this.profileUpdateData.profileImgFormData = new FormData()
         this.profileUpdateData.profileImgFormData.append('profileImg', this.profileImg)
@@ -201,6 +203,24 @@ export default {
       tempGenres.push(genre.id)
     });
     this.profileUpdateData.basicData.genres = tempGenres;
+  },
+  beforeRouteLeave(to, from, next) {
+    if (!this.clicked) {
+      if (this.profileUpdateData.basicData.nickName !== this.myaccount.nickName
+          || this.profileUpdateData.basicData.description !== this.myaccount.description
+          || this.profileUpdateData.basicData.genres.length !== this.myaccount.likeGenres.length
+          || this.profileImg
+         ) {
+        if (confirm('수정 중인 프로필이 있습니다. 정말 넘어가시겠습니까?') === true) {
+          next()
+        } else {
+          return false
+        }
+      }
+      next()
+    } else {
+      next()
+    }
   }
 }
 </script>
@@ -234,4 +254,4 @@ export default {
   .profile-image {
     max-height: 200px; 
   }
-</style>                                                                                                                                                                                                                                                
+</style>
