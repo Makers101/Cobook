@@ -290,7 +290,8 @@ img {
 
 .profile-img {
   width: 25px;
-  height: auto;
+  height: 25px;
+  /* height: auto; */
   border-radius: 50%;
 }
 
