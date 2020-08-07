@@ -206,13 +206,13 @@
         </div>
       </div>
 
-      <hr>
+      <!-- <hr> -->
 
       <!-- clubEvent-detail-reviews -->
-      <h4 class="text-left font-weight-bold mb-3">클럽 이벤트 기록</h4>
+      <!-- <h4 class="text-left font-weight-bold mb-3">클럽 이벤트 기록</h4>
       <div class="no-content d-flex justify-content-center align-items-center" v-if="!selectedClubEvent.reviews">
         <p class="mb-0">아직 클럽 이벤트 기록이 없습니다 ㄴ(°0°)ㄱ</p>
-      </div>
+      </div> -->
     </div>
 
     <div v-else class="mt-5">

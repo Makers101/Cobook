@@ -46,7 +46,6 @@
                   <v-textarea
                     v-model="profileUpdateData.basicData.description"
                     color="blue-grey lighten-2"
-                    :rules="[v => !!v || '필수항목입니다.']"
                     label="소개"
                   ></v-textarea>
                 </v-col>
@@ -98,10 +97,12 @@
 
                 <!-- 프로필 사진 첨부 -->
                 <v-col cols="12">
-                  <!-- <div class="d-flex flex-column justify-content-center align-items-start">
-                    <p class="mb-0">현재 프로필 이미지</p>
-                    <img class="profile-img" :src="myaccount.profileImg" alt="" v-if="myaccount.profileImg">
-                  </div> -->
+                  <div v-if="myaccount.profileImg && !profileImg">
+                    <img class="img-fluid profile-image rounded" :src="myaccount.profileImg" :alt="myaccount.nickName">
+                  </div>
+                  <div v-if="previewImg && profileImg">
+                    <img class="img-fluid profile-image rounded" :src="previewImg" :alt="myaccount.nickName">
+                  </div>
                   <v-file-input
                     v-model="profileImg"
                     enctype="multipart/form-data"
@@ -110,6 +111,7 @@
                     prepend-icon=""
                     chips
                     :rules="[v => !v || v.size < 2000000 || '이미지 크기는 최대 2MB 입니다.' ]"
+                    @change="previewImage"
                   >
                   </v-file-input>
                 </v-col>
@@ -140,6 +142,7 @@ export default {
   data () {
     return {
       profileImg: null,
+      previewImg: null,
       profileUpdateData: {
         basicData: {
           nickName: null,
@@ -177,6 +180,15 @@ export default {
         this.profileUpdateData.profileImgFormData.append('profileImg', this.profileImg)
       }
       this.updateProfile(this.profileUpdateData)
+    },
+    previewImage() {
+      if (this.profileImg) {
+        let reader = new FileReader();
+        reader.onload = e => {
+          this.previewImg = e.target.result
+        };
+        reader.readAsDataURL(this.profileImg);
+      }
     },
   },
   created() {
@@ -217,5 +229,9 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate( -50%, -50% );
+  }
+
+  .profile-image {
+    max-height: 200px; 
   }
 </style>                                                                                                                                                                                                                                                

@@ -42,14 +42,14 @@
           <button 
             class="btn btn btn-toggle-false mx-1"
             @click="selectFilter(genre.name)"
-            v-show="filters.genre_filter.has(genre.name)"
+            v-show="filters.genre_filter === genre.name"
           >
             #{{ genre.name }}
           </button>
           <button 
             class="btn btn btn-toggle-true mx-1"
             @click="selectFilter(genre.name)"
-            v-show="!filters.genre_filter.has(genre.name)"
+            v-show="!(filters.genre_filter === genre.name)"
           >
             #{{ genre.name }}
           </button>
@@ -62,7 +62,7 @@
     <!-- onedayEvents-list -->
     <div class="onedayEvents-list my-2 row">
       <div 
-        class="col-lg-4 col-12 p-3 pointer"
+        class="col-lg-4 col-md-6 col-sm-12 p-3 pointer"
         v-for="onedayEvent in filteredOnedayEvents"
         :key="`onedayEvent_${onedayEvent.id}`"
         @click="selectOnedayEvent(onedayEvent.id)">
@@ -99,7 +99,7 @@ export default {
     return {
       filters: {
         recruit_filter: false,
-        genre_filter: new Set()
+        genre_filter: null,
       }
     }
   },
@@ -119,10 +119,10 @@ export default {
       if (filter === 'recruit') {
         this.filters.recruit_filter = !this.filters.recruit_filter
       } else {
-        if (!this.filters.genre_filter.has(filter)) {
-          this.filters.genre_filter.add(filter)
+        if (this.filters.genre_filter === filter) {
+          this.filters.genre_filter = null
         } else {
-          this.filters.genre_filter.delete(filter)
+          this.filters.genre_filter = filter
         }
       }
       this.$forceUpdate();

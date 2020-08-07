@@ -62,7 +62,7 @@
     <!-- clubs-list -->
     <div class="club-list my-2 row">
       <div 
-        class="col-lg-4 col-12 p-3"
+        class="col-lg-4 col-md-6 col-sm-12 p-3"
         v-for="club in filteredClubs"
         :key="`club_${club.id}`">
         <div class="card">
