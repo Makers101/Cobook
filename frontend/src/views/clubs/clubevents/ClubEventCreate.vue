@@ -263,7 +263,8 @@ export default {
       clubEventDate: false,
       clubEventTime: false,
       search: null,
-      offlinePlace: null
+      offlinePlace: null,
+      clicked: false
     }
   },
   computed: {
@@ -305,6 +306,7 @@ export default {
       this.$refs.form.validate()
     },
     clickCreate() {
+      this.clicked = true
       this.clubEventCreateData.datetime = this.date + 'T' + this.time
       if (this.offlineEnabled) {
         this.clubEventCreateData.place = this.offlinePlace
@@ -319,6 +321,28 @@ export default {
       if (this.offlinePlace === '온라인') {
         this.offlinePlace = null
       }
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (!this.clicked) {
+      if (this.clubEventCreateData.name
+          || this.clubEventCreateData.description
+          || this.clubEventCreateData.bookId
+          || this.clubEventCreateData.place
+          || this.offlinePlace
+          || this.date !== new Date().toISOString().substr(0, 10)
+          || this.time !== '00:00'
+          || this.clubEventCreateData.questions.length > 0
+         ) {
+        if (confirm('생성 중인 클럽 이벤트가 있습니다. 정말 넘어가시겠습니까?') === true) {
+          next()
+        } else {
+          return false
+        }
+      }
+      next()
+    } else {
+      next()
     }
   }
 }
