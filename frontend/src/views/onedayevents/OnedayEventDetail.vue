@@ -32,8 +32,8 @@
         <div>
           <div class="d-flex justify-content-between">
             <div class="d-flex flex-column align-items-start justify-content-end">
-              <p class="mb-1 font-weight-bold"><i class="fas fa-map-marker-alt"></i> {{ selectedOnedayEvent.place }}</p>
-              <p class="mb-0 font-weight-bold">{{ selectedOnedayEvent.datetime | moment('YYYY년 MM월 DD일 HH시 mm분') }}</p>
+              <p class="mb-1 ml-1 font-weight-bold"><i class="fas fa-map-marker-alt"></i> {{ selectedOnedayEvent.place }}</p>
+              <p class="mb-0 ml-1 font-weight-bold">{{ selectedOnedayEvent.datetime | moment('YYYY년 MM월 DD일 HH시 mm분') }}</p>
             </div>
             <div class="d-flex justify-content-end align-items-end">
               <button
