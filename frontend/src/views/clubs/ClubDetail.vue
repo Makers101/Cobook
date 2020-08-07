@@ -395,7 +395,7 @@ export default {
   .club-image {
     border-radius: 25px;
     padding: 8px;
-    max-height: 200px;
+    height: 200px;
   }
 
   .clubEvent-name {
