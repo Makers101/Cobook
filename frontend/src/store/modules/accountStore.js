@@ -19,9 +19,31 @@ const accountStore = {
   actions: {
     // Signup
     postAuthData1({ commit } , info) {
+      let timerInterval
+        Swal.fire({
+          title: '이메일을 보내는 중입니다.',
+          html: '조금만 기다려주세요',
+          timer: 4000,
+          timerProgressBar: true,
+          onBeforeOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+              const content = Swal.getContent()
+              if (content) {
+                const b = content.querySelector('b')
+                if (b) {
+                  b.textContent = Swal.getTimerLeft()
+                }
+              }
+            }, 100)
+          },
+          onClose: () => {
+            clearInterval(timerInterval)
+          }
+        })
       axios.post(SERVER.URL + info.location, info.data)
-        .then(res => {
-          console.log("SUCCESS", res.data)
+        .then(() => {
+          // console.log("SUCCESS", res.data)
           console.log(commit)
           router.push({ name: 'SignupEmail', params: {signupEmail: info.data} })
 
