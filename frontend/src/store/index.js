@@ -13,6 +13,7 @@ import router from '@/router'
 import axios from 'axios'
 import cookies from 'vue-cookies'
 import SERVER from '@/api/api'
+import Swal from 'sweetalert2'
 
 export default new Vuex.Store({
   state: {
@@ -95,7 +96,21 @@ export default new Vuex.Store({
           commit('SET_TOKEN', null)
           cookies.remove('auth-token')
           // commit('SET_INIT')
-          alert("로그아웃 되었습니다.")
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'success',
+            title: '로그아웃되었습니다.'
+          })
           router.push({ name: 'Login' })
     },
   },
