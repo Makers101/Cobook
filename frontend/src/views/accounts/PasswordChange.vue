@@ -41,6 +41,7 @@
 import SERVER from '@/api/api'
 import axios from 'axios'
 import router from '@/router'
+import Swal from 'sweetalert2'
 
 export default {
   name: 'PasswordChange',
@@ -104,7 +105,21 @@ export default {
       if ( this.isSubmit ){
         axios.post(SERVER.URL + SERVER.ROUTES.changepassword, newData)
         .then (() => {
-          console.log("clickChangePassword Success")
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'success',
+            title: "비밀번호 변경에 성공하였습니다."
+          })
           router.push({ name: 'PasswordChangeSuccessful' })
         })
         .catch (err => {
