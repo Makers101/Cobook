@@ -62,7 +62,7 @@
     <!-- onedayEvents-list -->
     <div class="onedayEvents-list my-2 row">
       <div 
-        class="col-lg-4 col-12 p-3 pointer"
+        class="col-lg-4 col-md-6 col-sm-12 p-3 pointer"
         v-for="onedayEvent in filteredOnedayEvents"
         :key="`onedayEvent_${onedayEvent.id}`"
         @click="selectOnedayEvent(onedayEvent.id)">
