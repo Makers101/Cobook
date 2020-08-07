@@ -326,6 +326,6 @@ export default {
   }
 
   .club-image {
-    max-height: 200px; 
+    height: 200px; 
   }
 </style>
