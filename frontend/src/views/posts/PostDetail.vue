@@ -327,7 +327,7 @@ export default {
     },
     copyUrl() {
       const copyText = document.createElement("input");
-      copyText.value = `http://localhost:8080/posts/${this.commentCreateData.postId}`
+      copyText.value = `http://i3a111.p.ssafy.io/posts/${this.commentCreateData.postId}`
       document.body.appendChild(copyText)
       
       copyText.select();
