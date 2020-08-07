@@ -28,6 +28,7 @@
           type="password"
           placeholder="비밀번호를 입력하세요."
           required
+          @keyup.enter="login(loginData)"
         />
         <label for="password"></label>
         <div class="error-text ml-3" v-if="error.password">{{error.password}}</div>
