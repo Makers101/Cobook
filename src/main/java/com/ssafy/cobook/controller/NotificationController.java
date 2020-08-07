@@ -2,7 +2,7 @@ package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.NotificationService;
-import com.ssafy.cobook.service.dto.notification.NotificationRequestDto;
+import com.ssafy.cobook.service.dto.notification.NotificationReqDto;
 import com.ssafy.cobook.service.dto.notification.NotificationResponseDto;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -41,9 +41,11 @@ public class NotificationController {
     }
 
     @ApiOperation(value = "알람 저장하기")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping
-    public ResponseEntity<Void> saveNotification(@RequestBody final NotificationRequestDto requestDto) {
-        notificationService.saveNoti(requestDto);
+    public ResponseEntity<Void> saveNotification(@ApiIgnore final Authentication authentication, @RequestBody final NotificationReqDto requestDto) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        notificationService.saveNoti(requestDto, userId);
         return ResponseEntity.ok().build();
     }
 

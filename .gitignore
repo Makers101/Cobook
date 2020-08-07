@@ -37,3 +37,7 @@ out/
 application
 *.yml
 src/main/resources/application.yml
+
+serviceAccount
+*.json
+src/main/resources/serviceAccount.json

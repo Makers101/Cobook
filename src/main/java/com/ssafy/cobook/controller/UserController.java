@@ -45,7 +45,7 @@ public class UserController {
         UserResponseIdDto userResponseDto = userService.signUp(userSaveRequestDto, false);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }
-    
+
     @ApiOperation(value = "소셜로 로그인하는 경우", response = UserResponseIdDto.class)
     @PostMapping("/social")
     public ResponseEntity<String> socialLogin(@RequestBody final OAuth2LoginDto oAuth2LoginDto) {
