@@ -418,7 +418,7 @@ export default {
   .btn-genre {
     background-color: #88A498;
     color: #F8F8F8;
-    opacity: 100%;
+    opacity: 1;
   }
 
   .setting-btn:focus {
