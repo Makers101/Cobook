@@ -166,6 +166,8 @@
                       v-model="offlineResidence"
                       :disabled="!offlineEnabled"
                       label="오프라인 모임 장소"
+                      counter
+                      maxlength="30"
                       :rules="residenceRules"
                     ></v-text-field>
                   </div>
