@@ -270,7 +270,13 @@ public class PostService {
         Post post = getPostById(postId);
         PostComment postComment = postCommentRepository.findById(commentId)
                 .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_COMMENTS));
-        if (!postComment.getUser().equals(user) || !user.getNickName().equals("코북이")) {
+        if (!user.getNickName().equals("코북이")) {
+            user.removeComment(postComment);
+            post.removeComment(postComment);
+            postCommentRepository.delete(postComment);
+            return;
+        }
+        if (!postComment.getUser().equals(user)) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_COMMENT);
         }
         user.removeComment(postComment);
