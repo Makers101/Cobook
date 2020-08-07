@@ -166,6 +166,8 @@
                       v-model="offlineResidence"
                       :disabled="!offlineEnabled"
                       label="오프라인 모임 장소"
+                      counter
+                      maxlength="30"
                       :rules="residenceRules"
                     ></v-text-field>
                   </div>
@@ -213,7 +215,8 @@ export default {
       valid: true,
       lazy:false,
       searchGenre: null,
-      offlineResidence: null
+      offlineResidence: null,
+      clicked: false
     }
   },
   computed: {
@@ -255,6 +258,7 @@ export default {
       this.$refs.form.validate()
     },
     clickCreate() {
+      this.clicked = true
       this.clubCreateData.clubImgFormData.append('clubImg', this.clubImg)
       if (this.offlineEnabled) {
         this.clubCreateData.basicData.residence = this.offlineResidence
@@ -274,6 +278,27 @@ export default {
       if (this.offlineResidence === '온라인') {
         this.offlineResidence = null
       }
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (!this.clicked) {
+      if (this.clubCreateData.basicData.name
+          || this.clubCreateData.basicData.onelineDescription
+          || this.clubCreateData.basicData.description
+          || this.clubCreateData.basicData.residence
+          || this.offlineResidence
+          || this.clubCreateData.basicData.genres.length > 0
+          || this.clubImg
+         ) {
+        if (confirm('생성 중인 클럽이 있습니다. 정말 넘어가시겠습니까?') === true) {
+          next()
+        } else {
+          return false
+        }
+      }
+      next()
+    } else {
+      next()
     }
   }
 }

@@ -98,14 +98,8 @@
               </span>
             </div>
             <div class="d-flex justify-content-between">
-              <p class="card-text mb-0">
-                <small class="color-black">주로 <span class="color-black font-weight-bold">{{ club.residence }}</span>에서 만남 :)</small>
-              </p>
-              <div class="d-flex">
-                <p class="card-text mb-0 mr-2">
-                  <small class="color-black"><i class="fas fa-users"></i> {{ club.memberCnt }}</small>
-                </p>
-              </div>
+              <small class="color-black club-residence">주로 <span class="color-black font-weight-bold">{{ club.residence }}</span>에서 만남 :)</small>
+              <small class="color-black club-memberCnt"><i class="fas fa-users"></i> {{ club.memberCnt }}</small>
             </div>
           </div>
         </div>
@@ -208,7 +202,7 @@ export default {
     text-align: start;
   }
 
-  .club-followers {
+  .club-memberCnt {
     white-space: nowrap;
   }
 
@@ -222,6 +216,17 @@ export default {
     -webkit-box-orient: vertical;
     text-align: start;
     height: 3rem;
+  }
+
+  .club-residence {
+    overflow: hidden;
+    white-space: normal;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+    -webkit-box-orient: vertical;
+    text-align: start;
   }
 
   .card-head {

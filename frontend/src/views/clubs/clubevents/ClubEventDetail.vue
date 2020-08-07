@@ -29,19 +29,16 @@
             <div class="d-flex justify-content-start align-items-center">
               <span class="badge badge-genre ml-1">{{ selectedClubEvent.book.genre }}</span>
             </div>
-            <div class="d-flex justify-content-start align-items-center mt-2">
-              <p
-                class="ml-1 mb-0 font-weight-bold club-name pointer"
-                @click="toSelectedClub(selectedClub.id)">
-                클럽: {{ selectedClub.name }}
-              </p>
+            <div class="d-flex justify-content-start align-items-center mt-2 ml-1">
+              <span>in</span>
+              <p class="ml-1 mb-0 font-weight-bold club-name pointer" @click="toSelectedClub(selectedClub.id)">{{ selectedClub.name }}</p>
             </div>
           </div>
           <div>
             <div class="d-flex justify-content-between">
               <div class="d-flex flex-column align-items-start justify-content-end">
-                <p class="mb-1 font-weight-bold"><i class="fas fa-map-marker-alt"></i> {{ selectedClubEvent.place }}</p>
-                <p class="mb-0 font-weight-bold">{{ selectedClubEvent.datetime | moment('YYYY년 MM월 DD일 HH시 mm분') }}</p>
+                <p class="mb-1 ml-1 font-weight-bold"><i class="fas fa-map-marker-alt"></i> {{ selectedClubEvent.place }}</p>
+                <p class="mb-0 ml-1 font-weight-bold">{{ selectedClubEvent.datetime | moment('YYYY년 MM월 DD일 HH시 mm분') }}</p>
               </div>
               <div class="d-flex justify-content-end align-items-end">
                 <button

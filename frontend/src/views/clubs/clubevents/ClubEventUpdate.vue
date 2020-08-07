@@ -267,7 +267,8 @@ export default {
       clubEventDate: false,
       clubEventTime: false,
       search: null,
-      offlinePlace: null
+      offlinePlace: null,
+      clicked: false
     }
   },
   computed: {
@@ -310,6 +311,7 @@ export default {
       this.$refs.form.validate()
     },
     clickUpdate() {
+      this.clicked = true
       this.clubEventUpdateData.datetime = this.date + 'T' + this.time
       if (this.offlineEnabled) {
         this.clubEventUpdateData.place = this.offlinePlace
@@ -345,6 +347,28 @@ export default {
           this.clubEventUpdateData.questions.push(question.question)
         })
       })
+  },
+  beforeRouteLeave(to, from, next) {
+    if (!this.clicked) {
+      if (this.clubEventUpdateData.name !== this.selectedClubEvent.name
+          || this.clubEventUpdateData.description !== this.selectedClubEvent.description
+          || this.clubEventUpdateData.bookId !== this.selectedClubEvent.book.id
+          || this.clubEventUpdateData.place !== this.selectedClubEvent.place
+          || ((this.clubEventUpdateData.place !== '온라인') && (this.offlinePlace !== this.selectedClubEvent.place))
+          || this.date !== this.selectedClubEvent.datetime.slice(0, 10)
+          || this.time !== this.selectedClubEvent.datetime.slice(11, 16)
+          || this.clubEventUpdateData.questions.length !== this.selectedClubEvent.questions.length
+         ) {
+        if (confirm('수정 중인 클럽 이벤트가 있습니다. 정말 넘어가시겠습니까?') === true) {
+          next()
+        } else {
+          return false
+        }
+      }
+      next()
+    } else {
+      next()
+    }
   }
 }
 </script>

@@ -207,15 +207,16 @@
         <p class="mb-0">아직 {{ selectedClub.name }}의 클럽 이벤트가 없습니다 ㄴ(°0°)ㄱ</p>
       </div>
     </div>  
-    <hr>
+    
+    <!-- <hr> -->
 
     <!-- club-posts -->
-    <div>
+    <!-- <div>
       <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}의 게시물</h4>
       <div class="no-content d-flex justify-content-center align-items-center" v-if="!selectedClub.posts">
         <p class="mb-0">아직 {{ selectedClub.name }}의 게시물이 없습니다 ㄴ(°0°)ㄱ</p>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
