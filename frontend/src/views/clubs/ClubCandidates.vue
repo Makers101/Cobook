@@ -275,7 +275,7 @@ export default {
   .club-image {
     border-radius: 25px;
     padding: 8px;
-    max-height: 200px;
+    height: 200px;
   }
 
   .clubEvent-name {
@@ -313,8 +313,8 @@ export default {
   }
 
   .profile-image {
-    max-width: 50px;
-    max-height: 50px;
+    width: 50px;
+    height: 50px;
   }
 
 </style>
