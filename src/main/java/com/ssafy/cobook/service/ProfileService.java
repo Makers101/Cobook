@@ -5,6 +5,7 @@ import com.ssafy.cobook.domain.clubeventmember.ClubEventMember;
 import com.ssafy.cobook.domain.clubeventmember.ClubEventMemberRepository;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
+import com.ssafy.cobook.domain.clubmember.MemberRole;
 import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.genre.Genre;
@@ -67,6 +68,7 @@ public class ProfileService {
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
         List<ClubResDto> clubList = clubMemberRepository.findAllByUser(toUser).stream()
+                .filter(m->!m.getRole().equals(MemberRole.WAITING))
                 .map(ClubMember::getClub)
                 .map(ClubResDto::new)
                 .collect(Collectors.toList());

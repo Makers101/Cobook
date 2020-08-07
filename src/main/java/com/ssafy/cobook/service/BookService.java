@@ -1,7 +1,13 @@
 package com.ssafy.cobook.service;
 
+import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.book.BookRepository;
+import com.ssafy.cobook.domain.post.PostRepository;
+import com.ssafy.cobook.exception.BaseException;
+import com.ssafy.cobook.exception.ErrorCode;
+import com.ssafy.cobook.service.dto.book.BookDetailResponseDto;
 import com.ssafy.cobook.service.dto.book.BookResponseDto;
+import com.ssafy.cobook.service.dto.post.PostByMembersResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,10 +23,20 @@ import java.util.stream.Collectors;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final PostRepository postRepository;
 
     public List<BookResponseDto> getAllBooks() {
         return bookRepository.findAll().stream()
                 .map(BookResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public BookDetailResponseDto getDetials(Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(()->new BaseException(ErrorCode.UNEXPECTED_BOOK));
+        List<PostByMembersResDto> posts = postRepository.findAllByBook(book).stream()
+                .map(PostByMembersResDto::new)
+                .collect(Collectors.toList());
+        return new BookDetailResponseDto(book, posts);
     }
 }
