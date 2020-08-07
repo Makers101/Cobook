@@ -211,6 +211,7 @@ export default {
       rankArray: [1, 2, 3, 4, 5],
       satisfactionEmojis: ['😭', '😢', '😊', '😄', '😍'],
       activatedDetail: false,
+      clicked: false
     }
   },
   computed: {
@@ -258,6 +259,7 @@ export default {
       }
     },
     clickUpdate() {
+      this.clicked = true
       if (window.$('#summernote').summernote('code') === '<p style="text-align: left;"><br></p>') {
         this.postUpdateData.basicData.review = null
       } else if (window.$('#summernote').summernote('code') === '<p><br></p>') {
@@ -298,18 +300,22 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    if (this.postUpdateData.basicData.onelineReview !== this.selectedPost.onelineReview
-        || this.postUpdateData.basicData.open !== this.selectedPost.open
-        || this.postUpdateData.basicData.rank !== this.selectedPost.rank
-        || window.$('#summernote').summernote('code') !== this.selectedPost.review
-       ) {
-      if (confirm('수정 중인 게시물이 있습니다. 정말 넘어가시겠습니까?') === true) {
-        next()
-      } else {
-        return false
+    if (!this.clicked) {
+      if (this.postUpdateData.basicData.onelineReview !== this.selectedPost.onelineReview
+          || this.postUpdateData.basicData.rank !== this.selectedPost.rank
+          || (window.$('#summernote').summernote('code') !== '<p><br></p>') && (window.$('#summernote').summernote('code') !== this.selectedPost.review)
+          || this.postUpdateData.basicData.tags.length !== this.selectedPost.tags.length
+         ) {
+        if (confirm('수정 중인 게시물이 있습니다. 정말 넘어가시겠습니까?') === true) {
+          next()
+        } else {
+          return false
+        }
       }
+      next()
+    } else {
+      next()
     }
-    next()
   }
 }
 </script>
