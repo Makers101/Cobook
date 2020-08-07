@@ -86,7 +86,7 @@ export default {
     signupKakao(info) {
       axios.post(SERVER.URL + SERVER.ROUTES.social, info)
         .then(res => {
-          cookies.set("auth-token", res.data);
+          this.SET_TOKEN(res.data)
           const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -97,8 +97,8 @@ export default {
               toast.addEventListener('mouseenter', Swal.stopTimer)
               toast.addEventListener('mouseleave', Swal.resumeTimer)
               }
-           })
-           Toast.fire({
+          })
+          Toast.fire({
             icon: 'success',
             title: "로그인에 성공하였습니다."
           })

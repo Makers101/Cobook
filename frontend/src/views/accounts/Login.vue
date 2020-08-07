@@ -76,11 +76,10 @@
 </template>
 
 <script>
-    import {mapActions} from "vuex";
-    import Swal from 'sweetalert2'
-    import axios from "axios";
-    import SERVER from "@/api/api";
-    import cookies from "vue-cookies";
+import { mapActions, mapMutations } from "vuex";
+import Swal from 'sweetalert2'
+import axios from "axios";
+import SERVER from "@/api/api";
 
 export default {
   name: "Login",
@@ -103,151 +102,93 @@ export default {
   watch: {
     loginData: {
       deep: true,
-
-                handler() {
-                    this.checkEmailForm();
-                    this.checkPasswordForm();
-                },
-            },
+      handler() {
+          this.checkEmailForm();
+          this.checkPasswordForm();
         },
-        methods: {
-            async handleClickSignIn() {
-                const googleUser = await this.$gAuth.signIn();
-                const profile = googleUser.getBasicProfile();
-                const userInfo = {
-                    nickname: profile.Cd,
-                    email: profile.zu,
-                    platformType: "GOOGLE",
-                };
-                axios
-                    .post(SERVER.URL + SERVER.ROUTES.social, userInfo)
-                    .then((res) => {
-                        console.log(res);
-                        cookies.set("auth-token", res.data);
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            timerProgressBar: true,
-                            onOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                            }
-                        })
-                        Toast.fire({
-                            icon: 'success',
-                            title: "로그인에 성공하였습니다."
-                        })
-                        this.$router.push("/");
-                        this.findMyAccount();
-                    });
-            },
-            kakaoLogin() {
-                window.Kakao.Auth.login({
-                    scope: "profile, account_email",
-                    success: this.GetMe,
+    },
+  },
+  methods: {
+    ...mapMutations(['SET_TOKEN']),
+    ...mapActions("accountStore", ["login"]),
+    async handleClickSignIn() {
+      const googleUser = await this.$gAuth.signIn();
+      const profile = googleUser.getBasicProfile();
+      const userInfo = {
+          nickname: profile.Cd,
+          email: profile.zu,
+          platformType: "GOOGLE",
+      };
+      axios
+        .post(SERVER.URL + SERVER.ROUTES.social, userInfo)
+        .then((res) => {
+          console.log(res);
+          this.SET_TOKEN(res.data)
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            onOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          })
+          Toast.fire({
+              icon: 'success',
+              title: "로그인에 성공하였습니다."
+          })
+          this.$router.push("/");
+        });
+    },
+    kakaoLogin() {
+      window.Kakao.Auth.login({
+        scope: "profile, account_email",
+        success: this.GetMe,
+      });
+    },
+    GetMe() {
+      window.Kakao.API.request({
+        url: "/v2/user/me",
+        success: (res) => {
+          const kakao_account = res.kakao_account;
+          const userInfo = {
+            nickname: kakao_account.profile.nickname,
+            email: kakao_account.email,
+            platformType: "KAKAO",
+          };
+          if (userInfo.email === undefined) {
+            this.$router.push({
+              name: "SignupKakao",
+              params: {
+                nickname: userInfo.nickname,
+                platformType: userInfo.platformType,
+              },
+            });
+          } else {
+            axios
+              .post(SERVER.URL + SERVER.ROUTES.social, userInfo)
+              .then((res) => {
+                this.SET_TOKEN(res.data)
+                const Toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 2000,
+                  timerProgressBar: true,
+                  onOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                  }
+                })
+                Toast.fire({
+                  icon: 'success',
+                  title: "로그인에 성공하였습니다."
+                })
+                  this.$router.push("/");
                 });
-            },
-            GetMe() {
-                window.Kakao.API.request({
-                    url: "/v2/user/me",
-                    success: (res) => {
-                        const kakao_account = res.kakao_account;
-                        const userInfo = {
-                            nickname: kakao_account.profile.nickname,
-                            email: kakao_account.email,
-                            platformType: "KAKAO",
-                        };
-                        if (userInfo.email === undefined) {
-                            this.$router.push({
-                                name: "SignupKakao",
-                                params: {
-                                    nickname: userInfo.nickname,
-                                    platformType: userInfo.platformType,
-                                },
-                            });
-                        } else {
-                            axios
-                                .post(SERVER.URL + SERVER.ROUTES.social, userInfo)
-                                .then((res) => {
-                                    cookies.set("auth-token", res.data);
-                                    const Toast = Swal.mixin({
-                                        toast: true,
-                                        position: 'top-end',
-                                        showConfirmButton: false,
-                                        timer: 2000,
-                                        timerProgressBar: true,
-                                        onOpen: (toast) => {
-                                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                        }
-                                    })
-                                    Toast.fire({
-                                        icon: 'success',
-                                        title: "로그인에 성공하였습니다."
-                                    })
-                                            this.findMyAccount();
-                                            this.$router.push("/");
-                                        });
-                                    }
-                    },
-                });
-            },
-            checkEmailForm() {
-                if (
-                    this.loginData.email.length > 0 &&
-                    !this.validEmail(this.loginData.email)
-                ) {
-                    this.error.email = "올바른 이메일 형식이 아니에요";
-                } else this.error.email = false;
-            },
-            validEmail(email) {
-                // eslint-disable-next-line
-                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                return re.test(email);
-            },
-            checkPasswordForm() {
-                if (
-                    this.loginData.password.length > 0 &&
-                    this.loginData.password.length < 8
-                ) {
-                    this.error.password = "비밀번호가 너무 짧아요";
-                } else if (
-                    this.loginData.password.length >= 8 &&
-                    !this.validPassword(this.loginData.password)
-                ) {
-                    this.error.password = "영문, 숫자 포함 8 자리 이상이어야 해요.";
-                } else this.error.password = false;
-                // 버튼 활성화
-                if (
-                    this.loginData.password.length > 0 &&
-                    this.loginData.email.length > 0
-                ) {
-                    let isSubmit = true;
-                    Object.values(this.error).map((v) => {
-                        if (v) isSubmit = false;
-                    });
-                    this.isSubmit = isSubmit;
-                }
-            },
-            validPassword(password) {
-                var va = /^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/;
-                return va.test(password);
-            },
-            clickSignup() {
-                this.$router.push({name: "Signup"});
-            },
-            clickLogin() {
-                if (this.isSubmit) {
-                    this.$router.push("/");
-                }
-            },
-            clickPasswordFind() {
-                this.$router.push({name: "PasswordFind"});
-            },
-            ...mapActions("accountStore", ["login"]),
-            ...mapActions(["findMyAccount"])
+              }
         },
       });
     },
@@ -293,18 +234,16 @@ export default {
       return va.test(password);
     },
     clickSignup() {
-      this.$router.push({ name: "Signup" });
+      this.$router.push({name: "Signup"});
     },
     clickLogin() {
       if (this.isSubmit) {
-        this.$router.push("/");
+          this.$router.push("/");
       }
     },
     clickPasswordFind() {
-      this.$router.push({ name: "PasswordFind" });
+      this.$router.push({name: "PasswordFind"});
     },
-    ...mapActions("accountStore", ["login"]),
-    ...mapActions(["findMyAccount"]),
   },
 };
 </script>
