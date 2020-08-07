@@ -296,6 +296,20 @@ export default {
       })
       window.$('#summernote').summernote('code', this.selectedPost.review);
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.postUpdateData.basicData.onelineReview !== this.selectedPost.onelineReview
+        || this.postUpdateData.basicData.open !== this.selectedPost.open
+        || this.postUpdateData.basicData.rank !== this.selectedPost.rank
+        || window.$('#summernote').summernote('code') !== this.selectedPost.review
+       ) {
+      if (confirm('수정 중인 게시물이 있습니다. 정말 넘어가시겠습니까?') === true) {
+        next()
+      } else {
+        return false
+      }
+    }
+    next()
   }
 }
 </script>

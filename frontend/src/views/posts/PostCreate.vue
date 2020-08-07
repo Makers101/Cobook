@@ -273,6 +273,21 @@ export default {
     if (this.$route.params.selectedBookId) {
       this.postCreateData.bookId = this.$route.params.selectedBookId
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.postCreateData.bookId
+        || this.postCreateData.onelineReview
+        || (this.postCreateData.rank !== 3)
+        || (window.$('#summernote').summernote('code') !== '<p><br></p>')
+        || (this.postCreateData.tags.length !== 0)
+       ) {
+      if (confirm('작성 중인 게시물이 있습니다. 정말 넘어가시겠습니까?') === true) {
+        next()
+      } else {
+        return false
+      }
+    }
+    next()
   }
 }
 </script>
