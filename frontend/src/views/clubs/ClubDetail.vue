@@ -178,7 +178,7 @@
       <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 클럽 이벤트</h4>
       <div class="row rows-cols-1 row-cols-sm-3" v-if="selectedClub.clubEvents.length !== 0">
         <div
-          class="mb-2 col-12 col-sm-4 pointer"
+          class="mb-2 col-lg-4 col-md-6 col-sm-12 pointer"
           v-for="clubEvent in selectedClub.clubEvents"
           :key="clubEvent.id"
           @click="selectClubEvent(clubEvent.id)">

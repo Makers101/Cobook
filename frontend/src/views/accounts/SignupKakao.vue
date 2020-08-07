@@ -31,11 +31,12 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import SERVER from '@/api/api'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import router from '@/router'
-import cookies from 'vue-cookies'
+
 export default {
   name: 'SignupKakao',
   data() {
@@ -64,6 +65,7 @@ export default {
     } 
   },
   methods: {
+    ...mapMutations(['SET_TOKEN']),
     checkEmailForm() {
       if ( this.signupKakaoData.email.length > 0 && !this.validEmail(this.signupKakaoData.email) ) {
         this.error.email = "올바른 이메일 형식이 아니에요"   

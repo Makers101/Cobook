@@ -101,6 +101,7 @@
                 <v-radio-group
                   v-model="onedayEventCreateData.place"
                   :rules="[v => !!v || '필수항목입니다.']"
+                  @mousedown="preventDoubling"
                 >
                   <div class="d-flex justify-content-start align-items-center">
                     <v-radio label="온라인" value="온라인"></v-radio>
@@ -325,6 +326,11 @@ export default {
         this.onedayEventCreateData.place = this.offlinePlace
       }
       this.createOnedayEvent(this.onedayEventCreateData)
+    },
+    preventDoubling() {
+      if (this.offlinePlace === '온라인') {
+        this.offlinePlace = null
+      }
     }
   }
 }

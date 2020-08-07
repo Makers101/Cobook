@@ -92,14 +92,13 @@ const onedayEventStore = {
           new_onedayEvents1 = state.onedayEvents
         }
 
-        console.log(new_onedayEvents1)
-        if (filters.genre_filter.size !== 0) {
+        if (filters.genre_filter) {
           let new_onedayEvents2 = new Set()
           new_onedayEvents1.forEach(onedayEvent => {
-              if (filters.genre_filter.has(onedayEvent.book.genre)) {
-                new_onedayEvents2.add(onedayEvent)
-              }
-            })
+            if (filters.genre_filter === onedayEvent.book.genre) {
+              new_onedayEvents2.add(onedayEvent)
+            }
+          })
           state.filteredOnedayEvents = new_onedayEvents2
         } else {
           state.filteredOnedayEvents = new_onedayEvents1
