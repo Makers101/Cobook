@@ -3,7 +3,9 @@ import VueRouter from 'vue-router'
 // accounts
 import Login from '@/views/accounts/Login'
 import Signup from '@/views/accounts/Signup'
+import SignupKakao from '@/views/accounts/SignupKakao'
 import SignupEmail from '@/views/accounts/SignupEmail'
+import SignupSuccessful from '@/views/accounts/SignupSuccessful'
 import PasswordFind from '@/views/accounts/PasswordFind'
 import PasswordFindEmail from '@/views/accounts/PasswordFindEmail'
 import PasswordChange from '@/views/accounts/PasswordChange'
@@ -24,11 +26,17 @@ import PostUpdate from '@/views/posts/PostUpdate'
 import ClubList from '@/views/clubs/ClubList'
 import ClubDetail from '@/views/clubs/ClubDetail'
 import ClubCreate from '@/views/clubs/ClubCreate'
+import ClubUpdate from '@/views/clubs/ClubUpdate'
 import ClubCandidates from '@/views/clubs/ClubCandidates'
-import ReadingDetail from '@/views/clubs/readings/ReadingDetail'
-import ReadingCreate from '@/views/clubs/readings/ReadingCreate'
-// meetups
-import MeetupList from '@/views/meetups/MeetupList'
+import ClubEventDetail from '@/views/clubs/clubevents/ClubEventDetail'
+import ClubEventCreate from '@/views/clubs/clubevents/ClubEventCreate'
+import ClubEventUpdate from '@/views/clubs/clubevents/ClubEventUpdate'
+
+// onedayevents
+import OnedayEventList from '@/views/onedayevents/OnedayEventList'
+import OnedayEventDetail from '@/views/onedayevents/OnedayEventDetail'
+import OnedayEventCreate from '@/views/onedayevents/OnedayEventCreate'
+import OnedayEventUpdate from '@/views/onedayevents/OnedayEventUpdate'
 
 //pagenotfound
 import PageNotFound from '@/views/PageNotFound'
@@ -49,9 +57,19 @@ Vue.use(VueRouter)
     component: Signup
   },
   {
+    path: '/signup/kakao',
+    name: 'SignupKakao',
+    component: SignupKakao
+  },
+  {
     path: '/signup/email',
     name: 'SignupEmail',
     component: SignupEmail
+  },
+  {
+    path: '/signup/success',
+    name: 'SignupSuccessful',
+    component: SignupSuccessful
   },
   {
     path: '/password',
@@ -148,25 +166,50 @@ Vue.use(VueRouter)
     component: ClubDetail
   },
   {
+    path: '/clubs/:clubId/update',
+    name: 'ClubUpdate',
+    component: ClubUpdate
+  },
+  {
     path: '/clubs/:clubId/candidates',
     name: 'ClubCandidates',
     component: ClubCandidates
   },
   {
-    path: '/clubs/:clubId/readings/create',
-    name: 'ReadingCreate',
-    component: ReadingCreate
+    path: '/clubs/:clubId/clubevents/create',
+    name: 'ClubEventCreate',
+    component: ClubEventCreate
   },
   {
-    path: '/clubs/:clubId/readings/:readingId',
-    name: 'ReadingDetail',
-    component: ReadingDetail
+    path: '/clubs/:clubId/clubevents/:clubEventId',
+    name: 'ClubEventDetail',
+    component: ClubEventDetail
   },
-  // meetups
   {
-    path: '/meetups',
-    name: 'MeetupList',
-    component: MeetupList
+    path: '/clubs/:clubId/clubevents/:clubEventId/update',
+    name: 'ClubEventUpdate',
+    component: ClubEventUpdate
+  },
+  // onedayevents
+  {
+    path: '/onedayevents',
+    name: 'OnedayEventList',
+    component: OnedayEventList
+  },
+  {
+    path: '/onedayevents/create',
+    name: 'OnedayEventCreate',
+    component: OnedayEventCreate
+  },
+  {
+    path: '/onedayevents/:onedayEventId',
+    name: 'OnedayEventDetail',
+    component: OnedayEventDetail
+  },
+  {
+    path: '/onedayevents/:onedayEventId/update',
+    name: 'OnedayEventUpdate',
+    component: OnedayEventUpdate
   },
   // 404 Pages
   {
@@ -185,9 +228,11 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const pubicPages = ['Login', 'Signup'] // Login 안해도 됨
-  const authPages = ['Login', 'Signup'] // Login 되어있으면 안됨
-  const authRequired = !pubicPages.includes(to.name) // 로그인 해야하는 페이지면 true 반환
+  const publicPages = ['Login', 'Signup', 'SignupEmail', 'SignupKakao', 'PasswordFind', 'PasswordFindEmail', 'PasswordChange', 'PasswordChangeSuccessful'] // Login 안해도 됨
+  const authPages = ['Login', 'Signup', 'SignupEmail', 'SignupKakao', 'PasswordFind', 'PasswordFindEmail', 'PasswordChange', 'PasswordChangeSuccessful'] // Login 되어있으면 안됨
+  // const pubicPages = ['Login', 'Signup'] // Login 안해도 됨
+  // const authPages = ['Login', 'Signup'] // Login 되어있으면 안됨
+  const authRequired = !publicPages.includes(to.name) // 로그인 해야하는 페이지면 true 반환
   const unauthRequired = authPages.includes(to.name)
   const isLoggedIn = Vue.$cookies.isKey('auth-token')
 

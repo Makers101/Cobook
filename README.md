@@ -65,18 +65,19 @@
         <li><a href="Document/Dev_log/20200723_dev_log.md">7/23 - Back-end (OAuth + Post CRUD) & Front-end (디자인 회의 + Wireframe) </a></li>
         <li><a href="Document/Dev_log/20200724_dev_log.md">7/24 - Back-end (OAuth + Post/Club CR + JPA) + Front-end (Signup/Login page + Club + Feed + Navbar) </a></li>
         <li><a href="Document/Dev_log/20200725_0726_dev_log.md">7/25 ~ 7/26 - Back-end (OAuth) + Front-end (Feed - Create/Detail + Profile - List/Update + Club - Detail/List + Authentication - Password Change)</a></li>
-        <li><a href="Document/Dev_log/20200727_dev_log.md">7/27 - Back-end (JWT bug + fix bug + OAuth) + Front-end (Club - Create + Authentication - Background image + Profile - Update + Add Vuetify/Cookies)</a></li>
-    </ul>
-</details>
-<details>
-<summary>3주차</summary>
-<ul>
-    <li><a href="Document/Dev_log/20200728_dev_log.md">7/28 - Back-end (프로필 - 상세 조회 + 팔로잉 ) + Front-end (Profile - 팔로잉/팔로워 + Authentication 디자인 수정 + Post/Club API 연결</a></li>
-    <li><a href="Document/Dev_log/20200729_dev_log.md">7/29 - Back-end (프로필 - 팔로잉 + Club - 팔로잉) + Front-end (프로필 - 팔로잉/팔로워 모달 구현 + 수정 기능)</a></li>
-    <li><a href="Document/Dev_log/20200730_dev_log.md">7/30 - Back-end (Club - Reading Feed) + Front-end (Feed - 무한 스크롤 + 프로필 - 수정 + 팔로잉 기능 실시간 반영)</a></li>
 </ul>
 </details>
 
+<details>
+<summary>3주차</summary>
+<ul>
+    <li><a href="Document/Dev_log/20200727_dev_log.md">7/27 - Back-end (JWT bug + fix bug + OAuth) + Front-end (Club - Create + Authentication - Background image + Profile - Update + Add Vuetify/Cookies)</a></li>
+    <li><a href="Document/Dev_log/20200728_dev_log.md">7/28 - Back-end (프로필 - 상세 조회 + 팔로잉 ) + Front-end (Profile - 팔로잉/팔로워 + Authentication 디자인 수정 + Post/Club API 연결</a></li>
+    <li><a href="Document/Dev_log/20200729_dev_log.md">7/29 - Back-end (프로필 - 팔로잉 + Club - 팔로잉) + Front-end (프로필 - 팔로잉/팔로워 모달 구현 + 수정 기능)</a></li>
+    <li><a href="Document/Dev_log/20200730_dev_log.md">7/30 - Back-end (Club - Reading Feed) + Front-end (Feed - 무한 스크롤 + 프로필 - 수정 + 팔로잉 기능 실시간 반영)</a></li>
+    <li><a href="Document/Dev_log/20200731_dev_log.md">7/31 - Front-end (오류 수정) + 중간 PPT 및 발표 준비 + 중간 시연 영상 제작</a></li>
+</ul>
+</details>
 
 <br>
 
@@ -93,3 +94,40 @@
 - Back-end
   - Spring Boot
   - python: 3.7.4
+
+<br>
+
+## ⭐️ 핵심 기능
+
+- Feed
+  - 피드
+    - 팔로우한 유저가 작성한 책 리뷰 게시물 확인
+    - 책 리뷰의 긴 '텍스트 형태'보다는 이를 요약하는 '한줄 평'위주의 리뷰 노출
+  - 상세 피드
+    - 한줄 평 뿐만 아니라 기존 리뷰, 작성 시각 노출
+    - 댓글 작성 가능
+  - 좋아요, 북마크, 공유하기
+- Club
+  - 책 모임 매칭 서비스, 클럽
+  - 클럽: 정기적으로 책모임을 갖는 하나의 그룹
+    - 클럽 멤버, 클럽 설명, 주요 장르, 위치 확인 가능
+  - 리딩: 클럽 안에서 진행되는 정기적인, 한 번의 책 모임
+    - 리딩에 참여할 멤버, 멤버 개개인이 해당 책에 대해 작성한 리뷰, 리딩에서 진행될 질문지 확인 가능
+- Meetup
+  - 클럽과 관계없이 진행되는 일회성 책모임
+    - 밋업에 참여할 멤버, 개개인이 해당 책에 대해 작성한 리뷰, 밋업에서 진행될 질문지 확인 가능
+- Profile
+  - 독서 활동 관리 서비스
+  - 내가 읽은 책 확인
+  - 내가 참여했던 모임 확인 
+  - 내가 북마크한 게시물 확인
+  - 팔로우와 팔로워를 통한 유저간의 소통
+
+<br>
+
+## 🎞 시연 영상
+
+- <a href="https://www.youtube.com/watch?v=hAW3b7z9Ifo&feature=youtu.be">중간발표 시연영상 </a>
+
+<br>
+

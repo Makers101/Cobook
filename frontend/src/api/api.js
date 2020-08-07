@@ -9,6 +9,9 @@ export default {
 
     // clubs
     clubs: '/clubs',
+    
+    // onedayevents
+    onedayevents: '/onedayevents',
 
     // posts
     posts: '/posts',
@@ -17,6 +20,7 @@ export default {
     // accounts
     myaccount: '/users',
     signup: '/users/signup',
+    social: '/users/social',
     login: '/users/signin',
     password: '/users/password',
     changepassword: '/users/resetPassword/update',

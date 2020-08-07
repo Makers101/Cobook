@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 import accountStore from '@/store/modules/accountStore'
 import clubStore from '@/store/modules/clubStore'
-import meetupStore from '@/store/modules/meetupStore'
+import onedayEventStore from '@/store/modules/onedayEventStore'
 import postStore from '@/store/modules/postStore'
 import profileStore from '@/store/modules/profileStore'
 
@@ -13,6 +13,7 @@ import router from '@/router'
 import axios from 'axios'
 import cookies from 'vue-cookies'
 import SERVER from '@/api/api'
+import Swal from 'sweetalert2'
 
 export default new Vuex.Store({
   state: {
@@ -85,9 +86,9 @@ export default new Vuex.Store({
         })
         .catch(err => console.log(err.response.data))
     },
-    createNoti({ state }, notiData) {
+    createNoti({ state, getters }, notiData) {
       console.log(state)
-      axios.post(SERVER.URL + SERVER.ROUTES.noti, notiData)
+      axios.post(SERVER.URL + SERVER.ROUTES.noti, notiData, getters.config)
         .then(res => console.log(res))
         .catch(err => console.log(err.response.data))
     },
@@ -95,7 +96,21 @@ export default new Vuex.Store({
           commit('SET_TOKEN', null)
           cookies.remove('auth-token')
           // commit('SET_INIT')
-          alert("로그아웃 되었습니다.")
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'success',
+            title: '로그아웃되었습니다.'
+          })
           router.push({ name: 'Login' })
     },
   },
@@ -103,7 +118,7 @@ export default new Vuex.Store({
   modules: {
     accountStore: accountStore,
     clubStore: clubStore,
-    meetupStore: meetupStore,
+    onedayEventStore: onedayEventStore,
     postStore: postStore,
     profileStore: profileStore
   }

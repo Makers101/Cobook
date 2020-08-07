@@ -67,7 +67,7 @@
       </div>
 
       <div class="buttons mt-3">
-        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="isSubmit && signup(signupData)" >가입하기</button>
+        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickSignup" >가입하기</button>
       </div>
 
       <hr class="divide">
@@ -94,7 +94,6 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'Signup',
-
   data() {
     return {
       signupData: {
@@ -175,7 +174,7 @@ export default {
     },
     clickSignup() {
       if ( this.isSubmit ){
-        this.$router.push( {name: 'SignupEmail' })
+        this.signup(this.signupData)
       }
     },
     ...mapActions('accountStore', ['signup'])
@@ -207,7 +206,6 @@ h3 {
   background-color: #88A498;
   color: #F8F8F8;
   width: 70%;
-  /* font-size: 10px; */
 }
 
 .divide {
@@ -258,6 +256,10 @@ input[type="password"] {
   background-color: rgb(136, 154, 152, 0.25);
   color: #F8F8F8;
   cursor: inherit;
+}
+
+.background {
+  background-repeat: repeat;
 }
 
 .background::after {

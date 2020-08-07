@@ -1,14 +1,28 @@
 <template>
   <div class="custom-container my-3">
-    <!-- club-header -->
+
+    <!-- club-detail-header -->
     <div class="row">
-      <img class="club-image col-4" :src="selectedClub.clubImg" alt="" v-if="selectedClub.clubImg">
-      <img class="club-image col-4" src="http://placehold.jp/300x200.png?text=sample" alt="" v-else>
+
+      <!-- club-detail-clubImg -->
+      <img
+        class="club-image col-4"
+        :src="selectedClub.clubImg"
+        :alt="selectedClub.name"
+        v-if="selectedClub.clubImg">
+      <img
+        class="club-image col-4"
+        :src="'http://placehold.jp/300x200.png?text=' + selectedClub.name"
+        :alt="selectedClub.name"
+        v-else>
+
       <div class="col-8 py-2 d-flex flex-column justify-content-between">
         <div>
           <div class="d-flex justify-content-between mb-2">
             <div class="d-flex justify-content-start align-items-center">
+              <!-- club-detail-name -->
               <h3 class="mb-0 font-weight-bold">{{ selectedClub.name }}</h3>
+              <!-- club-detail-recruit -->
               <span class="badge mb-0 ml-2 club-recruit" v-if="selectedClub.recruit">모집중</span>
             </div>
             <!-- <div class="d-flex align-items-center">
@@ -16,18 +30,22 @@
               <button class="btn btn-green ml-2">팔로우</button>
             </div> -->
           </div>
+          <!-- club-detail-onelineDescription -->
           <p class="text-left">{{ selectedClub.onelineDescription }}</p>
         </div>
         
         <div>
+          <!-- club-detail-residence -->
           <p class="color-black text-left">주로 <span class="color-black font-weight-bold">{{ selectedClub.residence }}</span>에서 만남 :)</p>
           <div class="d-flex justify-content-between">
+            <!-- club-detail-genres -->
             <div>
               <button class="btn btn-genre mr-2" disabled v-for="genre in selectedClub.genres" :key="genre.id">#{{ genre.name }}</button>
             </div>
+            <!-- club-detail-buttons -->
             <div>
               <button
-                class="btn btn-secondary dropdown-toggle mr-2"
+                class="btn btn-secondary dropdown-toggle"
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
@@ -39,34 +57,62 @@
                 <button 
                   class="dropdown-item setting-btn text-center"
                   type="button"
-                  @click="toReadingCreate">
-                  리딩 생성
+                  @click="toClubEventCreate">
+                  클럽 이벤트 생성
                 </button>
                 <button 
                   class="dropdown-item setting-btn text-center"
                   type="button"
-                  @click="clickUpdateRecruit"
+                  @click="clickUpdateRecruit(selectedClub.id)"
                   v-if="!selectedClub.recruit">
                   모집 활성화
                 </button>
                 <button 
                   class="dropdown-item setting-btn text-center"
                   type="button"
-                  @click="clickUpdateRecruit"
+                  @click="clickUpdateRecruit(selectedClub.id)"
                   v-if="selectedClub.recruit">
                   모집 비활성화
                 </button>
                 <button 
                   class="dropdown-item setting-btn text-center"
                   type="button"
-                  @click="toClubCandidates"
+                  @click="toClubCandidates(selectedClub.id)"
                   v-if="selectedClub.recruit">
                   모집 현황
                 </button>
+                <div class="dropdown-divider my-1"></div>
+                <button 
+                  class="dropdown-item setting-btn text-center"
+                  type="button"
+                  @click="toClubUpdate(selectedClub.id)">
+                  클럽 정보 수정
+                </button>
+                <button 
+                  class="dropdown-item setting-btn text-center"
+                  type="button"
+                  @click="clickClubDelete(selectedClub.id)">
+                  클럽 삭제
+                </button>
               </div>
-              <button class="btn btn-warning mr" v-if="selectedClub.recruit && !isMember && !isLeader &&!isCandidate" @click="clickApplyClub('apply')">가입 신청</button>
-              <button class="btn btn-warning mr" v-if="selectedClub.recruit && isCandidate" @click="clickApplyClub('cancel')">가입 취소</button>
-              <button class="btn btn-warning mr" v-if="!isLeader && isMember" @click="clickClubSecede">클럽 탈퇴</button>
+              <button
+                class="btn btn-warning"
+                v-if="selectedClub.recruit && !isMember && !isLeader &&!isCandidate"
+                @click="clickApplyClub('apply', selectedClub.id)">
+                가입 신청
+              </button>
+              <button
+                class="btn btn-warning"
+                v-if="selectedClub.recruit && isCandidate"
+                @click="clickApplyClub('cancel', selectedClub.id)">
+                가입 취소
+              </button>
+              <button
+                class="btn btn-warning mr"
+                v-if="!isLeader && isMember"
+                @click="clickClubSecede(selectedClub.id)">
+                클럽 탈퇴
+              </button>
             </div>
           </div>
         </div>
@@ -75,20 +121,41 @@
 
     <hr>
 
-    <!-- club-members -->
+    <!-- club-detail-members -->
     <div>
       <h4 class="text-left font-weight-bold mb-3">클럽 멤버({{ selectedClub.memberCnt }})</h4>
       <div class="d-flex justify-content-start">
         <div class="profile-container pointer mr-3" @click="selectUser(selectedClub.leader.id)">
-          <img class="rounded-circle image" :src="selectedClub.leader.profileImg" alt="" v-if="selectedClub.leader.profileImg">
-          <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
+          <img
+            class="rounded-circle image"
+            :src="selectedClub.leader.profileImg"
+            :alt="selectedClub.leader.nickName"
+            v-if="selectedClub.leader.profileImg">
+          <img
+            class="rounded-circle image"
+            :src="'http://placehold.jp/150x150.png?text=' + selectedClub.leader.nickName"
+            :alt="selectedClub.leader.nickName"
+            v-else>
           <div class="overlay rounded-circle">
             <div class="text">{{ selectedClub.leader.nickName }}</div>
           </div>
         </div>
-        <div class="profile-container pointer mr-3" v-for="member in selectedClub.members" :key="member.id" @click="selectUser(member.id)">
-          <img class="rounded-circle image" :src="member.profileImg" alt="" v-if="member.profileImg">
-          <img class="rounded-circle image" src="http://placehold.jp/150x150.png?text=profile" alt="" v-else>
+
+        <div
+          class="profile-container pointer mr-3"
+          v-for="member in selectedClub.members"
+          :key="member.id"
+          @click="selectUser(member.id)">
+          <img
+            class="rounded-circle image"
+            :src="member.profileImg"
+            :alt="member.nickName"
+            v-if="member.profileImg">
+          <img
+            class="rounded-circle image"
+            :src="'http://placehold.jp/150x150.png?text=' + memter.nickName"
+            :alt="member.nickName"
+            v-else>
           <div class="overlay rounded-circle">
             <div class="text">{{ member.nickName }}</div>
           </div>
@@ -106,27 +173,29 @@
 
     <hr>
 
-    <!-- club-readings -->
+    <!-- club-clubEvents -->
     <div>
-      <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 리딩</h4>
-      <div class="row rows-cols-1 row-cols-sm-3" v-if="selectedClub.readings.length !== 0">
-        <div class="mb-2 col-12 col-sm-4 pointer" v-for="reading in selectedClub.readings" :key="reading.id" @click="selectReading(reading.id)">
+      <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 클럽 이벤트</h4>
+      <div class="row rows-cols-1 row-cols-sm-3" v-if="selectedClub.clubEvents.length !== 0">
+        <div
+          class="mb-2 col-lg-4 col-md-6 col-sm-12 pointer"
+          v-for="clubEvent in selectedClub.clubEvents"
+          :key="clubEvent.id"
+          @click="selectClubEvent(clubEvent.id)">
           <div class="card h-100">
             <div class="row no-gutters">
-              <div class="col-6 reading-left">
-                <img class="bg-image" :src="reading.book.bookImg" width="100%">
-                <span class="badge mb-0 reading-closed-true" v-if="reading.recruit">종료</span>
-                <span class="badge mb-0 reading-closed-false" v-else>예정</span>
+              <div class="col-6 clubEvent-left">
+                <img class="bg-image" :src="clubEvent.book.bookImg" width="100%">
+                <span class="badge mb-0 clubEvent-closed-true" v-if="clubEvent.recruit">종료</span>
+                <span class="badge mb-0 clubEvent-closed-false" v-else>예정</span>
               </div>
-              <div class="col-6 text-left d-flex flex-column p-2">
-                <p class="color-light-black book-title" lt="book">{{ reading.book.title }}</p>
-                <small>{{ reading.name }}</small>
+              <div class="col-6 text-left d-flex flex-column align-items-start p-2">
+                <p class="clubEvent-name font-weight-bold" lt="book">{{ clubEvent.name }}</p>
+                <span class="badge badge-genre">{{ clubEvent.book.genre }}</span>
                 <div class="mt-auto">
-                  <div class="d-flex justify-content-between">
-                    <span><small><i class="fas fa-users"></i> {{ reading.participantCnt}}</small></span>
-                    <span><small><i class="fas fa-map-marker-alt"></i> {{ reading.place }}</small></span>
-                  </div>
-                  <span class="reading-date"><small>{{ reading.datetime | moment('YYYY-MM-DD HH:mm') }}</small></span>
+                  <p class="mb-0"><small><i class="fas fa-users"></i> {{ clubEvent.participantCnt}}</small></p>
+                  <p class="mb-0"><small><i class="fas fa-map-marker-alt"></i> {{ clubEvent.place }}</small></p>
+                  <p class="clubEvent-date mb-0"><small>{{ clubEvent.datetime | moment('YYYY-MM-DD HH:mm') }}</small></p>
                 </div>
               </div>
             </div>
@@ -135,7 +204,7 @@
       </div>
 
       <div class="no-content d-flex justify-content-center align-items-center" v-else>
-        <p class="mb-0">아직 {{ selectedClub.name }}의 리딩이 없습니다 ㄴ(°0°)ㄱ</p>
+        <p class="mb-0">아직 {{ selectedClub.name }}의 클럽 이벤트가 없습니다 ㄴ(°0°)ㄱ</p>
       </div>
     </div>  
     <hr>
@@ -162,14 +231,14 @@ export default {
   computed: {
     ...mapState(['myaccount']),
     ...mapState('clubStore', ['selectedClub']),
-    isLeader: function() {
+    isLeader() {
       if (this.myaccount.id === this.selectedClub.leader.id) {
         return true
       } else {
         return false
       }
     },
-    isMember: function() {
+    isMember() {
       let result = false
       this.selectedClub.members.forEach(member => {
         if (this.myaccount.id === member.id) {
@@ -178,7 +247,7 @@ export default {
       });
       return result
     },
-    isCandidate: function() {
+    isCandidate() {
       if (this.selectedClub.candidates.includes(this.myaccount.id)) {
         return true
       } else {
@@ -188,18 +257,22 @@ export default {
   },
   methods: {
     ...mapActions(['createNoti']),
-    ...mapActions('clubStore', ['findClub', 'updateRecruit', 'applyClub', 'secedeClub']),
-    selectReading(readingId) {
-      router.push({ name: 'ReadingDetail', params: { clubId: this.$route.params.clubId, readingId: readingId }})
+    ...mapActions('clubStore', ['findClub', 'updateRecruit', 'applyClub', 'secedeClub', 'deleteClub']),
+    selectClubEvent(clubEventId) {
+      if (this.isMember || this.isLeader) {
+        router.push({ name: 'ClubEventDetail', params: { clubId: this.$route.params.clubId, clubEventId: clubEventId }})
+      } else {
+        alert('아쉽지만 클럽 멤버만 접근 가능합니다.')
+      }
     },
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
     },
-    clickUpdateRecruit() {
-      this.updateRecruit(this.$route.params.clubId)
+    clickUpdateRecruit(clubId) {
+      this.updateRecruit(clubId)
       this.selectedClub.recruit = !this.selectedClub.recruit
     },
-    clickApplyClub(type) {
+    clickApplyClub(type, clubId) {
       let notiData = new Object()
       notiData = {
         from: this.myaccount.id,
@@ -211,24 +284,34 @@ export default {
       
       if (type === 'apply') {
         alert('가입 신청이 완료 되었습니다. 설레는 마음으로 기다려주세요 :)')
-        this.applyClub(this.$route.params.clubId)
+        this.applyClub(clubId)
       } else if (type === 'cancel') {
         alert('가입 신청이 취소 되었습니다 :)')
-        this.applyClub(this.$route.params.clubId)
+        this.applyClub(clubId)
       }
     },
-    toClubCandidates() {
-      router.push({ name: 'ClubCandidates', params: { clubId: this.$route.params.clubId }})
+    toClubCandidates(clubId) {
+      router.push({ name: 'ClubCandidates', params: { clubId: clubId }})
     },
-    clickClubSecede() {
+    clickClubSecede(clubId) {
       if (confirm('클럽을 탈퇴하시겠습니까?') === true) {
-        this.secedeClub(this.$route.params.clubId)
+        this.secedeClub(clubId)
       } else {
         return false
       }
     },
-    toReadingCreate() {
-      router.push({ name: 'ReadingCreate' })
+    toClubEventCreate() {
+      router.push({ name: 'ClubEventCreate' })
+    },
+    toClubUpdate(clubId) {
+      router.push({ name: 'ClubUpdate', params: { clubId: clubId } })
+    },
+    clickClubDelete(clubId) {
+      if (confirm('클럽을 삭제하시겠습니까?') === true) {
+        this.deleteClub(clubId)
+      } else {
+        return false
+      }
     }
   },
   created() {
@@ -279,11 +362,11 @@ export default {
     font-weight: bold;
   }
 
-  .reading-left {
+  .clubEvent-left {
     position: relative;
   }
 
-  .reading-closed-false {
+  .clubEvent-closed-false {
     background-color: rgba(221, 118, 0, 0.8); 
     color: #F8F8F8;
     text-align: center;
@@ -294,7 +377,7 @@ export default {
     padding: 6px;
   }
 
-  .reading-closed-true {
+  .clubEvent-closed-true {
     background-color: #707070; 
     color: #F8F8F8;
     text-align: center;
@@ -315,7 +398,7 @@ export default {
     max-height: 200px;
   }
 
-  .book-title {
+  .clubEvent-name {
     word-break: keep-all;
   }
 
@@ -341,5 +424,11 @@ export default {
   .setting-btn:focus {
     background-color: #707070 !important;
     outline: none;
+  }
+
+  .badge-genre {
+    background-color: #88A498;
+    color: #F8F8F8;
+    padding: 6px;
   }
 </style>

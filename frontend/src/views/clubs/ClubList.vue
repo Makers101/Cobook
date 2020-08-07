@@ -20,8 +20,20 @@
     <!-- clubs-menubar -->
     <div class="club-menubar my-3 d-flex justify-content-between">
       <div class="club-toggle">
-        <button class="btn btn-toggle-false mx-1" @click="selectFilter('recruit')" v-show="filters.recruit_filter">#모집중</button>
-        <button class="btn btn-toggle-true mx-1" @click="selectFilter('recruit')" v-show="!filters.recruit_filter">#모집중</button>
+        <button
+          class="btn btn-toggle-false mx-1"
+          @click="selectFilter('recruit')"
+          v-show="filters.recruit_filter"
+        >
+          #모집중
+        </button>
+        <button
+          class="btn btn-toggle-true mx-1"
+          @click="selectFilter('recruit')"
+          v-show="!filters.recruit_filter"
+        >
+          #모집중
+        </button>
 
         <span             
           v-for="genre in myaccount.likeGenres"
@@ -50,7 +62,7 @@
     <!-- clubs-list -->
     <div class="club-list my-2 row">
       <div 
-        class="col-lg-4 col-12 p-3"
+        class="col-lg-4 col-md-6 col-sm-12 p-3"
         v-for="club in filteredClubs"
         :key="`club_${club.id}`">
         <div class="card">
@@ -64,7 +76,7 @@
             >
             <img
               class="card-img-top to-detail"
-              src="http://placehold.jp/300x200.png?text=sample"
+              :src="'http://placehold.jp/300x150.png?text=' + club.name"
               :alt="club.name"
               @click="selectClub(club.id)"
               v-else
@@ -174,29 +186,8 @@ export default {
     color: #88A498;
   }
 
-  /* .btn-toggle-true:hover {
-    background-color: #88A498;
-    color: #F8F8F8;
-  } */
-
   .btn-toggle-false {
     background-color: #88A498;
-    color: #F8F8F8;
-  }
-
-  /* .btn-toggle-false:hover {
-    background-color: white;
-    border-color: #88A498;
-    color: #88A498;
-  } */
-
-  .btn-club-create {
-    background-color: #88A498;
-    color: #F8F8F8;
-  }
-
-  .btn-club-create:hover {
-    background-color: #3c755a;
     color: #F8F8F8;
   }
 
@@ -238,8 +229,6 @@ export default {
   }
 
   .club-recruit {
-    /* background-color: #b68145; */
-    /* background-color: #907a62; */
     background-color: rgba(221, 118, 0, 0.8); 
     color: #F8F8F8;
     text-align: center;
@@ -266,7 +255,4 @@ export default {
     height: auto;
   }
   
-  /* .club-image {
-    height: 200px;
-  } */
 </style>

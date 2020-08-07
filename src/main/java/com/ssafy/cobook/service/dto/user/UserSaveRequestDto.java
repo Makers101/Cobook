@@ -20,7 +20,6 @@ public class UserSaveRequestDto {
     private String password;
     private String nickName;
     private PlatformType platformType;
-    private Boolean accept;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
@@ -32,8 +31,7 @@ public class UserSaveRequestDto {
                 .email(email)
                 .password(password)
                 .nickName(nickName)
-                .platformType(platformType)
-                .accept(true)
+                .platformType(PlatformType.valueOf("NONE"))
                 .roles(Collections.singletonList("USER_ROLE"))
                 .build();
     }

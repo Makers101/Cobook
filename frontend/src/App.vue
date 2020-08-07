@@ -5,10 +5,11 @@
         <nav class="navbar navbar-expand-md navbar-light navbar-bg-color">
           <router-link class="navbar-brand" to="/">
             <img 
-              class="img-fluid logo-img" 
-              src="https://user-images.githubusercontent.com/57381062/88909311-e8728200-d295-11ea-92d4-0a4a805f9afa.png" 
+              class="img-fluid logo-img"
+              style="height: 50px"
+              src="@/assets/new logo.png" 
               alt="로고 이미지"
-            ><span class="ml-2 logo-text">Co-Book</span>
+            >
           </router-link>
           <button 
             class="navbar-toggler" 
@@ -22,8 +23,28 @@
             <span class="navbar-toggler-icon"></span>
           </button>
 
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <div class="autocomplete" id="search-bar">
+          <div class="collapse navbar-collapse row" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto col-3 d-flex justify-content-between">
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'PostList' }">
+                  <!-- <i class="fas fa-home"></i> -->
+                  피드
+                </router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'ClubList' }">
+                  <!-- <i class="fas fa-users"></i> -->
+                  클럽
+                </router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'OnedayEventList' }">
+                  <!-- <img class="img-fluid club-img" src="https://user-images.githubusercontent.com/57381062/88909365-f7f1cb00-d295-11ea-859e-656c0633bf2e.png" alt="밋업 이미지"> -->
+                  원데이이벤트
+                </router-link>
+              </li>
+            </ul>
+            <div class="autocomplete col-3 text-right offset-4 " id="search-bar">
               <input 
                 type="search" 
                 v-model="keyword" 
@@ -38,47 +59,35 @@
                   class="autocomplete-result d-flex"
                   v-for="user in searchedUsers"
                   :key="`search-${user.id}`"
+                  @click="userDetail(user.id)"
                 >
-                <img
-                  class="img-fluid mr-3"
-                  style="width:25px; height:25px; border-radius: 50%" 
-                  v-if="user.profileImg"
-                  :src="user.profileImg" 
-                  alt="">
-                <img
-                  class="img-fluid mr-3"
-                  v-else
-                  style="border-radius: 50%"
-                  src="https://user-images.githubusercontent.com/57381062/88908958-84e85480-d295-11ea-9637-540f1be674ac.png"
-                  width=25px
-                  height=25px 
-                  >
-                <span @click="userDetail(user.id)">
-                  {{ user.nickName }}
-                </span>
+                  <img
+                    class="img-fluid mr-3"
+                    style="width:25px; height:25px; border-radius: 50%" 
+                    v-if="user.profileImg"
+                    :src="user.profileImg" 
+                    alt="">
+                  <img
+                    class="img-fluid mr-3"
+                    v-else
+                    style="border-radius: 50%"
+                    src="https://user-images.githubusercontent.com/57381062/88908958-84e85480-d295-11ea-9637-540f1be674ac.png"
+                    width=25px
+                    height=25px 
+                    >
+                  <span>
+                    {{ user.nickName }}
+                  </span>
                 </li>
               </ul>
             </div>
-            <ul class="navbar-nav mr-auto row w-100">
-              <li class="nav-item col-3">
-                <router-link class="nav-link" :to="{ name: 'PostList' }">
-                  <i class="fas fa-home color-green"></i>
-                  Feed
+            <ul class="navbar-nav mr-auto col-2 d-flex justify-content-between">
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'PostCreate' }">
+                  <i class="fas fa-plus-circle"></i>
                 </router-link>
               </li>
-              <li class="nav-item col-3">
-                <router-link class="nav-link" :to="{ name: 'ClubList' }">
-                  <i class="fas fa-users color-green"></i>
-                  Club
-                </router-link>
-              </li>
-              <li class="nav-item col-3">
-                <router-link class="nav-link" :to="{ name: 'MeetupList' }">
-                  <img class="img-fluid club-img" src="https://user-images.githubusercontent.com/57381062/88909365-f7f1cb00-d295-11ea-859e-656c0633bf2e.png" alt="밋업 이미지">
-                  Meetup
-                </router-link>
-              </li>
-              <li class="nav-item dropdown col-1 pointer">
+              <li class="nav-item dropdown pointer">
                 <div 
                   class="nav-link dropdown-toggle" 
                   id="navbarDropdown" 
@@ -87,27 +96,23 @@
                   data-toggle="dropdown" 
                   aria-haspopup="true" 
                   aria-expanded="false"
+                  @click="clickNoti"
                 >
-                  <i class="fas fa-bell color-green"></i>
+                  <i class="fas fa-bell"></i>
                 </div>
-                <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
+                <!-- <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
                   <div
                     class="dropdown-item setting-btn"
-                    v-for="noti in notis"
-                    :key="`noti-${noti.id}`"
+                    v-for="(noti, idx) in notis"
+                    :key="`noti-${idx}`"
                     @click="toRoute(noti)"
                   >
-                    <p v-if="noti.type==='club'">{{ findUsers[noti.from] }}님이 '{{ findClubs[noti.dataId] }}' club에 가입신청했습니다.</p>
+                    <p v-if="noti.type==='club'">{{ findUsers[noti.from] }}님이 '{{ findClubs[noti.clubId] }}' club에 가입신청했습니다.</p>
                     <p v-if="noti.type==='follow'">{{ findUsers[noti.from] }}님이 팔로우했습니다.</p>
                   </div>
-                </div>
+                </div> -->
               </li>
-              <li class="nav-item col-1">
-                <router-link class="nav-link" :to="{ name: 'PostCreate' }">
-                  <i class="fas fa-plus-circle color-green"></i>
-                </router-link>
-              </li>
-              <li class="nav-item dropdown col-1">
+              <li class="nav-item dropdown">
                 <div 
                   class="nav-link dropdown-toggle" 
                   id="navbarDropdown" 
@@ -117,7 +122,7 @@
                   aria-haspopup="true" 
                   aria-expanded="false"
                 >
-                  <i class="fas fa-user color-green"></i>
+                  <i class="fas fa-user"></i>
                 </div>
                 <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
                   <router-link class="dropdown-item setting-btn menus" :to="{ name: 'Profile', params: {userId: myaccount.id} }">프로필</router-link>
@@ -144,6 +149,21 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+// import firebase from 'firebase/app'
+// import 'firebase/database'
+
+// const firebaseConfig = {
+//   apiKey: "AIzaSyA9KKQn0uKuErmQMJsMbhw25-iG8chHLdI",
+//   authDomain: "co-book-original.firebaseapp.com",
+//   databaseURL: "https://co-book-original.firebaseio.com",
+//   projectId: "co-book-original",
+//   storageBucket: "co-book-original.appspot.com",
+//   messagingSenderId: "21513194733",
+//   appId: "1:21513194733:web:5ac45b8faee796d5b910e4",
+//   measurementId: "G-YNYKTYY7B8"
+// };
+
+// firebase.initializeApp(firebaseConfig);
 
 export default {
   name: 'App',
@@ -154,10 +174,11 @@ export default {
       searchedUsers: null,
       findUsers: null,
       findClubs: null,
+      notis: null,
     }
   },
   computed: {
-    ...mapState(['genres', 'myaccount', 'books', 'users', 'notis']),
+    ...mapState(['genres', 'myaccount', 'books', 'users']),
   },
   methods: {
     ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'fetchNotis', 'logout']),
@@ -191,6 +212,37 @@ export default {
       } else if (noti.type === 'follow') {
         this.$router.push({name: 'Profile', params: { userId: noti.dataId }})
       }
+    },
+    // clickNoti() {
+    //   const text = {
+    //     // "token" : 'dwyx4pmx5p90GVEFWkl6Hu:APA91bGV0Da1jxCWuW70-akuu7PSJnOsIu75js9eQFjzUUVjkctHm8fYUyMoSrWbRlKvH5IWuh2VHpNOXlkpwNokwbIkbmB_sH6l-5VU4ExWf0iiFQAToMq0PUnMMo-MDYvSLTpovjui',
+    //     "to": "dwyx4pmx5p90GVEFWkl6Hu:APA91bGV0Da1jxCWuW70-akuu7PSJnOsIu75js9eQFjzUUVjkctHm8fYUyMoSrWbRlKvH5IWuh2VHpNOXlkpwNokwbIkbmB_sH6l-5VU4ExWf0iiFQAToMq0PUnMMo-MDYvSLTpovjui",
+    //     "data": {
+    //       "message": "FCM Message",
+    //       // "body": "This is a message from FCM"
+    //     }
+    //   }
+    //   const header = {
+    //     headers: {
+    //       "Accept": "application/json",
+    //       "Content-Type": "application/json",
+    //       "Authorization": "key=AAAABQJJTO0:APA91bF0ju8l8DHn82GuJndzCtFh178p5cKwSs32GdnJOIk3Rgl8gRJ5jf674Vj6tFQrhCy4WelWgqdSuQ9F2imhAnAgentNfktHjnPN1L_uNCZavDJjsUYqPS07zM9gbmSzfUZqBfYG"
+    //     }
+    //   }
+    //   axios.post('https://fcm.googleapis.com/fcm/send', text, header)
+    //     .then(res => console.log(res))
+    //     .catch(err => console.log(err))
+    // }
+    // Firebase
+    // clickNoti() {
+    //   // console.log(firebase.database())
+    //   firebase.database().ref('noti/' + this.myaccount.id).on('value', data => {
+    //     this.notis = Object.values(data.val()).reverse()
+    //     console.log(this.notis)
+    //   })
+    // }
+    clickNoti() {
+      console.log(1)
     }
   },
   watch: {
@@ -212,7 +264,7 @@ export default {
     this.fetchBooks()
     this.fetchUsers()
     this.fetchNotis()
-  }
+  },
 }
 </script>
 
@@ -238,14 +290,13 @@ export default {
   max-height: 960px;
 }
 
-#nav a {
+#nav a, i {
   font-size: 1.1rem;
   font-weight: 900;
   color: #3A2F15;
 }
 
 .navbar-bg-color {
-  background: #D6CBBD;
   height: 65px;
 }
 
@@ -271,16 +322,17 @@ export default {
 input {
 	outline: none;
 }
+
 input[type=search] {
 	-webkit-appearance: textfield;
 	-webkit-box-sizing: content-box;
 	font-size: 100%;
 }
+
 input::-webkit-search-decoration,
 input::-webkit-search-cancel-button {
 	display: none; 
 }
-
 
 input[type=search] {
 	background: #ededed url(https://static.tumblr.com/ftv85bp/MIXmud4tx/search-icon.png) no-repeat 9px center;
@@ -296,6 +348,7 @@ input[type=search] {
 	-moz-transition: all .5s;
 	transition: all .5s;
 }
+
 input[type=search]:focus {
 	width: 130px;
 	background-color: #fff;
@@ -306,10 +359,10 @@ input[type=search]:focus {
 	box-shadow: 0 0 5px #88A498;
 }
 
-
 input:-moz-placeholder {
 	color: #999;
 }
+
 input::-webkit-input-placeholder {
 	color: #999;
 }
@@ -320,9 +373,11 @@ input::-webkit-input-placeholder {
 	color: transparent;
 	cursor: pointer;
 }
+
 #search-bar input[type=search]:hover {
 	background-color: #fff;
 }
+
 #search-bar input[type=search]:focus {
 	width: 130px;
 	padding-left: 35px;
@@ -330,9 +385,11 @@ input::-webkit-input-placeholder {
 	background-color: #fff;
 	cursor: auto;
 }
+
 #search-bar input:-moz-placeholder {
 	color: transparent;
 }
+
 #search-bar input::-webkit-input-placeholder {
 	color: transparent;
 }
@@ -363,24 +420,29 @@ input::-webkit-input-placeholder {
 .autocomplete-results::-webkit-scrollbar {
   width: 8px; height: 8px; border: 3px solid white; 
   } 
+
 .autocomplete-results::-webkit-scrollbar-button,.autocomplete-results::-webkit-scrollbar-button:END {
   background-color: white;
 }
+
 .autocomplete-results::-webkit-scrollbar-button:start:decrement{
 }
+
 .autocomplete-results::-webkit-scrollbar-track {
   background: white; 
   -webkit-border-radius: 10px white; 
   border-radius:10px white;
   /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.2) */
-  }
+}
+
 .autocomplete-results::-webkit-scrollbar-thumb {
   height: 10px; 
   width: 50px; 
   background: #88A498; 
   -webkit-border-radius: 15px; border-radius: 15px; 
   /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
-  }
+}
+
 .autocomplete-results:hover{
   overflow-y: scroll;
 }

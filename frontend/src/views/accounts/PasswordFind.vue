@@ -35,6 +35,7 @@ import { mapActions } from 'vuex'
 import SERVER from '@/api/api'
 import axios from 'axios'
 import router from '@/router'
+import Swal from 'sweetalert2'
 
 export default {
   name: 'PasswordFind',
@@ -86,14 +87,50 @@ export default {
       }
     },
     sendPasswordEmail(info) {
+      let timerInterval
+        Swal.fire({
+          title: '이메일을 보내는 중입니다.',
+          html: '조금만 기다려주세요',
+          timer: 4000,
+          timerProgressBar: true,
+          onBeforeOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+              const content = Swal.getContent()
+              if (content) {
+                const b = content.querySelector('b')
+                if (b) {
+                  b.textContent = Swal.getTimerLeft()
+                }
+              }
+            }, 100)
+          },
+          onClose: () => {
+            clearInterval(timerInterval)
+          }
+        })               
       axios.post(SERVER.URL + SERVER.ROUTES.password, info.data, {
         headers: { 'Content-Type': 'application/json' }
       })
-        .then (() => {
+        .then (() => {                                    
           router.push({ name: 'PasswordFindEmail'})
         })
-        .catch (err =>{
-          console.log(err.response)
+        .catch (() =>{
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: false,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'error',
+            title: "이메일이 존재하지 않습니다."
+          })
         })
     },
     findPassword(passwordFindData) {
@@ -109,6 +146,10 @@ export default {
 </script>
 
 <style scoped>
+.background {
+  background-repeat: repeat;
+}
+
 .container {
   width: 30%;
   border-radius: 25px;

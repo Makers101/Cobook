@@ -8,8 +8,8 @@ const clubStore = {
       clubs: null,
       filteredClubs: null,
       selectedClub: null,
-      selectedReading: null,
-      candidates: null,
+      selectedClubEvent: null,
+      candidates: null
     },
     getters: {
     },
@@ -23,8 +23,8 @@ const clubStore = {
       SET_SELECTED_CLUB(state, club) {
         state.selectedClub = club
       },
-      SET_SELECTED_READING(state, reading) {
-        state.selectedReading = reading
+      SET_SELECTED_CLUBEVENT(state, clubEvent) {
+        state.selectedClubEvent = clubEvent
       },
       SET_CANDIDATES(state, candidates) {
         state.candidates = candidates
@@ -75,10 +75,10 @@ const clubStore = {
           })
           .catch(err => console.log(err.response.data))
       },
-      findReading({ rootGetters, commit }, params) {
-        axios.get(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/readings/' + params.readingId, rootGetters.config)
+      findClubEvent({ rootGetters, commit }, params) {
+        axios.get(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/clubevents/' + params.clubEventId, rootGetters.config)
           .then(res => {
-            commit('SET_SELECTED_READING', res.data)
+            commit('SET_SELECTED_CLUBEVENT', res.data)
           })
           .catch(err => {
             console.log(err.response.data)
@@ -107,10 +107,46 @@ const clubStore = {
             console.log(err.response.data)
           })
       },
-      createReading({ rootGetters }, params) {
-        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/readings', params.readingCreateData, rootGetters.config)
+      updateClub({ rootState, rootGetters, dispatch }, clubUpdateData) {
+        axios.put(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubUpdateData.clubId, clubUpdateData.basicData, rootGetters.config)
+          .then(() => {
+            console.log(clubUpdateData)
+            if (clubUpdateData.clubImgFormData) {
+              axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubUpdateData.clubId + '/images', clubUpdateData.clubImgFormData, 
+                {
+                  headers: {
+                    'jwt': rootState.authToken,
+                    'Content-Type': 'multipart/form-data'
+                  }
+                })
+                .then(() => {
+                  dispatch('findMyAccount', null, { root: true })
+                  router.push({ name: 'ClubDetail', params: { clubId: clubUpdateData.clubId }})
+                })
+                .catch(err => {
+                  console.log(err.response.data)
+                })
+            } else {
+              router.push({ name: 'ClubDetail', params: { clubId: clubUpdateData.clubId }})
+            }
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      deleteClub({ rootGetters }, clubId) {
+        axios.delete(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId, rootGetters.config)
+          .then(() => {
+            router.push({ name: 'ClubList' })
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      createClubEvent({ rootGetters }, params) {
+        axios.post(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/clubevents', params.clubEventCreateData, rootGetters.config)
           .then(res => {
-            router.push({ name: 'ReadingDetail', params: { clubId: params.clubId, readingId: res.data.id }})
+            router.push({ name: 'ClubEventDetail', params: { clubId: params.clubId, clubEventId: res.data.id }})
           })
           .catch(err => {
             console.log(err.response.data)
@@ -150,14 +186,14 @@ const clubStore = {
             console.log(err.response.data)
           })
       },
-      participateReading({ rootGetters, dispatch }, params) {
+      participateClubEvent({ rootGetters, dispatch }, params) {
         axios.post(
-          SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/readings/' + params.readingId + '/apply',
+          SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/clubevents/' + params.clubEventId + '/apply',
           null,
           rootGetters.config
         )
           .then(() => {
-            dispatch('findReading', params)
+            dispatch('findClubEvent', params)
           })
           .catch(err => {
             console.log(err.response.data)
@@ -167,6 +203,29 @@ const clubStore = {
         axios.delete(SERVER.URL + SERVER.ROUTES.clubs + '/' + clubId + '/members', rootGetters.config)
           .then(() => {
             dispatch('findClub', clubId)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      updateClubEvent({ rootGetters, dispatch }, dataContainer) {
+        axios.put(
+          SERVER.URL + SERVER.ROUTES.clubs + '/' + dataContainer.params.clubId + '/clubevents/' + dataContainer.params.clubEventId,
+          dataContainer.clubEventUpdateData,
+          rootGetters.config)
+          .then(() => {
+            dispatch('findClubEvent', dataContainer.params)
+            router.push({ name: 'ClubEventDetail', params: { clubId: dataContainer.params.clubId, clubEventId: dataContainer.params.clubEventId }})
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+
+      },
+      deleteClubEvent({ rootGetters }, params) {
+        axios.delete(SERVER.URL + SERVER.ROUTES.clubs + '/' + params.clubId + '/clubevents/' + params.clubEventId, rootGetters.config)
+          .then(() => {
+            router.push({ name: 'ClubDetail', params: { clubId: params.clubId } })
           })
           .catch(err => {
             console.log(err.response.data)

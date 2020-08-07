@@ -123,10 +123,6 @@ public class Post extends BaseEntity {
         this.review = requestDto.getReview();
     }
 
-    public void deleteTags(PostTag tag) {
-        this.tags.remove(tag);
-    }
-
     public void updatePost(PostUpdateByClubReqDto requestDto) {
         this.onelineReview = requestDto.getOnelineReview();
         this.open = requestDto.getOpen();
@@ -136,5 +132,13 @@ public class Post extends BaseEntity {
 
     public void removeComment(PostComment postComment) {
         this.comments.remove(postComment);
+    }
+
+    public void addTags(List<PostTag> postTags) {
+        this.tags = postTags;
+    }
+
+    public void removeTags() {
+        this.tags.clear();
     }
 }

@@ -6,6 +6,7 @@ import com.ssafy.cobook.service.dto.post.*;
 import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.tag.TagResponseDto;
+import com.ssafy.cobook.util.PageRequest;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -45,12 +47,6 @@ public class PostController {
         Long userId = ((User) authentication.getPrincipal()).getId();
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.savePosts(requestDto, userId));
     }
-
-//    @ApiOperation(value = "팔로우 한 사람들의 게시글을 조회한다.", response = PostResDto.class)
-//    @GetMapping("/users/{userId}/follows")
-//    public ResponseEntity<List<PostResDto>> getPosts(@PathVariable("userId") final Long userId) {
-//        return ResponseEntity.status(HttpStatus.OK).body(postService.getFollowPosts(userId));
-//    }
 
     @ApiOperation(value = "게시글의 상세 내용을 조회한다.", response = PostDetailResDto.class)
     @GetMapping("/{postId}")
@@ -134,5 +130,20 @@ public class PostController {
         Long userId = ((User) authentication.getPrincipal()).getId();
         postService.deletePosts(userId, postId);
         return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "게시글을 페이징 처리해 전체 조회한다.", response = PostResponseDto.class)
+    @GetMapping("/page")
+    public ResponseEntity<Page<PostResponseDto>> getAllPostsByPaging(final PageRequest pageRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPostsPage(pageRequest));
+    }
+
+    @ApiOperation(value = "팔로우한 사람의 게시글을 조회한다")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/follows")
+    public ResponseEntity<List<PostResponseDto>> getFollowerPosts(@ApiIgnore final Authentication authentication) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        List<PostResponseDto> responseDtos = postService.getFollowerPosts(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
     }
 }

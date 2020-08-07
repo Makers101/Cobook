@@ -26,12 +26,15 @@ import com.ssafy.cobook.service.dto.post.*;
 import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.tag.TagResponseDto;
+import com.ssafy.cobook.util.PageRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -215,26 +218,25 @@ public class PostService {
         if (post.getUser() == null || !post.getUser().equals(user)) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_POST);
         }
+        post.updatePost(requestDto);
         List<PostTag> originTags = post.getTags();
+        postTagRepository.deleteAll(originTags);
+        post.removeTags();
+        for (PostTag t : originTags) {
+            Tag temp = t.getTag();
+            temp.removePostTag(t);
+        }
         List<Tag> tags = requestDto.getTags().stream()
                 .map(this::saveTag)
                 .collect(Collectors.toList());
-        for (PostTag tag : originTags) {
-            Tag temp = tag.getTag();
-            if (!tags.contains(temp)) {
-                temp.removePostTag(tag);
-                post.deleteTags(tag);
-                postTagRepository.delete(tag);
-            }
-        }
         List<PostTag> postTags = tags.stream()
                 .map(t -> saveTag(post, t))
                 .collect(Collectors.toList());
-        post.updatePost(requestDto);
-        post.setTags(postTags);
+        post.addTags(postTags);
     }
 
-    private PostTag saveTag(Post post, Tag tag) {
+    @Transactional
+    public PostTag saveTag(Post post, Tag tag) {
         if (postTagRepository.findByPostAndTag(post, tag).isPresent()) {
             return postTagRepository.findByPostAndTag(post, tag).get();
         }
@@ -245,23 +247,21 @@ public class PostService {
     public void updateClubPosts(PostUpdateByClubReqDto requestDto, Long clubId, Long postId) {
         Post post = getPostById(postId);
         Club club = getClub(clubId);
+        post.updatePost(requestDto);
         List<PostTag> originTags = post.getTags();
+        postTagRepository.deleteAll(originTags);
+        post.removeTags();
+        for (PostTag t : originTags) {
+            Tag temp = t.getTag();
+            temp.removePostTag(t);
+        }
         List<Tag> tags = requestDto.getTags().stream()
                 .map(this::saveTag)
                 .collect(Collectors.toList());
-        for (PostTag tag : originTags) {
-            Tag temp = tag.getTag();
-            if (!tags.contains(temp)) {
-                Tag delete = tagRepository.findById(temp.getId()).get();
-                delete.removePostTag(tag);
-                post.deleteTags(tag);
-            }
-        }
         List<PostTag> postTags = tags.stream()
                 .map(t -> saveTag(post, t))
                 .collect(Collectors.toList());
-        post.updatePost(requestDto);
-        post.setTags(postTags);
+        post.addTags(postTags);
     }
 
     @Transactional
@@ -270,6 +270,12 @@ public class PostService {
         Post post = getPostById(postId);
         PostComment postComment = postCommentRepository.findById(commentId)
                 .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_COMMENTS));
+        if (!user.getNickName().equals("코북이")) {
+            user.removeComment(postComment);
+            post.removeComment(postComment);
+            postCommentRepository.delete(postComment);
+            return;
+        }
         if (!postComment.getUser().equals(user)) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_COMMENT);
         }
@@ -284,6 +290,31 @@ public class PostService {
         Post post = getPostById(postId);
         if (!post.getUser().equals(user)) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_POST);
+        }
+        if (!user.getNickName().equals("코북이")) {
+            List<PostLike> postLikes = postLikeRepository.findAllByPost(post);
+            for (PostLike postLike : postLikes) {
+                postLike.removeUser();
+            }
+            postLikeRepository.deleteAll(postLikes);
+            List<PostTag> postTags = postTagRepository.findAllByPost(post);
+            for (PostTag postTag : postTags) {
+                postTag.removeTag();
+            }
+            postTagRepository.deleteAll(postTags);
+            List<PostBookMark> bookMarks = postBookMarkRepository.findAllByPost(post);
+            for (PostBookMark postBookMark : bookMarks) {
+                postBookMark.removeUser();
+            }
+            postBookMarkRepository.deleteAll(bookMarks);
+            List<PostComment> comments = postCommentRepository.findAllByPost(post);
+            for (PostComment comment : comments) {
+                comment.removeUser();
+            }
+            postCommentRepository.deleteAll(comments);
+            user.removePost(post);
+            postRepository.delete(post);
+            return;
         }
         List<PostLike> postLikes = postLikeRepository.findAllByPost(post);
         for (PostLike postLike : postLikes) {
@@ -307,5 +338,27 @@ public class PostService {
         postCommentRepository.deleteAll(comments);
         user.removePost(post);
         postRepository.delete(post);
+    }
+
+    public Page<PostResponseDto> getAllPostsPage(PageRequest pageRequest) {
+        return postRepository.findAll(pageRequest.of()).map(PostResponseDto::new);
+    }
+
+    public List<PostResponseDto> getFollowerPosts(Long userId) {
+        User user = getUserById(userId);
+        List<User> follwer = followRepository.findAllByFromUser(user).stream()
+                .map(Follow::getToUser)
+                .collect(Collectors.toList());
+        List<List<Post>> posts = follwer.stream()
+                .map(User::getPosts)
+                .collect(Collectors.toList());
+        List<PostResponseDto> ret = new ArrayList<>();
+        for (List<Post> post : posts) {
+            ret.addAll(post.stream()
+                    .map(PostResponseDto::new)
+                    .collect(Collectors.toList()));
+        }
+        Collections.sort(ret);
+        return ret;
     }
 }

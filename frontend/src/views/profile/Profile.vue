@@ -50,7 +50,9 @@
         <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileBookmark', params: { userId:this.$route.params.userId }}"> Book Mark</router-link>
         <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileOverview', params: { userId:this.$route.params.userId }}"> Overview</router-link>
       </div>
-      <router-view/>
+      <transition name="slide" mode="out-in">
+        <router-view></router-view>
+      </transition>
     </div>
   </div>
 </div>
@@ -72,22 +74,31 @@ export default {
       showFollowerForm: false,
       showFollowingForm: false,
       currentlyFollowing: null,
+      transitionName: ''
     }
   },
   components: {
     FollowerForm,
     FollowingForm
   },
-
+  // watch: {
+  //   $route(to, from) {
+  //     if (to.meta.index > from.meta.index){
+  //       this.trnasitionName='slide-left';
+  //     } else {
+  //       this.transitionName='slide-right';
+  //     }
+  //   }
+  // },
   methods: {
     ...mapActions(['createNoti']),
     ...mapActions('profileStore', ['findProfile', 'clickFollow', 'fetchFollowerList', 'fetchFollowingList']),
     clickedFollow(profile) {
       let notiData = new Object()
       notiData = {
-        from: this.myaccount.id,
         to: this.profile.id,
-        dataId: this.profile.id,
+        clubId: 0,
+        isRead: false,
         type: "follow"
       }
       this.createNoti(notiData)
@@ -143,10 +154,6 @@ export default {
     this.$router.push({ name: 'ProfileFeed',  params: { userId:this.$route.params.userId }})
   },
 
-  updated() {
-     
-  },
-
   beforeRouteUpdate (to, from, next) {
     this.showFollowerForm = false
     this.showFollowingForm = false
@@ -188,5 +195,38 @@ export default {
 .profile-description {
   white-space: pre-line;
 }
+
+.slide-leave-active {
+        transition: opacity 0.3s ease;
+        opacity: 0;
+        animation: slide-out 0.3s ease-out forwards;
+    }
+
+    .slide-leave {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .slide-enter-active {
+        animation: slide-in 0.3s ease-out forwards;
+    }
+
+    @keyframes slide-out {
+        0% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(-30px);
+        }
+    }
+
+    @keyframes slide-in {
+        0% {
+            transform: translateY(-30px);
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
 
 </style>

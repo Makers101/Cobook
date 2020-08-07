@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 public class UserUpdatePwdDto {
     private String password;
     private String passwordConfirm;
+    private String jwt;
 }

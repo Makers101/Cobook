@@ -1,6 +1,8 @@
 import SERVER from '@/api/api'
 import axios from 'axios'
 import router from '@/router'
+import Swal from 'sweetalert2'
+
 // import cookies from 'vue-cookies'
 
 const accountStore = {
@@ -16,16 +18,30 @@ const accountStore = {
   },
   actions: {
     // Signup
-    postAuthData1(info) {
+    postAuthData1({ commit } , info) {
       axios.post(SERVER.URL + info.location, info.data)
         .then(res => {
           console.log("SUCCESS", res.data)
-          // commit('SET_TOKEN', res.data, { root: true })
-          router.push({ name: 'SignupEmail' })
+          console.log(commit)
+          router.push({ name: 'SignupEmail', params: {signupEmail: info.data} })
 
         })
         .catch(err => {
-          console.log(err.response.data)
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: false,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'error',
+            title: err.response.data.message
+          })
         })
     },
     // Login
@@ -34,41 +50,87 @@ const accountStore = {
         .then(res => {
           console.log("SUCCESS")
           commit('SET_TOKEN', res.data, { root: true })
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'success',
+            title: "로그인에 성공하였습니다."
+          })
+
           router.push('/')
         })
         .catch(err => {
-          console.log(err.response.data)
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: false,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'error',
+            title: err.response.data.message
+          })
         })
     },
+    // 비밀번호
     sendPasswordEmail(info) {
       axios.post(SERVER.URL + info.location, info.data)
         .then(() => {
-          console.log("SUCCESS")
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'success',
+            title: "메일을 발송했습니다."
+          })
           router.push('/')
         })
         .catch(err => {
           console.log(err.response.data)
         })
     },
-    changePassword(info) {
-      axios.post(SERVER.URL + info.location, info.data, {
-        headers: {
-          'Content-Type': 'application/json',
-          'jwt': this.$route.query.jwt,
-        }
-      })
-        .then(() => {
-          router.push({ name: 'PasswordChangeSuccessful' })
-        })
-        .catch(err => {
-          console.log(err.response)
-        })
-    },
+    // changePassword(info) {
+    //   axios.post(SERVER.URL + info.location, info.data, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'jwt': this.$route.query.jwt,
+    //       // 'jwt': rootState.route.query.jwt
+    //     }
+    //   })
+    //     .then(() => {
+    //       router.push({ name: 'PasswordChangeSuccessful' })
+    //     })
+    //     .catch(err => {
+    //       console.log(err.response)
+    //     })
+    // },
     signup({ dispatch }, signupData) {
       const info = {
         data: signupData,
         location: SERVER.ROUTES.signup,
-        to: '/password/email'
+        to: '/signup/email'
       }
       dispatch('postAuthData1', info)
     },
@@ -80,34 +142,33 @@ const accountStore = {
       }
       dispatch('postAuthData2', info)
     },
-    clickChangePassword({ dispatch }, passwordChangeData) {
-      const info = {
-        data: passwordChangeData,
-        location: SERVER.ROUTES.changepassword,
-      }
-      dispatch('changePassword', info)
-    }
+    // clickChangePassword({ dispatch }, passwordChangeData) {
+    //   const info = {
+    //     data: passwordChangeData,
+    //     location: SERVER.ROUTES.changepassword,
+    //   }
+    //   dispatch('changePassword', info)
+    // },
     // findPassword({ dispatch }, passwordFindData) {
     //     const info = {
     //         data: passwordFindData,
     //         location: SERVER.ROUTES.password,
     //     }
     //     dispatch('sendPasswordEmail', info)
-    // }
-
-    // findPassword(email) {
-    //     const info = {
-    //         data: email,
-    //     }
-    //     axios.post(SERVER.URL + SERVER.ROUTES.password, info)
-    //         .then (res => {
-    //             console.log(res.data)
-    //             router.push({ name: 'PasswordFindEmail'})
-    //         })
-    //         .catch (err =>{
-    //             console.log(err.response)
-    //         })
     // },
+    findPassword(email) {
+        const info = {
+            data: email,
+        }
+        axios.post(SERVER.URL + SERVER.ROUTES.password, info)
+            .then (res => {
+                console.log(res.data)
+                router.push({ name: 'PasswordFindEmail'})
+            })
+            .catch (err =>{
+                console.log(err.response)
+            })
+    },
 
   },
 }

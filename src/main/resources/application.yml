@@ -1,7 +1,16 @@
 spring:
   profiles:
     active: local
-
+server:
+  port: 8090
+#  ssl:
+#    enabled: true
+#    key-store: cobook.jks # 1번에서 생성한 Key store 경로와 파일명을 적어줍니다.
+#    key-store-password: cobook  # 1번에서 생성한 Key store의 비밀번호를 적어줍니다.
+#    key-password: cobook # 1번에서 생성한 키스토어의 마지막의 키 비밀번호
+#    key-alias: cobook-ssl # 키 스토어 별칭
+#    trust-store: cobook.ts # 2번에서 생성한 Trust-Store 경로
+#    trust-store-password: cobook # Trust-Store 비밀번호
 ---
 jwt:
   secret:cobook@$&
@@ -9,10 +18,10 @@ jwt:
 spring:
   profiles: local
   datasource:
-    url: jdbc:h2:tcp://localhost/~/cobook
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mariadb://54.180.126.17:3306/cobook
+    username: cobook
+    password: cobook
+    driver-class-name: org.mariadb.jdbc.Driver
   h2:
     console:
       enabled: true

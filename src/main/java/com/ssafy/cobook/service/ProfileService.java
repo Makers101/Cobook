@@ -1,7 +1,11 @@
 package com.ssafy.cobook.service;
 
+import com.ssafy.cobook.domain.clubevent.ClubEventRepository;
+import com.ssafy.cobook.domain.clubeventmember.ClubEventMember;
+import com.ssafy.cobook.domain.clubeventmember.ClubEventMemberRepository;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
+import com.ssafy.cobook.domain.clubmember.MemberRole;
 import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.genre.Genre;
@@ -10,23 +14,19 @@ import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
 import com.ssafy.cobook.domain.postbookmark.PostBookMark;
 import com.ssafy.cobook.domain.postbookmark.PostBookMarkRepository;
-import com.ssafy.cobook.domain.reading.Reading;
-import com.ssafy.cobook.domain.reading.ReadingRepository;
-import com.ssafy.cobook.domain.readingmember.ReadingMember;
-import com.ssafy.cobook.domain.readingmember.ReadingMemberRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
+import com.ssafy.cobook.domain.usergenre.UserGenre;
 import com.ssafy.cobook.domain.usergenre.UserGenreRepository;
+import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
 import com.ssafy.cobook.service.dto.post.PostDetailResDto;
 import com.ssafy.cobook.service.dto.post.PostResponseDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
-import com.ssafy.cobook.service.dto.reading.ReadingByClubResDto;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventByClubResDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
-import com.ssafy.cobook.domain.usergenre.UserGenre;
-import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.service.dto.user.UserResponseIdDto;
 import com.ssafy.cobook.service.dto.user.UserUpdateReqDto;
 import lombok.RequiredArgsConstructor;
@@ -57,8 +57,8 @@ public class ProfileService {
     private final UserGenreRepository userGenreRepository;
     private final PostRepository postRepository;
     private final PostBookMarkRepository postBookMarkRepository;
-    private final ReadingRepository readingRepository;
-    private final ReadingMemberRepository readingMemberRepository;
+    private final ClubEventRepository clubEventRepository;
+    private final ClubEventMemberRepository clubEventMemberRepository;
 
     public ProfileResponseDto getUserInfo(Long fromUserId, Long toUserId) {
         User toUser = userRepository.findById(toUserId)
@@ -68,6 +68,7 @@ public class ProfileService {
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
         List<ClubResDto> clubList = clubMemberRepository.findAllByUser(toUser).stream()
+                .filter(m->!m.getRole().equals(MemberRole.WAITING))
                 .map(ClubMember::getClub)
                 .map(ClubResDto::new)
                 .collect(Collectors.toList());
@@ -255,13 +256,13 @@ public class ProfileService {
                 .collect(Collectors.toList());
     }
 
-    public List<ReadingByClubResDto> getUserReading(Long userId) {
+    public List<ClubEventByClubResDto> getUserReading(Long userId) {
         User user = getUserById(userId);
 
-        return readingMemberRepository.findAllByUser(user)
+        return clubEventMemberRepository.findAllByUser(user)
                 .stream()
-                .map(ReadingMember::getReading)
-                .map(ReadingByClubResDto::new)
+                .map(ClubEventMember::getClubEvent)
+                .map(ClubEventByClubResDto::new)
                 .collect(Collectors.toList());
     }
 

@@ -27,7 +27,6 @@ public class JwtTokenProvider {
 
     private final UserDetailsService userDetailsService;
 
-
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());

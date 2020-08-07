@@ -22,6 +22,10 @@ export default {
 </script>
 
 <style scoped>
+.background {
+  background-repeat: repeat;
+}
+
 .container {
   width: 30%;
   border-radius: 25px;

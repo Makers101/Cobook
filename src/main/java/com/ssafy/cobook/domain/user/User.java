@@ -3,12 +3,12 @@ package com.ssafy.cobook.domain.user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.cobook.domain.booklike.BookLike;
 import com.ssafy.cobook.domain.clubmember.ClubMember;
-import com.ssafy.cobook.domain.meetupmember.MeetUpMember;
+import com.ssafy.cobook.domain.onedayeventmember.OneDayEventMember;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.postbookmark.PostBookMark;
 import com.ssafy.cobook.domain.postcomment.PostComment;
 import com.ssafy.cobook.domain.postlike.PostLike;
-import com.ssafy.cobook.domain.readingmember.ReadingMember;
+import com.ssafy.cobook.domain.clubeventmember.ClubEventMember;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -44,7 +44,6 @@ public class User implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-
     @Enumerated(EnumType.STRING)
     private PlatformType platformType;
 
@@ -66,7 +65,7 @@ public class User implements UserDetails {
     private List<ClubMember> clubMembers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<ReadingMember> readingMembers = new ArrayList<>();
+    private List<ClubEventMember> readingMembers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserGenre> userGenres = new ArrayList<>();
@@ -75,13 +74,14 @@ public class User implements UserDetails {
     private List<BookLike> bookLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<MeetUpMember> meetUpMembers = new ArrayList<>();
+    private List<OneDayEventMember> oneDayEventMembers = new ArrayList<>();
 
     @Builder
-    public User(String email, String password, String nickName, PlatformType platformType, List<String> roles) {
+    public User(String email, String password, String nickName, Boolean accept, PlatformType platformType, List<String> roles) {
         this.email = email;
         this.password = password;
         this.nickName = nickName;
+        this.accept = accept;
         this.platformType = platformType;
         this.roles = roles;
     }
@@ -141,12 +141,12 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void enrollReading(ReadingMember readingMember) {
-        if(this.readingMembers.contains(readingMember)) {
-            readingMembers.remove(readingMember);
+    public void enrollReading(ClubEventMember clubEventMember) {
+        if(this.readingMembers.contains(clubEventMember)) {
+            readingMembers.remove(clubEventMember);
             return;
         }
-        this.readingMembers.add(readingMember);
+        this.readingMembers.add(clubEventMember);
     }
 
     public void deleteLike(PostLike postLike) {
@@ -198,11 +198,19 @@ public class User implements UserDetails {
         this.postLikes.remove(postLike);
     }
 
-    public void removeReading(ReadingMember delete) {
+    public void removeReading(ClubEventMember delete) {
         this.readingMembers.remove(delete);
     }
 
     public void removeClub(ClubMember clubMember) {
         this.clubMembers.remove(clubMember);
+    }
+
+    public void enrollOneDayEvent(OneDayEventMember member) {
+        this.oneDayEventMembers.add(member);
+    }
+
+    public void removeEvents(OneDayEventMember member) {
+        this.oneDayEventMembers.remove(member);
     }
 }

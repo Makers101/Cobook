@@ -10,10 +10,6 @@ import com.ssafy.cobook.service.dto.club.ClubResDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.user.*;
 import com.ssafy.cobook.util.JwtTokenProvider;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -25,15 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.security.Key;
-import java.util.Base64;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -67,10 +56,10 @@ public class UserService {
         user.changePassword(encodePassword);
         user = userRepository.save(user);
 
-//        String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
+        String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
 
         // 이메일 인증 메일을 보낸다
-//        preparedAndSend(userSaveRequestDto.getEmail(), isFind, token);
+        preparedAndSend(userSaveRequestDto.getEmail(), isFind, token);
 
         return new UserResponseIdDto(user.getId());
     }
@@ -78,7 +67,7 @@ public class UserService {
     @Transactional
     public void checkEmailToken(String token) {
         Long id = Long.valueOf(jwtTokenProvider.getId(token));
-        userRepository.findById(id).orElseThrow(()->new UserException(ErrorCode.WRONG_EMAIL_CHECK_AUTH));
+        userRepository.findById(id).orElseThrow(() -> new UserException(ErrorCode.WRONG_EMAIL_CHECK_AUTH));
         userRepository.updateAccept(id, true);
     }
 
@@ -117,6 +106,7 @@ public class UserService {
         ProfileResponseDto profileResponseDto = new ProfileResponseDto(user, clubList, followerList, followingList);
         return profileResponseDto;
     }
+
     private void preparedAndSend(String recipient, boolean isFind, String token) {
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -146,10 +136,10 @@ public class UserService {
         emailSender.send(messagePreparator);
     }
 
-    public void getPassword(UserEmailSimpleDto userEmailSimpleDto, boolean isFind){
+    public void getPassword(UserEmailSimpleDto userEmailSimpleDto, boolean isFind) {
         String userEmail = userEmailSimpleDto.getEmail();
         User user = userRepository.findByEmail(userEmailSimpleDto.getEmail())
-                .orElseThrow(()->new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
         String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
         preparedAndSend(userEmail, isFind, token);
@@ -157,7 +147,8 @@ public class UserService {
 
 
     @Transactional
-    public void updatePassword(Long userId, UserUpdatePwdDto userUpdatePwdDto) {
+    public void updatePassword(String token, UserUpdatePwdDto userUpdatePwdDto) {
+        Long userId = Long.valueOf(jwtTokenProvider.getId(token));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
@@ -165,4 +156,17 @@ public class UserService {
         userRepository.updatePassword(user.getId(), encodePassword);
     }
 
+    public String socialLogin(OAuth2LoginDto oAuth2LoginDto) {
+        String email = oAuth2LoginDto.getEmail();
+        String platformType = oAuth2LoginDto.getPlatformType();
+        User newUser = oAuth2LoginDto.toEntity(platformType);
+        if (!userRepository.findByEmail(email).isPresent()) {
+            userRepository.save(newUser);
+        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+
+        String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
+        return token;
+    }
 }

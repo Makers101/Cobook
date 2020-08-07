@@ -33,6 +33,9 @@ public class NotificationController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping
     public ResponseEntity<List<NotificationResponseDto>> getNotifications(@ApiIgnore final Authentication authentication) {
+        if( authentication == null) {
+            return ResponseEntity.ok().build();
+        }
         Long userId = ((User) authentication.getPrincipal()).getId();
         return ResponseEntity.status(HttpStatus.OK).body(notificationService.getNotis(userId));
     }
