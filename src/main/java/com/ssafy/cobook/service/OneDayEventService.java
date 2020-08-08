@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -78,7 +79,7 @@ public class OneDayEventService {
 
     public List<OneDayEventResponseDto> getAllEvents() {
         return eventRepository.findAll().stream()
-                .filter(e-> !e.getClosed())
+                .filter(e -> !e.getClosed())
                 .map(OneDayEventResponseDto::new)
                 .sorted()
                 .collect(Collectors.toList());
@@ -168,5 +169,16 @@ public class OneDayEventService {
         members.forEach(OneDayEventMember::signOutEvent);
         memberRepository.deleteAll(members);
         eventRepository.delete(event);
+    }
+
+    @Transactional
+    public void checkEnded() {
+        LocalDateTime now = LocalDateTime.now();
+        List<OneDayEvent> events = eventRepository.findAll().stream()
+                .filter(e -> !e.getClosed())
+                .collect(Collectors.toList());
+        for (OneDayEvent event : events) {
+            event.isEnd(now);
+        }
     }
 }

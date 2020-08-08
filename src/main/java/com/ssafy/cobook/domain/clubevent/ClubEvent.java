@@ -102,4 +102,10 @@ public class ClubEvent {
         this.book = book;
         this.book.enrollReading(this);
     }
+
+    public void isEnd(LocalDateTime now) {
+        if (this.dateTime.isBefore(now)) {
+            this.closed = true;
+        }
+    }
 }

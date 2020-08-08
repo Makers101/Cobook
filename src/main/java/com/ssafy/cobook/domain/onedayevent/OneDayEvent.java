@@ -80,4 +80,10 @@ public class OneDayEvent {
         this.book = book;
         book.addEvent(this);
     }
+
+    public void isEnd(LocalDateTime now) {
+        if (this.dateTime.isBefore(now)) {
+            this.closed = true;
+        }
+    }
 }

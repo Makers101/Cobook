@@ -30,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -192,5 +193,16 @@ public class ClubEventService {
         clubEventQuestionRepository.deleteAll(questions);
         event.delete();
         clubEventRepository.delete(event);
+    }
+
+    @Transactional
+    public void checkEnded() {
+        LocalDateTime now = LocalDateTime.now();
+        List<ClubEvent> events = clubEventRepository.findAll().stream()
+                .filter(e->!e.getClosed())
+                .collect(Collectors.toList());
+        for(ClubEvent event: events) {
+            event.isEnd(now);
+        }
     }
 }
