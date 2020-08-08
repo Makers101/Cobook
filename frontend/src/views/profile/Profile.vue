@@ -1,62 +1,67 @@
 <template>
-<div>
-  <div class="row mt-3">
-    <div class="offset-md-2 col-md-8 col-12">
-      <div class="d-flex justify-content-start">
-        <div class="d-flex justify-content-center align-items-center ml-5">
-          <img v-if="profile.profileImg" class="profile-image bg-light-ivory" :src="`${profile.profileImg}`">
-          <img v-else class="profile-image bg-light-ivory" src="http://placehold.jp/200x200.png">
-        </div>
-        <div class="part align-self-end">
-          <div class="text-left ml-3">
-            <div class="d-flex justify-content-between mt-auto">
-              <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>
-              <span v-if="myaccount.id !== profile.id">
-                <button v-if="checkFollow(profile)" class="btn px-4 bg-light-black" @click="clickedFollow(profile)">팔로잉</button>
-                <button v-else class="btn bg-green px-4 follow-button" @click="clickedFollow(profile)">팔로우</button>
-              </span>
-              
-            </div>
-            <p class="profile-description">{{ profile.description }}</p>
-            <div class="d-flex justify-content-between">
-              <p class="color-light-black font-weight-bold">
-                <span>{{ profile.followerList.length }}</span> <span @click.stop="showFollowerForm=true" class="mr-3 pointer"> FOLLOWER</span> 
-                <span>{{ profile.followingList.length }}</span><span @click.stop="showFollowingForm=true" class="pointer"> FOLLOWING</span>
-              </p>   
-              <button class="btn bg-green" v-if="myaccount.id === profile.id" @click="clickUpdate(profile.id)">프로필 수정</button>   
-            </div>
-              
+  <div class="custom-container mt-3">
+    
+    <div class="d-flex">
+      <div class="">
+        <img
+          class="profile-image bg-light-ivory"
+          :src="profile.profileImg"
+          :alt="profile.nickName"
+          v-if="profile.profileImg">
+        <img
+          class="profile-image bg-light-ivory"
+          :src="'http://placehold.jp/200x200.png?text=' + profile.nickName"
+          :alt="profile.nickName"
+          v-else >
+      </div>
+      <div class="part align-self-end">
+        <div class="text-left ml-3">
+          <div class="d-flex justify-content-between mt-auto">
+            <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>
+            <span v-if="myaccount.id !== profile.id">
+              <button v-if="checkFollow(profile)" class="btn px-4 bg-light-black" @click="clickedFollow(profile)">팔로잉</button>
+              <button v-else class="btn bg-green px-4 follow-button" @click="clickedFollow(profile)">팔로우</button>
+            </span>
+            
           </div>
+          <p class="profile-description">{{ profile.description }}</p>
+          <div class="d-flex justify-content-between">
+            <p class="color-light-black font-weight-bold">
+              <span>{{ profile.followerList.length }}</span> <span @click.stop="showFollowerForm=true" class="mr-3 pointer"> FOLLOWER</span> 
+              <span>{{ profile.followingList.length }}</span><span @click.stop="showFollowingForm=true" class="pointer"> FOLLOWING</span>
+            </p>   
+            <button class="btn bg-green" v-if="myaccount.id === profile.id" @click="clickUpdate(profile.id)">프로필 수정</button>   
+          </div>
+            
         </div>
       </div>
-      <FollowerForm 
-        v-if="showFollowerForm" 
-        v-model="showFollowerForm" 
-        :followerList = "this.followerList"
-        :profile="this.profile" 
-        id="followerModal"
-      />
-      <FollowingForm 
-      v-if="showFollowingForm" 
-      v-model="showFollowingForm" 
-      :followingList = "this.followingList"
-      :profile="this.profile"
-      id="followingModal"/>
-
-      <!-- routers -->
-      <div class="d-flex justify-content-between mt-4">
-        <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileFeed', params: { userId:this.$route.params.userId }}"> Feed</router-link>
-        <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileClub', params: { userId:this.$route.params.userId }}"> Club</router-link>
-        <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileBookmark', params: { userId:this.$route.params.userId }}"> Book Mark</router-link>
-        <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileOverview', params: { userId:this.$route.params.userId }}"> Overview</router-link>
-      </div>
-      <transition name="slide" mode="out-in">
-        <router-view></router-view>
-      </transition>
     </div>
+
+    <FollowerForm 
+      v-if="showFollowerForm" 
+      v-model="showFollowerForm" 
+      :followerList = "this.followerList"
+      :profile="this.profile" 
+      id="followerModal"
+    />
+    <FollowingForm 
+    v-if="showFollowingForm" 
+    v-model="showFollowingForm" 
+    :followingList = "this.followingList"
+    :profile="this.profile"
+    id="followingModal"/>
+
+    <!-- routers -->
+    <div class="d-flex justify-content-between mt-4">
+      <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileFeed', params: { userId:this.$route.params.userId }}"> Feed</router-link>
+      <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileClub', params: { userId:this.$route.params.userId }}"> Club</router-link>
+      <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileBookmark', params: { userId:this.$route.params.userId }}"> Book Mark</router-link>
+      <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileOverview', params: { userId:this.$route.params.userId }}"> Overview</router-link>
+    </div>
+    <transition name="slide" mode="out-in">
+      <router-view></router-view>
+    </transition>
   </div>
-</div>
-  
 </template>
 
 <script>
