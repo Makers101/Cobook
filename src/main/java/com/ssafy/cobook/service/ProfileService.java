@@ -1,5 +1,6 @@
 package com.ssafy.cobook.service;
 
+import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.clubevent.ClubEventRepository;
 import com.ssafy.cobook.domain.clubeventmember.ClubEventMember;
 import com.ssafy.cobook.domain.clubeventmember.ClubEventMemberRepository;
@@ -22,10 +23,13 @@ import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
+import com.ssafy.cobook.service.dto.genre.GenreResponseDto;
 import com.ssafy.cobook.service.dto.post.PostDetailResDto;
 import com.ssafy.cobook.service.dto.post.PostResponseDto;
+import com.ssafy.cobook.service.dto.profile.ProfileByStatisticsForGenre;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.clubevent.ClubEventByClubResDto;
+import com.ssafy.cobook.service.dto.profile.ProfileStatisticsResDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
 import com.ssafy.cobook.service.dto.user.UserResponseIdDto;
 import com.ssafy.cobook.service.dto.user.UserUpdateReqDto;
@@ -37,10 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -273,5 +274,38 @@ public class ProfileService {
                 .map(PostBookMark::getPost)
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public ProfileStatisticsResDto getUserStatics(Long userId) {
+        User user = getUserById(userId);
+
+        // 장르별 정보
+        List<GenreResponseDto> genreList = postRepository.findAllByUser(user).stream()
+                .map(Post::getBook)
+                .map(Book::getGenre)
+                .map(GenreResponseDto::new)
+                .collect(Collectors.toList());
+
+        Map<String, Long> genreData = new HashMap<>();
+
+        for (GenreResponseDto g : genreList) {
+            if (!genreData.containsKey(g.getName())) {
+                genreData.put(g.getName(), 1L);
+            } else {
+                Long count = genreData.get(g.getName());
+                genreData.put(g.getName(), count + 1);
+            }
+        }
+
+        List<ProfileByStatisticsForGenre> genresByStatistics = new ArrayList<>();
+
+        for (String key : genreData.keySet()) {
+            genresByStatistics.add(new ProfileByStatisticsForGenre(key, genreData.get(key)));
+        }
+
+
+        ProfileStatisticsResDto profileStaticsResDto = new ProfileStatisticsResDto(genresByStatistics, null);
+
+        return profileStaticsResDto;
     }
 }
