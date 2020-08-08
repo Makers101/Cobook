@@ -25,6 +25,7 @@
               <h3 class="mb-0 font-weight-bold">{{ selectedClubEvent.name }}</h3>
               <span class="badge mb-0 ml-2 clubEvent-closed-true" v-if="selectedClubEvent.closed">종료</span>
               <span class="badge mb-0 ml-2 clubEvent-closed-false" v-else>예정</span>
+              <span class="btn mb-0 ml-2 clubEvent-closed-true" @click="enterRoom(selectedClubEvent.id)">온라인 입장</span>
             </div>
             <div class="d-flex justify-content-start align-items-center">
               <span class="badge badge-genre ml-1">{{ selectedClubEvent.book.genre }}</span>
@@ -294,6 +295,9 @@ export default {
       } else {
         return false
       }
+    },
+    enterRoom(roomId) {
+      router.push({name: 'ClubEventRoom', params: { roomId: roomId }})
     }
   },
   created() {
