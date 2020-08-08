@@ -266,12 +266,12 @@ public class ProfileService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostDetailResDto> getUserBookmark(Long userId) {
+    public List<PostResponseDto> getUserBookmark(Long userId) {
         User user = getUserById(userId);
         return postBookMarkRepository.findAllByUser(user)
                 .stream()
                 .map(PostBookMark::getPost)
-                .map(PostDetailResDto::new)
+                .map(PostResponseDto::new)
                 .collect(Collectors.toList());
     }
 }

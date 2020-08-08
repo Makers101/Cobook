@@ -131,7 +131,7 @@ public class ProfileController {
 
     @ApiOperation(value = "해당 유저의 북마크를 가져온다")
     @GetMapping("/{userId}/bookmark")
-    public ResponseEntity<List<PostDetailResDto>>getBookmark(@PathVariable("userId") Long toUserId){
+    public ResponseEntity<List<PostResponseDto>> getBookmark(@PathVariable("userId") Long toUserId) {
         return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserBookmark(toUserId));
     }
 
