@@ -1,29 +1,32 @@
 <template>
-<div class="container">
-  <div class="page cover" @click="handlePage"> 
-    <div class="back backcover"></div>
-    <div class="front frontcover"><p>LAST PAGE</p>  </div>
+  <div class="container">
+    <div class="page cover" > 
+      <div class="back backcover"></div>
+      <div class="front frontcover"><p>LAST PAGE</p>  </div>
+    </div>
+    <div class="page three" @click="handlePage">
+      <div class="back"><p>Page 3 back</p></div>
+      <div class="front"><p>Page 3</p></div>
+    </div>
+    <div class="page two" @click="handlePage">
+      <div class="back"><p>Page 2 back</p></div>
+      <div class="front"><p>Page 2</p></div>
+    </div>
+    <div class="page one" @click="handlePage">
+      <div class="back"><p>Page 1 back</p></div>
+      <div class="front"><p>Page 1</p></div>
+    </div>
+    <div class="page cover" @click="handlePage"> 
+      <div class="back backcover">{{selectedBook}}</div>
+      <div class="front frontcover" >
+        <p >댓글 작성하기</p>
+      </div>
+    </div>
   </div>
-  <div class="page three" @click="handlePage">
-    <div class="back"><p>Page 3 back</p></div>
-    <div class="front"><p>Page 3</p></div>
-  </div>
-  <div class="page two" @click="handlePage">
-    <div class="back"><p>Page 2 back</p></div>
-    <div class="front"><p>Page 2</p></div>
-  </div>
-  <div class="page one" @click="handlePage">
-    <div class="back"><p>Page 1 back</p></div>
-    <div class="front"><p>Page 1</p></div>
-  </div>
-  <div class="page cover" @click="handlePage"> 
-    <div class="back backcover"></div>
-    <div class="front frontcover"><p>⊰Click to open⊱</p></div>
-  </div>
-</div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 'use strict';
 
 const pages= document.querySelectorAll('.page');
@@ -31,36 +34,22 @@ const pages= document.querySelectorAll('.page');
 let leftZ = 0;
 let rightZ = 5;
 
-function handlePage (event) {
-  const thisPage = event.currentTarget;
-  if (!thisPage.classList.contains('animationOpen') && !thisPage.classList.contains('animationClose')){
-    rightZ += -1;
-    leftZ += 1;
-    thisPage.classList.add('animationOpen');
-    thisPage.style.zIndex=leftZ;
-  } else if (thisPage.classList.contains('animationOpen')){
-    thisPage.classList.remove('animationOpen');
-    thisPage.classList.add('animationClose');
-    leftZ += -1;
-    rightZ += +1;
-    thisPage.style.zIndex=rightZ;
-  }else{
-    thisPage.classList.remove('animationClose');
-    thisPage.classList.add('animationOpen');
-    rightZ += -1;
-    leftZ += 1;
-    thisPage.classList.add('animationOpen');
-    thisPage.style.zIndex=leftZ;
-  }
-}
-
 for (const page of pages) {
-  page.addEventListener('click', handlePage);
+  page.addEventListener('click', this.handlePage);
 }
 
 export default {
   name: "Book",
+  data() {
+    return {
+
+    }
+  },
+  computed: {
+    ...mapState('bookStore', ['selectedBook']),
+  },
   methods: {
+    ...mapActions('bookStore', ['findBook']),
     handlePage(event) {
       const thisPage = event.currentTarget;
       if (!thisPage.classList.contains('animationOpen') && !thisPage.classList.contains('animationClose')){
@@ -83,14 +72,16 @@ export default {
         thisPage.style.zIndex=leftZ;
       }
     },
-    
+  },
+  created() {
+    this.findBook(this.$route.params.bookId)
   }
 }
 </script>
 
 <style scoped>
 .body {
-  height: 90vh;
+  height: 100vh;
   width: 100%;
 }
 .container {
@@ -147,10 +138,10 @@ export default {
   font-size: 15px;
 }
 .animationOpen{
-  animation: openPage 1s linear forwards;
+  animation: openPage 0.5s linear forwards;
 }
 .animationClose{
-  animation: closePage 1s linear;
+  animation: closePage 0.5s linear;
 }
 @keyframes openPage {
   0%{

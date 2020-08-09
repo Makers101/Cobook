@@ -5,18 +5,18 @@ import SERVER from '@/api/api'
 const bookStore = {
     namespaced : true,
     state: {
-        book: null,
+        selectedBook: null,
     },
     getters: {
 
     },
     mutations: {
-        SET_SELECTED_POST(state, book) {
+        SET_SELECTED_BOOK(state, book) {
             state.selectedBook = book
           },
     },
     actions: {
-        findPost({ commit }, bookId) {
+        findBook({ commit }, bookId) {
             axios.get(SERVER.URL + SERVER.ROUTES.books + '/' + bookId)
               .then(res => {
                 commit('SET_SELECTED_BOOK', res.data)
