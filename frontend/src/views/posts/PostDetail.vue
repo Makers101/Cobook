@@ -1027,7 +1027,7 @@ body {
 .scroll-sect::-webkit-scrollbar-thumb {
   height: 10px; 
   width: 50px; 
-  background: #345389; 
+  background: #88A498; 
   -webkit-border-radius: 15px; border-radius: 15px; 
   /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
 }
