@@ -32,6 +32,7 @@ public class ClubEventSaveReqDto {
                 .dateTime(datetime)
                 .place(place)
                 .description(description)
+                .closed(false)
                 .build();
     }
 }
