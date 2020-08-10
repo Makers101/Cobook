@@ -179,9 +179,9 @@
             <!-- 페이지2 -->
             <div class="page2 d-flex flex-column " style="height:700px;"> 
               <!-- 책에 대한 리뷰 리스트 -->
-              <h5 class="mb-4"><strong>다른 유저가 작성한 리뷰</strong></h5>
+              <h5 class="mb-4"><strong>다른 유저들의 리뷰</strong></h5>
               <div class="w-100" style="height:190px;">
-                <div v-if="selectedBook.posts.length">
+                <div v-if="selectedBook.posts.length === 1 && selectedBook.posts[0].id !== selectedPost.id">
                   <div class="mb-2" v-for="post in selectedBook.posts" :key="post.id">
                     <div
                       class="pointer row no-gutters" 
@@ -206,6 +206,11 @@
                       </div>
                     </div>
                   </div>
+                </div>
+                <div v-else>
+                  <h5 class="mb-1">아직 다른 유저들이 작성한 리뷰는 없어요 ㅠ_ㅠ</h5>
+                  <h5>리뷰... 작성해주시겠어요?</h5>
+                  <button class="btn btn-green mt-3" @click="clickPostCreate(selectedPost.book.id)">리뷰 작성하러 가기</button>
                 </div>
               </div>
               
@@ -414,6 +419,9 @@ export default {
     },
     bookDetail(bookId) {
       this.$router.push({ name: 'BookDetail', params: { bookId: bookId}})
+    },
+    clickPostCreate(bookId) {
+      this.$router.push({ name: 'PostCreate', params: { selectedBookId: bookId }})
     }
   },
   created() {
@@ -438,8 +446,8 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     this.findPost(to.params.postId)
-    this.commentCreateData.postId = this.$route.params['postId']
     next()
+    this.commentCreateData.postId = this.$route.params['postId']
     this.fetchComments(to.params.postId)
     this.findBook(this.selectedPost.book.id)
   },
