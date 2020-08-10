@@ -77,39 +77,44 @@
               <h5 class="mb-4"><strong>코북 유저들의 리뷰</strong></h5>
               <div class="review-list scroll-sect"  v-if="selectedBook.posts.length">
                 <div class="mb-3" v-for="post in selectedBook.posts" :key="post.id">
-                  <card 
-                    class="row no-gutters pointer" 
-                    style="height: 120px"
-                    @click="postDetail(post.id)">
-                    <div class="col-4 bg-green d-flex align-items-center left-card">
-                      <div>
-                        <span class="rounded-circle bg-green">
-                          <img
-                            v-if="!post.profileImg"
-                            class="img-fluid feed-profile-img mt-2"
-                            style="max-width: 50%; border-radius: 50%;" 
-                            src="@/assets/anonymous.png" 
-                            alt="유저 프로필 사진">
-                          <img 
-                            v-else
-                            class="img-fluid feed-profile-img mt-2"
-                            style="max-width: 50%; border-radius: 50%;" 
-                            :src="post.profileImg" alt="작성자 프로필 사진">
-                        </span>
-                        <span>
-                          <p class="mb-2">{{ post.nickName }}</p>
-                        </span>
+                  
+                    <div 
+                      class="card-style row no-gutters pointer" 
+                      style="height: 120px"
+                      @click="postDetail(post.id)"
+                      :key="post.id">
+                      <div class="col-4 bg-green d-flex align-items-center left-card">
+                        <div>
+                          <span class="rounded-circle bg-green">
+                            <img
+                              v-if="!post.profileImg"
+                              class="img-fluid feed-profile-img mt-2"
+                              style="max-width: 50%; border-radius: 50%;" 
+                              src="@/assets/anonymous.png" 
+                              alt="유저 프로필 사진">
+                            <img 
+                              v-else
+                              class="img-fluid feed-profile-img mt-2"
+                              style="max-width: 50%; border-radius: 50%;" 
+                              :src="post.profileImg" alt="작성자 프로필 사진">
+                          </span>
+                          <span>
+                            <p class="mb-2">{{ post.nickName }}</p>
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <!-- style="border: 1px solid #88A498;" -->
-                    <div class="col-8 d-flex align-items-center" >
-                      <div>
-                        <div class="px-3 pt-2 large-text text-left"><i class="fas fa-quote-left"></i></div>
-                        <div class="px-4 text-center post-onelineReview">{{ post.onelineReview }}</div>                  
-                        <div class="px-3 pb-2 large-text text-right"><i class="fas fa-quote-right"></i></div>
+                      <!-- style="border: 1px solid #88A498;" -->
+                      
+                      <div class="col-8 d-flex align-items-center">
+                        <div>
+                          <div class="px-3 pt-2 large-text text-left"><i class="fas fa-quote-left"></i></div>
+                          <div class="px-4 text-center post-onelineReview">{{ post.onelineReview }}</div>               
+                          <div class="px-3 pb-2 large-text text-right"><i class="fas fa-quote-right"></i></div>
+                        </div>
                       </div>
+                      
                     </div>
-                  </card>
+                  
                 </div>
               </div>
               <div class="review-list d-flex align-items-center" v-else>
@@ -119,6 +124,8 @@
                   <button class="btn btn-green mt-3" @click="clickPostCreate(selectedPost.book.id)">리뷰 작성하러 가기</button>
                 </div>
               </div>
+            
+              
             </div>
           </article>
           <footer>
@@ -506,7 +513,7 @@ p, h1, h2, h3, h4, h5, h6, div {
   text-decoration: none !important;
 }
 
-card {
+.card-style {
   border-radius: 100px;
   box-shadow: rgba(0,0,0,0.5) 0 1em 0.6em;
   width: 95%;
