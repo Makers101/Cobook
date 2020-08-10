@@ -17,7 +17,12 @@
                   <!-- 책 이미지 및 정보 -->
                   <div class="row no-gutters">
                     <div class="col-3">
-                      <img style="height: 15vh;" :src="selectedPost.book.bookImg" alt="책 이미지">
+                      <img 
+                        class="pointer"
+                        style="height: 100px;" 
+                        :src="selectedPost.book.bookImg" 
+                        alt="책 이미지"
+                        @click="bookDetail(selectedPost.book.id)">
                     </div>
                     <div class="col-9 text-left pr-3 align-self-center">
                       <p><mark>{{ selectedPost.book.title }}</mark></p>
@@ -132,25 +137,6 @@
             </div>
             <!-- 페이지2 -->
             <div class="page2 d-flex flex-column " style="height:700px;"> 
-              <!-- <div class="w-100 page2-header">
-                <p class="text-left">
-                  <span class="rounded-circle">
-                    <img
-                      v-if="!selectedPost.user.profileImg"
-                      class="img-fluid feed-profile-img mr-1" 
-                      src="@/assets/anonymous.png" 
-                      alt="유저 프로필 사진">
-                    <img 
-                      v-else
-                      class="img-fluid feed-profile-img mr-1" 
-                      :src="selectedPost.user.profileImg" alt="작성자 프로필 사진">
-                  </span>
-                  <strong>
-                    <span class="pointer" @click="selectUser(selectedPost.user.id)">{{ selectedPost.user.nickName }}님</span>
-                  </strong>
-                </p>
-              </div> 
-              <hr style="background-color:#efefef"> -->
               <!-- 책에 대한 리뷰 리스트 -->
               <h5 class="mb-4"><strong>다른 유저가 작성한 리뷰</strong></h5>
               <div class="w-100" style="height:190px;">
@@ -385,6 +371,9 @@ export default {
     postDetail(postId) {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
     },
+    bookDetail(bookId) {
+      this.$router.push({ name: 'BookDetail', params: { bookId: bookId}})
+    }
   },
   created() {
     this.commentCreateData.postId = this.$route.params['postId']
@@ -404,14 +393,13 @@ export default {
         return false
       }
     }
-    this.findBook(0)
     next()
   },
   beforeRouteUpdate (to, from, next) {
     this.findPost(to.params.postId)
     this.commentCreateData.postId = this.$route.params['postId']
-    this.fetchComments(this.commentCreateData.postId)
     next()
+    this.fetchComments(to.params.postId)
     this.findBook(this.selectedPost.book.id)
   },
 }
