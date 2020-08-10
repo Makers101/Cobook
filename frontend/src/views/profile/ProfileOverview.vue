@@ -1,112 +1,121 @@
 <template>
   <div>
-    <v-row class="fill-height">
-      <v-col>
-        <v-sheet height="64">
-          <v-toolbar flat color="white">
-            <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
-              Today
-            </v-btn>
-            <v-btn fab text small color="grey darken-2" @click="prev">
-              <v-icon small>mdi-chevron-left</v-icon>
-            </v-btn>
-            <v-btn fab text small color="grey darken-2" @click="next">
-              <v-icon small>mdi-chevron-right</v-icon>
-            </v-btn>
-            <v-toolbar-title v-if="$refs.calendar">
-              {{ $refs.calendar.title }}
-            </v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-menu bottom right>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  outlined
-                  color="grey darken-2"
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  <span>{{ typeToLabel[type] }}</span>
-                  <v-icon right>mdi-menu-down</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item @click="type = 'day'">
-                  <v-list-item-title>Day</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="type = 'week'">
-                  <v-list-item-title>Week</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="type = 'month'">
-                  <v-list-item-title>Month</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="type = '4day'">
-                  <v-list-item-title>4 days</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </v-toolbar>
-        </v-sheet>
-        <v-sheet height="600">
-          <v-calendar
-            ref="calendar"
-            v-model="focus"
-            color="primary"
-            :events="events"
-            :event-color="getEventColor"
-            :type="type"
-            @click:event="showEvent"
-            @click:more="viewDay"
-            @click:date="viewDay"
-            @change="updateRange"
-          ></v-calendar>
-          <v-menu
-            v-model="selectedOpen"
-            :close-on-content-click="false"
-            :activator="selectedElement"
-            offset-x
-          >
-            <v-card
-              color="grey lighten-4"
-              min-width="350px"
-              flat
+    <!-- profile-overview-calendar -->
+    <v-app>
+      <v-row class="fill-height">
+        <v-col>
+          <v-sheet height="64">
+            <v-toolbar flat color="white">
+              <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
+                Today
+              </v-btn>
+              <v-btn fab text small color="grey darken-2" @click="prev">
+                <v-icon small>mdi-chevron-left</v-icon>
+              </v-btn>
+              <v-btn fab text small color="grey darken-2" @click="next">
+                <v-icon small>mdi-chevron-right</v-icon>
+              </v-btn>
+              <v-toolbar-title v-if="$refs.calendar">
+                {{ $refs.calendar.title }}
+              </v-toolbar-title>
+              <v-spacer></v-spacer>
+              <div>
+                <small class="mr-2"><i class="fas fa-dot-circle" style="color: #ff9800"></i>독서</small>
+                <small class="mr-2"><i class="fas fa-dot-circle" style="color: #3f51b5"></i>클럽 이벤트</small>
+                <small class="mr-3"><i class="fas fa-dot-circle" style="color: #4CAF50"></i>원데이 이벤트</small>
+              </div>
+              <v-menu bottom right>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    outlined
+                    color="grey darken-2"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <span>{{ typeToLabel[type] }}</span>
+                    <v-icon right>mdi-menu-down</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item @click="type = 'day'">
+                    <v-list-item-title>Day</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="type = 'week'">
+                    <v-list-item-title>Week</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="type = 'month'">
+                    <v-list-item-title>Month</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="type = '4day'">
+                    <v-list-item-title>4 days</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-toolbar>
+          </v-sheet>
+          <v-sheet height="600">
+            <v-calendar
+              ref="calendar"
+              v-model="focus"
+              color="primary"
+              :events="events"
+              :event-color="getEventColor"
+              :type="type"
+              @click:event="showEvent"
+              @click:more="viewDay"
+              @click:date="viewDay"
+              @change="updateRange"
+            ></v-calendar>
+            <v-menu
+              v-model="selectedOpen"
+              :close-on-content-click="false"
+              :activator="selectedElement"
+              offset-x
             >
-              <v-toolbar
-                :color="selectedEvent.color"
-                dark
+              <v-card
+                color="grey lighten-4"
+                min-width="350px"
+                flat
               >
-                <v-btn icon>
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-btn icon>
-                  <v-icon>mdi-heart</v-icon>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </v-toolbar>
-              <v-card-text>
-                <span v-html="selectedEvent.details"></span>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn
-                  text
-                  color="secondary"
-                  @click="selectedOpen = false"
+                <v-toolbar
+                  :color="selectedEvent.color"
+                  dark
                 >
-                  Cancel
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-menu>
-        </v-sheet>
-      </v-col>
-    </v-row>
+                  <v-btn icon>
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                  <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                  <v-spacer></v-spacer>
+                  <v-btn icon>
+                    <v-icon>mdi-heart</v-icon>
+                  </v-btn>
+                  <v-btn icon>
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </v-toolbar>
+                <v-card-text>
+                  <span v-html="selectedEvent.details"></span>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn
+                    text
+                    color="secondary"
+                    @click="selectedOpen = false"
+                  >
+                    Cancel
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-menu>
+          </v-sheet>
+        </v-col>
+      </v-row>
+    </v-app>
     
+    <!-- profile-overview-statistics -->
     <hr>
 
-    <v-row>
+    <v-row class="mb-5">
       <v-col cols="6">
         <h3>월별 독서 통계</h3>
         <div class="d-flex justify-content-center align-items-center">
@@ -115,9 +124,9 @@
       </v-col>
       <v-col cols="6">
         <h3>장르별 독서 통계</h3>
-        <div class="d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-center align-items-center" style="min-height:400px">
           <pie-chart v-if="pieData.labels.length > 0"></pie-chart>
-          <div class="mt-5" v-else>
+          <div v-else>
             <img
               src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png"
               width="150px">
@@ -152,22 +161,15 @@ export default {
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
-      events: [{
-        name: 'sample',
-        start: '2020-08-10',
-        end: '',
-        color: 'blue',
-        timed: false,
-      }],
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }
   },
   computed: {
-    ...mapState('profileStore', ['pieData', 'barData', 'profile'])
+    ...mapState('profileStore', ['pieData', 'barData', 'profile', 'events'])
   },
   methods: {
-    ...mapActions('profileStore', ['findOverview']),
+    ...mapActions('profileStore', ['findOverview', 'collectEvents']),
     viewDay ({ date }) {
       this.focus = date
       this.type = 'day'
@@ -229,21 +231,19 @@ export default {
     rnd (a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a
     },
+    calendarType(type) {
+      this.type = type
+    }
   },
   created() {
     this.findOverview(this.$route.params.userId)
+    this.collectEvents()
   },
   mounted () {
     this.$refs.calendar.checkChange()
-    this.overview.genreByPostData.forEach(genre => {
-      this.pieData.labels.push(genre.name)
-      this.pieData.datasets[0].data.push(genre.count)
-    });
-    this.$forceUpdate();
   },
 }
 </script>
 
 <style scoped>
-
 </style>

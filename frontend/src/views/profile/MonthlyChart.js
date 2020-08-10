@@ -34,7 +34,7 @@ export default {
           mode: 'single',
           callbacks: {
             label: function(tooltipItems) {
-              return '$' + tooltipItems.yLabel;
+              return tooltipItems.yLabel + '권';
             }
           }
         },

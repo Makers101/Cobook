@@ -10,12 +10,14 @@ const profileStore = {
     feeds: null,
     bookmarks: null,
     clubs: null,
-    readings: null,
+    clubEvents: null,
+    onedayEvents: null,
     overview: null,
     followingList: null,
     followerList: null,
     pieData: null,
-    barData: null
+    barData: null,
+    events: null,
   },
   getters: {
   },
@@ -35,8 +37,11 @@ const profileStore = {
     SET_CLUBS(state, clubs) {
       state.clubs = clubs
     },
-    SET_READINGS(state, readings) {
-      state.readings = readings
+    SET_CLUB_EVENTS(state, clubEvents) {
+      state.clubEvents = clubEvents
+    },
+    SET_ONEDAY_EVENTS(state, onedayEvents) {
+      state.onedayEvents = onedayEvents
     },
     SET_OVERVIEW(state, overview) {
       state.overview = overview
@@ -52,6 +57,9 @@ const profileStore = {
     },
     SET_BARDATA(state, barData) {
       state.barData = barData
+    },
+    SET_EVENTS(state, events) {
+      state.events = events
     }
   },
   actions: {
@@ -139,14 +147,64 @@ const profileStore = {
           console.log(err.response.data)
         })
     },
-    fetchReadings({ commit }, userId) {
-      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.reading)
+    fetchClubEvents({ commit }, userId) {
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/clubevents')
         .then(res => {
-          commit('SET_READINGS', res.data)
+          commit('SET_CLUB_EVENTS', res.data)
         })
         .catch(err => {
           console.log(err.response.data)
         })
+    },
+    fetchOnedayEvents({ commit }, userId) {
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/onedayevents')
+        .then(res => {
+          commit('SET_ONEDAY_EVENTS', res.data)
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
+    collectEvents({ state, commit }) {
+      const events = []
+
+      state.clubEvents.forEach(clubEvent => {
+        events.push(
+          {
+            name: clubEvent.name,
+            start: clubEvent.datetime.slice(0, 16),
+            end: '',
+            color: 'indigo',
+            timed: false
+          }
+        )
+      })
+
+      state.onedayEvents.forEach(onedayEvent => {
+        events.push(
+          {
+            name: onedayEvent.name,
+            start: onedayEvent.datetime.slice(0, 16),
+            end: '',
+            color: 'green',
+            timed: false
+          }
+        )
+      })
+
+      state.feeds.forEach(post => {
+        events.push(
+          {
+            name: post.book.title,
+            start: post.createdAt.slice(0, 10),
+            end: '',
+            color: 'orange',
+            timed: false
+          }
+        )
+      });
+
+      commit('SET_EVENTS', events)
     },
     findOverview({ commit }, userId) {
       axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/overview')
@@ -197,8 +255,7 @@ const profileStore = {
         .catch(err => {
           console.log(err.response.data)
         })
-    }
-    ,
+    },
     updateProfile({ rootState, rootGetters, dispatch }, profileUpdateData) {
       axios.put(SERVER.URL + SERVER.ROUTES.profile, profileUpdateData.basicData, rootGetters.config )
         .then(res => {
