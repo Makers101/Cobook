@@ -77,7 +77,10 @@
               <h4 class="mb-3">유저들이 쓴 리뷰 보러가기</h4>
               <div class="review-list scroll-sect"  v-if="selectedBook.posts.length">
                 <div class="mb-3" v-for="post in selectedBook.posts" :key="post.id">
-                  <card class="row no-gutters" style="height: 140px">
+                  <card 
+                    class="row no-gutters pointer" 
+                    style="height: 140px"
+                    @click="postDetail(post.id)">
                     <div class="col-4 bg-green d-flex align-items-center left-card">
                       <div>
                         <span class="rounded-circle bg-green">
@@ -149,7 +152,10 @@ export default {
     ...mapActions('bookStore', ['findBook']),
     clickPostCreate(bookId) {
       this.$router.push({ name: 'PostCreate', params: { selectedBookId: bookId }})
-    }
+    },
+    postDetail(postId) {
+      this.$router.push({ name: 'PostDetail', params: { postId: postId }})
+    },
   },
   created() {
     this.findBook(this.$route.params.bookId)
