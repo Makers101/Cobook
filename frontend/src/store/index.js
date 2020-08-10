@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 import accountStore from '@/store/modules/accountStore'
+import bookStore from '@/store/modules/bookStore'
 import clubStore from '@/store/modules/clubStore'
 import onedayEventStore from '@/store/modules/onedayEventStore'
 import postStore from '@/store/modules/postStore'
@@ -117,6 +118,7 @@ export default new Vuex.Store({
 
   modules: {
     accountStore: accountStore,
+    bookStore: bookStore,
     clubStore: clubStore,
     onedayEventStore: onedayEventStore,
     postStore: postStore,
