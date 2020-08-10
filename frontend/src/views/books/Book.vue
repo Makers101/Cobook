@@ -78,7 +78,7 @@
               <div class="review-list scroll-sect"  v-if="selectedBook.posts.length">
                 <div class="mb-3" v-for="post in selectedBook.posts" :key="post.id">
                   <card class="row no-gutters" style="height: 140px">
-                    <div class="col-4 bg-green d-flex align-items-center">
+                    <div class="col-4 bg-green d-flex align-items-center left-card">
                       <div>
                         <span class="rounded-circle bg-green">
                           <img
@@ -503,6 +503,12 @@ p, h1, h2, h3, h4, h5, h6, div {
 card {
   border-radius: 100px;
   box-shadow: rgba(0,0,0,0.5) 0 1em 0.6em;
+  width: 95%;
+}
+
+.left-card {
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
 }
 
 .post-onelineReview {
