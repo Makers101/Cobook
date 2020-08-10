@@ -1,7 +1,7 @@
 package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.service.BookService;
-import com.ssafy.cobook.service.dto.book.BookDetailsDto;
+import com.ssafy.cobook.service.dto.book.BookDetailResponseDto;
 import com.ssafy.cobook.service.dto.book.BookResponseDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class BookController {
 
     @ApiOperation(value = "책 상세조회")
     @GetMapping("/{bookId}")
-    public ResponseEntity<BookDetailResponseDto> getBookDetails(@PathVariable('bookId') final Long bookId) {
+    public ResponseEntity<BookDetailResponseDto> getBookDetails(@PathVariable("bookId") final Long bookId) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.getDetials(bookId));
     }
 }

@@ -32,8 +32,9 @@ public class PostDetailResDto {
     private List<Long> likeUsers;
     private List<Long> bookmarkUsers;
     private List<TagByPostDto> tags;
+    private List<PostSimpleResDto> posts;
 
-    public PostDetailResDto(Post post) {
+    public PostDetailResDto(Post post, List<PostSimpleResDto> posts) {
         this.id = post.getId();
         if (post.ofClub()) {
             this.club = new ClubByPostDto(post.getClub());
@@ -58,5 +59,6 @@ public class PostDetailResDto {
                 .map(PostTag::getTag)
                 .map(TagByPostDto::new)
                 .collect(Collectors.toList());
+        this.posts = posts;
     }
 }
