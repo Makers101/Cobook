@@ -1,5 +1,4 @@
 <template>
-
   <div>
     <div id="wrapper">
       <div id="container">
@@ -8,10 +7,10 @@
           </header>
           <article>
             <!-- 페이지1 -->
-            <div class="page1 d-flex flex-column" style="height: 600px">
+            <div class="page1 d-flex flex-column" style="height: 580px">
               <!-- 책 제목 -->
-              <div> 
-                <h2 class="chapter-title book-title pt-0" style="height:120px;">{{selectedBook.title }}</h2>
+              <div class="d-flex align-items-center" style="height:85px;"> 
+                <h2 class="chapter-title book-title pt-0">{{selectedBook.title }}</h2>
               </div>
               <div class="d-flex">
                 <!-- 책 이미지 -->
@@ -33,13 +32,13 @@
                       <span class="text-left">{{ selectedBook.author }} </span>
                     </div>
                   </div>
-                  <div class="row no-gutters align-items-center text-left" v-if="selectedBook.translators.length > 1">
+                  <div class="row no-gutters align-items-center text-left" v-if="selectedBook.translators.length">
                     <div class="col-5 col-lg-4"> 
                       <strong>번역가</strong>
                       <i class="fas fa-language color-green ml-1 mr-2" width="20px"></i>
                     </div>
                     <div class="col-7 col-lg-8">  
-                      <span>{{ selectedBook.translator }}</span>
+                      <span>{{ selectedBook.translators }}</span>
                     </div>
                   </div>
                   <div class="row no-gutters align-items-center text-left">
@@ -63,26 +62,61 @@
                 </div>
               </div>
               <!-- 책 줄거리 -->
-              <div class="mt-3 text-left">
+              <div class="mt-3 text-left" v-if="selectedBook.contents !== ''">
                 {{ selectedBook.contents }}
               </div>
+              <div class="mt-5" v-else>
+                <h6>줄거리가 없습니다.</h6>
+              </div>
               <div class="text-right mt-auto">
-                <button class="btn btn-green"><a class="url" :href="selectedBook.url" target="_blank">자세히보기</a></button>
+                <button class="btn btn-green m-0"><a class="url" :href="selectedBook.url" target="_blank">자세히보기</a></button>
               </div>
             </div>
             <!-- 페이지2 -->
             <div class="page2" style="height: 600px">
-              <div>
-                <h4>유저들이 쓴 리뷰 보러가기</h4>
-                <div v-if="selectedBook.posts.length">
-                  <div v-for="post in selectedBook.posts" :key="post.id">
-                    
-
-                  </div>
+              <h4 class="mb-3">유저들이 쓴 리뷰 보러가기</h4>
+              <div class="review-list scroll-sect"  v-if="selectedBook.posts.length">
+                <div class="mb-3" v-for="post in selectedBook.posts" :key="post.id">
+                  <card class="row no-gutters" style="height: 140px">
+                    <div class="col-4 bg-green d-flex align-items-center">
+                      <div>
+                        <span class="rounded-circle bg-green">
+                          <img
+                            v-if="!post.profileImg"
+                            class="img-fluid feed-profile-img mt-2"
+                            style="max-width: 50%; border-radius: 50%;" 
+                            src="@/assets/anonymous.png" 
+                            alt="유저 프로필 사진">
+                          <img 
+                            v-else
+                            class="img-fluid feed-profile-img mt-2"
+                            style="max-width: 50%; border-radius: 50%;" 
+                            :src="post.profileImg" alt="작성자 프로필 사진">
+                        </span>
+                        <span>
+                          <p class="mb-2">{{ post.nickName }}</p>
+                        </span>
+                      </div>
+                    </div>
+                    <!-- style="border: 1px solid #88A498;" -->
+                    <div class="col-8 d-flex align-items-center" >
+                      <div>
+                        <div class="px-3 pt-2 large-text text-left"><i class="fas fa-quote-left"></i></div>
+                        <div class="px-4 text-center post-onelineReview">{{ post.onelineReview }}</div>                  
+                        <div class="px-3 pb-2 large-text text-right"><i class="fas fa-quote-right"></i></div>
+                      </div>
+                    </div>
+                  </card>
+                </div>
+              </div>
+              <div class="review-list d-flex align-items-center" v-else>
+                <div>
+                  <h5 class="mb-1">아직 다른 유저들이 작성한 리뷰는 없어요 ㅠ_ㅠ</h5>
+                  <h5>리뷰... 작성해주시겠어요?</h5>
+                  <button class="btn btn-green mt-3" @click="clickPostCreate(selectedPost.book.id)">리뷰 작성하러 가기</button>
                 </div>
               </div>
             </div>
-              
           </article>
           <footer>
             <ol id="page-numbers">
@@ -113,6 +147,9 @@ export default {
   },
   methods: {
     ...mapActions('bookStore', ['findBook']),
+    clickPostCreate(bookId) {
+      this.$router.push({ name: 'PostCreate', params: { selectedBookId: bookId }})
+    }
   },
   created() {
     this.findBook(this.$route.params.bookId)
@@ -178,10 +215,6 @@ body {
     margin: 0;
 }
 
-.open-book header * {
-    font-size: 0.75em;
-    text-transform: uppercase;
-}
 
 .open-book footer {
     padding-top: 1em;
@@ -203,7 +236,7 @@ body {
     background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCA2NCA2NCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNjQgNjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCiAgICA8Zz4NCiAgICAJPHBhdGggZD0iTTAsMzJMMzIsMGwzMiwzMkwzMiw2NEwwLDMyeiBNOCwzMmwyNCwyNGwyNC0yNEwzMiw4TDgsMzJ6IE0xNiwzMmwxNi0xNmwxNiwxNkwzMiw0OEwxNiwzMnogTTI0LDMybDgsOGw4LThsLTgtOEwyNCwzMnoiIC8+DQogICAgPC9nPg0KPC9zdmc+) bottom center no-repeat;
     background-size: 0.5em 0.5em;
     font: 700 7vw/1.25 'Playfair Display', sans-serif;
-    font-size: 1.7em !important;
+    font-size: 1.5em !important;
     letter-spacing: 0.125em;
     margin: 0 0 1em 0;
     padding: 1em 0;
@@ -446,11 +479,6 @@ body {
         display: block;
     }
 
-    /* Chapter Title */
-    .open-book .chapter-title {
-        font-size: 3em;
-    }
-
     .open-book .chapter-title:before,
     .open-book .chapter-title:after {
         height: 0.125em;
@@ -470,5 +498,46 @@ p, h1, h2, h3, h4, h5, h6, div {
 
 .url:active, .url:link, .url:active {
   text-decoration: none !important;
+}
+
+card {
+  border-radius: 100px;
+  box-shadow: rgba(0,0,0,0.5) 0 1em 0.6em;
+}
+
+.post-onelineReview {
+  word-break: keep-all;
+}
+
+.review-list {
+  overflow-y: auto;
+  height: 550px;
+}
+
+/* scroll */
+.scroll-sect::-webkit-scrollbar {
+  width: 8px; height: 8px; border: 3px solid white; 
+} 
+
+.scroll-sect::-webkit-scrollbar-button,.scroll-sect::-webkit-scrollbar-button:END {
+  background-color: white;
+}
+
+.scroll-sect::-webkit-scrollbar-button:start:decrement{
+}
+
+.scroll-sect::-webkit-scrollbar-track {
+  background: white; 
+  -webkit-border-radius: 10px white; 
+  border-radius:10px white;
+  /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.2) */
+}
+
+.scroll-sect::-webkit-scrollbar-thumb {
+  height: 10px; 
+  width: 50px; 
+  background: #88A498 ; 
+  -webkit-border-radius: 15px; border-radius: 15px; 
+  /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
 }
 </style>
