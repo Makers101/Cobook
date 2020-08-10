@@ -74,7 +74,7 @@
             </div>
             <!-- 페이지2 -->
             <div class="page2" style="height: 600px">
-              <h4 class="mb-3">유저들이 쓴 리뷰 보러가기</h4>
+              <h4 class="mb-3">코북 유저들의 리뷰</h4>
               <div class="review-list scroll-sect"  v-if="selectedBook.posts.length">
                 <div class="mb-3" v-for="post in selectedBook.posts" :key="post.id">
                   <card 
