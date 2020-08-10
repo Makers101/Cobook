@@ -43,6 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -288,7 +289,7 @@ public class ProfileService {
                 .map(GenreResponseDto::new)
                 .collect(Collectors.toList());
 
-        Map<String, Long> genreData = new HashMap<>();
+        Map<String, Long> genreData = new TreeMap<>();
 
         for (GenreResponseDto g : genreList) {
             if (!genreData.containsKey(g.getName())) {
@@ -304,38 +305,41 @@ public class ProfileService {
         for (String key : genreData.keySet()) {
             genresByStatistics.add(new ProfileByStatisticsForGenre(key, genreData.get(key)));
         }
+        genresByStatistics.sort((ProfileByStatisticsForGenre data1, ProfileByStatisticsForGenre data2)
+                -> data2.getCount().compareTo(data1.getCount()));
 
         // 기간별 정보
         List<PostResponseDto> periodsDate = postRepository.findAllByUser(user).stream()
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
 
-        Map<String, Long> periodData = new HashMap<>();
+        Map<String, Long> periodData = new TreeMap<>();
 
         LocalDate curDate = LocalDate.now(); // 현재 날짜
-        LocalDate[] preDate = new LocalDate[13];
-        preDate[0] = curDate;
-        for (int month = 1; month <= 12; month++) {
-            preDate[month] = curDate.minusDays(30 * month);
+        String[] preDate = new String[12];
+        preDate[0] = curDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        periodData.put(preDate[0], 0L);
+
+        for (int month = 1; month < 12; month++) {
+            preDate[month] = curDate.minusMonths(month).format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            periodData.put(preDate[month], 0L);
         }
 
         for (PostResponseDto p : periodsDate) {
-            LocalDate postDate = LocalDate.from(p.getCreatedAt());
+            LocalDate postLocalDate = LocalDate.from(p.getCreatedAt());
+            String postStringDate = postLocalDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
-            for (int month = 0; month <= 11; month++) {
-                if ((preDate[month].isEqual(postDate) || preDate[month].isAfter(postDate)) && preDate[month + 1].isBefore(postDate)) {
-                    String periods = preDate[month+1] + " ~ " + preDate[month];
-
-                    if (!periodData.containsKey(periods)) {
-                        periodData.put(periods, 1L);
-                    } else {
+            for (int month = 0; month < 12; month++) {
+                if (preDate[month].equals(postStringDate)) {
+                    String periods = preDate[month];
                         Long count = periodData.get(periods);
                         periodData.put(periods, count + 1);
-                    }
                     break;
                 }
             }
         }
+
 
         List<ProfileByStatisticsForPeriod> periodsByStatistics = new ArrayList<>();
 
