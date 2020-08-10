@@ -6,6 +6,7 @@ import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.club.ClubRepository;
 import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.follow.FollowRepository;
+import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
 import com.ssafy.cobook.domain.postbookmark.PostBookMark;
@@ -20,6 +21,7 @@ import com.ssafy.cobook.domain.tag.Tag;
 import com.ssafy.cobook.domain.tag.TagRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
+import com.ssafy.cobook.domain.usergenre.UserGenre;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.service.dto.post.*;
@@ -102,7 +104,12 @@ public class PostService {
 
     public PostDetailResDto details(Long postId) {
         Post post = getPostById(postId);
-        return new PostDetailResDto(post);
+        Book book = post.getBook();
+        List<PostSimpleResDto> posts = book.getPosts().stream()
+                .filter(p -> !p.getId().equals(postId))
+                .map(PostSimpleResDto::new)
+                .collect(Collectors.toList());
+        return new PostDetailResDto(post, posts);
     }
 
     @Transactional
@@ -360,5 +367,24 @@ public class PostService {
         }
         Collections.sort(ret);
         return ret;
+    }
+
+    public List<PostResponseDtoByGenre> getGenresPosts(Long userId) {
+        User user = getUserById(userId);
+        List<String> genres = user.getUserGenres().stream()
+                .map(UserGenre::getGenre)
+                .map(Genre::getGenreName)
+                .collect(Collectors.toList());
+        List<PostResponseDtoByGenre> posts = new ArrayList<>();
+        for (String genre : genres) {
+            PostResponseDtoByGenre dto = new PostResponseDtoByGenre(genre);
+            List<PostResponseDto> result = postRepository.findAll().stream()
+                    .filter(p->p.intrested(genre))
+                    .map(PostResponseDto::new)
+                    .collect(Collectors.toList());
+            dto.setPosts(result);
+            posts.add(dto);
+        }
+        return posts;
     }
 }

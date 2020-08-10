@@ -141,4 +141,8 @@ public class Post extends BaseEntity {
     public void removeTags() {
         this.tags.clear();
     }
+
+    public boolean intrested(String genre) {
+        return this.book.getGenre().getGenreName().equals(genre);
+    }
 }
