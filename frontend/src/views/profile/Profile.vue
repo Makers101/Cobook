@@ -99,7 +99,7 @@ export default {
   // },
   methods: {
     ...mapActions(['createNoti']),
-    ...mapActions('profileStore', ['findProfile', 'clickFollow', 'fetchFollowerList', 'fetchFollowingList']),
+    ...mapActions('profileStore', ['findProfile', 'clickFollow', 'fetchFollowerList', 'fetchFollowingList', 'findOverview']),
     clickedFollow(profile, type) {
       if (type === 'unfollow') {
         if (confirm('팔로우를 취소하시겠습니까?') === false) {
@@ -159,7 +159,8 @@ export default {
   created() {
     this.findProfile(this.$route.params.userId)
     this.fetchFollowerList(this.$route.params.userId) 
-    this.fetchFollowingList(this.$route.params.userId) 
+    this.fetchFollowingList(this.$route.params.userId)
+    this.findOverview(this.$route.params.userId)
   },
 
   mounted() {
