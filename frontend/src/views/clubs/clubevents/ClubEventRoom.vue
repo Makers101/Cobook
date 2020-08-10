@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ roomId }}
+    클럽 이벤트 방 번호: {{ roomId }}
   </div>
 </template>
 
