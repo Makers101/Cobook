@@ -217,9 +217,10 @@
                   <div
                   v-for="comment in comments"
                   :key="`comment-${comment.id}`">
-                    <div class="d-flex justify-content-between">
-                      <div class="m-0">
+                    <div class="d-flex">
+                      <div class="m-0 p-0 col-9 text-left">
                         <span class="rounded-circle">
+                          <!-- 댓글 프로필 사진 -->
                           <img
                             v-if="!comment.user.profileImg"
                             class="img-fluid feed-profile-img" 
@@ -230,22 +231,21 @@
                             class="img-fluid feed-profile-img" 
                             :src="comment.user.profileImg" alt="작성자 프로필 사진">
                         </span>
-                        <span class="ml-2 pointer" @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
+                        <!-- 댓글 Username -->
+                        <span class="pointer ml-2 mr-2" @click="selectUser(comment.user.id)"><strong>{{ comment.user.nickName }}</strong></span>
                         <span v-if="comment.isClub" class="badge bg-green">Club</span>
+                        <!-- 댓글-->
+                        <span class="m-0">{{ comment.content }}</span>
                       </div>
-                      <div class="m-0">
-                          <!-- @click="deleteComment({post.id, comment.id" -->
-                        <div
-                          class="btn text-danger btn-sm"
-                          v-if="comment.user.id === myaccount.id"
-                          @click="deleteComment({ postId: commentCreateData.postId, commentId: comment.id })"
-                        > 삭제
-                        </div>
+                      <div
+                        class="btn text-danger btn-sm m-0 p-0 col-3"
+                        v-if="comment.user.id === myaccount.id"
+                        @click="deleteComment({ postId: commentCreateData.postId, commentId: comment.id })"
+                      > 삭제
                       </div>
                     </div>
-                    <div class="col-12 text-left wrapping py-0 mb-3">
-                      <div>{{ comment.content }}</div>
-                      <div><small style="color:#979797">{{ comment.createdAt | moment("from", "now") }}</small></div>
+                    <div class="text-left mb-3">
+                      <small style="color:#979797">{{ comment.createdAt | moment("from", "now") }}</small>
                     </div>
                   </div>
                 </div>
