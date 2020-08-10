@@ -1,8 +1,8 @@
 <template>
   <div class="custom-container mt-3">
     
-    <div class="d-flex">
-      <div class="">
+    <div class="row">
+      <div class="col-3 d-flex justify-content-center align-items-center">
         <img
           class="profile-image bg-light-ivory"
           :src="profile.profileImg"
@@ -12,27 +12,29 @@
           class="profile-image bg-light-ivory"
           :src="'http://placehold.jp/200x200.png?text=' + profile.nickName"
           :alt="profile.nickName"
-          v-else >
+          v-else>
       </div>
-      <div class="part align-self-end">
-        <div class="text-left ml-3">
-          <div class="d-flex justify-content-between mt-auto">
-            <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>
-            <span v-if="myaccount.id !== profile.id">
-              <button v-if="checkFollow(profile)" class="btn px-4 bg-light-black" @click="clickedFollow(profile)">팔로잉</button>
-              <button v-else class="btn bg-green px-4 follow-button" @click="clickedFollow(profile)">팔로우</button>
-            </span>
-            
-          </div>
+      <div class="col-9 part text-left d-flex flex-column justify-content-between">
+        <div class="d-flex flex-column justify-content-start">
+          <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>
           <p class="profile-description">{{ profile.description }}</p>
+        </div>
+        
+        <div class="d-flex flex-column justify-content-end">
+          <p class="color-light-black font-weight-bold mb-2">
+            <span>{{ profile.followerList.length }}</span> <span @click.stop="showFollowerForm=true" class="mr-3 pointer"> FOLLOWER</span> 
+            <span>{{ profile.followingList.length }}</span><span @click.stop="showFollowingForm=true" class="pointer"> FOLLOWING</span>
+          </p> 
           <div class="d-flex justify-content-between">
-            <p class="color-light-black font-weight-bold">
-              <span>{{ profile.followerList.length }}</span> <span @click.stop="showFollowerForm=true" class="mr-3 pointer"> FOLLOWER</span> 
-              <span>{{ profile.followingList.length }}</span><span @click.stop="showFollowingForm=true" class="pointer"> FOLLOWING</span>
-            </p>   
-            <button class="btn bg-green" v-if="myaccount.id === profile.id" @click="clickUpdate(profile.id)">프로필 수정</button>   
+            <div>
+              <button class="btn btn-genre mr-2" disabled v-for="genre in profile.likeGenres" :key="genre.id">#{{ genre.name }}</button>
+            </div>
+            <span v-if="myaccount.id !== profile.id">
+              <button v-if="checkFollow(profile)" class="btn px-4 btn-following" @click="clickedFollow(profile, 'unfollow')">팔로잉</button>
+              <button v-else class="btn btn-follow px-4" @click="clickedFollow(profile, 'follow')">팔로우</button>
+            </span>
+            <button class="btn btn-secondary" v-if="myaccount.id === profile.id" @click="clickUpdate(profile.id)">프로필 수정</button>   
           </div>
-            
         </div>
       </div>
     </div>
@@ -98,7 +100,13 @@ export default {
   methods: {
     ...mapActions(['createNoti']),
     ...mapActions('profileStore', ['findProfile', 'clickFollow', 'fetchFollowerList', 'fetchFollowingList']),
-    clickedFollow(profile) {
+    clickedFollow(profile, type) {
+      if (type === 'unfollow') {
+        if (confirm('팔로우를 취소하시겠습니까?') === false) {
+          return false
+        }
+      }
+
       let notiData = new Object()
       notiData = {
         to: this.profile.id,
@@ -139,7 +147,6 @@ export default {
       if (flag === false){
         return false
       }
-
     },
     closeDialog: function() {
       this.showFollowerDialog = false
@@ -173,8 +180,8 @@ export default {
 <style scoped>
 .profile-image{
   border-radius: 50%;
-  width: 10vw;
-  height: 10vw;
+  width: 12vw;
+  height: 12vw;
 }
 
 .part {
@@ -199,6 +206,22 @@ export default {
 
 .profile-description {
   white-space: pre-line;
+}
+
+.btn-genre {
+  background-color: #88A498;
+  color: #F8F8F8;
+  opacity: 1;
+}
+
+.btn-following {
+  background-color: #88A498;
+  color: #F8F8F8;
+}
+
+.btn-follow {
+  border-color: #88A498 !important;
+  color: #88A498 !important;
 }
 
 .slide-leave-active {
