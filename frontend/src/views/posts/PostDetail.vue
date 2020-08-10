@@ -8,10 +8,12 @@
           </header>
           <article>
             <!-- 페이지1 -->
-            <div class="page1 d-flex flex-column w-100" style="height:750px;">
+            <div class="page1 d-flex flex-column w-100" style="height:700px;">
                 <div class="w-100">
                   <!-- 한줄평-->
-                  <h2 class="chapter-title book-title pt-0">{{ selectedPost.onelineReview }}</h2>
+                  <div> 
+                    <h2 class="chapter-title book-title pt-0" style="height:85px;">{{ selectedPost.onelineReview }}</h2>
+                  </div>
                   <!-- 책 이미지 및 정보 -->
                   <div class="row no-gutters">
                     <div class="col-3">
@@ -129,7 +131,7 @@
                 
             </div>
             <!-- 페이지2 -->
-            <div class="page2 d-flex flex-column " style="height:750px;"> 
+            <div class="page2 d-flex flex-column " style="height:700px;"> 
               <!-- <div class="w-100 page2-header">
                 <p class="text-left">
                   <span class="rounded-circle">
@@ -149,10 +151,41 @@
                 </p>
               </div> 
               <hr style="background-color:#efefef"> -->
+              <!-- 책에 대한 리뷰 리스트 -->
+              <h5 class="mb-4"><strong>다른 유저가 작성한 리뷰</strong></h5>
+              <div class="w-100" style="height:190px;">
+                <div v-if="selectedBook.posts.length">
+                  <div class="mb-2" v-for="post in selectedBook.posts" :key="post.id">
+                    <div
+                      class="pointer row no-gutters" 
+                      v-if="post.id !== selectedPost.id"
+                      @click="postDetail(post.id)">
+                      <div class="m-0 col-3 text-left">
+                        <span class="rounded-circle">
+                          <img
+                            v-if="!post.profileImg"
+                            class="img-fluid feed-profile-img" 
+                            src="@/assets/anonymous.png" 
+                            alt="유저 프로필 사진">
+                          <img 
+                            v-else
+                            class="img-fluid feed-profile-img" 
+                            :src="post.profileImg" alt="작성자 프로필 사진">
+                        </span>
+                        <small class="ml-2">{{ post.nickName }}</small>
+                      </div>
+                      <div class="changeFont m-0 col-9 text-left">
+                        "{{ post.onelineReview}}"
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <!-- 댓글 -->
-              <h5 class="text-left">댓글</h5>
+              <h5 class="text-left mt-2 mb-3"><strong>댓글</strong></h5>
               <!-- 댓글 리스트 -->
-              <div class="comment-list w-100 scroll-sect" style="height:700px">
+              <div class="comment-list w-100 scroll-sect" style="height:350px">
                 <div v-if="comments.length">
                   <div
                   v-for="comment in comments"
@@ -190,21 +223,19 @@
                   </div>
                 </div>
                 <div v-else class="d-flex align-items-center">
-                  <div style="margin-top:120px;">
-                    <img src="https://user-images.githubusercontent.com/25967949/89524240-2e43c300-d81f-11ea-9a05-b1b45d70172f.png">
+                  <div>
+                    <img src="https://user-images.githubusercontent.com/25967949/89524240-2e43c300-d81f-11ea-9a05-b1b45d70172f.png" width="300px">
                     <h5>작성된 댓글이 없습니다.</h5>
                   </div>
 
                 </div>
               </div>
-        
-              <hr class="mt-1" style="background-color:#efefef">
               
               <div class="comment mt-auto w-100" id="comment">
                 <!-- 댓글 작성 -->
-                <div class="input-group row no-gutters commentSection" style="height:70px;">
+                <div class="input-group row no-gutters commentSection" style="height:65px;">
                   <textarea
-                    class="col-11 textareaSection p-3" 
+                    class="col-11 textareaSection p-1" 
                     @keyup.enter="enterComment" 
                     @input="activeBtn"
                     v-model="commentCreateData.content" 
@@ -263,9 +294,11 @@ export default {
   computed: {
     ...mapState(['myaccount']),
     ...mapState('postStore', ['selectedPost', 'comments']),
+    ...mapState('bookStore', ['selectedBook']),
   },
   methods: {
     ...mapActions('postStore', ['findPost', 'fetchComments', 'createComment', 'createLike', 'createBookmark', 'deleteComment', 'deletePost']),
+    ...mapActions('bookStore', ['findBook']),
     clickLike(post) {
       this.createLike(post.id)
       if (post.likeUsers.includes(this.myaccount.id)) {
@@ -348,12 +381,16 @@ export default {
       } else {
         return false
       }
-    }
+    },
+    postDetail(postId) {
+      this.$router.push({ name: 'PostDetail', params: { postId: postId }})
+    },
   },
   created() {
     this.commentCreateData.postId = this.$route.params['postId']
     this.findPost(this.commentCreateData.postId)
     this.fetchComments(this.commentCreateData.postId)
+    this.findBook(this.selectedPost.book.id)
     
   },
   mounted() {
@@ -367,8 +404,16 @@ export default {
         return false
       }
     }
+    this.findBook(0)
     next()
-  }
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.findPost(to.params.postId)
+    this.commentCreateData.postId = this.$route.params['postId']
+    this.fetchComments(this.commentCreateData.postId)
+    next()
+    this.findBook(this.selectedPost.book.id)
+  },
 }
 </script>
 
@@ -951,6 +996,29 @@ body {
   background: #345389; 
   -webkit-border-radius: 15px; border-radius: 15px; 
   /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
+}
+
+/* .gradient {
+  background-image: linear-gradient(
+    to right,
+    hsl(211, 100%, 50%),
+    hsl(179, 100%, 30%)
+  );
+  transition: background-image 0.5s linear;
+}
+
+.gradient:hover {
+  background-image: linear-gradient(
+    to bottom,
+    hsl(344, 100%, 50%),
+    hsl(31, 100%, 40%)
+  );
+} */
+
+@import url('https://fonts.googleapis.com/css2?family=Cute+Font&family=East+Sea+Dokdo&family=Hi+Melody&family=Nanum+Brush+Script&family=Yeon+Sung&display=swap');
+
+.changeFont {
+font-family: 'Yeon Sung', cursive;
 }
 
 </style>
