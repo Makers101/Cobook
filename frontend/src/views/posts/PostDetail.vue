@@ -181,12 +181,11 @@
               <!-- 책에 대한 리뷰 리스트 -->
               <h5 class="mb-4"><strong>다른 유저들의 리뷰</strong></h5>
               <div class="w-100" style="height:190px;">
-                <div v-if="selectedBook.posts.length === 1 && selectedBook.posts[0].id !== selectedPost.id">
-                  <div class="mb-2" v-for="post in selectedBook.posts" :key="post.id">
+                <div v-if="selectedPost.posts.length">
+                  <div class="mb-2" v-for="post in selectedPost.posts" :key="post.postId">
                     <div
                       class="pointer row no-gutters" 
-                      v-if="post.id !== selectedPost.id"
-                      @click="postDetail(post.id)">
+                      @click="postDetail(post.postId)">
                       <div class="m-0 col-3 text-left">
                         <span class="rounded-circle">
                           <img
@@ -202,7 +201,7 @@
                         <small class="ml-2">{{ post.nickName }}</small>
                       </div>
                       <div class="changeFont m-0 col-9 text-left">
-                        "{{ post.onelineReview}}"
+                        "{{ post.onelineReview }}"
                       </div>
                     </div>
                   </div>
@@ -326,11 +325,9 @@ export default {
   computed: {
     ...mapState(['myaccount']),
     ...mapState('postStore', ['selectedPost', 'comments']),
-    ...mapState('bookStore', ['selectedBook']),
   },
   methods: {
     ...mapActions('postStore', ['findPost', 'fetchComments', 'createComment', 'createLike', 'createBookmark', 'deleteComment', 'deletePost']),
-    ...mapActions('bookStore', ['findBook']),
     clickLike(post) {
       this.createLike(post.id)
       if (post.likeUsers.includes(this.myaccount.id)) {
@@ -620,7 +617,7 @@ body {
     background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCA2NCA2NCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNjQgNjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCiAgICA8Zz4NCiAgICAJPHBhdGggZD0iTTAsMzJMMzIsMGwzMiwzMkwzMiw2NEwwLDMyeiBNOCwzMmwyNCwyNGwyNC0yNEwzMiw4TDgsMzJ6IE0xNiwzMmwxNi0xNmwxNiwxNkwzMiw0OEwxNiwzMnogTTI0LDMybDgsOGw4LThsLTgtOEwyNCwzMnoiIC8+DQogICAgPC9nPg0KPC9zdmc+) bottom center no-repeat;
     background-size: 0.5em 0.5em;
     font: 700 7vw/1.25 'Playfair Display', sans-serif;
-    font-size: 1.7em !important;
+    font-size: 1.5em !important;
     letter-spacing: 0.125em;
     margin: 0 0 1em 0;
     padding: 1em 0;
@@ -1030,7 +1027,7 @@ body {
 .scroll-sect::-webkit-scrollbar-thumb {
   height: 10px; 
   width: 50px; 
-  background: #345389; 
+  background: #88A498; 
   -webkit-border-radius: 15px; border-radius: 15px; 
   /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
 }
