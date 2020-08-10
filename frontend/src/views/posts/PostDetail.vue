@@ -181,14 +181,13 @@
               <!-- 책에 대한 리뷰 리스트 -->
               <h5 class="mb-4"><strong>다른 유저들의 리뷰</strong></h5>
               <div class="w-100" style="height:190px;">
-                <div v-if="selectedBook.posts.length === 1 && selectedBook.posts[0].id !== selectedPost.id">
-                  <div class="mb-2" v-for="post in selectedBook.posts" :key="post.id">
+                <div v-if="selectedPost.posts.length">
+                  <div class="mb-2" v-for="post in selectedPost.posts" :key="post.postId">
                     <div
                       class="pointer row no-gutters" 
-                      v-if="post.id !== selectedPost.id"
-                      @click="postDetail(post.id)">
+                      @click="postDetail(post.postId)">
                       <div class="m-0 col-3 text-left">
-                        <span class="rounded-circle">
+                        <span class="roundecd-circle">
                           <img
                             v-if="!post.profileImg"
                             class="img-fluid feed-profile-img" 
@@ -202,7 +201,7 @@
                         <small class="ml-2">{{ post.nickName }}</small>
                       </div>
                       <div class="changeFont m-0 col-9 text-left">
-                        "{{ post.onelineReview}}"
+                        "{{ post.onelineReview }}"
                       </div>
                     </div>
                   </div>
@@ -326,11 +325,9 @@ export default {
   computed: {
     ...mapState(['myaccount']),
     ...mapState('postStore', ['selectedPost', 'comments']),
-    ...mapState('bookStore', ['selectedBook']),
   },
   methods: {
     ...mapActions('postStore', ['findPost', 'fetchComments', 'createComment', 'createLike', 'createBookmark', 'deleteComment', 'deletePost']),
-    ...mapActions('bookStore', ['findBook']),
     clickLike(post) {
       this.createLike(post.id)
       if (post.likeUsers.includes(this.myaccount.id)) {
