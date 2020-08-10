@@ -40,7 +40,7 @@ import OnedayEventCreate from '@/views/onedayevents/OnedayEventCreate'
 import OnedayEventUpdate from '@/views/onedayevents/OnedayEventUpdate'
 
 // books
-import Book from '@/views/books/Book'
+import BookDetail from '@/views/books/Book'
 
 //pagenotfound
 import PageNotFound from '@/views/PageNotFound'
@@ -223,8 +223,8 @@ Vue.use(VueRouter)
   // Books
   {
     path: '/books/:bookId',
-    name: 'Book',
-    component: Book
+    name: 'BookDetail',
+    component: BookDetail
   },
   // 404 Pages
   {
