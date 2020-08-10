@@ -1,48 +1,48 @@
 <template>
-  <div class="mt-3">
-    <h5 class="text-left font-weight-bold" v-if="clubs.length">Club</h5>
-    <!-- Club cards -->
-    <div class="club-list my-2 row" v-if="clubs.length">
+  <div class="my-3">
+    
+    <!-- profile-clubs -->
+    <h5 class="text-left font-weight-bold mb-0 ml-3" v-if="clubs.length">{{ profile.nickName }}님의 Club</h5>
+    <div class="d-flex my-2 club-list" style="overflow-x: scroll;" v-if="clubs.length">
       <div 
-        class="col-sm-4 col-12 p-3"
+        class="px-3"
         v-for="club in clubs"
-        :key="`club_${club.id}`">
+        :key="`club_${club.id}`"
+        style="min-width: 345.59px; max-width: 345.59px">
         <div class="card">
           <div class="card-head club-image-container">
             <img
-              class="card-img-top to-detail club-image"
+              class="card-img-top club-image to-detail"
               :src="club.clubImg"
               :alt="club.name"
               @click="selectClub(club.id)"
+              v-if="club.clubImg"
             >
-            <span class="badge mb-0 club-open" v-if="club.recruit">모집중</span>
+            <img
+              class="card-img-top to-detail"
+              :src="'http://placehold.jp/300x150.png?text=' + club.name"
+              :alt="club.name"
+              @click="selectClub(club.id)"
+              v-else
+            >
+            <span class="badge mb-0 club-recruit" v-if="club.recruit">모집중</span>
           </div>        
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h4 class="card-title font-weight-bold mb-0 club-name to-detail" @click="selectClub(club.id)">{{ club.name }}</h4>
-              <small class="color-green font-weight-bold club-followers">{{ club.followerCnt }} FOLLOW</small>
             </div>
             <p class="card-text text-left club-oneline">{{ club.onelineDescription }}</p>
-            <div class="d-flex justify-content-start my-3 club-genre">
+            <div class="d-flex justify-content-start my-3">
               <span
                 class="badge badge-genre mr-2"
-                v-for="genre in club.genres.slice(0,3)"
+                v-for="genre in club.genres"
                 :key="`club_genre_${genre.id}`">
                 #{{ genre.name }}
               </span>
             </div>
             <div class="d-flex justify-content-between">
-              <p class="card-text mb-0">
-                <small class="color-black">주로 <span class="color-black font-weight-bold">{{ club.residence }}</span>에서 만남 :)</small>
-              </p>
-              <div class="d-flex">
-                <p class="card-text mb-0 mr-2">
-                  <small class="color-black"><i class="fas fa-users"></i> {{ club.participant_num }}</small>
-                </p>
-                <!-- <p class="card-text mb-0" v-if="club.open">
-                  <small class="text-danger font-weight-bold">모집중</small>
-                </p> -->
-              </div>
+              <small class="color-black club-residence">주로 <span class="color-black font-weight-bold">{{ club.residence }}</span>에서 만남 :)</small>
+              <small class="color-black club-memberCnt"><i class="fas fa-users"></i> {{ club.memberCnt }}</small>
             </div>
           </div>
         </div>
@@ -52,30 +52,44 @@
       <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
       <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 가입한 클럽이 없습니다. </h3>
     </div>
-    <!-- Reading & Meetups -->
-    <!-- <h5 class="text-left font-weight-bold" v-if="clubs.length">Reading & Meetup</h5>
-    <div class="row rows-cols-1 row-cols-sm-3">
-      <div class="col mb-4 col-12 col-sm-4" v-for="reading in readings" :key="reading.id">
+
+    <hr class="my-4">
+
+    <!-- profile-events -->
+    <h5 class="text-left font-weight-bold mb-0 ml-3" v-if="integratedEvents.length">{{ profile.nickName }}님의 이벤트</h5>
+    <div class="d-flex events-list my-2" style="overflow-x: scroll;" v-if="integratedEvents.length">
+      <div 
+        class="px-3 pointer"
+        v-for="event in integratedEvents"
+        :key="`event_${event.id}`"
+        @click="selectEvent(event.id, event.clubId)"
+        style="min-width: 345.59px; max-width: 345.59px;">
         <div class="card h-100">
           <div class="row no-gutters">
-            <div class="col-6" @click="selectReading(reading.clubId, reading.id)">
-              <img class="bg-image" :src="`${ reading.book.bookImg }`" width="100%">
+            <div class="col-6 event-left">
+              <img class="bg-image" :src="event.book.bookImg" width="100%">
+              <span class="badge mb-0 event-recruit" v-if="event.participantCnt < event.capacity + 1">모집중</span>
+              <!-- <span class="badge mb-0 event-closed-false" v-else>풀방</span> -->
             </div>
-            <div class="col-6 text-left d-flex flex-column p-2">
-              <p class="color-light-black book-title reading-booktitle" alt="book">{{ reading.book.title }}</p>
-              <small class="reading-name" @click="selectReading(reading.clubId, reading.id)">{{ reading.name }}</small>
+            <div class="col-6 text-left d-flex flex-column align-items-start p-2">
+              <p class="event-name font-weight-bold" lt="book">{{ event.name }}</p>
+              <span class="badge badge-genre">{{ event.book.genre }}</span>
               <div class="mt-auto">
-                <div class="d-flex justify-content-between">
-                  <span><small><i class="fas fa-users"></i> {{ reading.participantCnt}}</small></span>
-                  <span><small><i class="fas fa-map-marker-alt"></i> {{ reading.place }}</small></span>
-                </div>
-                <span class="reading-date"><small>{{ reading.datetime | moment('YYYY-MM-DD HH:mm') }}</small></span>
+                <p class="mb-0" v-if="event.capacity"><small><i class="fas fa-users"></i> {{ event.participantCnt}} / {{ event.capacity + 1 }}</small></p>
+                <p class="mb-0" v-else><small><i class="fas fa-users"></i> {{ event.participantCnt}}</small></p>
+                <p class="mb-0"><small><i class="fas fa-map-marker-alt"></i> {{ event.place }}</small></p>
+                <p class="event-date mb-0"><small>{{ event.datetime | moment('YYYY-MM-DD HH:mm') }}</small></p>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
+    <div v-else>
+      <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
+      <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 참여한 이벤트가 없습니다. </h3>
+    </div>
+
   </div>
 </template>
 
@@ -93,78 +107,42 @@ export default {
     }
   },
   computed: {
-    ...mapState('profileStore',['clubs', 'readings', 'profile']),
-    ...mapState(['myaccount'])
+    ...mapState('profileStore',['clubs', 'clubEvents', 'onedayEvents', 'profile']),
+    ...mapState(['myaccount']),
+    integratedEvents() {
+      const events = this.clubEvents.concat(this.onedayEvents)
+      events.sort(function(a, b) {
+        let datetimeA = a.datetime
+        let datetimeB = b.datetime
+        if (datetimeA < datetimeB) {
+          return 1
+        }
+        if (datetimeA > datetimeB) {
+          return -1
+        }
+        return 0
+      })
+      return events
+      }
   },
   methods: {
-    //  ...mapActions('profileStore', ['fetchClubs', 'fetchReadings']),
      ...mapActions('profileStore', ['fetchClubs']),
     selectClub(club_id) {
       router.push({ name: 'ClubDetail', params: { clubId: club_id }})
     },
-    selectReading(club_id, reading_id) {
-      router.push({ name: 'ReadingDetail', params: {clubId: club_id, readingId: reading_id }})
-    },
-    // filterClubs() {
-    //   let new_clubs = []
-            
-    //   if (this.open_filter) {
-    //     sample_clubs.forEach(club => {
-    //       if (club.open) {
-    //         new_clubs.push(club)
-    //       }
-    //     });
-    //   } else {
-    //     new_clubs = sample_clubs
-    //   }
-
-    //   console.log(new_clubs)
-
-    //   if (this.genre_filter.size !== 0) {
-    //     console.log('여기1')
-    //     let new_clubs2 = new Set()
-    //     new_clubs.forEach(club => {
-    //       let temp = 0
-    //       club.genres.forEach(genre => {
-    //         if (this.genre_filter.has(genre.name)) {
-    //           temp = temp + 1
-    //         }
-    //       })
-    //       console.log(club.genres.length)
-    //       console.log(temp)
-    //       if (club.genres.length === temp) {
-    //         new_clubs2.add(club)
-    //       }
-    //     })
-    //     this.clubs = new_clubs2
-    //   } else {
-    //     console.log('여기2')
-    //     this.clubs = new_clubs
-    //   }
-    // },
-    selectFilter(filter) {
-      if (filter === 'popular') {
-        this.popular_filter = !this.popular_filter
-      } else if (filter === 'open') {
-        this.open_filter = !this.open_filter
+    selectEvent(eventId, clubId) {
+      if (clubId) {
+        router.push({ name: 'ClubEventDetail', params: { clubId: clubId, clubEventId: eventId }})
       } else {
-        if (!this.genre_filter.has(filter)) {
-          this.genre_filter.add(filter)
-        } else {
-          this.genre_filter.delete(filter)
-        }
+        router.push({ name: 'OnedayEventDetail', params: { onedayEventId: eventId }})
       }
-      this.$forceUpdate();
-      this.filterClubs()
-    }
+    },
   },
   created() {
     this.fetchClubs(this.$route.params.userId)
-    this.fetchReadings(this.$route.params.userId)
   },
   beforeRouteUpdate (to, from, next) {
     this.fetchClubs(to.params.userId)
-    this.fetchReadings(to.params.userId)
     next();
   },
 }
@@ -188,11 +166,11 @@ export default {
     text-align: start;
   }
 
-  .club-followers {
+  .club-memberCnt {
     white-space: nowrap;
   }
 
-  .club-oneline, .reading-name {
+  .club-oneline {
     overflow: hidden;
     white-space: normal;
     word-wrap: break-word;
@@ -204,13 +182,22 @@ export default {
     height: 3rem;
   }
 
+  .club-residence {
+    overflow: hidden;
+    white-space: normal;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+    -webkit-box-orient: vertical;
+    text-align: start;
+  }
+
   .card-head {
     position: relative;
   }
 
-  .club-open {
-    /* background-color: #b68145; */
-    /* background-color: #907a62; */
+  .club-recruit {
     background-color: rgba(221, 118, 0, 0.8); 
     color: #F8F8F8;
     text-align: center;
@@ -226,28 +213,6 @@ export default {
     color: #88A498
   }
 
-  .reading-date {
-    overflow: hidden;
-    white-space: normal;
-    word-wrap: break-word;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 1; 
-    -webkit-box-orient: vertical;
-    text-align: start;
-  }
-
-  .reading-booktitle {
-    overflow: hidden;
-    white-space: normal;
-    word-wrap: break-word;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; 
-    -webkit-box-orient: vertical;
-    text-align: start;
-  }
-
   .club-image-container {
     max-width: 100%;
     height: 150px;
@@ -259,14 +224,33 @@ export default {
     height: auto;
   }
 
-  .club-genre {
-    overflow: hidden;
-    white-space: normal;
-    word-wrap: break-word;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 1; 
-    -webkit-box-orient: vertical;
-    text-align: start;
+  .event-left {
+    position: relative;
+  }
+
+  .event-recruit {
+    background-color: rgba(221, 118, 0, 0.8); 
+    color: #F8F8F8;
+    text-align: center;
+    position: absolute;
+    top: 9%;
+    left: 18%;
+    transform: translate( -50%, -50% );
+    padding: 6px;
+  }
+
+  .event-closed-true {
+    background-color: #707070; 
+    color: #F8F8F8;
+    text-align: center;
+    position: absolute;
+    top: 9%;
+    left: 18%;
+    transform: translate( -50%, -50% );
+    padding: 6px;
+  }
+
+  .event-name {
+    word-break: keep-all;
   }
 </style>
