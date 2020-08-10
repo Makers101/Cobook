@@ -187,7 +187,7 @@
                       class="pointer row no-gutters" 
                       @click="postDetail(post.postId)">
                       <div class="m-0 col-3 text-left">
-                        <span class="roundecd-circle">
+                        <span class="rounded-circle">
                           <img
                             v-if="!post.profileImg"
                             class="img-fluid feed-profile-img" 
@@ -617,7 +617,7 @@ body {
     background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCA2NCA2NCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNjQgNjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCiAgICA8Zz4NCiAgICAJPHBhdGggZD0iTTAsMzJMMzIsMGwzMiwzMkwzMiw2NEwwLDMyeiBNOCwzMmwyNCwyNGwyNC0yNEwzMiw4TDgsMzJ6IE0xNiwzMmwxNi0xNmwxNiwxNkwzMiw0OEwxNiwzMnogTTI0LDMybDgsOGw4LThsLTgtOEwyNCwzMnoiIC8+DQogICAgPC9nPg0KPC9zdmc+) bottom center no-repeat;
     background-size: 0.5em 0.5em;
     font: 700 7vw/1.25 'Playfair Display', sans-serif;
-    font-size: 1.7em !important;
+    font-size: 1.5em !important;
     letter-spacing: 0.125em;
     margin: 0 0 1em 0;
     padding: 1em 0;
