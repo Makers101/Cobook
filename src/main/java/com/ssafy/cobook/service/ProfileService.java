@@ -1,5 +1,6 @@
 package com.ssafy.cobook.service;
 
+import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.clubevent.ClubEventRepository;
 import com.ssafy.cobook.domain.clubeventmember.ClubEventMember;
 import com.ssafy.cobook.domain.clubeventmember.ClubEventMemberRepository;
@@ -22,10 +23,14 @@ import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
+import com.ssafy.cobook.service.dto.genre.GenreResponseDto;
 import com.ssafy.cobook.service.dto.post.PostDetailResDto;
 import com.ssafy.cobook.service.dto.post.PostResponseDto;
+import com.ssafy.cobook.service.dto.profile.ProfileByStatisticsForGenre;
+import com.ssafy.cobook.service.dto.profile.ProfileByStatisticsForPeriod;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
 import com.ssafy.cobook.service.dto.clubevent.ClubEventByClubResDto;
+import com.ssafy.cobook.service.dto.profile.ProfileStatisticsResDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
 import com.ssafy.cobook.service.dto.user.UserResponseIdDto;
 import com.ssafy.cobook.service.dto.user.UserUpdateReqDto;
@@ -37,10 +42,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -266,12 +269,82 @@ public class ProfileService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostDetailResDto> getUserBookmark(Long userId) {
+    public List<PostResponseDto> getUserBookmark(Long userId) {
         User user = getUserById(userId);
         return postBookMarkRepository.findAllByUser(user)
                 .stream()
                 .map(PostBookMark::getPost)
-                .map(PostDetailResDto::new)
+                .map(PostResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public ProfileStatisticsResDto getUserStatics(Long userId) {
+        User user = getUserById(userId);
+
+        // 장르별 정보
+        List<GenreResponseDto> genreList = postRepository.findAllByUser(user).stream()
+                .map(Post::getBook)
+                .map(Book::getGenre)
+                .map(GenreResponseDto::new)
+                .collect(Collectors.toList());
+
+        Map<String, Long> genreData = new HashMap<>();
+
+        for (GenreResponseDto g : genreList) {
+            if (!genreData.containsKey(g.getName())) {
+                genreData.put(g.getName(), 1L);
+            } else {
+                Long count = genreData.get(g.getName());
+                genreData.put(g.getName(), count + 1);
+            }
+        }
+
+        List<ProfileByStatisticsForGenre> genresByStatistics = new ArrayList<>();
+
+        for (String key : genreData.keySet()) {
+            genresByStatistics.add(new ProfileByStatisticsForGenre(key, genreData.get(key)));
+        }
+
+        // 기간별 정보
+        List<PostResponseDto> periodsDate = postRepository.findAllByUser(user).stream()
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
+
+        Map<String, Long> periodData = new HashMap<>();
+
+        LocalDate curDate = LocalDate.now(); // 현재 날짜
+        LocalDate[] preDate = new LocalDate[13];
+        preDate[0] = curDate;
+        for (int month = 1; month <= 12; month++) {
+            preDate[month] = curDate.minusDays(30 * month);
+        }
+
+        for (PostResponseDto p : periodsDate) {
+            LocalDate postDate = LocalDate.from(p.getCreatedAt());
+
+            for (int month = 0; month <= 11; month++) {
+                if ((preDate[month].isEqual(postDate) || preDate[month].isAfter(postDate)) && preDate[month + 1].isBefore(postDate)) {
+                    String periods = preDate[month+1] + " ~ " + preDate[month];
+
+                    if (!periodData.containsKey(periods)) {
+                        periodData.put(periods, 1L);
+                    } else {
+                        Long count = periodData.get(periods);
+                        periodData.put(periods, count + 1);
+                    }
+                    break;
+                }
+            }
+        }
+
+        List<ProfileByStatisticsForPeriod> periodsByStatistics = new ArrayList<>();
+
+        for (String key : periodData.keySet()) {
+            periodsByStatistics.add(new ProfileByStatisticsForPeriod(key, periodData.get(key)));
+        }
+
+        ProfileStatisticsResDto profileStaticsResDto = new ProfileStatisticsResDto(genresByStatistics, periodsByStatistics);
+
+        return profileStaticsResDto;
     }
 }
