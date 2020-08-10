@@ -79,7 +79,7 @@
                 <div class="mb-3" v-for="post in selectedBook.posts" :key="post.id">
                   <card 
                     class="row no-gutters pointer" 
-                    style="height: 140px"
+                    style="height: 120px"
                     @click="postDetail(post.id)">
                     <div class="col-4 bg-green d-flex align-items-center left-card">
                       <div>
@@ -157,7 +157,7 @@ export default {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
     },
   },
-  created() {
+  mounted() {
     this.findBook(this.$route.params.bookId)
   }
 }
