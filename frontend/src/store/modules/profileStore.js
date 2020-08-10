@@ -11,8 +11,11 @@ const profileStore = {
     bookmarks: null,
     clubs: null,
     readings: null,
+    overview: null,
     followingList: null,
     followerList: null,
+    pieData: null,
+    barData: null
   },
   getters: {
   },
@@ -35,11 +38,20 @@ const profileStore = {
     SET_READINGS(state, readings) {
       state.readings = readings
     },
+    SET_OVERVIEW(state, overview) {
+      state.overview = overview
+    },
     SET_FOLLOWINGLIST(state, followingList) {
       state.followingList = followingList
     },
     SET_FOLLOWERLIST(state, followerList) {
       state.followerList = followerList
+    },
+    SET_PIEDATA(state, pieData) {
+      state.pieData = pieData
+    },
+    SET_BARDATA(state, barData) {
+      state.barData = barData
     }
   },
   actions: {
@@ -136,6 +148,57 @@ const profileStore = {
           console.log(err.response.data)
         })
     },
+    findOverview({ commit }, userId) {
+      axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + '/overview')
+        .then(res => {
+          commit('SET_OVERVIEW', res.data)
+          const pieData = {
+            hoverBackgroundColor: "red",
+            hoverBorderWidth: 10,
+            labels: [],
+            datasets: [
+              {
+                label: "장르별 독서량",
+                backgroundColor: [
+                  '#41B883', '#E46651', '#00D8FF', '#C28535',
+                  '#8AAE56', '#B66C46', '#FCD1B5', '#DE9391',
+                  '#96759A', '#455B71', '#28343D', '#A4BBC8',
+                  '#556F59', '#9B8C6E', '#CED19A', '#2681A3',
+                  '#544542', '#735567', '#A4403D', '#CA7C7C'
+                ].sort(function(){return 0.5-Math.random()}),
+                data: []
+              }
+            ]
+          }
+          res.data.genreByPostData.forEach(genre => {
+            pieData.labels.push(genre.name)
+            pieData.datasets[0].data.push(genre.count)
+          });
+          commit('SET_PIEDATA', pieData)
+          
+          const barData = {
+            labels: [],
+            datasets: [
+              {
+                xAxisID: 0,
+                yAxisID: 0,
+                label: '월별 독서량',
+                backgroundColor: '#88A498',
+                data: []
+              }
+            ]
+          }
+          res.data.monthByPostData.forEach(month => {
+            barData.labels.push(month.period.slice(5, ) + '월')
+            barData.datasets[0].data.push(month.count)
+          })
+          commit('SET_BARDATA', barData)
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    }
+    ,
     updateProfile({ rootState, rootGetters, dispatch }, profileUpdateData) {
       axios.put(SERVER.URL + SERVER.ROUTES.profile, profileUpdateData.basicData, rootGetters.config )
         .then(res => {
