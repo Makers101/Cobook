@@ -1,42 +1,105 @@
 <template>
-  <div class="container">
-    <div class="page cover" > 
-      <div class="back backcover"></div>
-      <div class="front frontcover"><p>LAST PAGE</p>  </div>
-    </div>
-    <div class="page three" @click="handlePage">
-      <div class="back"><p>Page 3 back</p></div>
-      <div class="front"><p>Page 3</p></div>
-    </div>
-    <div class="page two" @click="handlePage">
-      <div class="back"><p>Page 2 back</p></div>
-      <div class="front"><p>Page 2</p></div>
-    </div>
-    <div class="page one" @click="handlePage">
-      <div class="back"><p>Page 1 back</p></div>
-      <div class="front"><p>Page 1</p></div>
-    </div>
-    <div class="page cover" @click="handlePage"> 
-      <div class="back backcover">{{selectedBook}}</div>
-      <div class="front frontcover" >
-        <p >댓글 작성하기</p>
+
+  <div>
+    <div id="wrapper">
+      <div id="container">
+        <section class="open-book">
+          <header>
+          </header>
+          <article>
+            <!-- 페이지1 -->
+            <div class="page1 d-flex flex-column" style="height: 600px">
+              <!-- 책 제목 -->
+              <div> 
+                <h2 class="chapter-title book-title pt-0" style="height:120px;">{{selectedBook.title }}</h2>
+              </div>
+              <div class="d-flex">
+                <!-- 책 이미지 -->
+                <div class="w-50 mr-3">
+                  <img 
+                    style="height: 200px;" 
+                    :src="selectedBook.bookImg" 
+                    alt="책 이미지">
+                </div>
+                <!-- 책 정보 -->
+                <div class="mx-0 mt-3 row no-gutters align-items-center text-left">
+                  <!-- pubDate, author, publisher, translators, url -->
+                  <div class="row no-gutters">
+                    <div class="col-5 col-lg-4"> 
+                      <strong>저자</strong>
+                      <img class="ml-1 mr-2" src="https://user-images.githubusercontent.com/25967949/88953039-4a9da800-d2d3-11ea-8f6b-5792b4f87c45.png" width="20px"> 
+                    </div>
+                    <div class="col-7 col-lg-8">
+                      <span class="text-left">{{ selectedBook.author }} </span>
+                    </div>
+                  </div>
+                  <div class="row no-gutters align-items-center text-left" v-if="selectedBook.translators.length > 1">
+                    <div class="col-5 col-lg-4"> 
+                      <strong>번역가</strong>
+                      <i class="fas fa-language color-green ml-1 mr-2" width="20px"></i>
+                    </div>
+                    <div class="col-7 col-lg-8">  
+                      <span>{{ selectedBook.translator }}</span>
+                    </div>
+                  </div>
+                  <div class="row no-gutters align-items-center text-left">
+                    <div class="col-5 col-lg-4">
+                      <strong>출판사</strong>
+                      <img class="ml-1 mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px">
+                    </div>
+                    <div class="col-7 col-lg-8">
+                      <span>{{ selectedBook.publisher }}</span>
+                    </div>
+                  </div>
+                  <div class="row no-gutters align-items-center text-left">
+                    <div class="col-5 col-lg-4">
+                      <strong>출판일</strong>
+                      <img class="ml-1 mr-2" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> 
+                    </div>
+                    <div class="col-7 col-lg-8">
+                      <span>{{ selectedBook.pubDate | moment('YYYY-MM-DD')}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 책 줄거리 -->
+              <div class="mt-3 text-left">
+                {{ selectedBook.contents }}
+              </div>
+              <div class="text-right mt-auto">
+                <button class="btn btn-green"><a class="url" :href="selectedBook.url" target="_blank">자세히보기</a></button>
+              </div>
+            </div>
+            <!-- 페이지2 -->
+            <div class="page2" style="height: 600px">
+              <div>
+                <h4>유저들이 쓴 리뷰 보러가기</h4>
+                <div v-if="selectedBook.posts.length">
+                  <div v-for="post in selectedBook.posts" :key="post.id">
+                    
+
+                  </div>
+                </div>
+              </div>
+            </div>
+              
+          </article>
+          <footer>
+            <ol id="page-numbers">
+              <li>1</li>
+              <li>2</li>
+            </ol>
+          </footer>
+        </section>
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
 'use strict';
-
-const pages= document.querySelectorAll('.page');
-
-let leftZ = 0;
-let rightZ = 5;
-
-for (const page of pages) {
-  page.addEventListener('click', this.handlePage);
-}
 
 export default {
   name: "Book",
@@ -50,28 +113,6 @@ export default {
   },
   methods: {
     ...mapActions('bookStore', ['findBook']),
-    handlePage(event) {
-      const thisPage = event.currentTarget;
-      if (!thisPage.classList.contains('animationOpen') && !thisPage.classList.contains('animationClose')){
-        rightZ += -1;
-        leftZ += 1;
-        thisPage.classList.add('animationOpen');
-        thisPage.style.zIndex=leftZ;
-      } else if (thisPage.classList.contains('animationOpen')){
-        thisPage.classList.remove('animationOpen');
-        thisPage.classList.add('animationClose');
-        leftZ += -1;
-        rightZ += +1;
-        thisPage.style.zIndex=rightZ;
-      }else{
-        thisPage.classList.remove('animationClose');
-        thisPage.classList.add('animationOpen');
-        rightZ += -1;
-        leftZ += 1;
-        thisPage.classList.add('animationOpen');
-        thisPage.style.zIndex=leftZ;
-      }
-    },
   },
   created() {
     this.findBook(this.$route.params.bookId)
@@ -80,85 +121,354 @@ export default {
 </script>
 
 <style scoped>
-.body {
-  height: 100vh;
-  width: 100%;
-}
-.container {
-  height: 600px;
-  width: 1000px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); 
-}
-.page {
-  padding: 10px;
-  position: absolute;
-  left: 500px;
-  height: 600px;
-  width: 500px;
-  background-color: #d6d093;
-  /* background-color: ; */
-  transform-origin: left;
-  transform-style: preserve-3d;
-  border-radius: 0 10px 10px 0;
-  box-shadow: inset 10px 9px 10px rgba(0 0 0 0.3);
-}
-.cover{
-  background-color: #825918;
+
+@import url(https://fonts.googleapis.com/css?family=Crimson+Text:400,700,900,400italic,700italic,900italic|Playfair+Display:400,700,900,400italic,700italic,900italic|Rock+Salt:400);
+
+body {
+    background-color: #1d1f20;
+    color: #e5e5e5;
+    font: 16px/1.25 'Crimson Text', sans-serif;
+    margin: 0;
 }
 
-.front{
-  color: black;
-  position: absolute;
-  top:0;
-  height: 600px;
-  width: 500px;
-  backface-visibility: hidden;
-  transform: rotateY(0deg);
+#wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 80em;
 }
-.back{
-  color: black;
-  position: absolute;
-  top:0;
-  height: 600px;
-  width: 500px;
-  backface-visibility: hidden;
-  transform: rotateY(180deg);
+
+#container {
+    float: left;
+    padding: 1em;
+    width: 100%;
 }
-.backcover{
-  background-color: #825918;
+
+
+
+/*** OPEN BOOK ***/
+.open-book {
+    background: #fff;
+    box-shadow: rgba(0,0,0,0.5) 0 1em 3em;
+    color: #000;
+    padding: 2em;
 }
-.frontcover{
-  color:#e5a102;
-  background-color: #825918;
-  text-align: center;
-  line-height: 125px;
-  font-size: 15px;
+
+.open-book * {
+    position: relative;
 }
-.animationOpen{
-  animation: openPage 0.5s linear forwards;
+
+/* Highlight */
+.open-book *::-moz-selection {
+    background: rgba(222,255,0,0.75);
 }
-.animationClose{
-  animation: closePage 0.5s linear;
+
+.open-book *::selection {
+    background: rgba(222,255,0,0.75);
 }
-@keyframes openPage {
-  0%{
-    transform: perspective(1500px) rotateY(0deg); 
-    z-index: 10;
-  }
-  100%{
-    transform: perspective(1500px) rotateY(-180deg);
-  }
+
+/* Header/Footer */
+.open-book header {
+    padding-bottom: 1em;
 }
-@keyframes closePage {
-  0%{
-    transform: perspective(1500px) rotateY(-180deg);
-    z-index: 10;
-  }
-  100%{
-    transform: perspective(1500px) rotateY(0deg); 
-  }
+
+.open-book header *,
+.open-book footer * {
+    font: 700 1em/1.25 'Playfair Display', sans-serif;
+    letter-spacing: 0.125em;
+    margin: 0;
+}
+
+.open-book header * {
+    font-size: 0.75em;
+    text-transform: uppercase;
+}
+
+.open-book footer {
+    padding-top: 1em;
+}
+
+.open-book footer #page-numbers {
+    display: none;
+    list-style: none;
+    padding: 0;
+    text-align: left;
+}
+
+.open-book footer #page-numbers > li:last-child {
+    text-align: right;
+}
+
+/* Chapter Title */
+.open-book .chapter-title {
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCA2NCA2NCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNjQgNjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCiAgICA8Zz4NCiAgICAJPHBhdGggZD0iTTAsMzJMMzIsMGwzMiwzMkwzMiw2NEwwLDMyeiBNOCwzMmwyNCwyNGwyNC0yNEwzMiw4TDgsMzJ6IE0xNiwzMmwxNi0xNmwxNiwxNkwzMiw0OEwxNiwzMnogTTI0LDMybDgsOGw4LThsLTgtOEwyNCwzMnoiIC8+DQogICAgPC9nPg0KPC9zdmc+) bottom center no-repeat;
+    background-size: 0.5em 0.5em;
+    font: 700 7vw/1.25 'Playfair Display', sans-serif;
+    font-size: 1.7em !important;
+    letter-spacing: 0.125em;
+    margin: 0 0 1em 0;
+    padding: 1em 0;
+    position: relative;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.open-book .chapter-title:before,
+.open-book .chapter-title:after {
+    border: solid 0 #000;
+    border-width: 0.05em 0;
+    bottom: calc((0.125em / 2) * 3);
+    content: '';
+    height: 0.15em;
+    position: absolute;
+    width: calc(50% - (1em / 2));
+}
+
+.open-book .chapter-title:before {
+    left: 0;
+}
+
+.open-book .chapter-title:after {
+    right: 0;
+}
+
+/* Body Copy */
+.open-book article {
+    line-height: 1.5;
+}
+
+.open-book article *:not(.chapter-title):not(hr):not(dl) {
+    margin: 0 auto;
+    max-width: 28.125em;
+}
+
+
+.open-book .chapter-title + p:first-of-type {
+    text-indent: 0;
+}
+
+.open-book .chapter-title + p:first-of-type:first-letter {
+    float: left;
+    font: 700 3em/0.65 'Playfair Display', sans-serif;
+    padding: 0.15em 0.05em 0 0;
+    text-transform: uppercase;
+}
+
+.open-book article > ul,
+.open-book article > ol {
+    padding-left: 3em;
+}
+
+.open-book article > ul ul {
+    padding-left: 1em;
+}
+
+.open-book a {
+    background-size: auto 0.25em;
+    color: inherit;
+    text-decoration: none;
+}
+
+.open-book s,
+.open-book strike {
+
+    background-size: auto 0.5em;
+    color: rgba(0,0,0,0.5);
+    text-decoration: none;
+}
+
+.open-book sup {
+    color: #cc0000;
+    font-family: 'Rock Salt', cursive;
+    left: 0;
+    margin-top: -1em!important;
+    max-width: 100%!important;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+}
+
+.open-book mark {
+    background: linear-gradient(to bottom, rgba(222,255,0,1) 0%,rgba(222,255,0,0.5) 60%,rgba(222,255,0,1) 100%);
+}
+
+.open-book mark.pink {
+    background: linear-gradient(to bottom, rgba(255,69,190,1) 0%,rgba(255,107,203,0.5) 60%,rgba(255,107,203,1) 100%);
+}
+
+.open-book mark.blue {
+    background: linear-gradient(to bottom, rgba(73,179,255,1) 0%,rgba(107,193,255,0.5) 60%,rgba(107,193,255,1) 100%);
+}
+
+.open-book mark.green {
+    background: linear-gradient(to bottom, rgba(67,226,15,1) 0%,rgba(39,229,54,0.5) 60%,rgba(39,229,54,1) 100%);
+}
+
+.open-book mark.orange {
+    background: linear-gradient(to bottom, rgba(255,134,9,1) 0%,rgba(255,177,34,0.5) 60%,rgba(255,177,34,1) 100%);
+}
+
+.open-book hr {
+    background-color: #000;
+    border: 0;
+    height: 2px;
+    margin: 1em 0;
+}
+
+.open-book dl {
+    border: solid 0 #ccc;
+    border-width: 0.0625em 0;
+    break-inside: avoid-column;
+    margin: 1em auto;
+    padding: 1em 0;
+}
+
+
+
+/*** MEDIA QUERIES ***/
+@media only screen and ( min-width: 50em ) {
+
+    .open-book {
+        margin: 1em;
+        position: relative;
+    }
+
+    .open-book:before {
+        background-color: #8B4513;
+        border-radius: 0.25em;
+        bottom: -1em;
+        content: '';
+        left: -1em;
+        position: absolute;
+        right: -1em;
+        top: -1em;
+        z-index: -1;
+    }
+
+    .open-book:after {
+        background: linear-gradient(to right, transparent 0%,rgba(0,0,0,0.2) 46%,rgba(0,0,0,0.5) 49%,rgba(0,0,0,0.6) 50%,rgba(0,0,0,0.5) 51%,rgba(0,0,0,0.2) 52%,transparent 100%);
+        bottom: -1em;
+        content: '';
+        left: 50%;
+        position: absolute;
+        top: -1em;
+        transform: translate(-50%,0);
+        width: 4em;
+        z-index: 1;
+    }
+
+    .open-book > * {
+        column-count: 2;
+        column-gap: 6em;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Header/Footer */
+    .open-book header:before,
+    .open-book header:after,
+    .open-book footer:before,
+    .open-book footer:after {
+        background: #fff;
+        border-radius: 25%;
+        content: '';
+        height: 2em;
+        position: absolute;
+        z-index: -1;
+        width: calc(50% + 2em);
+    }
+
+    .open-book header:before,
+    .open-book footer:before,
+    .open-book footer:after {
+        border-top-left-radius: 0;
+    }
+
+    .open-book header:after,
+    .open-book footer:before,
+    .open-book footer:after {
+        border-top-right-radius: 0;
+    }
+
+    .open-book header:before,
+    .open-book header:after,
+    .open-book footer:after {
+        border-bottom-right-radius: 0;
+    }
+
+    .open-book header:before,
+    .open-book header:after,
+    .open-book footer:before {
+        border-bottom-left-radius: 0;
+    }
+
+    .open-book header:before,
+    .open-book header:after {
+        top: -2.65em;
+    }
+
+    .open-book header:before,
+    .open-book footer:before {
+        right: 50%;
+    }
+
+    .open-book header:before {
+        transform: rotate(-2deg);
+    }
+
+    .open-book header:after,
+    .open-book footer:after {
+        left: 50%;
+    }
+
+    .open-book header:after {
+        transform: rotate(2deg);
+    }
+
+    .open-book footer:before,
+    .open-book footer:after {
+        bottom: -2.65em;
+    }
+
+    .open-book footer:before {
+        transform: rotate(2deg);
+    }
+
+    .open-book footer:after {
+        transform: rotate(-2deg);
+    }
+
+    .open-book header > *:last-child,
+    .open-book footer > *:last-child {
+        text-align: right;
+    }
+
+    .open-book footer #page-numbers {
+        display: block;
+    }
+
+    /* Chapter Title */
+    .open-book .chapter-title {
+        font-size: 3em;
+    }
+
+    .open-book .chapter-title:before,
+    .open-book .chapter-title:after {
+        height: 0.125em;
+    }
+
+    /* Body Copy */
+    .open-book article > ul,
+    .open-book article > ol {
+        padding-left: 4em;
+    }
+
+}
+
+p, h1, h2, h3, h4, h5, h6, div {
+  width: 100%;
+}
+
+.url:active, .url:link, .url:active {
+  text-decoration: none !important;
 }
 </style>
