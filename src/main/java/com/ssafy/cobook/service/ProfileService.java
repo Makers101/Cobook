@@ -11,6 +11,9 @@ import com.ssafy.cobook.domain.follow.Follow;
 import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.genre.GenreRepository;
+import com.ssafy.cobook.domain.onedayevent.OneDayEventRepository;
+import com.ssafy.cobook.domain.onedayeventmember.OneDayEventMember;
+import com.ssafy.cobook.domain.onedayeventmember.OneDayEventMemberRepository;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
 import com.ssafy.cobook.domain.postbookmark.PostBookMark;
@@ -23,13 +26,13 @@ import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventSimpleResDto;
 import com.ssafy.cobook.service.dto.genre.GenreResponseDto;
-import com.ssafy.cobook.service.dto.post.PostDetailResDto;
+import com.ssafy.cobook.service.dto.onedayevent.OneDayEventResponseDto;
 import com.ssafy.cobook.service.dto.post.PostResponseDto;
 import com.ssafy.cobook.service.dto.profile.ProfileByStatisticsForGenre;
 import com.ssafy.cobook.service.dto.profile.ProfileByStatisticsForPeriod;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
-import com.ssafy.cobook.service.dto.clubevent.ClubEventByClubResDto;
 import com.ssafy.cobook.service.dto.profile.ProfileStatisticsResDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
 import com.ssafy.cobook.service.dto.user.UserResponseIdDto;
@@ -61,18 +64,16 @@ public class ProfileService {
     private final UserGenreRepository userGenreRepository;
     private final PostRepository postRepository;
     private final PostBookMarkRepository postBookMarkRepository;
-    private final ClubEventRepository clubEventRepository;
     private final ClubEventMemberRepository clubEventMemberRepository;
+    private final OneDayEventMemberRepository oneDayEventMemberRepository;
+
 
     public ProfileResponseDto getUserInfo(Long fromUserId, Long toUserId) {
         User toUser = userRepository.findById(toUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
 
-        User fromUser = userRepository.findById(fromUserId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
-
         List<ClubResDto> clubList = clubMemberRepository.findAllByUser(toUser).stream()
-                .filter(m->!m.getRole().equals(MemberRole.WAITING))
+                .filter(m -> !m.getRole().equals(MemberRole.WAITING))
                 .map(ClubMember::getClub)
                 .map(ClubResDto::new)
                 .collect(Collectors.toList());
@@ -172,10 +173,10 @@ public class ProfileService {
                 .orElse(Collections.emptyList());
 
         List<UserByFollowDto> followerList = new ArrayList<>();
-        if(!followerList.isEmpty()){
+        if (!followerList.isEmpty()) {
             followerList.addAll(0, followList);
         }
-        if(!notFollowList.isEmpty()){
+        if (!notFollowList.isEmpty()) {
             followerList.addAll(0, notFollowList);
         }
 
@@ -253,20 +254,31 @@ public class ProfileService {
 
     public List<ClubResDto> getUserClub(Long userId) {
         User user = getUserById(userId);
-        return clubMemberRepository.findAllByUser(user)
-                .stream()
+
+        return clubMemberRepository.findAllByUser(user).stream()
+                .filter(c->!c.getRole().equals(MemberRole.WAITING))
                 .map(ClubMember::getClub)
                 .map(ClubResDto::new)
                 .collect(Collectors.toList());
     }
 
-    public List<ClubEventByClubResDto> getUserReading(Long userId) {
+    public List<ClubEventSimpleResDto> getClubEvents(Long userId) {
         User user = getUserById(userId);
 
-        return clubEventMemberRepository.findAllByUser(user)
+        return clubEventMemberRepository.findByUser(user)
                 .stream()
                 .map(ClubEventMember::getClubEvent)
-                .map(ClubEventByClubResDto::new)
+                .map(ClubEventSimpleResDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<OneDayEventResponseDto> getOneDayEvents(Long userId) {
+        User user = getUserById(userId);
+
+
+        return oneDayEventMemberRepository.findByUser(user).stream()
+                .map(OneDayEventMember::getOneDayEvent)
+                .map(OneDayEventResponseDto::new)
                 .collect(Collectors.toList());
     }
 
@@ -278,6 +290,7 @@ public class ProfileService {
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
     }
+
 
     public ProfileStatisticsResDto getUserStatics(Long userId) {
         User user = getUserById(userId);
@@ -333,8 +346,8 @@ public class ProfileService {
             for (int month = 0; month < 12; month++) {
                 if (preDate[month].equals(postStringDate)) {
                     String periods = preDate[month];
-                        Long count = periodData.get(periods);
-                        periodData.put(periods, count + 1);
+                    Long count = periodData.get(periods);
+                    periodData.put(periods, count + 1);
                     break;
                 }
             }
