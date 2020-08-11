@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="app">
-      <div id="nav">
+      <div id="nav" v-if="authToken != null">
         <nav class="navbar navbar-expand-md navbar-light navbar-bg-color">
           <router-link class="navbar-brand" to="/">
             <img 
@@ -84,7 +84,7 @@
             <ul class="navbar-nav mr-auto col-2 d-flex justify-content-between">
               <li class="nav-item">
                 <router-link class="nav-link" :to="{ name: 'PostCreate' }">
-                  <i class="fas fa-plus-circle"></i>
+                  <i class="fas fa-pen"></i>
                 </router-link>
               </li>
               <li class="nav-item dropdown pointer">
@@ -135,6 +135,14 @@
           </div>
         </nav>
       </div>
+      <div class="mt-5" v-else>
+        <img 
+          class="img-fluid logo-img"
+          style="height: 50px"
+          src="@/assets/new logo.png" 
+          alt="로고 이미지"
+        >
+      </div>
       <router-view/>
     </div>
     <div id="app2">
@@ -178,7 +186,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['genres', 'myaccount', 'books', 'users']),
+    ...mapState(['genres', 'myaccount', 'books', 'users', 'authToken']),
   },
   methods: {
     ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'fetchNotis', 'logout']),
@@ -483,5 +491,9 @@ input::-webkit-input-placeholder {
 
 .menus {
   font-size: 17px !important;
+}
+
+.dropdown-toggle:after {
+  content: none;
 }
 </style>
