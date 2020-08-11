@@ -4,13 +4,14 @@
       <div id="container">
         <section class="open-book">
           <header>
+            <p class="text-black-50">Book Info</p>
           </header>
           <article>
             <!-- 페이지1 -->
             <div class="page1 d-flex flex-column" style="height: 580px">
               <!-- 책 제목 -->
               <div class="d-flex align-items-center" style="height:85px;"> 
-                <h2 class="chapter-title book-title pt-0">{{selectedBook.title }}</h2>
+                <h2 class="chapter-title book-title pt-0">『{{ selectedBook.title }}』</h2>
               </div>
               <div class="d-flex">
                 <!-- 책 이미지 -->
@@ -63,6 +64,7 @@
               </div>
               <!-- 책 줄거리 -->
               <div class="mt-3 text-left" v-if="selectedBook.contents !== ''">
+                <h6 class="mb-2"><strong>줄거리</strong></h6>
                 {{ selectedBook.contents }}
               </div>
               <div class="mt-5" v-else>
@@ -353,6 +355,25 @@ body {
     background: linear-gradient(to bottom, rgba(255,134,9,1) 0%,rgba(255,177,34,0.5) 60%,rgba(255,177,34,1) 100%);
 }
 
+
+/* Header/Footer */
+.open-book header {
+    padding-bottom: 1em;
+}
+
+.open-book header *,
+.open-book footer * {
+    font: 700 1em/1.25 'Playfair Display', sans-serif;
+    letter-spacing: 0.125em;
+    margin: 0;
+}
+
+.open-book header * {
+    font-size: 0.75em;
+    text-transform: uppercase;
+}
+
+
 .open-book hr {
     background-color: #000;
     border: 0;
@@ -485,7 +506,7 @@ body {
 
     .open-book header > *:last-child,
     .open-book footer > *:last-child {
-        text-align: right;
+        text-align: left;
     }
 
     .open-book footer #page-numbers {
