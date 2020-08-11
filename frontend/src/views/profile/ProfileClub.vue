@@ -140,24 +140,28 @@ export default {
   created() {
     this.fetchClubs(this.$route.params.userId)
   },
-  mounted() {
+  updated() {
     function stopWheel(e){
       if(!e){ e = window.event; } /* IE7, IE8, Chrome, Safari */
       if(e.preventDefault) { e.preventDefault(); } /* Chrome, Safari, Firefox */
       e.returnValue = false; /* IE7, IE8 */
     }
 
-    const scrollAreaClub = document.querySelector('#scroll-area-club')
-    scrollAreaClub.addEventListener('wheel', (e) => {
-      scrollAreaClub.scrollLeft += e.deltaY;
-      stopWheel()
-    })
+    if (this.clubs.length > 3) {
+      const scrollAreaClub = document.querySelector('#scroll-area-club')
+      scrollAreaClub.addEventListener('wheel', (e) => {
+        scrollAreaClub.scrollLeft += e.deltaY;
+        stopWheel()
+      })
+    }
 
-    const scrollAreaEvent = document.querySelector('#scroll-area-event')
-    scrollAreaEvent.addEventListener('wheel', (e) => {
-      scrollAreaEvent.scrollLeft += e.deltaY;
-      stopWheel()
-    })
+    if (this.integratedEvents.length > 3) {
+      const scrollAreaEvent = document.querySelector('#scroll-area-event')
+      scrollAreaEvent.addEventListener('wheel', (e) => {
+        scrollAreaEvent.scrollLeft += e.deltaY;
+        stopWheel()
+      })
+    }
   },
   beforeRouteUpdate (to, from, next) {
     this.fetchClubs(to.params.userId)

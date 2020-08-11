@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container my-3">
+  <div class="custom-container mt-3 mb-5">
 
     <!-- club-detail-header -->
     <div class="row">
@@ -176,14 +176,13 @@
     <!-- club-clubEvents -->
     <div>
       <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 클럽 이벤트</h4>
-      <div class="d-flex my-2 scroll-sect" id="scroll-area-event" v-if="selectedClub.clubEvents.length">
+      <div class="d-flex scroll-sect" id="scroll-area-event" v-if="selectedClub.clubEvents.length">
         <div
-          class="px-3 pointer"
+          class="col-4 pointer"
           v-for="clubEvent in selectedClub.clubEvents"
           :key="clubEvent.id"
-          @click="selectClubEvent(clubEvent.id)"
-          style="min-width: 345.59px; max-width: 345.59px;">
-          <div class="card h-100">
+          @click="selectClubEvent(clubEvent.id)">
+          <div class="card m-0">
             <div class="row no-gutters">
               <div class="col-6 clubEvent-left">
                 <img class="bg-image" :src="clubEvent.book.bookImg" width="100%">
@@ -319,19 +318,21 @@ export default {
   created() {
     this.findClub(this.$route.params.clubId)
   },
-  mounted() {
+  updated() {
     function stopWheel(e){
       if(!e){ e = window.event; } /* IE7, IE8, Chrome, Safari */
       if(e.preventDefault) { e.preventDefault(); } /* Chrome, Safari, Firefox */
       e.returnValue = false; /* IE7, IE8 */
     }
 
-    const scrollAreaEvent = document.querySelector('#scroll-area-event')
-    scrollAreaEvent.addEventListener('wheel', (e) => {
-      scrollAreaEvent.scrollLeft += e.deltaY;
-      stopWheel()
-    })
-  },
+    if (this.selectedClub.clubEvents.length > 3) {
+      const scrollAreaEvent = document.querySelector('#scroll-area-event')
+      scrollAreaEvent.addEventListener('wheel', (e) => {
+        scrollAreaEvent.scrollLeft += e.deltaY;
+        stopWheel()
+      })
+    }
+  }
 }
 </script>
 

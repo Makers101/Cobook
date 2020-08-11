@@ -156,9 +156,9 @@
         <h4 class="text-left font-weight-bold mb-3">멤버의 책 리뷰</h4>
         <button class="btn btn-green" @click="toPostCreate(selectedOnedayEvent.book.id)">책 리뷰 작성하기</button>
       </div>
-      <div class="d-flex my-2 scroll-sect" id="scroll-area-post" v-if="selectedOnedayEvent.memberPosts.length">
+      <div class="d-flex scroll-sect" id="scroll-area-post" v-if="selectedOnedayEvent.memberPosts.length">
         <div 
-          class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
+          class="col-4 pointer"
           v-for="post in selectedOnedayEvent.memberPosts"
           :key="post.id"
           @click="toPostDetail(post.id)">
@@ -173,44 +173,11 @@
                 </div>
                 <img :src="post.profileImg">  
               </div>
-              <!-- <div class="more-info">
-                <h4><i class="fas fa-star"></i>{{ post.rank }}</h4>
-                <div class="coords">
-                  <span>Group Name</span>
-                  <span>Joined January 2019</span>
-                </div>
-                <div class="coords">
-                  <span>Position/Role</span>
-                  <span>City, Country</span>
-                </div>
-                <div class="stats">
-                  <div>
-                    <div class="title">Awards</div>
-                    <i class="fa fa-trophy"></i>
-                    <div class="value">2</div>
-                  </div>
-                  <div>
-                    <div class="title">Matches</div>
-                    <i class="fa fa-gamepad"></i>
-                    <div class="value">27</div>
-                  </div>
-                  <div>
-                    <div class="title">Pals</div>
-                    <i class="fa fa-group"></i>
-                    <div class="value">123</div>
-                  </div>
-                  <div>
-                    <div class="title">Coffee</div>
-                    <i class="fa fa-coffee"></i>
-                    <div class="value infinity">∞</div>
-                  </div>
-                </div>
-              </div> -->
             </div>
             <div class="general d-flex flex-column justify-content-between">
               <div class="w-100 h-100 d-flex flex-column justify-content-around">
                 <div class="mb-2">
-                  <span class="mb-3" v-for="index in post.rank" :key="index"><i class="fas fa-star"></i></span>
+                  <span class="mb-3 star-container" v-for="index in post.rank" :key="index"><i class="fas fa-star" style="color:yellow"></i></span>
                 </div>
                 <p class="text-left m-0"><i class="fas fa-quote-left"></i></p>
                 <p class="card-text px-3" style="word-break:keep-all;">{{ post.onelineReview }}</p>
@@ -311,18 +278,19 @@ export default {
   created() {
     this.findOnedayEvent(this.$route.params.onedayEventId)
   },
-  mounted() {
+  updated() {
     function stopWheel(e){
       if(!e){ e = window.event; } /* IE7, IE8, Chrome, Safari */
       if(e.preventDefault) { e.preventDefault(); } /* Chrome, Safari, Firefox */
       e.returnValue = false; /* IE7, IE8 */
     }
-
-    const scrollAreaClub = document.querySelector('#scroll-area-post')
-    scrollAreaClub.addEventListener('wheel', (e) => {
-      scrollAreaClub.scrollLeft += e.deltaY;
-      stopWheel()
-    })
+    if (this.selectedOnedayEvent.memberPosts.length > 3) {
+      const scrollAreaClub = document.querySelector('#scroll-area-post')
+      scrollAreaClub.addEventListener('wheel', (e) => {
+        scrollAreaClub.scrollLeft += e.deltaY;
+        stopWheel()
+      })
+    }
   },
 }
 </script>
@@ -430,6 +398,10 @@ export default {
     padding: 6px;
   }
 
+  .star-container {
+    text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.7);
+  }
+
   /* card css 여기! */
 
 .center {
@@ -506,8 +478,8 @@ export default {
 
 .card .additional .user-card .level {
   white-space: pre-wrap;
-  width: 100%;
-  word-break: keep-all;
+  width: 90%;
+  word-break: break-all;
 }
 
 .card .additional .user-card .points {
@@ -604,6 +576,38 @@ export default {
   padding: 1rem;
 }
 
+  .scroll-sect {
+    overflow: hidden;
+  }
 
+  .scroll-sect::-webkit-scrollbar {
+    width: 8px; height: 8px; border: 3px solid white; 
+  } 
+
+  .scroll-sect::-webkit-scrollbar-button,.scroll-sect::-webkit-scrollbar-button:END {
+    background-color: white;
+  }
+
+  .scroll-sect::-webkit-scrollbar-button:start:decrement{
+  }
+
+  .scroll-sect::-webkit-scrollbar-track {
+    background: white; 
+    -webkit-border-radius: 10px white; 
+    border-radius:10px white;
+    /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.2) */
+  }
+
+  .scroll-sect::-webkit-scrollbar-thumb {
+    height: 10px; 
+    width: 50px; 
+    background: #88A498; 
+    -webkit-border-radius: 15px; border-radius: 15px; 
+    /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
+  }
+
+  .scroll-sect:hover{
+    overflow-x: scroll;
+  }
 /* https://www.gamasutra.com/db_area/images/news/2018/Jun/320213/supermario64thumb1.jpg */
 </style>
