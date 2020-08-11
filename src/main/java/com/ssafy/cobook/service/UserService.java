@@ -49,7 +49,7 @@ public class UserService {
     @Transactional
     public UserResponseIdDto signUp(UserSaveRequestDto userSaveRequestDto, Boolean isFind) {
         if (userRepository.findByNickName(userSaveRequestDto.getNickName()).isPresent()) {
-            throw new UserException("이미 가입된 메일입니다", ErrorCode.MEMBER_DUPLICATED_NICKNAME);
+            throw new UserException("이미 존재하는 닉네임입니다", ErrorCode.MEMBER_DUPLICATED_NICKNAME);
         }
 
         if (userRepository.findByEmail(userSaveRequestDto.getEmail()).isPresent()) {
