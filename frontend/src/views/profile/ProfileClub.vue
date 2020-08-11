@@ -3,7 +3,7 @@
     
     <!-- profile-clubs -->
     <h5 class="text-left font-weight-bold mb-0 ml-3" v-if="clubs.length">{{ profile.nickName }}님의 Club</h5>
-    <div class="d-flex my-2 club-list" style="overflow-x: scroll;" v-if="clubs.length">
+    <div class="d-flex my-2 club-list scroll-sect" id="scroll-area-club" v-if="clubs.length">
       <div 
         class="px-3"
         v-for="club in clubs"
@@ -53,11 +53,10 @@
       <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 가입한 클럽이 없습니다. </h3>
     </div>
 
-    <hr class="my-4">
-
     <!-- profile-events -->
-    <h5 class="text-left font-weight-bold mb-0 ml-3" v-if="integratedEvents.length">{{ profile.nickName }}님의 이벤트</h5>
-    <div class="d-flex events-list my-2" style="overflow-x: scroll;" v-if="integratedEvents.length">
+
+    <h5 class="text-left font-weight-bold mb-0 ml-3 mt-5" v-if="integratedEvents.length">{{ profile.nickName }}님의 이벤트</h5>
+    <div class="d-flex events-list my-2 scroll-sect" id="scroll-area-event" v-if="integratedEvents.length">
       <div 
         class="px-3 pointer"
         v-for="event in integratedEvents"
@@ -68,8 +67,8 @@
           <div class="row no-gutters">
             <div class="col-6 event-left">
               <img class="bg-image" :src="event.book.bookImg" width="100%">
-              <span class="badge mb-0 event-recruit" v-if="event.participantCnt < event.capacity + 1">모집중</span>
-              <!-- <span class="badge mb-0 event-closed-false" v-else>풀방</span> -->
+              <span class="badge mb-0 event-closed-true" v-if="event.closed">종료</span>
+              <span class="badge mb-0 event-closed-false" v-else>예정</span>
             </div>
             <div class="col-6 text-left d-flex flex-column align-items-start p-2">
               <p class="event-name font-weight-bold" lt="book">{{ event.name }}</p>
@@ -140,6 +139,25 @@ export default {
   },
   created() {
     this.fetchClubs(this.$route.params.userId)
+  },
+  mounted() {
+    function stopWheel(e){
+      if(!e){ e = window.event; } /* IE7, IE8, Chrome, Safari */
+      if(e.preventDefault) { e.preventDefault(); } /* Chrome, Safari, Firefox */
+      e.returnValue = false; /* IE7, IE8 */
+    }
+
+    const scrollAreaClub = document.querySelector('#scroll-area-club')
+    scrollAreaClub.addEventListener('wheel', (e) => {
+      scrollAreaClub.scrollLeft += e.deltaY;
+      stopWheel()
+    })
+
+    const scrollAreaEvent = document.querySelector('#scroll-area-event')
+    scrollAreaEvent.addEventListener('wheel', (e) => {
+      scrollAreaEvent.scrollLeft += e.deltaY;
+      stopWheel()
+    })
   },
   beforeRouteUpdate (to, from, next) {
     this.fetchClubs(to.params.userId)
@@ -228,17 +246,6 @@ export default {
     position: relative;
   }
 
-  .event-recruit {
-    background-color: rgba(221, 118, 0, 0.8); 
-    color: #F8F8F8;
-    text-align: center;
-    position: absolute;
-    top: 9%;
-    left: 18%;
-    transform: translate( -50%, -50% );
-    padding: 6px;
-  }
-
   .event-closed-true {
     background-color: #707070; 
     color: #F8F8F8;
@@ -250,7 +257,52 @@ export default {
     padding: 6px;
   }
 
+  .event-closed-false {
+    background-color: rgba(221, 118, 0, 0.8); 
+    color: #F8F8F8;
+    text-align: center;
+    position: absolute;
+    top: 9%;
+    left: 18%;
+    transform: translate( -50%, -50% );
+    padding: 6px;
+  }
+
   .event-name {
     word-break: keep-all;
+  }
+
+  .scroll-sect {
+    overflow: hidden;
+  }
+
+  .scroll-sect::-webkit-scrollbar {
+    width: 8px; height: 8px; border: 3px solid white; 
+  } 
+
+  .scroll-sect::-webkit-scrollbar-button,.scroll-sect::-webkit-scrollbar-button:END {
+    background-color: white;
+  }
+
+  .scroll-sect::-webkit-scrollbar-button:start:decrement{
+  }
+
+  .scroll-sect::-webkit-scrollbar-track {
+    background: white; 
+    -webkit-border-radius: 10px white; 
+    border-radius:10px white;
+    /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.2) */
+  }
+
+  .scroll-sect::-webkit-scrollbar-thumb {
+    height: 10px; 
+    width: 50px; 
+    background: #88A498; 
+    -webkit-border-radius: 15px; border-radius: 15px; 
+    /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
+  }
+
+  .scroll-sect:hover{
+    overflow-x: scroll;
   }
 </style>
