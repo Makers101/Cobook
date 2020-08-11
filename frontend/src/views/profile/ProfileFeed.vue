@@ -14,25 +14,28 @@
                 </div>
                 <img class="mt-5" :src="feed.book.bookImg">  
               </div>
-              <div class="more-info">
+              <div class="more-info d-flex flex-column justify-content-around">
                 <p class="book-title my-2">{{ feed.book.title }}</p>
                 <div class="text-left">
                   <div class="coords">
                     <p>
                       <!-- <mark>작가</mark> -->
+                      <img class="mr-2" src="https://user-images.githubusercontent.com/25967949/89915180-00042000-dc31-11ea-8777-4cc7df56b4b4.png" width="20px">
                       <span>{{ feed.book.author }}</span>
                     </p>
                   </div>
                   <div class="coords">
                     <p>
                       <!-- <mark>출판사</mark> -->
+                      <img class="mr-2" src="https://user-images.githubusercontent.com/25967949/89915533-71dc6980-dc31-11ea-96c5-139fa8877eb2.png" width="20px">
                       <span>{{ feed.book.publisher }}</span>
                     </p>
                   </div>
                   <div class="coords">
                     <p>
                       <!-- <mark>출판일</mark> -->
-                      <span>{{ feed.book.pubDate }}</span>
+                      <img class="mr-2" src="https://user-images.githubusercontent.com/25967949/89915335-304bbe80-dc31-11ea-9dbc-06270437603f.png" width="20px">
+                      <span>{{ feed.book.pubDate | moment('YYYY-MM-DD') }}</span>
                     </p>
                   </div>
                 </div>
@@ -223,7 +226,7 @@ export default {
 }
 
 .card .additional .more-info {
-  /* width: 300px; */
+  width: 66%;
   float: left;
   position: absolute;
   left: 120px;
@@ -309,8 +312,6 @@ export default {
 
 .card p {
   margin: 0;
-  padding-left: 10px;
-  padding-right: 10px;
 }
 
 mark {
