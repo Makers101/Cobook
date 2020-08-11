@@ -158,37 +158,68 @@
       </div>
       <div class="row rows-cols-1 row-cols-md-3" v-if="selectedOnedayEvent.memberPosts.length !== 0">
         <div 
-          class="col-12 col-sm-4 mb-4 pointer"
+          class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
           v-for="post in selectedOnedayEvent.memberPosts"
           :key="post.id"
           @click="toPostDetail(post.id)">
-          <div class="card h-100">
-            <div style="max-height:70px;overflow:hidden;">
-              <img
-                class="bg-image"
-                :src="selectedOnedayEvent.book.bookImg"
-                :alt="selectedOnedayEvent.book.title"
-                v-if="selectedOnedayEvent.book.bookImg">
-              <img
-                class="bg-image"
-                :src="'http://placehold.jp/300x200.png?text=' + selectedOnedayEvent.book.title"
-                :alt="selectedOnedayEvent.book.title"
-                v-else>
-              <h5 class="card-img-top color-light-black px-5 post-user" v-if="post.nickName">
-                {{ post.nickName }}
-              </h5>
-            </div>
-            <div class="card-body bg-light-ivory d-flex flex-column">
-              <div class="mt-auto">
-                <div class="w-100">
-                  <p class="text-left m-0"><i class="fas fa-quote-left"></i></p>
-                  <p class="card-text" style="word-break:keep-all;">{{ post.onelineReview }}</p>
-                  <p class="text-right m-0"><i class="fas fa-quote-right"></i></p>
+          <div class="card m-0 ">
+            <div class="additional d-flex justify-content-center">
+              <div class="user-card">
+                <div class="level center">
+                  {{ post.nickName }}
                 </div>
+                <div class="points center">
+                  <i class="fas fa-heart mr-1"></i> {{ post.likeUsers.length }}
+                </div>
+                <img :src="post.profileImg">  
               </div>
-              <div class="text-left bg-light-ivory pt-0 mt-auto">
-                <span class="mr-3"><i class="fas fa-heart mr-2"></i>{{ post.likeUsers.length }}</span>
+              <!-- <div class="more-info">
+                <h4><i class="fas fa-star"></i>{{ post.rank }}</h4>
+                <div class="coords">
+                  <span>Group Name</span>
+                  <span>Joined January 2019</span>
+                </div>
+                <div class="coords">
+                  <span>Position/Role</span>
+                  <span>City, Country</span>
+                </div>
+                <div class="stats">
+                  <div>
+                    <div class="title">Awards</div>
+                    <i class="fa fa-trophy"></i>
+                    <div class="value">2</div>
+                  </div>
+                  <div>
+                    <div class="title">Matches</div>
+                    <i class="fa fa-gamepad"></i>
+                    <div class="value">27</div>
+                  </div>
+                  <div>
+                    <div class="title">Pals</div>
+                    <i class="fa fa-group"></i>
+                    <div class="value">123</div>
+                  </div>
+                  <div>
+                    <div class="title">Coffee</div>
+                    <i class="fa fa-coffee"></i>
+                    <div class="value infinity">∞</div>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+            <div class="general d-flex flex-column justify-content-between">
+              <div class="w-100 h-100 d-flex flex-column justify-content-around">
+                <div class="mb-2">
+                  <span class="mb-3" v-for="index in post.rank" :key="index"><i class="fas fa-star"></i></span>
+                </div>
+                <p class="text-left m-0"><i class="fas fa-quote-left"></i></p>
+                <p class="card-text px-3" style="word-break:keep-all;">{{ post.onelineReview }}</p>
+                <p class="text-right m-0"><i class="fas fa-quote-right"></i></p>
               </div>
+              <div class="more">
+                <span class="text-black-50"><small>{{ post.createdAt | moment('YYYY-MM-DD')}}</small></span>
+              </div>
+              
             </div>
           </div>
         </div>            
@@ -293,7 +324,7 @@ export default {
   }
 
   .onedayEvent-closed-false {
-    background-color: rgba(221, 118, 0, 0.8); 
+    background-color: #88A498; 
     color: #F8F8F8;
     text-align: center;
     padding: 5px;
@@ -385,4 +416,181 @@ export default {
     color: #F8F8F8;
     padding: 6px;
   }
+
+  /* card css 여기! */
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+}
+
+.card {
+  /* width: 300px; */
+  height: 250px;
+  background-color: #fff;
+  background: linear-gradient(#f8f8f8, #fff);
+  box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  margin: 1.5rem;
+}
+
+.card h1 {
+  text-align: center;
+}
+
+.card .additional {
+  position: absolute;
+  width: 33%;
+  height: 100%;
+  background: linear-gradient(#88A498, #88A487);
+  transition: width 0.4s;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.card.green .additional {
+  background: linear-gradient(#92bCa6, #A2CCB6);
+}
+
+
+/* .card:hover .additional {
+  width: 100%;
+  border-radius: 0 5px 5px 0;
+} */
+
+.card .additional .user-card {
+  width: 100px;
+  height: 100%;
+  position: relative;
+  float: left;
+}
+
+.card .additional .user-card::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 10%;
+  right: -2px;
+  height: 80%;
+}
+
+.card .additional .user-card .level,
+.card .additional .user-card .points {
+  top: 15%;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 0.75em;
+  font-weight: bold;
+  background: rgba(0,0,0,0.15);
+  padding: 0.125rem 0.75rem;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.card .additional .user-card .level {
+  white-space: pre-wrap;
+  width: 100%;
+  word-break: keep-all;
+}
+
+.card .additional .user-card .points {
+  top: 85%;
+}
+
+.card .additional .user-card img {
+  top: 35%;
+  max-width: 50%;
+  left: 23%;
+  border-radius: 50%;
+  position: absolute;
+}
+/* 
+.card .additional .more-info {
+  width: 300px;
+  float: left;
+  position: absolute;
+  left: 150px;
+  height: 100%;
+}
+
+.card .additional .more-info h1 {
+  color: #fff;
+  margin-bottom: 0;
+}
+
+.card.green .additional .more-info h1 {
+  color: #224C36;
+} */
+
+.card .additional .coords {
+  margin: 0 1rem;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.card.green .additional .coords {
+  color: #325C46;
+}
+
+.card .additional .coords span + span {
+  float: right;
+}
+
+.card .additional .stats {
+  font-size: 2rem;
+  display: flex;
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  top: auto;
+  color: #fff;
+}
+
+.card.green .additional .stats {
+  color: #325C46;
+}
+
+.card .additional .stats > div {
+  flex: 1;
+  text-align: center;
+}
+
+.card .additional .stats i {
+  display: block;
+}
+
+.card .additional .stats div.title {
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.card .additional .stats div.value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1.5rem;
+}
+
+.card .additional .stats div.value.infinity {
+  font-size: 2.5rem;
+}
+
+.card .general {
+  width: 66%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+
+/* https://www.gamasutra.com/db_area/images/news/2018/Jun/320213/supermario64thumb1.jpg */
 </style>
