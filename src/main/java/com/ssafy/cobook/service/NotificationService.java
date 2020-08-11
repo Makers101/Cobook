@@ -3,6 +3,7 @@ package com.ssafy.cobook.service;
 import com.google.firebase.database.*;
 import com.ssafy.cobook.domain.club.Club;
 import com.ssafy.cobook.domain.club.ClubRepository;
+import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
 import com.ssafy.cobook.domain.clubmember.MemberRole;
 import com.ssafy.cobook.domain.follow.FollowRepository;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -55,23 +57,23 @@ public class NotificationService {
         DatabaseReference ref = database.getReference("noti"); // 최상위 root: noti
         Long toId = 0L;
 
+
         Club club = null;
-        User fromUser = getUser(fromUserId);
-        User toUser = getUser(notificationReqDto.getToUserId());
 
         if (type.equals("club")) {
             club = clubRepository.findById(notificationReqDto.getDataId())
                     .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_CLUB));
-            toId = clubMemberRepository.findByClub(club).stream() // 해당 클럽의 멤버들을 뽑아서
-                    .filter(c -> c.getRole().equals(MemberRole.LEADER)) // 리더인 애를 찾고
-                    .map(ClubMemberResponseDto::new)
-                    .map(cm -> cm.getId())
-                    .collect(Collectors.toList()).get(0);
-
-            System.out.println("클럽의 리더 아이디" + toId);
+            List<ClubMember> clubMemberList = clubMemberRepository.findByClub(club); // 해당 클럽의 멤버들을 뽑아서
+            for (ClubMember clubMember : clubMemberList) {
+                if (clubMember.getRole().equals(MemberRole.LEADER)) {
+                    toId = clubMember.getUser().getId();
+                }
+            }
         } else {
             toId = notificationReqDto.getToUserId();
         }
+        User fromUser = getUser(fromUserId);
+        User toUser = getUser(toId);
 
 
         DatabaseReference notiRef = ref.child(toId.toString()); // 알림 받는 사람의 아이디
@@ -81,17 +83,40 @@ public class NotificationService {
 
 
         if (type.equals("club")) { // 클럽 가입 신청
-        
-
-        } else if (type.equals("follow")) { // 팔로우
-            if (followRepository.findByToUser(fromUser, toUser).isPresent()) { // 이미 팔로우 되있는 경우면 noti에서 삭제
+            if (!clubMemberRepository.findByUserAndClub(fromUser, club).isPresent()) { // 가입신청을 눌러서 데이터가 생김 => 데이터가 없을 때 삭제 알림이 가야함
                 notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
                         exFindData:
                         for (DataSnapshot data : snapshot.getChildren()) {
                             String postKey = data.getKey();
-                            System.out.println("포스트의 키 값" + postKey);
+                            for (DataSnapshot values : data.getChildren()) {
+                                if (values.getKey().equals("from")) {
+                                    if (values.getValue() == fromUserId) {
+                                        DatabaseReference deleteRef = notiRef.child(postKey);
+                                        deleteRef.removeValueAsync();
+                                        break exFindData;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                    }
+                });
+            } else { // 테이블에 값이 존재하는 경우에는 가입신청을 한거라서, 데이터를 생성해줌
+                saveNoti.setValueAsync(notificationSaveDto);
+            }
+        } else if (type.equals("follow")) { // 팔로우
+            if (!followRepository.findByToUser(fromUser, toUser).isPresent()) { // 팔로우를 신청했다면 테이블에 이미 존재하므로 없을 때 삭제
+                notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        exFindData:
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            String postKey = data.getKey();
                             for (DataSnapshot values : data.getChildren()) {
                                 if (values.getKey().equals("from")) {
                                     if (values.getValue() == fromUserId) {
