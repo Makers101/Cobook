@@ -176,17 +176,18 @@
     <!-- club-clubEvents -->
     <div>
       <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 클럽 이벤트</h4>
-      <div class="row rows-cols-1 row-cols-sm-3" v-if="selectedClub.clubEvents.length !== 0">
+      <div class="d-flex my-2 scroll-sect" id="scroll-area-event" v-if="selectedClub.clubEvents.length">
         <div
-          class="mb-2 col-lg-4 col-md-6 col-sm-12 pointer"
+          class="px-3 pointer"
           v-for="clubEvent in selectedClub.clubEvents"
           :key="clubEvent.id"
-          @click="selectClubEvent(clubEvent.id)">
+          @click="selectClubEvent(clubEvent.id)"
+          style="min-width: 345.59px; max-width: 345.59px;">
           <div class="card h-100">
             <div class="row no-gutters">
               <div class="col-6 clubEvent-left">
                 <img class="bg-image" :src="clubEvent.book.bookImg" width="100%">
-                <span class="badge mb-0 clubEvent-closed-true" v-if="clubEvent.recruit">종료</span>
+                <span class="badge mb-0 clubEvent-closed-true" v-if="clubEvent.closed">종료</span>
                 <span class="badge mb-0 clubEvent-closed-false" v-else>예정</span>
               </div>
               <div class="col-6 text-left d-flex flex-column align-items-start p-2">
@@ -317,7 +318,20 @@ export default {
   },
   created() {
     this.findClub(this.$route.params.clubId)
-  }
+  },
+  mounted() {
+    function stopWheel(e){
+      if(!e){ e = window.event; } /* IE7, IE8, Chrome, Safari */
+      if(e.preventDefault) { e.preventDefault(); } /* Chrome, Safari, Firefox */
+      e.returnValue = false; /* IE7, IE8 */
+    }
+
+    const scrollAreaEvent = document.querySelector('#scroll-area-event')
+    scrollAreaEvent.addEventListener('wheel', (e) => {
+      scrollAreaEvent.scrollLeft += e.deltaY;
+      stopWheel()
+    })
+  },
 }
 </script>
 
@@ -431,5 +445,39 @@ export default {
     background-color: #88A498;
     color: #F8F8F8;
     padding: 6px;
+  }
+
+  .scroll-sect {
+    overflow: hidden;
+  }
+
+  .scroll-sect::-webkit-scrollbar {
+    width: 8px; height: 8px; border: 3px solid white; 
+  } 
+
+  .scroll-sect::-webkit-scrollbar-button,.scroll-sect::-webkit-scrollbar-button:END {
+    background-color: white;
+  }
+
+  .scroll-sect::-webkit-scrollbar-button:start:decrement{
+  }
+
+  .scroll-sect::-webkit-scrollbar-track {
+    background: white; 
+    -webkit-border-radius: 10px white; 
+    border-radius:10px white;
+    /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.2) */
+  }
+
+  .scroll-sect::-webkit-scrollbar-thumb {
+    height: 10px; 
+    width: 50px; 
+    background: #88A498; 
+    -webkit-border-radius: 15px; border-radius: 15px; 
+    /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
+  }
+
+  .scroll-sect:hover{
+    overflow-x: scroll;
   }
 </style>

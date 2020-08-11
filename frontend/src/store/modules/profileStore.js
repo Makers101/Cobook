@@ -175,7 +175,8 @@ const profileStore = {
             start: clubEvent.datetime.slice(0, 16),
             end: '',
             color: 'indigo',
-            timed: false
+            timed: false,
+            clubEvent: clubEvent
           }
         )
       })
@@ -187,7 +188,8 @@ const profileStore = {
             start: onedayEvent.datetime.slice(0, 16),
             end: '',
             color: 'green',
-            timed: false
+            timed: false,
+            onedayEvent: onedayEvent
           }
         )
       })
@@ -199,7 +201,8 @@ const profileStore = {
             start: post.createdAt.slice(0, 10),
             end: '',
             color: 'orange',
-            timed: false
+            timed: false,
+            post: post
           }
         )
       });

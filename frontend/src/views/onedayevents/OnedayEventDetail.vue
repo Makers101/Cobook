@@ -156,7 +156,7 @@
         <h4 class="text-left font-weight-bold mb-3">멤버의 책 리뷰</h4>
         <button class="btn btn-green" @click="toPostCreate(selectedOnedayEvent.book.id)">책 리뷰 작성하기</button>
       </div>
-      <div class="row rows-cols-1 row-cols-md-3" v-if="selectedOnedayEvent.memberPosts.length !== 0">
+      <div class="d-flex my-2 scroll-sect" id="scroll-area-post" v-if="selectedOnedayEvent.memberPosts.length">
         <div 
           class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
           v-for="post in selectedOnedayEvent.memberPosts"
@@ -310,7 +310,20 @@ export default {
   },
   created() {
     this.findOnedayEvent(this.$route.params.onedayEventId)
-  }
+  },
+  mounted() {
+    function stopWheel(e){
+      if(!e){ e = window.event; } /* IE7, IE8, Chrome, Safari */
+      if(e.preventDefault) { e.preventDefault(); } /* Chrome, Safari, Firefox */
+      e.returnValue = false; /* IE7, IE8 */
+    }
+
+    const scrollAreaClub = document.querySelector('#scroll-area-post')
+    scrollAreaClub.addEventListener('wheel', (e) => {
+      scrollAreaClub.scrollLeft += e.deltaY;
+      stopWheel()
+    })
+  },
 }
 </script>
 
