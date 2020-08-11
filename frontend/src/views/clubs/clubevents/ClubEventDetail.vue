@@ -162,43 +162,39 @@
           <h4 class="text-left font-weight-bold mb-3">멤버의 책 리뷰</h4>
           <button class="btn btn-green" @click="toPostCreate(selectedClubEvent.book.id)">책 리뷰 작성하기</button>
         </div>
-        <div class="d-flex my-2 scroll-sect" id="scroll-area-post" v-if="selectedClubEvent.memberPosts.length">
-          <div
-            class="pointer px-3"
+        <div class="d-flex scroll-sect" id="scroll-area-post" v-if="selectedClubEvent.memberPosts.length">
+          <div 
+            class="col-4 pointer"
             v-for="post in selectedClubEvent.memberPosts"
             :key="post.id"
-            @click="toPostDetail(post.id)"
-            style="min-width: 345.59px; max-width: 345.59px">
-            <div class="card h-100">
-              <div style="max-height:70px;overflow:hidden;">
-                <img
-                  class="bg-image"
-                  :src="selectedClubEvent.book.bookImg"
-                  :alt="selectedClubEvent.book.title"
-                  v-if="selectedClubEvent.book.bookImg">
-                <img
-                  class="bg-image"
-                  :src="'http://placehold.jp/300x200.png?text=' + selectedClubEvent.book.title"
-                  :alt="selectedClubEvent.book.title"
-                  v-else>
-                <h5 class="card-img-top color-light-black px-5 post-user" v-if="post.nickName">
-                  {{ post.nickName }}
-                </h5>
-              </div>
-              <div class="card-body bg-light-ivory d-flex flex-column">
-                <div class="mt-auto">
-                  <div class="w-100">
-                    <p class="text-left m-0"><i class="fas fa-quote-left"></i></p>
-                    <p class="card-text" style="word-break:keep-all;">{{ post.onelineReview }}</p>
-                    <p class="text-right m-0"><i class="fas fa-quote-right"></i></p>
+            @click="toPostDetail(post.id)">
+            <div class="card m-0">
+              <div class="additional d-flex justify-content-center">
+                <div class="user-card">
+                  <div class="level center">
+                    {{ post.nickName }}
                   </div>
+                  <div class="points center">
+                    <i class="fas fa-heart mr-1"></i> {{ post.likeUsers.length }}
+                  </div>
+                  <img :src="post.profileImg">  
                 </div>
-                <div class="text-left bg-light-ivory pt-0 mt-auto">
-                  <span class="mr-3"><i class="fas fa-heart mr-2"></i>{{ post.likeUsers.length }}</span>
+              </div>
+              <div class="general d-flex flex-column justify-content-between">
+                <div class="w-100 h-100 d-flex flex-column justify-content-around">
+                  <div class="mb-2">
+                    <span class="mb-3 star-container" v-for="index in post.rank" :key="index"><i class="fas fa-star" style="color:yellow"></i></span>
+                  </div>
+                  <p class="text-left m-0"><i class="fas fa-quote-left"></i></p>
+                  <p class="card-text px-3" style="word-break:keep-all;">{{ post.onelineReview }}</p>
+                  <p class="text-right m-0"><i class="fas fa-quote-right"></i></p>
+                </div>
+                <div class="more">
+                  <span class="text-black-50"><small>{{ post.createdAt | moment('YYYY-MM-DD')}}</small></span>
                 </div>
               </div>
             </div>
-          </div>            
+          </div>           
         </div>
         <div class="no-content d-flex justify-content-center align-items-center" v-else>
           <p class="mb-0">아직 멤버의 책 리뷰가 없습니다 ㄴ(°0°)ㄱ</p>
@@ -305,18 +301,20 @@ export default {
     this.findClub(this.params.clubId)
     this.findClubEvent(this.params)
   },
-  mounted() {
+  updated() {
     function stopWheel(e){
       if(!e){ e = window.event; } /* IE7, IE8, Chrome, Safari */
       if(e.preventDefault) { e.preventDefault(); } /* Chrome, Safari, Firefox */
       e.returnValue = false; /* IE7, IE8 */
     }
 
-    const scrollAreaClub = document.querySelector('#scroll-area-post')
-    scrollAreaClub.addEventListener('wheel', (e) => {
-      scrollAreaClub.scrollLeft += e.deltaY;
-      stopWheel()
-    })
+    if (this.selectedClubEvent.memberPosts.length > 3) {
+      const scrollAreaClub = document.querySelector('#scroll-area-post')
+      scrollAreaClub.addEventListener('wheel', (e) => {
+        scrollAreaClub.scrollLeft += e.deltaY;
+        stopWheel()
+      })
+    }
   },
 }
 </script>
@@ -433,6 +431,182 @@ export default {
     color: #F8F8F8;
     padding: 6px;
   }
+
+  .center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+}
+
+.card {
+  /* width: 300px; */
+  height: 250px;
+  background-color: #fff;
+  background: linear-gradient(#f8f8f8, #fff);
+  box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  margin: 1.5rem;
+}
+
+.card h1 {
+  text-align: center;
+}
+
+.card .additional {
+  position: absolute;
+  width: 33%;
+  height: 100%;
+  background: linear-gradient(#88A498, #88A487);
+  transition: width 0.4s;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.card.green .additional {
+  background: linear-gradient(#92bCa6, #A2CCB6);
+}
+
+
+/* .card:hover .additional {
+  width: 100%;
+  border-radius: 0 5px 5px 0;
+} */
+
+.card .additional .user-card {
+  width: 100px;
+  height: 100%;
+  position: relative;
+  float: left;
+}
+
+.card .additional .user-card::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 10%;
+  right: -2px;
+  height: 80%;
+}
+
+.card .additional .user-card .level,
+.card .additional .user-card .points {
+  top: 15%;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 0.75em;
+  font-weight: bold;
+  background: rgba(0,0,0,0.15);
+  padding: 0.125rem 0.75rem;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.card .additional .user-card .level {
+  white-space: pre-wrap;
+  width: 90%;
+  word-break: break-all;
+}
+
+.card .additional .user-card .points {
+  top: 85%;
+}
+
+.card .additional .user-card img {
+  top: 35%;
+  max-width: 50%;
+  left: 23%;
+  border-radius: 50%;
+  position: absolute;
+}
+/* 
+.card .additional .more-info {
+  width: 300px;
+  float: left;
+  position: absolute;
+  left: 150px;
+  height: 100%;
+}
+
+.card .additional .more-info h1 {
+  color: #fff;
+  margin-bottom: 0;
+}
+
+.card.green .additional .more-info h1 {
+  color: #224C36;
+} */
+
+.card .additional .coords {
+  margin: 0 1rem;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.card.green .additional .coords {
+  color: #325C46;
+}
+
+.card .additional .coords span + span {
+  float: right;
+}
+
+.card .additional .stats {
+  font-size: 2rem;
+  display: flex;
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  top: auto;
+  color: #fff;
+}
+
+.card.green .additional .stats {
+  color: #325C46;
+}
+
+.card .additional .stats > div {
+  flex: 1;
+  text-align: center;
+}
+
+.card .additional .stats i {
+  display: block;
+}
+
+.card .additional .stats div.title {
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.card .additional .stats div.value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1.5rem;
+}
+
+.card .additional .stats div.value.infinity {
+  font-size: 2.5rem;
+}
+
+.card .general {
+  width: 66%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+.star-container {
+  text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.7);
+}
 
   .scroll-sect {
     overflow: hidden;
