@@ -53,7 +53,6 @@
             <div class="more">
               <span class="text-black-50"><small>{{ feed.createdAt | moment('YYYY-MM-DD')}}</small></span>
             </div>
-            
           </div>
         </div>
       </div>   
