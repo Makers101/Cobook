@@ -70,7 +70,7 @@ public class ProfileService {
 
     public ProfileResponseDto getUserInfo(Long fromUserId, Long toUserId) {
         User toUser = userRepository.findById(toUserId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
         List<ClubResDto> clubList = clubMemberRepository.findAllByUser(toUser).stream()
                 .filter(m -> !m.getRole().equals(MemberRole.WAITING))
@@ -88,16 +88,16 @@ public class ProfileService {
 
     private User getUserById(final Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
     }
 
     // 팔로잉 - 눌러져있지 않으면 디비에 추가한다
     public void addFollow(Long fromUserId, Long toUserId) {
         User toUser = userRepository.findById(toUserId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
         User fromUser = userRepository.findById(fromUserId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
 
         if (followRepository.findByToUser(fromUser, toUser).isPresent()) {
@@ -113,10 +113,10 @@ public class ProfileService {
 
 
         User toUser = userRepository.findById(toUserId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
         User fromUser = userRepository.findById(fromUserId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
         // 1. isFollow인 애 찾기
         List<UserByFollowDto> followList = Optional.ofNullable(followRepository.findAllByFollowing(toUser.getId(), fromUser.getId())
@@ -149,10 +149,10 @@ public class ProfileService {
     // 팔로워 리스트 가져오기 (fromUser의 아이디가 들어오면 toUser가 fromUser의 값인 애들을 뽑아야함)
     public List<UserByFollowDto> getFollowerList(Long fromUserId, Long toUserId) {
         User toUser = userRepository.findById(toUserId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
         User fromUser = userRepository.findById(fromUserId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
         // 1. isFollow인 애 찾기
         List<UserByFollowDto> followList = Optional.ofNullable(followRepository.findAllByFollower(toUser.getId(), fromUser.getId())
