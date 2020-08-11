@@ -2,6 +2,7 @@ package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.service.SearchService;
 import com.ssafy.cobook.service.dto.book.BookBySearchResDto;
+import com.ssafy.cobook.service.dto.club.ClubBySearchResDto;
 import com.ssafy.cobook.service.dto.post.PostBySearchResDto;
 import com.ssafy.cobook.service.dto.user.UserBySearchResDto;
 import io.swagger.annotations.ApiOperation;
@@ -42,6 +43,12 @@ public class SearchController {
         // 검색한 keyword가 들어간 oneline review
         // review
         return ResponseEntity.status(HttpStatus.OK).body(searchService.searchPosts(keyword));
+    }
+
+    @ApiOperation(value = "클럽 검색하기 (클럽 이름으로 검색)")
+    @GetMapping("/club/{keyword}")
+    public ResponseEntity<List<ClubBySearchResDto>> searchClubs(@PathVariable("keyword") final String keyword) {
+        return ResponseEntity.status(HttpStatus.OK).body(searchService.searchClubs(keyword));
     }
 
 
