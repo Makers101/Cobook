@@ -1,17 +1,22 @@
 package com.ssafy.cobook.service;
 
 import com.google.firebase.database.*;
+import com.ssafy.cobook.domain.club.Club;
+import com.ssafy.cobook.domain.club.ClubRepository;
+import com.ssafy.cobook.domain.clubmember.ClubMember;
+import com.ssafy.cobook.domain.clubmember.ClubMemberRepository;
+import com.ssafy.cobook.domain.clubmember.MemberRole;
 import com.ssafy.cobook.domain.follow.FollowRepository;
-import com.ssafy.cobook.domain.notification.Notification;
-import com.ssafy.cobook.domain.notification.NotificationRepository;
+import com.ssafy.cobook.domain.post.Post;
+import com.ssafy.cobook.domain.post.PostRepository;
+import com.ssafy.cobook.domain.postcomment.PostCommentRepository;
+import com.ssafy.cobook.domain.postlike.PostLikeRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
-import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.notification.NotificationReqDto;
 import com.ssafy.cobook.service.dto.notification.NotificationSaveDto;
-import com.ssafy.cobook.service.dto.notification.NotificationResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,61 +32,179 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NotificationService {
 
-    private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
+    private final ClubMemberRepository clubMemberRepository;
+    private final ClubRepository clubRepository;
     private final FollowRepository followRepository;
-
-    public List<NotificationResponseDto> getNotis(Long userId) {
-        User user = getUser(userId);
-        return notificationRepository.findAllByToId(userId).stream()
-                .map(NotificationResponseDto::new)
-                .sorted()
-                .collect(Collectors.toList());
-    }
+    private final PostLikeRepository postLikeRepository;
+    private final PostRepository postRepository;
+    private final PostCommentRepository postCommentRepository;
 
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_USER));
     }
 
+    private Post getPost(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_POST));
+    }
+
     @Transactional
-    public void saveNoti(NotificationReqDto requestDto, Long fromUserId) {
+    public void saveNoti(NotificationReqDto notificationReqDto, Long fromUserId) {
         LocalDateTime curDateTime = LocalDateTime.now();
         String nowDate = curDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
 
-        NotificationSaveDto notificationSaveDto = new NotificationSaveDto(nowDate, requestDto.getDataId(), fromUserId, requestDto.getIsRead(), requestDto.getType());
 
+        // 저장할 데이터
+        NotificationSaveDto notificationSaveDto = new NotificationSaveDto(nowDate, notificationReqDto.getDataId(), fromUserId, notificationReqDto.getIsRead(), notificationReqDto.getType());
+
+        String type = notificationReqDto.getType();
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("noti"); // 최상위 root: noti
-        DatabaseReference notiRef = ref.child(requestDto.getTo().toString()); // noti의 child node: to의 아이디 값
+        Long toId = 0L;
+
+
+        Club club = null;
+        Post post = null;
+
+        if (type.equals("club")) {
+            club = clubRepository.findById(notificationReqDto.getDataId())
+                    .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_CLUB));
+            List<ClubMember> clubMemberList = clubMemberRepository.findByClub(club); // 해당 클럽의 멤버들을 뽑아서
+            for (ClubMember clubMember : clubMemberList) {
+                if (clubMember.getRole().equals(MemberRole.LEADER)) {
+                    toId = clubMember.getUser().getId();
+                    break;
+                }
+            }
+        } else if (type.equals("like") || type.equals("comment")) {
+            post = getPost(notificationReqDto.getDataId());
+            toId = notificationReqDto.getToUserId();
+        } else {
+            toId = notificationReqDto.getToUserId();
+        }
+
+        User fromUser = getUser(fromUserId);
+        User toUser = getUser(toId);
+
+
+        DatabaseReference notiRef = ref.child(toId.toString()); // 알림 받는 사람의 아이디
         DatabaseReference nextNotiRef = notiRef.push(); // 다음 키값으로 푸시
         String postId = nextNotiRef.getKey(); // 현재 알람의 키값을 가져옴
         DatabaseReference saveNoti = notiRef.child(postId); // to의 아이디 값의 child node
 
-//        String type = requestDto.getType();
-//
-//        if (type.equals("club")) { // 클럽 가입 신청
-//
-//        } else if (type.equals("clubApprove")) { // 클럽 가입 승인/거절
-//
-//        } else if (type.equals("follow")) { // 팔로우
-//            User fromUser = getUser(fromUserId);
-//            User toUser = getUser(requestDto.getTo());
-//
-//            if (!followRepository.findByToUser(fromUser, toUser).isPresent()) { // 이미 팔로우 되있는 경우면 noti에서 삭제
-//
-//            } else { //아닌 경우는 저장
-//                saveNoti.setValueAsync(notificationSaveDto);
-//            }
-//        } else if (type.equals("like")) { // 좋아요
-//
-//        } else if (type.equals("comment")) { // 댓글
-//
-//        }
 
-        saveNoti.setValueAsync(notificationSaveDto);
+        if (type.equals("club")) { // 클럽 가입 신청
+            if (!clubMemberRepository.findByUserAndClub(fromUser, club).isPresent()) { // 가입신청을 눌러서 데이터가 생김 => 데이터가 없을 때 삭제 알림이 가야함
+                notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        exFindData:
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            String postKey = data.getKey();
+                            for (DataSnapshot values : data.getChildren()) {
+                                if (values.getKey().equals("from")) {
+                                    if (values.getValue() == fromUserId) {
+                                        DatabaseReference deleteRef = notiRef.child(postKey);
+                                        deleteRef.removeValueAsync();
+                                        break exFindData;
+                                    }
+                                }
+                            }
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                    }
+                });
+            } else { // 테이블에 값이 존재하는 경우에는 가입신청을 한거라서, 데이터를 생성해줌
+                saveNoti.setValueAsync(notificationSaveDto);
+            }
+        } else if (type.equals("follow")) { // 팔로우
+            if (!followRepository.findByToUser(fromUser, toUser).isPresent()) { // 팔로우를 신청했다면 테이블에 이미 존재하므로 없을 때 삭제
+                notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        exFindData:
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            String postKey = data.getKey();
+                            for (DataSnapshot values : data.getChildren()) {
+                                if (values.getKey().equals("from")) {
+                                    if (values.getValue() == fromUserId) {
+                                        DatabaseReference deleteRef = notiRef.child(postKey);
+                                        deleteRef.removeValueAsync();
+                                        break exFindData;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                    }
+                });
+            } else { //아닌 경우는 저장
+                saveNoti.setValueAsync(notificationSaveDto);
+            }
+        } else if (type.equals("like")) { // 좋아요
+            if (!postLikeRepository.findByUserAndPost(fromUser, post).isPresent()) {
+                notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        exFindData:
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            String postKey = data.getKey();
+                            for (DataSnapshot values : data.getChildren()) {
+                                if (values.getKey().equals("from")) {
+                                    if (values.getValue() == fromUserId) {
+                                        DatabaseReference deleteRef = notiRef.child(postKey);
+                                        deleteRef.removeValueAsync();
+                                        break exFindData;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                    }
+                });
+            } else {
+                saveNoti.setValueAsync(notificationSaveDto);
+            }
+        } else { // 댓글
+            if(!postCommentRepository.findByUserAndPost(fromUser, post).isPresent()){
+                notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        exFindData:
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            String postKey = data.getKey();
+                            for (DataSnapshot values : data.getChildren()) {
+                                if (values.getKey().equals("from")) {
+                                    if (values.getValue() == fromUserId) {
+                                        DatabaseReference deleteRef = notiRef.child(postKey);
+                                        deleteRef.removeValueAsync();
+                                        break exFindData;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                    }
+                });
+            } else{
+                saveNoti.setValueAsync(notificationSaveDto);
+            }
+        }
     }
 
     @Transactional
