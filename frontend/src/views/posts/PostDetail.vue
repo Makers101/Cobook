@@ -20,7 +20,7 @@
                     <div class="col-3">
                       <ul class="align">
                         <li>
-                          <figure class="book" @click="bookDetail(selectedPost.book.id)">
+                          <figure class="book pointer" @click="bookDetail(selectedPost.book.id)">
                             <!-- front -->
                             <ul class="hardcover_front">
                               <li>
