@@ -5,7 +5,7 @@
         class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
         v-for="feed in feeds"
         :key="feed.id"
-        @click="toPostDetail(feed.id)">
+        @click="selectFeed(feed.id)">
         <div class="card m-0 ">
           <div class="additional d-flex justify-content-start px-1">
             <div class="user-card">
