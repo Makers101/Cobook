@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClubEventSimpleResDto implements Comparable<ClubEventSimpleResDto> {
 
-    private Long id;
+    private Long clubId;
+    private Long eventId;
     private String name;
     private LocalDateTime datetime;
     private String place;
@@ -21,7 +22,8 @@ public class ClubEventSimpleResDto implements Comparable<ClubEventSimpleResDto> 
     private BookSimpleResDto book;
 
     public ClubEventSimpleResDto(ClubEvent clubEvent) {
-        this.id = clubEvent.getId();
+        this.clubId = clubEvent.getClub().getId();
+        this.eventId = clubEvent.getId();
         this.name = clubEvent.getTitle();
         this.place = clubEvent.getPlace();
         this.datetime = clubEvent.getDateTime();
