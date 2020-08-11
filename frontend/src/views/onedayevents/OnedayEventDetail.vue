@@ -156,12 +156,13 @@
         <h4 class="text-left font-weight-bold mb-3">멤버의 책 리뷰</h4>
         <button class="btn btn-green" @click="toPostCreate(selectedOnedayEvent.book.id)">책 리뷰 작성하기</button>
       </div>
-      <div class="row rows-cols-1 row-cols-md-3" v-if="selectedOnedayEvent.memberPosts.length !== 0">
+      <div class="d-flex my-2 scroll-sect" id="scroll-area-post" v-if="selectedOnedayEvent.memberPosts.length">
         <div 
-          class="col-12 col-sm-4 mb-4 pointer"
+          class="pointer px-3"
           v-for="post in selectedOnedayEvent.memberPosts"
           :key="post.id"
-          @click="toPostDetail(post.id)">
+          @click="toPostDetail(post.id)"
+          style="min-width: 345.59px; max-width: 345.59px">
           <div class="card h-100">
             <div style="max-height:70px;overflow:hidden;">
               <img
@@ -279,7 +280,20 @@ export default {
   },
   created() {
     this.findOnedayEvent(this.$route.params.onedayEventId)
-  }
+  },
+  mounted() {
+    function stopWheel(e){
+      if(!e){ e = window.event; } /* IE7, IE8, Chrome, Safari */
+      if(e.preventDefault) { e.preventDefault(); } /* Chrome, Safari, Firefox */
+      e.returnValue = false; /* IE7, IE8 */
+    }
+
+    const scrollAreaClub = document.querySelector('#scroll-area-post')
+    scrollAreaClub.addEventListener('wheel', (e) => {
+      scrollAreaClub.scrollLeft += e.deltaY;
+      stopWheel()
+    })
+  },
 }
 </script>
 
@@ -384,5 +398,39 @@ export default {
     background-color: #88A498;
     color: #F8F8F8;
     padding: 6px;
+  }
+
+  .scroll-sect {
+    overflow: hidden;
+  }
+
+  .scroll-sect::-webkit-scrollbar {
+    width: 8px; height: 8px; border: 3px solid white; 
+  } 
+
+  .scroll-sect::-webkit-scrollbar-button,.scroll-sect::-webkit-scrollbar-button:END {
+    background-color: white;
+  }
+
+  .scroll-sect::-webkit-scrollbar-button:start:decrement{
+  }
+
+  .scroll-sect::-webkit-scrollbar-track {
+    background: white; 
+    -webkit-border-radius: 10px white; 
+    border-radius:10px white;
+    /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.2) */
+  }
+
+  .scroll-sect::-webkit-scrollbar-thumb {
+    height: 10px; 
+    width: 50px; 
+    background: #88A498; 
+    -webkit-border-radius: 15px; border-radius: 15px; 
+    /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
+  }
+
+  .scroll-sect:hover{
+    overflow-x: scroll;
   }
 </style>
