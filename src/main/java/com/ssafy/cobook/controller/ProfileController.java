@@ -1,6 +1,5 @@
 package com.ssafy.cobook.controller;
 
-
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.ProfileService;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
@@ -18,24 +17,22 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
-
-import static com.ssafy.cobook.config.WebMvcConfig.SERVER_PORT;
-
 
 @Slf4j
 @CrossOrigin(origins = "*")
@@ -125,7 +122,6 @@ public class ProfileController {
     @ApiOperation(value = "해당 유저의 피드를 가져온다")
     @GetMapping("/{userId}/feed")
     public ResponseEntity<List<PostResponseDto>>getFeed(@PathVariable("userId") Long toUserId){
-        log.info("SERVERPORT" + SERVER_PORT);
         return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserFeed(toUserId));
     }
 
