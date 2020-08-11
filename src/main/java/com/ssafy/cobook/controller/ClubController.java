@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Slf4j
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/clubs")
 @RequiredArgsConstructor

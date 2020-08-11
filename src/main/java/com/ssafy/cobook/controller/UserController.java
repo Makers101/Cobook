@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-
 public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;

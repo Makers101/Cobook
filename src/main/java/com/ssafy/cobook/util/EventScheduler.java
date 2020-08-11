@@ -19,7 +19,7 @@ public class EventScheduler {
     private final OneDayEventService oneDayEventService;
     private final ClubEventService clubEventService;
 
-    @Scheduled(cron = "0 0/30 * * * *")
+    @Scheduled(cron = "59 0/30 * * * *")
     public void cronJob() {
         logger.info("scheduled");
         oneDayEventService.checkEnded();
