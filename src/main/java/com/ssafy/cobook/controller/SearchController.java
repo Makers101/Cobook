@@ -1,6 +1,7 @@
 package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.service.SearchService;
+import com.ssafy.cobook.service.dto.book.BookBySearchResDto;
 import com.ssafy.cobook.service.dto.post.PostBySearchResDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,11 @@ import java.util.List;
 public class SearchController {
     private final SearchService searchService;
 
+    @ApiOperation(value = "책 검색하기 (책 이름과 저자명으로 검색)")
+    @GetMapping("/book/{keyword}")
+    public ResponseEntity<List<BookBySearchResDto>> searchBooks(@PathVariable("keyword") final String keyword) {
+        return ResponseEntity.status(HttpStatus.OK).body(searchService.searchBooks(keyword));
+    }
 
     @ApiOperation(value = "피드 검색하기 (한줄 리뷰, 리뷰에 포함된 내용으로 검색)")
     @GetMapping("/post/{keyword}")

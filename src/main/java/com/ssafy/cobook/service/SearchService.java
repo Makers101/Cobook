@@ -5,6 +5,7 @@ import com.ssafy.cobook.domain.club.ClubRepository;
 import com.ssafy.cobook.domain.onedayevent.OneDayEventRepository;
 import com.ssafy.cobook.domain.post.PostRepository;
 import com.ssafy.cobook.domain.user.UserRepository;
+import com.ssafy.cobook.service.dto.book.BookBySearchResDto;
 import com.ssafy.cobook.service.dto.post.PostBySearchResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +20,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SearchService {
     private final PostRepository postRepository;
+    private final BookRepository bookRepository;
 
-
-
+    public List<BookBySearchResDto> searchBooks(String keyword) {
+        return bookRepository.findByKeyword(keyword);
+    }
     public List<PostBySearchResDto> searchPosts(String keyword) {
         return postRepository.findByKeyword(keyword);
     }
