@@ -26,8 +26,7 @@ public class UserSaveRequestDto {
 
 
     @NotEmpty(message = "비밀번호를 입력해주세요.")
-    @Pattern(regexp = "/^[a-zA-Z0-9]*$/", message = "영문자, 숫자를 포함한 8자리 이상의 비밀번호를 입력하세요.")
-    @Length(min = 8, max = 128)
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=\\S+$).{8,20}")
     private String password;
 
     @NotEmpty(message = "닉네임을 입력해주세요.")
@@ -40,7 +39,7 @@ public class UserSaveRequestDto {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    public User toEntity(){
+    public User toEntity() {
 
         return User.builder()
                 .email(email)
