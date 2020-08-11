@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,14 +42,14 @@ public class UserController {
 
     @ApiOperation(value = "이메일, 패스워드, 유저명을 받아서 회원가입한다.", response = UserResponseIdDto.class)
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseIdDto> signUp(@RequestBody final UserSaveRequestDto userSaveRequestDto) {
+    public ResponseEntity<UserResponseIdDto> signUp(@RequestBody @Valid final UserSaveRequestDto userSaveRequestDto) {
         UserResponseIdDto userResponseDto = userService.signUp(userSaveRequestDto, false);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }
 
     @ApiOperation(value = "소셜로 로그인하는 경우", response = UserResponseIdDto.class)
     @PostMapping("/social")
-    public ResponseEntity<String> socialLogin(@RequestBody final OAuth2LoginDto oAuth2LoginDto) {
+    public ResponseEntity<String> socialLogin(@RequestBody @Valid final OAuth2LoginDto oAuth2LoginDto) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.socialLogin(oAuth2LoginDto));
     }
 
@@ -64,7 +65,7 @@ public class UserController {
 
     @ApiOperation(value = "이메일, 패스워드를 받아서 로그인하여 토큰을 반환한다")
     @PostMapping("/signin")
-    public ResponseEntity<String> signIn(@RequestBody final UserLoginRequestDto userLoginRequestDto) {
+    public ResponseEntity<String> signIn(@RequestBody @Valid final UserLoginRequestDto userLoginRequestDto) {
         User user = userService.login(userLoginRequestDto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(jwtTokenProvider.createToken(user.getId(), user.getRoles()));
     }
@@ -83,7 +84,7 @@ public class UserController {
 
     @ApiOperation(value = "비밀번호 찾기")
     @PostMapping("/password")
-    public ResponseEntity<Void> getPassword(@RequestBody UserEmailSimpleDto userEmailSimpleDto) {
+    public ResponseEntity<Void> getPassword(@RequestBody @Valid UserEmailSimpleDto userEmailSimpleDto) {
         userService.getPassword(userEmailSimpleDto, true);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -102,7 +103,7 @@ public class UserController {
 
     @ApiOperation(value = "인증코드가 올바르다면 비밀번호를 새로 입력받아 저장한다.", response = String.class)
     @PostMapping("resetPassword/update")
-    public ResponseEntity<Void> resetPassword(@RequestBody final UserUpdatePwdDto userUpdatePwdDto) {
+    public ResponseEntity<Void> resetPassword(@RequestBody @Valid final UserUpdatePwdDto userUpdatePwdDto) {
         String token = userUpdatePwdDto.getJwt();
         userService.updatePassword(token, userUpdatePwdDto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();

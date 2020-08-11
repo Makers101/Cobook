@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -43,7 +44,7 @@ public class PostController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping
     public ResponseEntity<PostSaveResDto> savePosts(@ApiIgnore final Authentication authentication,
-                                                    @RequestBody final PostSaveReqDto requestDto) {
+                                                    @RequestBody @Valid final PostSaveReqDto requestDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.savePosts(requestDto, userId));
     }
@@ -86,7 +87,7 @@ public class PostController {
     @PostMapping("/{postId}/comments")
     public ResponseEntity<Void> addComments(@ApiIgnore final Authentication authentication,
                                             @PathVariable("postId") final Long postId,
-                                            @RequestBody final CommentsReqDto dto) {
+                                            @RequestBody @Valid final CommentsReqDto dto) {
         System.out.println(authentication.toString());
         System.out.println(authentication.getPrincipal().toString());
         Long userId = ((User) authentication.getPrincipal()).getId();
@@ -105,7 +106,7 @@ public class PostController {
     @PutMapping("/{postId}")
     public ResponseEntity<Void> updatePost(@ApiIgnore final Authentication authentication,
                                            @PathVariable("postId") final Long postId,
-                                           @RequestBody final PostUpdateReqDto requestDto) {
+                                           @RequestBody @Valid final PostUpdateReqDto requestDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         postService.updatePost(postId, userId, requestDto);
         return ResponseEntity.ok().build();

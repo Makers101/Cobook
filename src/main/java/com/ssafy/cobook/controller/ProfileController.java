@@ -30,6 +30,7 @@ import org.springframework.http.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class ProfileController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PutMapping()
     public ResponseEntity<UserResponseIdDto> updateProfile(@ApiIgnore final Authentication authentication,
-                                                           @RequestBody final UserUpdateReqDto userUpdateDto) {
+                                                           @RequestBody @Valid final UserUpdateReqDto userUpdateDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         return ResponseEntity.status(HttpStatus.OK).body(profileService.updateUserInfo(userId, userUpdateDto));
     }

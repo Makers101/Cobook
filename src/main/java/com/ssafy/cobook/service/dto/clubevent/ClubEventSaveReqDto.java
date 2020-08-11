@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,12 +15,15 @@ import java.util.List;
 public class ClubEventSaveReqDto {
 
     @ApiModelProperty(position = 1)
+    @Length(min = 1, max = 30)
     private String name;
     @ApiModelProperty(position = 2)
+    @Length(min = 1, max = 100)
     private String description;
     @ApiModelProperty(position = 3)
     private LocalDateTime datetime;
     @ApiModelProperty(position = 4)
+    @Length(min = 1, max = 30)
     private String place;
     @ApiModelProperty(position = 5)
     private Long bookId;
