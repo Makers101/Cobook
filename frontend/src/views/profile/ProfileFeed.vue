@@ -2,58 +2,60 @@
   <div class="mt-3">
     <div class="row rows-cols-1 row-cols-md-3" v-if="this.feeds.length">
       <div 
-          class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
-          v-for="feed in feeds"
-          :key="feed.id"
-          @click="toPostDetail(feed.id)">
-          <div class="card m-0 ">
-            <div class="additional d-flex justify-content-start px-1">
-              <div class="user-card">
-                <div class="points center">
-                  <i class="fas fa-heart mr-1"></i> {{ feed.likeUsers.length }}
-                </div>
-                <img class="mt-5" :src="feed.book.bookImg">  
+        class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
+        v-for="feed in feeds"
+        :key="feed.id"
+        @click="selectFeed(feed.id)">
+        <div class="card m-0 ">
+          <div class="additional d-flex justify-content-start px-1">
+            <div class="user-card">
+              <div class="points center">
+                <i class="fas fa-heart mr-1"></i> {{ feed.likeUsers.length }}
               </div>
-              <div class="more-info">
-                <p class="book-title my-2">{{ feed.book.title }}</p>
-                <div class="text-left">
-                  <div class="coords">
-                    <p>
-                      <!-- <mark>작가</mark> -->
-                      <span>{{ feed.book.author }}</span>
-                    </p>
-                  </div>
-                  <div class="coords">
-                    <p>
-                      <!-- <mark>출판사</mark> -->
-                      <span>{{ feed.book.publisher }}</span>
-                    </p>
-                  </div>
-                  <div class="coords">
-                    <p>
-                      <!-- <mark>출판일</mark> -->
-                      <span>{{ feed.book.pubDate }}</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <img class="mt-5" :src="feed.book.bookImg">  
             </div>
-            <div class="general d-flex flex-column justify-content-between">
-              <div class="w-100 h-100 d-flex flex-column justify-content-around">
-                <div class="mb-2">
-                  <span class="mb-3 star-container" v-for="index in feed.rank" :key="index"><i class="fas fa-star" style="color:yellow"></i></span>
+            <div class="more-info d-flex flex-column justify-content-around">
+              <p class="book-title my-2">{{ feed.book.title }}</p>
+              <div class="text-left">
+                <div class="coords">
+                  <p>
+                    <!-- <mark>작가</mark> -->
+                    <img class="mr-2" src="https://user-images.githubusercontent.com/25967949/89915180-00042000-dc31-11ea-8777-4cc7df56b4b4.png" width="20px">
+                    <span>{{ feed.book.author }}</span>
+                  </p>
                 </div>
-                <p class="text-left m-0"><i class="fas fa-quote-left"></i></p>
-                <p class="card-text px-3" style="word-break:keep-all;">{{ feed.onelineReview }}</p>
-                <p class="text-right m-0"><i class="fas fa-quote-right"></i></p>
+                <div class="coords">
+                  <p>
+                    <!-- <mark>출판사</mark> -->
+                    <img class="mr-2" src="https://user-images.githubusercontent.com/25967949/89915533-71dc6980-dc31-11ea-96c5-139fa8877eb2.png" width="20px">
+                    <span>{{ feed.book.publisher }}</span>
+                  </p>
+                </div>
+                <div class="coords">
+                  <p>
+                    <!-- <mark>출판일</mark> -->
+                    <img class="mr-2" src="https://user-images.githubusercontent.com/25967949/89915335-304bbe80-dc31-11ea-9dbc-06270437603f.png" width="20px">
+                    <span>{{ feed.book.pubDate | moment('YYYY-MM-DD') }}</span>
+                  </p>
+                </div>
               </div>
-              <div class="more">
-                <span class="text-black-50"><small>{{ feed.createdAt | moment('YYYY-MM-DD')}}</small></span>
-              </div>
-              
             </div>
           </div>
-        </div>   
+          <div class="general d-flex flex-column justify-content-between">
+            <div class="w-100 h-100 d-flex flex-column justify-content-around">
+              <div class="mb-2">
+                <span class="mb-3 star-container" v-for="index in feed.rank" :key="index"><i class="fas fa-star" style="color:yellow"></i></span>
+              </div>
+              <p class="text-left m-0"><i class="fas fa-quote-left"></i></p>
+              <p class="card-text px-3" style="word-break:keep-all;">{{ feed.onelineReview }}</p>
+              <p class="text-right m-0"><i class="fas fa-quote-right"></i></p>
+            </div>
+            <div class="more">
+              <span class="text-black-50"><small>{{ feed.createdAt | moment('YYYY-MM-DD')}}</small></span>
+            </div>
+          </div>
+        </div>
+      </div>   
     </div>
     <div v-else>
       <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
@@ -133,7 +135,6 @@ export default {
 }
 
 .card {
-  /* width: 300px; */
   height: 250px;
   background-color: #fff;
   background: linear-gradient(#f8f8f8, #fff);
@@ -223,7 +224,7 @@ export default {
 }
 
 .card .additional .more-info {
-  /* width: 300px; */
+  width: 58%;
   float: left;
   position: absolute;
   left: 120px;
@@ -327,6 +328,5 @@ mark {
   color: red;
   text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.7);
 }
-
 
 </style>
