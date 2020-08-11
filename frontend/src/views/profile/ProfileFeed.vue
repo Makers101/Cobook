@@ -135,7 +135,6 @@ export default {
 }
 
 .card {
-  /* width: 300px; */
   height: 250px;
   background-color: #fff;
   background: linear-gradient(#f8f8f8, #fff);
@@ -225,7 +224,7 @@ export default {
 }
 
 .card .additional .more-info {
-  /* width: 300px; */
+  width: 58%;
   float: left;
   position: absolute;
   left: 120px;
@@ -329,6 +328,5 @@ mark {
   color: red;
   text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.7);
 }
-
 
 </style>
