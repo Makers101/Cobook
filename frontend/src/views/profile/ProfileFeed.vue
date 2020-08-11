@@ -226,7 +226,7 @@ export default {
 }
 
 .card .additional .more-info {
-  width: 66%;
+  /* width: 300px; */
   float: left;
   position: absolute;
   left: 120px;
@@ -312,6 +312,8 @@ export default {
 
 .card p {
   margin: 0;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 mark {
