@@ -1,5 +1,5 @@
 export default {
-  URL: 'http://i3a111.p.ssafy.io:8080/api',
+  URL: 'https://i3a111.p.ssafy.io:8090/api',
   ROUTES: {
     // books
     books: '/books',
