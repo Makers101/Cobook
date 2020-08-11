@@ -1001,7 +1001,11 @@ body {
   overflow-y: auto;
 }
 
-.post-onelinereview, .post-review, .book-title{
+.book-title {
+  word-break: break-word;
+}
+
+.post-onelinereview, .post-review{
   word-break: keep-all;
 }
 
@@ -1711,6 +1715,4 @@ figcaption p {
 		font-size: 90%;
 	}
 }
-
-
 </style>
