@@ -14,6 +14,8 @@ public class UserBySearchResDto {
     public UserBySearchResDto(User user){
         this.id = user.getId();
         this.nickName = user.getNickName();
-        this.profileImg = user.getProfileImg();
+        if (user.getProfileImg() != null) {
+            this.profileImg = "https://i3a111.p.ssafy.io:8090/api/profile/images/" + this.id;
+        }
     }
 }

@@ -1,7 +1,5 @@
 package com.ssafy.cobook.service.dto.profile;
 
-import com.ssafy.cobook.domain.clubgenre.ClubGenre;
-import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
@@ -31,10 +29,8 @@ public class ProfileResponseDto {
         this.email = user.getEmail();
         this.nickName = user.getNickName();
         this.description = user.getDescription();
-        this.profileImg = user.getProfileImg();
-
         if (user.getProfileImg() != null) {
-            this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.id;
+            this.profileImg = "https://i3a111.p.ssafy.io:8090/api/profile/images/" + this.id;
         }
 
         this.likeGenres = user.getUserGenres().stream()

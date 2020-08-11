@@ -19,7 +19,7 @@ public class OneDayEventMemberResponseDto {
         this.id = user.getId();
         this.nickName = user.getNickName();
         if (user.getProfileImg() != null) {
-            this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.id;
+            this.profileImg = "https://i3a111.p.ssafy.io:8090/api/profile/images/" + this.id;
         }
     }
 }

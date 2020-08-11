@@ -34,6 +34,8 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
+import static com.ssafy.cobook.config.WebMvcConfig.SERVER_PORT;
+
 
 @Slf4j
 @CrossOrigin(origins = "*")
@@ -123,6 +125,7 @@ public class ProfileController {
     @ApiOperation(value = "해당 유저의 피드를 가져온다")
     @GetMapping("/{userId}/feed")
     public ResponseEntity<List<PostResponseDto>>getFeed(@PathVariable("userId") Long toUserId){
+        log.info("SERVERPORT" + SERVER_PORT);
         return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserFeed(toUserId));
     }
 

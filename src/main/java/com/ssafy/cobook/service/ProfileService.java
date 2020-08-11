@@ -229,7 +229,7 @@ public class ProfileService {
     public void saveImg(Long userId, MultipartFile profileImg) throws IOException {
         uploadFile(profileImg);
         User user = getUserById(userId);
-        user.setProfile("http://i3a111.p.ssafy.io:8080/api/profile/images/profile/" + profileImg.getOriginalFilename());
+        user.setProfile("profile/" + profileImg.getOriginalFilename());
     }
 
     private void uploadFile(MultipartFile file) throws IOException {
@@ -240,7 +240,7 @@ public class ProfileService {
 
     public String getFilePath(Long userId) {
         User user = getUserById(userId);
-        return user.getProfileImg().replace("http://i3a111.p.ssafy.io:8080/api/profile/images/", "");
+        return user.getProfileImg();
     }
 
     public List<PostResponseDto> getUserFeed(Long userId) {

@@ -19,7 +19,7 @@ public class ClubCandidatesResponseDto {
         this.userId = clubMember.getUser().getId();
         this.nickName = clubMember.getUser().getNickName();
         if (clubMember.getUser().getProfileImg() != null) {
-            this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.userId;
+            this.profileImg = "https://i3a111.p.ssafy.io:8090/api/profile/images/" + this.userId;
         }
     }
 }

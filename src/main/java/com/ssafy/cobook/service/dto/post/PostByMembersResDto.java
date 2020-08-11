@@ -1,9 +1,6 @@
 package com.ssafy.cobook.service.dto.post;
 
 import com.ssafy.cobook.domain.post.Post;
-import com.ssafy.cobook.service.dto.book.BookDetailsDto;
-import com.ssafy.cobook.service.dto.club.ClubByPostDto;
-import com.ssafy.cobook.service.dto.user.UserByPostDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +31,7 @@ public class PostByMembersResDto {
         this.userId = post.getUser().getId();
         this.nickName = post.getUser().getNickName();
         if (post.getUser().getProfileImg() != null) {
-            this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.userId;
+            this.profileImg = "https://i3a111.p.ssafy.io:8090/api/profile/images/" + this.userId;
         }
         this.onelineReview = post.getOnelineReview();
         this.rank = post.getRank();
