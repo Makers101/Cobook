@@ -3,6 +3,7 @@ package com.ssafy.cobook.controller;
 import com.ssafy.cobook.service.SearchService;
 import com.ssafy.cobook.service.dto.book.BookBySearchResDto;
 import com.ssafy.cobook.service.dto.post.PostBySearchResDto;
+import com.ssafy.cobook.service.dto.user.UserBySearchResDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SearchController {
     private final SearchService searchService;
+
+    @ApiOperation(value = "유저 검색하기 (유저 이름으로 검색)")
+    @GetMapping("/user/{keyword}")
+    public ResponseEntity<List<UserBySearchResDto>> searchUsers(@PathVariable("keyword") final String keyword) {
+        return ResponseEntity.status(HttpStatus.OK).body(searchService.searchUsers(keyword));
+    }
 
     @ApiOperation(value = "책 검색하기 (책 이름과 저자명으로 검색)")
     @GetMapping("/book/{keyword}")
