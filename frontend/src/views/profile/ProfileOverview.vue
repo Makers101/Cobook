@@ -71,40 +71,76 @@
               :close-on-content-click="false"
               :activator="selectedElement"
               offset-x
+              min-width="350px"
+              max-width="350px"
             >
               <v-card
                 color="grey lighten-4"
                 min-width="350px"
+                max-width="350px"
                 flat
               >
                 <v-toolbar
                   :color="selectedEvent.color"
                   dark
                 >
-                  <v-btn icon>
-                    <v-icon>mdi-pencil</v-icon>
-                  </v-btn>
                   <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                   <v-spacer></v-spacer>
-                  <v-btn icon>
-                    <v-icon>mdi-heart</v-icon>
-                  </v-btn>
-                  <v-btn icon>
-                    <v-icon>mdi-dots-vertical</v-icon>
+                  <v-btn icon color="white" @click="selectedOpen = false">
+                    <i class="fas fa-times"></i>
                   </v-btn>
                 </v-toolbar>
-                <v-card-text>
-                  <span v-html="selectedEvent.details"></span>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    text
-                    color="secondary"
-                    @click="selectedOpen = false"
-                  >
-                    Cancel
-                  </v-btn>
-                </v-card-actions>
+                <div
+                  class="pointer"
+                  @click="selectEvent(selectedEvent.clubEvent.id, selectedEvent.clubEvent.clubId)"
+                  v-if="selectedEvent.clubEvent">
+                  <div class="card h-100">
+                    <div class="row no-gutters">
+                      <div class="col-6 event-left">
+                        <img class="bg-image" :src="selectedEvent.clubEvent.book.bookImg" width="100%">
+                        <span class="badge mb-0 event-closed-true" v-if="selectedEvent.clubEvent.closed">종료</span>
+                        <span class="badge mb-0 event-closed-false" v-else>예정</span>
+                      </div>
+                      <div class="col-6 text-left d-flex flex-column align-items-start p-2">
+                        <p class="event-name font-weight-bold" lt="book">{{ selectedEvent.clubEvent.name }}</p>
+                        <span class="badge badge-genre">{{ selectedEvent.clubEvent.book.genre }}</span>
+                        <div class="mt-auto">
+                          <p class="mb-0" v-if="selectedEvent.clubEvent.capacity"><small><i class="fas fa-users"></i> {{ selectedEvent.clubEvent.participantCnt}} / {{ selectedEvent.clubEvent.capacity + 1 }}</small></p>
+                          <p class="mb-0" v-else><small><i class="fas fa-users"></i> {{ selectedEvent.clubEvent.participantCnt}}</small></p>
+                          <p class="mb-0"><small><i class="fas fa-map-marker-alt"></i> {{ selectedEvent.clubEvent.place }}</small></p>
+                          <p class="event-date mb-0"><small>{{ selectedEvent.clubEvent.datetime | moment('YYYY-MM-DD HH:mm') }}</small></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="pointer"
+                  @click="selectEvent(selectedEvent.onedayEvent.id, null)"
+                  v-if="selectedEvent.onedayEvent">
+                  <div class="card h-100">
+                    <div class="row no-gutters">
+                      <div class="col-6 event-left">
+                        <img class="bg-image" :src="selectedEvent.onedayEvent.book.bookImg" width="100%">
+                        <span class="badge mb-0 event-closed-true" v-if="selectedEvent.onedayEvent.closed">종료</span>
+                        <span class="badge mb-0 event-closed-false" v-else>예정</span>
+                      </div>
+                      <div class="col-6 text-left d-flex flex-column align-items-start p-2">
+                        <p class="event-name font-weight-bold" lt="book">{{ selectedEvent.onedayEvent.name }}</p>
+                        <span class="badge badge-genre">{{ selectedEvent.onedayEvent.book.genre }}</span>
+                        <div class="mt-auto">
+                          <p class="mb-0" v-if="selectedEvent.onedayEvent.capacity"><small><i class="fas fa-users"></i> {{ selectedEvent.onedayEvent.participantCnt}} / {{ selectedEvent.onedayEvent.capacity + 1 }}</small></p>
+                          <p class="mb-0" v-else><small><i class="fas fa-users"></i> {{ selectedEvent.onedayEvent.participantCnt}}</small></p>
+                          <p class="mb-0"><small><i class="fas fa-map-marker-alt"></i> {{ selectedEvent.onedayEvent.place }}</small></p>
+                          <p class="event-date mb-0"><small>{{ selectedEvent.onedayEvent.datetime | moment('YYYY-MM-DD HH:mm') }}</small></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="selectedEvent.post">
+                  책 리뷰 게시물 카드가 들어갈 것!
+                </div>
               </v-card>
             </v-menu>
           </v-sheet>
@@ -113,9 +149,7 @@
     </v-app>
     
     <!-- profile-overview-statistics -->
-    <hr>
-
-    <v-row class="mb-5">
+    <v-row>
       <v-col cols="6">
         <h3>월별 독서 통계</h3>
         <div class="d-flex justify-content-center align-items-center">
@@ -140,6 +174,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import router from '@/router'
 import barChart from "@/views/profile/MonthlyChart.js";
 import PieChart from "@/views/profile/GenreChart.js";
 export default {
@@ -161,8 +196,6 @@ export default {
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
-      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-      names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }
   },
   computed: {
@@ -202,38 +235,19 @@ export default {
 
       nativeEvent.stopPropagation()
     },
-    updateRange ({ start, end }) {
-      const events = []
-
-      const min = new Date(`${start.date}T00:00:00`)
-      const max = new Date(`${end.date}T23:59:59`)
-      const days = (max.getTime() - min.getTime()) / 86400000
-      const eventCount = this.rnd(days, days + 20)
-
-      for (let i = 0; i < eventCount; i++) {
-        const allDay = this.rnd(0, 3) === 0
-        const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-        const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-        const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-        const second = new Date(first.getTime() + secondTimestamp)
-
-        events.push({
-          name: this.names[this.rnd(0, this.names.length - 1)],
-          start: first,
-          end: second,
-          color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay,
-        })
-      }
-
-      // this.events = events
-    },
     rnd (a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a
     },
     calendarType(type) {
       this.type = type
-    }
+    },
+    selectEvent(eventId, clubId) {
+      if (clubId) {
+        router.push({ name: 'ClubEventDetail', params: { clubId: clubId, clubEventId: eventId }})
+      } else {
+        router.push({ name: 'OnedayEventDetail', params: { onedayEventId: eventId }})
+      }
+    },
   },
   created() {
     this.findOverview(this.$route.params.userId)
@@ -246,4 +260,39 @@ export default {
 </script>
 
 <style scoped>
+  .badge-genre {
+    background-color: #88A498;
+    color: #F8F8F8;
+    padding: 6px;
+  }
+
+  .event-left {
+    position: relative;
+  }
+
+  .event-closed-true {
+    background-color: #707070; 
+    color: #F8F8F8;
+    text-align: center;
+    position: absolute;
+    top: 9%;
+    left: 18%;
+    transform: translate( -50%, -50% );
+    padding: 6px;
+  }
+
+  .event-closed-false {
+    background-color: rgba(221, 118, 0, 0.8); 
+    color: #F8F8F8;
+    text-align: center;
+    position: absolute;
+    top: 9%;
+    left: 18%;
+    transform: translate( -50%, -50% );
+    padding: 6px;
+  }
+
+  .event-name {
+    word-break: keep-all;
+  }
 </style>
