@@ -152,8 +152,7 @@ public class NotificationService {
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         } else if (type.equals("like")) { // 좋아요
-            System.out.println("좋아요로 들어옴");
-            if (!postLikeRepository.findByUserAndPost(toUser, post).isPresent()) {
+            if (!postLikeRepository.findByUserAndPost(fromUser, post).isPresent()) {
                 System.out.println("삭제로 들어옴");
                 notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
