@@ -6,8 +6,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class NotificationReqDto {
-    private Long to;
-    private Long dataId; // 클럽 아이디
+    private Long toUserId;
+    private Long dataId;
     private Boolean isRead;
     private String type;
+
 }

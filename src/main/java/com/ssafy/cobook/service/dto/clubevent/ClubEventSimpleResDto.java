@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class ClubEventSimpleResDto implements Comparable<ClubEventSimpleResDto> {
 
     private Long clubId;
-    private Long eventId;
+    private Long id;
     private String name;
     private LocalDateTime datetime;
     private String place;
@@ -23,7 +23,7 @@ public class ClubEventSimpleResDto implements Comparable<ClubEventSimpleResDto> 
 
     public ClubEventSimpleResDto(ClubEvent clubEvent) {
         this.clubId = clubEvent.getClub().getId();
-        this.eventId = clubEvent.getId();
+        this.id = clubEvent.getId();
         this.name = clubEvent.getTitle();
         this.place = clubEvent.getPlace();
         this.datetime = clubEvent.getDateTime();
