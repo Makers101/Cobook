@@ -48,6 +48,10 @@ public class UserService {
 
     @Transactional
     public UserResponseIdDto signUp(UserSaveRequestDto userSaveRequestDto, Boolean isFind) {
+        if (userRepository.findByNickName(userSaveRequestDto.getNickName()).isPresent()) {
+            throw new UserException("이미 가입된 메일입니다", ErrorCode.MEMBER_DUPLICATED_NICKNAME);
+        }
+
         if (userRepository.findByEmail(userSaveRequestDto.getEmail()).isPresent()) {
             throw new UserException("이미 가입된 메일입니다", ErrorCode.MEMBER_DUPLICATED_EMAIL);
         }
@@ -73,7 +77,7 @@ public class UserService {
 
     private User getUser(final String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserException(String.format("%s는(은) 가입되지 않은 이메일입니다.", email), ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(String.format("%s는(은) 가입되지 않은 이메일입니다.", email), ErrorCode.UNEXPECTED_USER));
     }
 
     public User login(UserLoginRequestDto userLoginRequestDto) {
@@ -139,7 +143,7 @@ public class UserService {
     public void getPassword(UserEmailSimpleDto userEmailSimpleDto, boolean isFind) {
         String userEmail = userEmailSimpleDto.getEmail();
         User user = userRepository.findByEmail(userEmailSimpleDto.getEmail())
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
         String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
         preparedAndSend(userEmail, isFind, token);
@@ -150,7 +154,7 @@ public class UserService {
     public void updatePassword(String token, UserUpdatePwdDto userUpdatePwdDto) {
         Long userId = Long.valueOf(jwtTokenProvider.getId(token));
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
         String encodePassword = passwordEncoder.encode(userUpdatePwdDto.getPassword());
         userRepository.updatePassword(user.getId(), encodePassword);
@@ -164,7 +168,7 @@ public class UserService {
             userRepository.save(newUser);
         }
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
         String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
         return token;

@@ -4,15 +4,16 @@
     <div id="wrapper">
       <div id="container">
         <section class="open-book">
-          <header>
+          <header class="text-left">
+            <p class="text-left text-black-50">Book Review</p>
           </header>
           <article>
             <!-- 페이지1 -->
             <div class="page1 d-flex flex-column w-100" style="height:700px;">
                 <div class="w-100">
                   <!-- 한줄평-->
-                  <div> 
-                    <h2 class="chapter-title book-title pt-0" style="height:85px;">{{ selectedPost.onelineReview }}</h2>
+                  <div class="d-flex flex-column justify-content-center"> 
+                    <h2 class="chapter-title book-title pt-0" style="height:85px;">"{{ selectedPost.onelineReview }}"</h2>
                   </div>
                   <!-- 책 이미지 및 정보 -->
                   <div class="row no-gutters">
@@ -154,9 +155,9 @@
                     <div class="mx-0 w-100" v-if="selectedPost.review">
                       <div class="review" v-html="selectedPost.review"></div>
                     </div>
-                    <div v-else>
-                      <img src="https://user-images.githubusercontent.com/25967949/89524240-2e43c300-d81f-11ea-9a05-b1b45d70172f.png">
-                      <h5>작성된 상세 리뷰가 없습니다.</h5>
+                    <div v-else class="d-flex flex-column justify-content-center h-100">
+                      <img src="https://user-images.githubusercontent.com/25967949/89845305-0f478700-dbb9-11ea-9bc8-5c9ca2d28601.png" width="200px">
+                      <h5 class="mt-2">작성된 상세 리뷰가 없습니다.</h5>
                     </div>
                   </div>
                   <!-- 뱃지 -->
@@ -181,7 +182,7 @@
               <!-- 책에 대한 리뷰 리스트 -->
               <h5 class="mb-4"><strong>다른 유저들의 리뷰</strong></h5>
               <div class="w-100" style="height:190px;">
-                <div v-if="selectedPost.posts.length">
+                <div class="scroll-sect" v-if="selectedPost.posts.length">
                   <div class="mb-2" v-for="post in selectedPost.posts" :key="post.postId">
                     <div
                       class="pointer row no-gutters" 
@@ -253,12 +254,11 @@
                     </div>
                   </div>
                 </div>
-                <div v-else class="d-flex align-items-center">
+                <div v-else class="d-flex flex-column justify-content-center h-100">
                   <div>
-                    <img src="https://user-images.githubusercontent.com/25967949/89524240-2e43c300-d81f-11ea-9a05-b1b45d70172f.png" width="300px">
+                    <!-- <img src="https://user-images.githubusercontent.com/25967949/89524240-2e43c300-d81f-11ea-9a05-b1b45d70172f.png" width="300px"> -->
                     <h5>작성된 댓글이 없습니다.</h5>
                   </div>
-
                 </div>
               </div>
               
@@ -1001,7 +1001,11 @@ body {
   overflow-y: auto;
 }
 
-.post-onelinereview, .post-review, .book-title{
+.book-title {
+  word-break: break-word;
+}
+
+.post-onelinereview, .post-review{
   word-break: keep-all;
 }
 
@@ -1711,6 +1715,4 @@ figcaption p {
 		font-size: 90%;
 	}
 }
-
-
 </style>
