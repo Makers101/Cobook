@@ -9,6 +9,7 @@ import com.ssafy.cobook.domain.clubmember.MemberRole;
 import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
+import com.ssafy.cobook.domain.postcomment.PostCommentRepository;
 import com.ssafy.cobook.domain.postlike.PostLikeRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
@@ -37,6 +38,7 @@ public class NotificationService {
     private final FollowRepository followRepository;
     private final PostLikeRepository postLikeRepository;
     private final PostRepository postRepository;
+    private final PostCommentRepository postCommentRepository;
 
     private User getUser(Long userId) {
         return userRepository.findById(userId)
@@ -58,7 +60,6 @@ public class NotificationService {
         NotificationSaveDto notificationSaveDto = new NotificationSaveDto(nowDate, notificationReqDto.getDataId(), fromUserId, notificationReqDto.getIsRead(), notificationReqDto.getType());
 
         String type = notificationReqDto.getType();
-        System.out.println("타입은 " + type);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("noti"); // 최상위 root: noti
@@ -84,7 +85,6 @@ public class NotificationService {
         } else {
             toId = notificationReqDto.getToUserId();
         }
-        System.out.println("저장to값" + toId);
 
         User fromUser = getUser(fromUserId);
         User toUser = getUser(toId);
@@ -121,7 +121,6 @@ public class NotificationService {
                     }
                 });
             } else { // 테이블에 값이 존재하는 경우에는 가입신청을 한거라서, 데이터를 생성해줌
-                System.out.println("들어옴");
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         } else if (type.equals("follow")) { // 팔로우
@@ -153,7 +152,6 @@ public class NotificationService {
             }
         } else if (type.equals("like")) { // 좋아요
             if (!postLikeRepository.findByUserAndPost(fromUser, post).isPresent()) {
-                System.out.println("삭제로 들어옴");
                 notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
@@ -177,11 +175,35 @@ public class NotificationService {
                     }
                 });
             } else {
-                System.out.println("저장으로 들어옴");
-
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         } else { // 댓글
+            if(!postCommentRepository.findByUserAndPost(fromUser, post).isPresent()){
+                notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        exFindData:
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            String postKey = data.getKey();
+                            for (DataSnapshot values : data.getChildren()) {
+                                if (values.getKey().equals("from")) {
+                                    if (values.getValue() == fromUserId) {
+                                        DatabaseReference deleteRef = notiRef.child(postKey);
+                                        deleteRef.removeValueAsync();
+                                        break exFindData;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                    }
+                });
+            } else{
+                saveNoti.setValueAsync(notificationSaveDto);
+            }
         }
     }
 
