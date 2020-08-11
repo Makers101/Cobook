@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class ClubController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping
     public ResponseEntity<ClubCreateResDto> createClub(@ApiIgnore final Authentication authentication,
-                                                       @RequestBody ClubCreateReqDto reqDto) throws IOException {
+                                                       @RequestBody @Valid ClubCreateReqDto reqDto) throws IOException {
         Long userId = ((User) authentication.getPrincipal()).getId();
         ClubCreateResDto resDto = clubService.create(userId, reqDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
@@ -142,7 +143,7 @@ public class ClubController {
     @ApiOperation(value = "클럽 게시글 작성", response = PostSaveResDto.class)
     @PostMapping("/{clubId}/posts")
     public ResponseEntity<PostSaveResDto> saveClubPosts(@PathVariable("clubId") final Long clubId,
-                                                        @RequestBody final PostSaveByClubReqDto requsetDto) {
+                                                        @RequestBody @Valid final PostSaveByClubReqDto requsetDto) {
         PostSaveResDto resDto = postService.saveClubPosts(requsetDto, clubId);
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
@@ -152,7 +153,7 @@ public class ClubController {
     @PostMapping("/{clubId}/clubevents")
     public ResponseEntity<ClubEventSaveResDto> makeEvents(@ApiIgnore final Authentication authentication,
                                                           @PathVariable("clubId") final Long clubId,
-                                                          @RequestBody final ClubEventSaveReqDto reqDto) {
+                                                          @RequestBody @Valid final ClubEventSaveReqDto reqDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         ClubEventSaveResDto resDto = clubEventService.makeReading(userId, clubId, reqDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
@@ -186,7 +187,7 @@ public class ClubController {
     public ResponseEntity<Void> updateEvents(@ApiIgnore final Authentication authentication,
                                              @PathVariable("clubId") final Long clubId,
                                              @PathVariable("clubEventId") final Long eventId,
-                                             @RequestBody final ClubEventUpdateReqDto reqDto) {
+                                             @RequestBody @Valid final ClubEventUpdateReqDto reqDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         clubEventService.updateEvent(userId, clubId, eventId, reqDto);
         return ResponseEntity.ok().build();
@@ -216,7 +217,7 @@ public class ClubController {
     @PutMapping("/{clubId}/posts/{postId}")
     public ResponseEntity<Void> updateClubPosts(@PathVariable("clubId") final Long clubId,
                                                 @PathVariable("postId") final Long postId,
-                                                @RequestBody final PostUpdateByClubReqDto requestDto) {
+                                                @RequestBody @Valid final PostUpdateByClubReqDto requestDto) {
         postService.updateClubPosts(requestDto, clubId, postId);
         return ResponseEntity.ok().build();
     }
@@ -264,7 +265,7 @@ public class ClubController {
     @PutMapping("/{clubId}")
     public ResponseEntity<Void> updateClub(@ApiIgnore final Authentication authentication,
                                            @PathVariable final Long clubId,
-                                           @RequestBody final ClubUpdateRequestDto requestDto) {
+                                           @RequestBody @Valid final ClubUpdateRequestDto requestDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         clubService.updateClub(userId, clubId, requestDto);
         return ResponseEntity.ok().build();
