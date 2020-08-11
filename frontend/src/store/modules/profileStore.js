@@ -220,13 +220,40 @@ const profileStore = {
             datasets: [
               {
                 label: "장르별 독서량",
+                // backgroundColor: [
+                //   '#f94144',
+                //   '#f3722c',
+                //   '#f8961e',
+                //   '#f9c74f',
+                //   '#90be6d',
+                //   '#43aa8b',
+                //   '#577590'
+                // ],
+                // backgroundColor: [
+                //   '#FF8989',
+                //   '#F5B68B',
+                //   '#FFE285',
+                //   '#A0CC82',
+                //   '#73A9DB',
+                //   '#637B9B',
+                // ],
+                // backgroundColor: [
+                  
+                //   '#E3CDB8',
+                //   '#A6664B',
+                //   '#332929',
+                //   '#414D41',
+                //   '#7F8C7F',
+                //   '#DFE6E4',
+                // ],
                 backgroundColor: [
-                  '#41B883', '#E46651', '#00D8FF', '#C28535',
-                  '#8AAE56', '#B66C46', '#FCD1B5', '#DE9391',
-                  '#96759A', '#455B71', '#28343D', '#A4BBC8',
-                  '#556F59', '#9B8C6E', '#CED19A', '#2681A3',
-                  '#544542', '#735567', '#A4403D', '#CA7C7C'
-                ].sort(function(){return 0.5-Math.random()}),
+                  '#344043',
+                  '#498B91',
+                  '#6CADAE',
+                  '#85C7CC',
+                  '#ADD6D8',
+                  '#C6D8D9'
+                ],
                 data: []
               }
             ]
