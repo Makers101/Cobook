@@ -1,7 +1,5 @@
 package com.ssafy.cobook.service.dto.profile;
 
-import com.ssafy.cobook.domain.clubgenre.ClubGenre;
-import com.ssafy.cobook.domain.clubmember.ClubMember;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.usergenre.UserGenre;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
@@ -12,8 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.ssafy.cobook.config.WebMvcConfig.SERVER_PORT;
 
 @Getter
 @NoArgsConstructor
@@ -34,7 +30,7 @@ public class ProfileResponseDto {
         this.nickName = user.getNickName();
         this.description = user.getDescription();
         if (user.getProfileImg() != null) {
-            this.profileImg = "http://i3a111.p.ssafy.io:" + SERVER_PORT + "/api/profile/images/" + this.id;
+            this.profileImg = "https://i3a111.p.ssafy.io:8090/api/profile/images/" + this.id;
         }
 
         this.likeGenres = user.getUserGenres().stream()

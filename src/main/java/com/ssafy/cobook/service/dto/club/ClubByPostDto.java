@@ -17,7 +17,7 @@ public class ClubByPostDto {
         this.id = club.getId();
         this.name = club.getName();
         if (club.getClubImg() != null) {
-            this.clubImg = "https://i3a111.p.ssafy.io/api/clubs/images/" + this.id;
+            this.clubImg = "https://i3a111.p.ssafy.io:8090/api/clubs/images/" + this.id;
         }
     }
 }

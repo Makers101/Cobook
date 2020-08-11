@@ -14,8 +14,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.ssafy.cobook.config.WebMvcConfig.SERVER_PORT;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClubDetailResDto {
@@ -41,7 +39,7 @@ public class ClubDetailResDto {
         this.id = club.getId();
         this.name = club.getName();
         if (club.getClubImg() != null) {
-            this.clubImg = "https://i3a111.p.ssafy.io/api/clubs/images/" + this.id;
+            this.clubImg = "https://i3a111.p.ssafy.io:8090/api/clubs/images/" + this.id;
         }
         this.onelineDescription = club.getOnelineDescription();
         this.description = club.getDescription();
