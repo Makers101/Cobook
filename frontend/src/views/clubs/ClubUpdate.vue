@@ -167,7 +167,7 @@
                       class="mx-3 mb-2"
                       v-model="offlineResidence"
                       counter
-                      maxlength="10"
+                      maxlength="30"
                       :disabled="!offlineEnabled"
                       label="오프라인 모임 장소"
                       :rules="residenceRules"
@@ -218,7 +218,8 @@ export default {
       valid: true,
       lazy:false,
       searchGenre: null,
-      offlineResidence: null
+      offlineResidence: null,
+      clicked: false
     }
   },
   computed: {
@@ -261,6 +262,7 @@ export default {
       this.$refs.form.validate()
     },
     clickUpdate() {
+      this.clicked = true
       if (this.clubImg) {
         this.clubUpdateData.clubImgFormData = new FormData()
         this.clubUpdateData.clubImgFormData.append('clubImg', this.clubImg)
@@ -299,6 +301,27 @@ export default {
     this.selectedClub.genres.forEach(genre => {
       this.clubUpdateData.basicData.genres.push(genre.id)
     })
+  },
+  beforeRouteLeave(to, from, next) {
+    if (!this.clicked) {
+      if (this.clubUpdateData.basicData.name !== this.selectedClub.name
+          || this.clubUpdateData.basicData.onelineDescription !== this.selectedClub.onelineDescription
+          || this.clubUpdateData.basicData.description !== this.selectedClub.description
+          || this.clubUpdateData.basicData.residence !== this.selectedClub.residence
+          || ((this.clubUpdateData.basicData.residence !== '온라인') && (this.offlineResidence !== this.selectedClub.residence))
+          || this.clubUpdateData.basicData.genres.length !== this.selectedClub.genres.length
+          || this.clubImg
+         ) {
+        if (confirm('수정 중인 클럽이 있습니다. 정말 넘어가시겠습니까?') === true) {
+          next()
+        } else {
+          return false
+        }
+      }
+      next()
+    } else {
+      next()
+    }
   }
 }
 </script>
@@ -326,6 +349,6 @@ export default {
   }
 
   .club-image {
-    max-height: 200px; 
+    height: 200px; 
   }
 </style>

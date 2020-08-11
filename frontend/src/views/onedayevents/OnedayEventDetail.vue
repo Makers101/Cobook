@@ -32,8 +32,8 @@
         <div>
           <div class="d-flex justify-content-between">
             <div class="d-flex flex-column align-items-start justify-content-end">
-              <p class="mb-1 font-weight-bold"><i class="fas fa-map-marker-alt"></i> {{ selectedOnedayEvent.place }}</p>
-              <p class="mb-0 font-weight-bold">{{ selectedOnedayEvent.datetime | moment('YYYY년 MM월 DD일 HH시 mm분') }}</p>
+              <p class="mb-1 ml-1 font-weight-bold"><i class="fas fa-map-marker-alt"></i> {{ selectedOnedayEvent.place }}</p>
+              <p class="mb-0 ml-1 font-weight-bold">{{ selectedOnedayEvent.datetime | moment('YYYY년 MM월 DD일 HH시 mm분') }}</p>
             </div>
             <div class="d-flex justify-content-end align-items-end">
               <button
@@ -133,7 +133,7 @@
     <hr>
 
     <!-- onedayEvent-detail-question -->
-    <div>
+    <div v-if="isParticipant || isLeader">
       <h4 class="text-left font-weight-bold mb-3">질문지</h4>
       <ul class="ml-4" v-if="selectedOnedayEvent.questions.length !== 0">
         <li
@@ -148,10 +148,10 @@
       </div>
     </div>
 
-    <hr>
+    <hr v-if="isParticipant || isLeader">
 
     <!-- onedayEvent-detail-posts -->
-    <div>
+    <div v-if="isParticipant || isLeader">
       <div class="d-flex justify-content-between align-items-center">
         <h4 class="text-left font-weight-bold mb-3">멤버의 책 리뷰</h4>
         <button class="btn btn-green" @click="toPostCreate(selectedOnedayEvent.book.id)">책 리뷰 작성하기</button>

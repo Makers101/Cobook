@@ -146,4 +146,13 @@ public class PostController {
         List<PostResponseDto> responseDtos = postService.getFollowerPosts(userId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
     }
+
+    @ApiOperation(value = "내 관심 장르 게시글 조회")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/genres")
+    public ResponseEntity<List<PostResponseDtoByGenre>> getGenresPosts(@ApiIgnore final Authentication authentication) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        List<PostResponseDtoByGenre> response = postService.getGenresPosts(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

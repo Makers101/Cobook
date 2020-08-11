@@ -3,6 +3,7 @@ package com.ssafy.cobook.service.dto.post;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.posttag.PostTag;
 import com.ssafy.cobook.domain.tag.Tag;
+import com.ssafy.cobook.service.dto.user.UserByPostDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,8 +21,7 @@ public class PostSimpleResDto {
     private Integer postLikesCount;
     private Integer postCommentsCount;
     private List<String> postTags;
-    private Long userId;
-    private String nickName;
+    private UserByPostDto user;
     private Long bookId;
     private String bookImage;
     private String bookTitle;
@@ -36,8 +36,7 @@ public class PostSimpleResDto {
                 .map(PostTag::getTag)
                 .map(Tag::getTagName)
                 .collect(Collectors.toList());
-        this.userId = post.getUser().getId();
-        this.nickName = post.getUser().getNickName();
+        this.user = new UserByPostDto(post.getUser());
         this.bookId = post.getBook().getId();
         this.bookImage = post.getBook().getBookImg();
         this.bookTitle = post.getBook().getTitle();

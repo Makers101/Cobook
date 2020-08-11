@@ -46,12 +46,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }
 
-//    @ApiOperation(value = "카카오톡으로 로그인하는 경우", response = UserResponseIdDto.class)
-//    @PostMapping("/social/kakao")
-//    public ResponseEntity<String> kakaoLogin(@RequestBody final OAuth2LoginDto oAuth2LoginDto) {
-//        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.socialLogin(oAuth2LoginDto));
-//    }
-
     @ApiOperation(value = "소셜로 로그인하는 경우", response = UserResponseIdDto.class)
     @PostMapping("/social")
     public ResponseEntity<String> socialLogin(@RequestBody final OAuth2LoginDto oAuth2LoginDto) {

@@ -4,18 +4,67 @@
     <div id="wrapper">
       <div id="container">
         <section class="open-book">
-          <header>
+          <header class="text-left">
+            <p class="text-left text-black-50">Book Review</p>
           </header>
           <article>
             <!-- 페이지1 -->
-            <div class="page1 d-flex flex-column w-100" style="height:750px;">
+            <div class="page1 d-flex flex-column w-100" style="height:700px;">
                 <div class="w-100">
                   <!-- 한줄평-->
-                  <h2 class="chapter-title book-title pt-0">{{ selectedPost.onelineReview }}</h2>
+                  <div class="d-flex flex-column justify-content-center"> 
+                    <h2 class="chapter-title book-title pt-0" style="height:85px;">"{{ selectedPost.onelineReview }}"</h2>
+                  </div>
                   <!-- 책 이미지 및 정보 -->
                   <div class="row no-gutters">
                     <div class="col-3">
-                      <img style="height: 15vh;" :src="selectedPost.book.bookImg" alt="책 이미지">
+                      <ul class="align">
+                        <li>
+                          <figure class="book" @click="bookDetail(selectedPost.book.id)">
+                            <!-- front -->
+                            <ul class="hardcover_front">
+                              <li>
+                                <div class="coverDesign blue">
+                                  <img 
+                                    class="pointer"
+                                    style="height: 105px;" 
+                                    :src="selectedPost.book.bookImg" 
+                                    alt="책 이미지"
+                                    @click="bookDetail(selectedPost.book.id)">
+                                </div>
+                              </li>
+                              <li></li>
+                            </ul>
+                            <!-- pages -->
+                            <ul class='page'>
+                              <li></li>
+                              <li>
+                                <p class="clickBtn">click</p>
+                              </li>
+                              <li></li>
+                              <li></li>
+                              <li></li>
+                            </ul>
+                          <!-- Back -->
+                            <ul class='hardcover_back'>
+                              <li></li>
+                              <li></li>
+                            </ul>
+                            <ul class='book_spine'>
+                              <li></li>
+                              <li></li>
+                            </ul>
+                          </figure>
+                        </li>
+                      </ul>
+
+                      
+                      <!-- <img 
+                        class="pointer"
+                        style="height: 100px;" 
+                        :src="selectedPost.book.bookImg" 
+                        alt="책 이미지"
+                        @click="bookDetail(selectedPost.book.id)"> -->
                     </div>
                     <div class="col-9 text-left pr-3 align-self-center">
                       <p><mark>{{ selectedPost.book.title }}</mark></p>
@@ -106,9 +155,9 @@
                     <div class="mx-0 w-100" v-if="selectedPost.review">
                       <div class="review" v-html="selectedPost.review"></div>
                     </div>
-                    <div v-else>
-                      <img src="https://user-images.githubusercontent.com/25967949/89524240-2e43c300-d81f-11ea-9a05-b1b45d70172f.png">
-                      <h5>작성된 상세 리뷰가 없습니다.</h5>
+                    <div v-else class="d-flex flex-column justify-content-center h-100">
+                      <img src="https://user-images.githubusercontent.com/25967949/89845305-0f478700-dbb9-11ea-9bc8-5c9ca2d28601.png" width="200px">
+                      <h5 class="mt-2">작성된 상세 리뷰가 없습니다.</h5>
                     </div>
                   </div>
                   <!-- 뱃지 -->
@@ -129,39 +178,56 @@
                 
             </div>
             <!-- 페이지2 -->
-            <div class="page2 d-flex flex-column " style="height:750px;"> 
-              <!-- <div class="w-100 page2-header">
-                <p class="text-left">
-                  <span class="rounded-circle">
-                    <img
-                      v-if="!selectedPost.user.profileImg"
-                      class="img-fluid feed-profile-img mr-1" 
-                      src="@/assets/anonymous.png" 
-                      alt="유저 프로필 사진">
-                    <img 
-                      v-else
-                      class="img-fluid feed-profile-img mr-1" 
-                      :src="selectedPost.user.profileImg" alt="작성자 프로필 사진">
-                  </span>
-                  <strong>
-                    <span class="pointer" @click="selectUser(selectedPost.user.id)">{{ selectedPost.user.nickName }}님</span>
-                  </strong>
-                </p>
-              </div> 
-              <hr style="background-color:#efefef"> -->
+            <div class="page2 d-flex flex-column " style="height:700px;"> 
+              <!-- 책에 대한 리뷰 리스트 -->
+              <h5 class="mb-4"><strong>다른 유저들의 리뷰</strong></h5>
+              <div class="w-100" style="height:190px;">
+                <div class="scroll-sect" v-if="selectedPost.posts.length">
+                  <div class="mb-2" v-for="post in selectedPost.posts" :key="post.postId">
+                    <div
+                      class="pointer row no-gutters" 
+                      @click="postDetail(post.postId)">
+                      <div class="m-0 col-3 text-left">
+                        <span class="rounded-circle">
+                          <img
+                            v-if="!post.profileImg"
+                            class="img-fluid feed-profile-img" 
+                            src="@/assets/anonymous.png" 
+                            alt="유저 프로필 사진">
+                          <img 
+                            v-else
+                            class="img-fluid feed-profile-img" 
+                            :src="post.profileImg" alt="작성자 프로필 사진">
+                        </span>
+                        <small class="ml-2">{{ post.nickName }}</small>
+                      </div>
+                      <div class="changeFont m-0 col-9 text-left">
+                        "{{ post.onelineReview }}"
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div v-else>
+                  <h5 class="mb-1">아직 다른 유저들이 작성한 리뷰는 없어요 ㅠ_ㅠ</h5>
+                  <h5>리뷰... 작성해주시겠어요?</h5>
+                  <button class="btn btn-green mt-3" @click="clickPostCreate(selectedPost.book.id)">리뷰 작성하러 가기</button>
+                </div>
+              </div>
+              
               <!-- 댓글 -->
-              <h5 class="text-left">댓글</h5>
+              <h5 class="text-left mt-2 mb-3"><strong>댓글</strong></h5>
               <!-- 댓글 리스트 -->
-              <div class="comment-list w-100 scroll-sect" style="height:700px">
+              <div class="comment-list w-100 scroll-sect" style="height:350px">
                 <div v-if="comments.length">
                   <div
                   v-for="comment in comments"
                   :key="`comment-${comment.id}`">
-                    <div class="d-flex justify-content-between">
-                      <div class="m-0">
+                    <div class="d-flex">
+                      <div class="m-0 p-0 col-9 text-left">
                         <span class="rounded-circle">
+                          <!-- 댓글 프로필 사진 -->
                           <img
-                            v-if="!selectedPost.user.profileImg"
+                            v-if="!comment.user.profileImg"
                             class="img-fluid feed-profile-img" 
                             src="@/assets/anonymous.png" 
                             alt="유저 프로필 사진">
@@ -170,41 +236,37 @@
                             class="img-fluid feed-profile-img" 
                             :src="comment.user.profileImg" alt="작성자 프로필 사진">
                         </span>
-                        <span class="ml-2 pointer" @click="selectUser(comment.user.id)">{{ comment.user.nickName }}</span>
+                        <!-- 댓글 Username -->
+                        <span class="pointer ml-2 mr-2" @click="selectUser(comment.user.id)"><strong>{{ comment.user.nickName }}</strong></span>
                         <span v-if="comment.isClub" class="badge bg-green">Club</span>
+                        <!-- 댓글-->
+                        <span class="m-0">{{ comment.content }}</span>
                       </div>
-                      <div class="m-0">
-                          <!-- @click="deleteComment({post.id, comment.id" -->
-                        <div
-                          class="btn text-danger btn-sm"
-                          v-if="comment.user.id === myaccount.id"
-                          @click="deleteComment({ postId: commentCreateData.postId, commentId: comment.id })"
-                        > 삭제
-                        </div>
+                      <div
+                        class="btn text-danger btn-sm m-0 p-0 col-3"
+                        v-if="comment.user.id === myaccount.id"
+                        @click="deleteComment({ postId: commentCreateData.postId, commentId: comment.id })"
+                      > 삭제
                       </div>
                     </div>
-                    <div class="col-12 text-left wrapping py-0 mb-3">
-                      <div>{{ comment.content }}</div>
-                      <div><small style="color:#979797">{{ comment.createdAt | moment("from", "now") }}</small></div>
+                    <div class="text-left mb-3">
+                      <small style="color:#979797">{{ comment.createdAt | moment("from", "now") }}</small>
                     </div>
                   </div>
                 </div>
-                <div v-else class="d-flex align-items-center">
-                  <div style="margin-top:120px;">
-                    <img src="https://user-images.githubusercontent.com/25967949/89524240-2e43c300-d81f-11ea-9a05-b1b45d70172f.png">
+                <div v-else class="d-flex flex-column justify-content-center h-100">
+                  <div>
+                    <!-- <img src="https://user-images.githubusercontent.com/25967949/89524240-2e43c300-d81f-11ea-9a05-b1b45d70172f.png" width="300px"> -->
                     <h5>작성된 댓글이 없습니다.</h5>
                   </div>
-
                 </div>
               </div>
-        
-              <hr class="mt-1" style="background-color:#efefef">
               
               <div class="comment mt-auto w-100" id="comment">
                 <!-- 댓글 작성 -->
-                <div class="input-group row no-gutters commentSection" style="height:70px;">
+                <div class="input-group row no-gutters commentSection" style="height:65px;">
                   <textarea
-                    class="col-11 textareaSection p-3" 
+                    class="col-11 textareaSection p-1" 
                     @keyup.enter="enterComment" 
                     @input="activeBtn"
                     v-model="commentCreateData.content" 
@@ -327,7 +389,7 @@ export default {
     },
     copyUrl() {
       const copyText = document.createElement("input");
-      copyText.value = `http://localhost:8080/posts/${this.commentCreateData.postId}`
+      copyText.value = `http://i3a111.p.ssafy.io/posts/${this.commentCreateData.postId}`
       document.body.appendChild(copyText)
       
       copyText.select();
@@ -348,12 +410,22 @@ export default {
       } else {
         return false
       }
+    },
+    postDetail(postId) {
+      this.$router.push({ name: 'PostDetail', params: { postId: postId }})
+    },
+    bookDetail(bookId) {
+      this.$router.push({ name: 'BookDetail', params: { bookId: bookId}})
+    },
+    clickPostCreate(bookId) {
+      this.$router.push({ name: 'PostCreate', params: { selectedBookId: bookId }})
     }
   },
   created() {
     this.commentCreateData.postId = this.$route.params['postId']
     this.findPost(this.commentCreateData.postId)
     this.fetchComments(this.commentCreateData.postId)
+    this.findBook(this.selectedPost.book.id)
     
   },
   mounted() {
@@ -362,13 +434,20 @@ export default {
   beforeRouteLeave(to, from, next) {
     if (this.commentCreateData.content) {
       if (confirm('작성 중인 댓글이 있습니다. 정말 넘어가시겠습니까?') === true) {
-        next(to)
+        next()
       } else {
-        next(false)
+        return false
       }
     }
     next()
-  }
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.findPost(to.params.postId)
+    next()
+    this.commentCreateData.postId = this.$route.params['postId']
+    this.fetchComments(to.params.postId)
+    this.findBook(this.selectedPost.book.id)
+  },
 }
 </script>
 
@@ -538,7 +617,7 @@ body {
     background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCA2NCA2NCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNjQgNjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCiAgICA8Zz4NCiAgICAJPHBhdGggZD0iTTAsMzJMMzIsMGwzMiwzMkwzMiw2NEwwLDMyeiBNOCwzMmwyNCwyNGwyNC0yNEwzMiw4TDgsMzJ6IE0xNiwzMmwxNi0xNmwxNiwxNkwzMiw0OEwxNiwzMnogTTI0LDMybDgsOGw4LThsLTgtOEwyNCwzMnoiIC8+DQogICAgPC9nPg0KPC9zdmc+) bottom center no-repeat;
     background-size: 0.5em 0.5em;
     font: 700 7vw/1.25 'Playfair Display', sans-serif;
-    font-size: 1.7em !important;
+    font-size: 1.5em !important;
     letter-spacing: 0.125em;
     margin: 0 0 1em 0;
     padding: 1em 0;
@@ -948,9 +1027,690 @@ body {
 .scroll-sect::-webkit-scrollbar-thumb {
   height: 10px; 
   width: 50px; 
-  background: #345389; 
+  background: #88A498; 
   -webkit-border-radius: 15px; border-radius: 15px; 
   /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
 }
+
+/* .gradient {
+  background-image: linear-gradient(
+    to right,
+    hsl(211, 100%, 50%),
+    hsl(179, 100%, 30%)
+  );
+  transition: background-image 0.5s linear;
+}
+
+.gradient:hover {
+  background-image: linear-gradient(
+    to bottom,
+    hsl(344, 100%, 50%),
+    hsl(31, 100%, 40%)
+  );
+} */
+
+@import url('https://fonts.googleapis.com/css2?family=Cute+Font&family=East+Sea+Dokdo&family=Hi+Melody&family=Nanum+Brush+Script&family=Yeon+Sung&display=swap');
+
+.changeFont {
+  font-family: 'Yeon Sung', cursive;
+}
+
+
+/* 책 관련 효과 시작 */
+
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+
+.clickBtn {
+	display: inline-block;
+	text-transform: uppercase;
+	border: 2px solid #2c3e50;
+  margin-top: 35px !important;
+	font-size: 0.7em;
+	font-weight: 700;
+	padding: 0.1em 0.4em;
+	text-align: center;
+	-webkit-transition: color 0.3s, border-color 0.3s;
+	-moz-transition: color 0.3s, border-color 0.3s;
+	transition: color 0.3s, border-color 0.3s;
+  border-radius: 5px;
+}
+
+.clickBtn:hover {
+	border-color: #16a085;
+	color: #16a085;
+}
+
+.align > li {
+	width: 100px;
+	min-height: 100px;
+	display: inline-block;
+	/* margin: 30px 20px 30px 30px; */
+	vertical-align: top;
+}
+
+
+/*
+	1. container
+*/
+
+.book {
+	position: relative;
+	width: 72px; 
+	height: 100px;
+	-webkit-perspective: 1000px;
+	-moz-perspective: 1000px;
+	perspective: 1000px;
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+
+/*
+	2. background & color
+*/
+
+/* HARDCOVER FRONT */
+.hardcover_front li:first-child {
+	background-color: #eee;
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+
+/* reverse */
+.hardcover_front li:last-child {
+	background: #fffbec;
+}
+
+/* HARDCOVER BACK */
+.hardcover_back li:first-child {
+	background: #fffbec;
+}
+
+/* reverse */
+.hardcover_back li:last-child {
+	background: #fffbec;
+}
+
+.book_spine li:first-child {
+	background: #eee;
+}
+.book_spine li:last-child {
+	background: #333;
+}
+
+/* thickness of cover */
+
+.hardcover_front li:first-child:after,
+.hardcover_front li:first-child:before,
+.hardcover_front li:last-child:after,
+.hardcover_front li:last-child:before,
+.hardcover_back li:first-child:after,
+.hardcover_back li:first-child:before,
+.hardcover_back li:last-child:after,
+.hardcover_back li:last-child:before,
+.book_spine li:first-child:after,
+.book_spine li:first-child:before,
+.book_spine li:last-child:after,
+.book_spine li:last-child:before {
+	background: #999;
+}
+
+/* page */
+
+.page > li {
+	background: -webkit-linear-gradient(left, #e1ddd8 0%, #fffbf6 100%);
+	background: -moz-linear-gradient(left, #e1ddd8 0%, #fffbf6 100%);
+	background: -ms-linear-gradient(left, #e1ddd8 0%, #fffbf6 100%);
+	background: linear-gradient(left, #e1ddd8 0%, #fffbf6 100%);
+	box-shadow: inset 0px -1px 2px rgba(50, 50, 50, 0.1), inset -1px 0px 1px rgba(150, 150, 150, 0.2);
+	border-radius: 0px 5px 5px 0px;
+}
+
+/*
+	3. opening cover, back cover and pages
+*/
+
+.hardcover_front {
+	-webkit-transform: rotateY(-34deg) translateZ(8px);
+	-moz-transform: rotateY(-34deg) translateZ(8px);
+	transform: rotateY(-34deg) translateZ(8px);
+	z-index: 100;
+}
+
+.hardcover_back {
+	-webkit-transform: rotateY(-15deg) translateZ(-8px);
+	-moz-transform: rotateY(-15deg) translateZ(-8px);
+	transform: rotateY(-15deg) translateZ(-8px);
+}
+
+.page li:nth-child(1) {
+	-webkit-transform: rotateY(-28deg);
+	-moz-transform: rotateY(-28deg);
+	transform: rotateY(-28deg);
+}
+
+.page li:nth-child(2) {
+	-webkit-transform: rotateY(-30deg);
+	-moz-transform: rotateY(-30deg);
+	transform: rotateY(-30deg);
+}
+
+.page li:nth-child(3) {
+	-webkit-transform: rotateY(-32deg);
+	-moz-transform: rotateY(-32deg);
+	transform: rotateY(-32deg);
+}
+
+.page li:nth-child(4) {
+	-webkit-transform: rotateY(-34deg);
+	-moz-transform: rotateY(-34deg);
+	transform: rotateY(-34deg);
+}
+
+.page li:nth-child(5) {
+	-webkit-transform: rotateY(-36deg);
+	-moz-transform: rotateY(-36deg);
+	transform: rotateY(-36deg);
+}
+
+/*
+	4. position, transform & transition
+*/
+
+.hardcover_front,
+.hardcover_back,
+.book_spine,
+.hardcover_front li,
+.hardcover_back li,
+.book_spine li {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+
+.hardcover_front,
+.hardcover_back {
+	-webkit-transform-origin: 0% 100%;
+	-moz-transform-origin: 0% 100%;
+	transform-origin: 0% 100%;
+}
+
+.hardcover_front {
+	-webkit-transition: all 0.8s ease, z-index 0.6s;
+	-moz-transition: all 0.8s ease, z-index 0.6s;
+	transition: all 0.8s ease, z-index 0.6s;
+}
+
+/* HARDCOVER front */
+.hardcover_front li:first-child {
+	cursor: default;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	-webkit-transform: translateZ(2px);
+	-moz-transform: translateZ(2px);
+	transform: translateZ(2px);
+}
+
+.hardcover_front li:last-child {
+	-webkit-transform: rotateY(180deg) translateZ(2px);
+	-moz-transform: rotateY(180deg) translateZ(2px);
+	transform: rotateY(180deg) translateZ(2px);
+}
+
+/* HARDCOVER back */
+.hardcover_back li:first-child {
+	-webkit-transform: translateZ(2px);
+	-moz-transform: translateZ(2px);
+	transform: translateZ(2px);
+}
+
+.hardcover_back li:last-child {
+	-webkit-transform: translateZ(-2px);
+	-moz-transform: translateZ(-2px);
+	transform: translateZ(-2px);
+}
+
+/* thickness of cover */
+.hardcover_front li:first-child:after,
+.hardcover_front li:first-child:before,
+.hardcover_front li:last-child:after,
+.hardcover_front li:last-child:before,
+.hardcover_back li:first-child:after,
+.hardcover_back li:first-child:before,
+.hardcover_back li:last-child:after,
+.hardcover_back li:last-child:before,
+.book_spine li:first-child:after,
+.book_spine li:first-child:before,
+.book_spine li:last-child:after,
+.book_spine li:last-child:before {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* HARDCOVER front */
+.hardcover_front li:first-child:after,
+.hardcover_front li:first-child:before {
+	width: 4px;
+	height: 100%;
+}
+
+.hardcover_front li:first-child:after {
+	-webkit-transform: rotateY(90deg) translateZ(-2px) translateX(2px);
+	-moz-transform: rotateY(90deg) translateZ(-2px) translateX(2px);
+	transform: rotateY(90deg) translateZ(-2px) translateX(2px);
+}
+
+.hardcover_front li:first-child:before {
+	-webkit-transform: rotateY(90deg) translateZ(158px) translateX(2px);
+	-moz-transform: rotateY(90deg) translateZ(158px) translateX(2px);
+	transform: rotateY(90deg) translateZ(158px) translateX(2px);
+}
+
+.hardcover_front li:last-child:after,
+.hardcover_front li:last-child:before {
+	width: 4px;
+	height: 160px;
+}
+
+.hardcover_front li:last-child:after {
+	-webkit-transform: rotateX(90deg) rotateZ(90deg) translateZ(80px) translateX(-2px) translateY(-78px);
+	-moz-transform: rotateX(90deg) rotateZ(90deg) translateZ(80px) translateX(-2px) translateY(-78px);
+	transform: rotateX(90deg) rotateZ(90deg) translateZ(80px) translateX(-2px) translateY(-78px);
+}
+.hardcover_front li:last-child:before {
+	box-shadow: 0px 0px 30px 5px #333;
+	-webkit-transform: rotateX(90deg) rotateZ(90deg) translateZ(-140px) translateX(-2px) translateY(-78px);
+	-moz-transform: rotateX(90deg) rotateZ(90deg) translateZ(-140px) translateX(-2px) translateY(-78px);
+	transform: rotateX(90deg) rotateZ(90deg) translateZ(-140px) translateX(-2px) translateY(-78px);
+}
+
+/* thickness of cover */
+
+.hardcover_back li:first-child:after,
+.hardcover_back li:first-child:before {
+	width: 4px;
+	height: 100%;
+}
+
+.hardcover_back li:first-child:after {
+	-webkit-transform: rotateY(90deg) translateZ(-2px) translateX(2px);
+	-moz-transform: rotateY(90deg) translateZ(-2px) translateX(2px);
+	transform: rotateY(90deg) translateZ(-2px) translateX(2px);
+}
+.hardcover_back li:first-child:before {
+	-webkit-transform: rotateY(90deg) translateZ(158px) translateX(2px);
+	-moz-transform: rotateY(90deg) translateZ(158px) translateX(2px);
+	transform: rotateY(90deg) translateZ(158px) translateX(2px);
+}
+
+.hardcover_back li:last-child:after,
+.hardcover_back li:last-child:before {
+	width: 4px;
+	height: 160px;
+}
+
+.hardcover_back li:last-child:after {
+	-webkit-transform: rotateX(90deg) rotateZ(90deg) translateZ(80px) translateX(2px) translateY(-78px);
+	-moz-transform: rotateX(90deg) rotateZ(90deg) translateZ(80px) translateX(2px) translateY(-78px);
+	transform: rotateX(90deg) rotateZ(90deg) translateZ(80px) translateX(2px) translateY(-78px);
+}
+
+.hardcover_back li:last-child:before {
+	box-shadow: 10px -1px 80px 20px #666;
+	-webkit-transform: rotateX(90deg) rotateZ(90deg) translateZ(-140px) translateX(2px) translateY(-78px);
+	-moz-transform: rotateX(90deg) rotateZ(90deg) translateZ(-140px) translateX(2px) translateY(-78px);
+	transform: rotateX(90deg) rotateZ(90deg) translateZ(-140px) translateX(2px) translateY(-78px);
+}
+
+/* BOOK SPINE */
+.book_spine {
+	-webkit-transform: rotateY(60deg) translateX(-5px) translateZ(-12px);
+	-moz-transform: rotateY(60deg) translateX(-5px) translateZ(-12px);
+	transform: rotateY(60deg) translateX(-5px) translateZ(-12px);
+	width: 16px;
+	z-index: 0;
+}
+
+.book_spine li:first-child {
+	-webkit-transform: translateZ(2px);
+	-moz-transform: translateZ(2px);
+	transform: translateZ(2px);
+}
+
+.book_spine li:last-child {
+	-webkit-transform: translateZ(-2px);
+	-moz-transform: translateZ(-2px);
+	transform: translateZ(-2px);
+}
+
+/* thickness of book spine */
+.book_spine li:first-child:after,
+.book_spine li:first-child:before {
+	width: 4px;
+	height: 100%;
+}
+
+.book_spine li:first-child:after {
+	-webkit-transform: rotateY(90deg) translateZ(-2px) translateX(2px);
+	-moz-transform: rotateY(90deg) translateZ(-2px) translateX(2px);
+	transform: rotateY(90deg) translateZ(-2px) translateX(2px);
+}
+
+.book_spine li:first-child:before {
+	-webkit-transform: rotateY(-90deg) translateZ(-12px);
+	-moz-transform: rotateY(-90deg) translateZ(-12px);
+	transform: rotateY(-90deg) translateZ(-12px);
+}
+
+.book_spine li:last-child:after,
+.book_spine li:last-child:before {
+	width: 4px;
+	height: 16px;
+}
+
+.book_spine li:last-child:after {
+	-webkit-transform: rotateX(90deg) rotateZ(90deg) translateZ(8px) translateX(2px) translateY(-6px);
+	-moz-transform: rotateX(90deg) rotateZ(90deg) translateZ(8px) translateX(2px) translateY(-6px);
+	transform: rotateX(90deg) rotateZ(90deg) translateZ(8px) translateX(2px) translateY(-6px);
+}
+
+.book_spine li:last-child:before {
+	box-shadow: 5px -1px 100px 40px rgba(0, 0, 0, 0.2);
+	-webkit-transform: rotateX(90deg) rotateZ(90deg) translateZ(-210px) translateX(2px) translateY(-6px);
+	-moz-transform: rotateX(90deg) rotateZ(90deg) translateZ(-210px) translateX(2px) translateY(-6px);
+	transform: rotateX(90deg) rotateZ(90deg) translateZ(-210px) translateX(2px) translateY(-6px);
+}
+
+.page,
+.page > li {
+	position: absolute;
+	top: 0;
+	left: 0;
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+
+.page {
+	width: 100%;
+	height: 98%;
+	top: 1%;
+	left: 3%;
+	z-index: 10;
+}
+
+.page > li {
+	width: 100%;
+	height: 100%;
+	-webkit-transform-origin: left center;
+	-moz-transform-origin: left center;
+	transform-origin: left center;
+	-webkit-transition-property: transform;
+	-moz-transition-property: transform;
+	transition-property: transform;
+	-webkit-transition-timing-function: ease;
+	-moz-transition-timing-function: ease;
+	transition-timing-function: ease;
+}
+
+.page > li:nth-child(1) {
+	-webkit-transition-duration: 0.6s;
+	-moz-transition-duration: 0.6s;
+	transition-duration: 0.6s;
+}
+
+.page > li:nth-child(2) {
+	-webkit-transition-duration: 0.6s;
+	-moz-transition-duration: 0.6s;
+	transition-duration: 0.6s;
+}
+
+.page > li:nth-child(3) {
+	-webkit-transition-duration: 0.4s;
+	-moz-transition-duration: 0.4s;
+	transition-duration: 0.4s;
+}
+
+.page > li:nth-child(4) {
+	-webkit-transition-duration: 0.5s;
+	-moz-transition-duration: 0.5s;
+	transition-duration: 0.5s;
+}
+
+.page > li:nth-child(5) {
+	-webkit-transition-duration: 0.6s;
+	-moz-transition-duration: 0.6s;
+	transition-duration: 0.6s;
+}
+
+/*
+	5. events
+*/
+
+.book:hover > .hardcover_front {
+	-webkit-transform: rotateY(-145deg) translateZ(0);
+	-moz-transform: rotateY(-145deg) translateZ(0);
+	transform: rotateY(-145deg) translateZ(0);
+	z-index: 0;
+}
+
+.book:hover > .page li:nth-child(1) {
+	-webkit-transform: rotateY(-30deg);
+	-moz-transform: rotateY(-30deg);
+	transform: rotateY(-30deg);
+	-webkit-transition-duration: 1.5s;
+	-moz-transition-duration: 1.5s;
+	transition-duration: 1.5s;
+}
+
+.book:hover > .page li:nth-child(2) {
+	-webkit-transform: rotateY(-35deg);
+	-moz-transform: rotateY(-35deg);
+	transform: rotateY(-35deg);
+	-webkit-transition-duration: 1.8s;
+	-moz-transition-duration: 1.8s;
+	transition-duration: 1.8s;
+}
+
+.book:hover > .page li:nth-child(3) {
+	-webkit-transform: rotateY(-118deg);
+	-moz-transform: rotateY(-118deg);
+	transform: rotateY(-118deg);
+	-webkit-transition-duration: 1.6s;
+	-moz-transition-duration: 1.6s;
+	transition-duration: 1.6s;
+}
+
+.book:hover > .page li:nth-child(4) {
+	-webkit-transform: rotateY(-130deg);
+	-moz-transform: rotateY(-130deg);
+	transform: rotateY(-130deg);
+	-webkit-transition-duration: 1.4s;
+	-moz-transition-duration: 1.4s;
+	transition-duration: 1.4s;
+}
+
+.book:hover > .page li:nth-child(5) {
+	-webkit-transform: rotateY(-140deg);
+	-moz-transform: rotateY(-140deg);
+	transform: rotateY(-140deg);
+	-webkit-transition-duration: 1.2s;
+	-moz-transition-duration: 1.2s;
+	transition-duration: 1.2s;
+}
+
+/*
+	6. Bonus
+*/
+
+/* cover CSS */
+
+.coverDesign {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	overflow: hidden;
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+
+.coverDesign::after {
+	background-image: -webkit-linear-gradient( -135deg, rgba(255, 255, 255, 0.45) 0%, transparent 100%);
+	background-image: -moz-linear-gradient( -135deg, rgba(255, 255, 255, 0.45) 0%, transparent 100%);
+	background-image: linear-gradient( -135deg, rgba(255, 255, 255, 0.45) 0%, transparent 100%);
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+.coverDesign h1 {
+	color: #fff;
+	font-size: 2.2em;
+	letter-spacing: 0.05em;
+	text-align: center;
+	margin: 54% 0 0 0;
+	text-shadow: -1px -1px 0 rgba(0,0,0,0.1);
+}
+
+.coverDesign p {
+	color: #f8f8f8;
+	font-size: 1em;
+	text-align: center;
+	text-shadow: -1px -1px 0 rgba(0,0,0,0.1);
+}
+
+.yellow {
+	background-color: #f1c40f;
+	background-image: -webkit-linear-gradient(top, #f1c40f 58%, #e7ba07 0%);
+	background-image: -moz-linear-gradient(top, #f1c40f 58%, #e7ba07 0%);
+	background-image: linear-gradient(top, #f1c40f 58%, #e7ba07 0%);
+}
+
+.blue {
+	background-color: #3498db;
+	background-image: -webkit-linear-gradient(top, #3498db 58%, #2a90d4 0%);
+	background-image: -moz-linear-gradient(top, #3498db 58%, #2a90d4 0%);
+	background-image: linear-gradient(top, #3498db 58%, #2a90d4 0%);
+}
+
+.grey {
+	background-color: #f8e9d1;
+	background-image: -webkit-linear-gradient(top, #f8e9d1 58%, #e7d5b7 0%);
+	background-image: -moz-linear-gradient(top, #f8e9d1 58%, #e7d5b7 0%);
+	background-image: linear-gradient(top, #f8e9d1 58%, #e7d5b7 0%);
+}
+
+/* Basic ribbon */
+
+.ribbon {
+	background: #c0392b;
+	color: #fff;
+	display: block;
+	font-size: 0.7em;
+	position: absolute;
+	top: 11px;
+	right: 1px;
+	width: 40px;
+	height: 20px;
+	line-height: 20px;
+	letter-spacing: 0.15em; 
+	text-align: center;
+	-webkit-transform: rotateZ(45deg) translateZ(1px);
+	-moz-transform: rotateZ(45deg) translateZ(1px);
+	transform: rotateZ(45deg) translateZ(1px);
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	backface-visibility: hidden;
+	z-index: 10;
+}
+
+.ribbon::before,
+.ribbon::after{
+	position: absolute;
+	top: -20px;
+	width: 0;
+	height: 0;
+	border-bottom: 20px solid #c0392b;
+	border-top: 20px solid transparent;
+}
+
+.ribbon::before{
+	left: -20px;
+	border-left: 20px solid transparent;
+}
+
+.ribbon::after{
+	right: -20px;
+	border-right: 20px solid transparent;
+}
+
+/* figcaption */
+
+figcaption {
+	padding-left: 40px;
+	text-align: left;
+	position: absolute;
+	top: 0%;
+	left: 160px;
+	width: 310px;
+}
+
+figcaption h1 {
+	margin: 0;
+}
+
+figcaption span {
+	color: #16a085;
+	padding: 0.6em 0 1em 0;
+	display: block;
+}
+
+figcaption p {
+	color: #63707d;
+	line-height: 1.3;
+}
+
+/* Media Queries */
+@media screen and (max-width: 37.8125em) {
+	.align > li {
+		width: 100%;
+		min-height: 440px;
+		height: auto;
+		padding: 0;
+		margin: 0 0 30px 0;
+	}
+
+	.book {
+		margin: 0 auto;
+	}
+
+	figcaption {
+		text-align: center;
+		width: 320px;
+		top: 250px;
+		padding-left: 0;
+		left: -80px;
+		font-size: 90%;
+	}
+}
+
 
 </style>

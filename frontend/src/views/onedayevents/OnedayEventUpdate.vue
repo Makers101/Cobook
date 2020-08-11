@@ -281,7 +281,8 @@ export default {
       onedayEventDate: false,
       onedayEventTime: false,
       search: null,
-      offlinePlace: null
+      offlinePlace: null,
+      clicked: false
     }
   },
   computed: {
@@ -324,6 +325,7 @@ export default {
       this.$refs.form.validate()
     },
     clickUpdate() {
+      this.clicked = true
       this.onedayEventUpdateData.datetime = this.date + 'T' + this.time
       if (this.offlineEnabled) {
         this.onedayEventUpdateData.place = this.offlinePlace
@@ -360,6 +362,29 @@ export default {
           this.onedayEventUpdateData.questions.push(question.question)
         })
       })
+  },
+  beforeRouteLeave(to, from, next) {
+    if (!this.clicked) {
+      if (this.onedayEventUpdateData.name !== this.selectedOnedayEvent.name
+          || this.onedayEventUpdateData.description !== this.selectedOnedayEvent.description
+          || this.onedayEventUpdateData.bookId !== this.selectedOnedayEvent.book.id
+          || this.onedayEventUpdateData.capacity !== this.selectedOnedayEvent.capacity
+          || this.onedayEventUpdateData.place !== this.selectedOnedayEvent.place
+          || ((this.onedayEventUpdateData.place !== '온라인') && (this.offlinePlace !== this.selectedOnedayEvent.place))
+          || this.date !== this.selectedOnedayEvent.datetime.slice(0, 10)
+          || this.time !== this.selectedOnedayEvent.datetime.slice(11, 16)
+          || this.onedayEventUpdateData.questions.length !== this.selectedOnedayEvent.questions.length
+         ) {
+        if (confirm('수정 중인 원데이 이벤트가 있습니다. 정말 넘어가시겠습니까?') === true) {
+          next()
+        } else {
+          return false
+        }
+      }
+      next()
+    } else {
+      next()
+    }
   }
 }
 </script>

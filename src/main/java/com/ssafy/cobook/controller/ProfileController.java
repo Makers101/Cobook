@@ -4,10 +4,11 @@ package com.ssafy.cobook.controller;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.ProfileService;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
-import com.ssafy.cobook.service.dto.clubevent.ClubEventByClubResDto;
-import com.ssafy.cobook.service.dto.post.PostDetailResDto;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventSimpleResDto;
+import com.ssafy.cobook.service.dto.onedayevent.OneDayEventResponseDto;
 import com.ssafy.cobook.service.dto.post.PostResponseDto;
 import com.ssafy.cobook.service.dto.profile.ProfileResponseDto;
+import com.ssafy.cobook.service.dto.profile.ProfileStatisticsResDto;
 import com.ssafy.cobook.service.dto.user.UserByFollowDto;
 import com.ssafy.cobook.service.dto.user.UserResponseIdDto;
 import com.ssafy.cobook.service.dto.user.UserUpdateReqDto;
@@ -129,15 +130,28 @@ public class ProfileController {
         return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserClub(toUserId));
     }
 
+
     @ApiOperation(value = "해당 유저의 북마크를 가져온다")
     @GetMapping("/{userId}/bookmark")
-    public ResponseEntity<List<PostDetailResDto>>getBookmark(@PathVariable("userId") Long toUserId){
+    public ResponseEntity<List<PostResponseDto>> getBookmark(@PathVariable("userId") Long toUserId) {
         return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserBookmark(toUserId));
     }
 
-    @ApiOperation(value = "해당 유저의 리딩을 가져온다")
+    @ApiOperation(value = "해당 유저의 클럽 이벤트를 가져온다")
     @GetMapping("/{userId}/clubevents")
-    public ResponseEntity<List<ClubEventByClubResDto>>getReading(@PathVariable("userId") Long toUserId){
-        return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserReading(toUserId));
+    public ResponseEntity<List<ClubEventSimpleResDto>>getClubEvents(@PathVariable("userId") Long toUserId){
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getClubEvents(toUserId));
+    }
+
+    @ApiOperation(value = "해당 유저의 원데이 이벤트를 가져온다")
+    @GetMapping("/{userId}/onedayevents")
+    public ResponseEntity<List<OneDayEventResponseDto>>getOneDayEvents(@PathVariable("userId") Long toUserId){
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getOneDayEvents(toUserId));
+    }
+
+    @ApiOperation(value = "해당 유저의 통계 정보를 가져온다")
+    @GetMapping("/{userId}/overview")
+    public ResponseEntity<ProfileStatisticsResDto> getUserStatics(@PathVariable("userId") Long toUserId) {
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.getUserStatics(toUserId));
     }
 }

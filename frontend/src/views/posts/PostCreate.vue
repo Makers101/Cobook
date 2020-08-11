@@ -209,6 +209,7 @@ export default {
       rankArray: [1, 2, 3, 4, 5],
       satisfactionEmojis: ['😭', '😢', '😊', '😄', '😍'],
       activatedDetail: false,
+      clicked: false
     }
   },
   computed: {
@@ -256,6 +257,7 @@ export default {
       }
     },
     clickCreate() {
+      this.clicked = true
       if (window.$('#summernote').summernote('code') === '<p style="text-align: left;"><br></p>') {
         this.postCreateData.review = null
       } else if (window.$('#summernote').summernote('code') === '<p><br></p>') {
@@ -272,6 +274,25 @@ export default {
   mounted() {
     if (this.$route.params.selectedBookId) {
       this.postCreateData.bookId = this.$route.params.selectedBookId
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (!this.clicked) {
+      if (this.postCreateData.bookId
+          || this.postCreateData.onelineReview
+          || (this.postCreateData.rank !== 3)
+          || (window.$('#summernote').summernote('code') !== '<p><br></p>')
+          || (this.postCreateData.tags.length !== 0)
+         ) {
+        if (confirm('작성 중인 게시물이 있습니다. 정말 넘어가시겠습니까?') === true) {
+          next()
+        } else {
+          return false
+        }
+      }
+      next()
+    } else {
+      next()
     }
   }
 }

@@ -31,12 +31,16 @@ import ClubCandidates from '@/views/clubs/ClubCandidates'
 import ClubEventDetail from '@/views/clubs/clubevents/ClubEventDetail'
 import ClubEventCreate from '@/views/clubs/clubevents/ClubEventCreate'
 import ClubEventUpdate from '@/views/clubs/clubevents/ClubEventUpdate'
+import ClubEventRoom from '@/views/clubs/clubevents/ClubEventRoom'
 
 // onedayevents
 import OnedayEventList from '@/views/onedayevents/OnedayEventList'
 import OnedayEventDetail from '@/views/onedayevents/OnedayEventDetail'
 import OnedayEventCreate from '@/views/onedayevents/OnedayEventCreate'
 import OnedayEventUpdate from '@/views/onedayevents/OnedayEventUpdate'
+
+// books
+import BookDetail from '@/views/books/Book'
 
 //pagenotfound
 import PageNotFound from '@/views/PageNotFound'
@@ -190,6 +194,11 @@ Vue.use(VueRouter)
     name: 'ClubEventUpdate',
     component: ClubEventUpdate
   },
+  {
+    path: '/clubs/:clubId/clubevents/:clubEventId/rooms/:roomId',
+    name: 'ClubEventRoom',
+    component: ClubEventRoom
+  },
   // onedayevents
   {
     path: '/onedayevents',
@@ -210,6 +219,12 @@ Vue.use(VueRouter)
     path: '/onedayevents/:onedayEventId/update',
     name: 'OnedayEventUpdate',
     component: OnedayEventUpdate
+  },
+  // Books
+  {
+    path: '/books/:bookId',
+    name: 'BookDetail',
+    component: BookDetail
   },
   // 404 Pages
   {

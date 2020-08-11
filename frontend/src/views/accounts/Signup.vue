@@ -61,6 +61,7 @@
           placeholder="비밀번호를 다시 입력해주세요."
           class="inputs"
           required
+          @keyup.enter="clickSignup"
         />
         <label for="password-confirm"></label>
         <div class="error-text ml-3" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
