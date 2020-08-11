@@ -133,7 +133,6 @@ export default {
 }
 
 .card {
-  /* width: 300px; */
   height: 250px;
   background-color: #fff;
   background: linear-gradient(#f8f8f8, #fff);
@@ -223,7 +222,7 @@ export default {
 }
 
 .card .additional .more-info {
-  /* width: 300px; */
+  width: 58%;
   float: left;
   position: absolute;
   left: 120px;
