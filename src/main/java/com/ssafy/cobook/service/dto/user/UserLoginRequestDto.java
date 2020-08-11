@@ -18,7 +18,8 @@ public class UserLoginRequestDto {
     private String email;
 
     @NotEmpty(message = "비밀번호를 입력해주세요.")
-    @Pattern(regexp = "/^[a-zA-Z0-9]*$/", message = "영문자, 숫자를 포함한 8자리 이상의 비밀번호를 입력하세요.")
-    @Length(min = 8, max = 128)
+    @Pattern(regexp="(?=.*[0-9])(?=.*[a-zA-Z])(?=\\S+$).{8,20}",
+            message = "영문자, 숫자를 포함한 8자리 이상의 비밀번호를 입력하세요.")
+//    @Length(min = 8, max = 128)
     private String password;
 }

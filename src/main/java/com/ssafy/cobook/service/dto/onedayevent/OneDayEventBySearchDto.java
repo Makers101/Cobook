@@ -31,10 +31,9 @@ public class OneDayEventBySearchDto {
         this.description = oneDayEvent.getDescription();
         this.closed = oneDayEvent.getClosed();
         this.book = new BookSimpleResDto(oneDayEvent.getBook());
-        this.participantCnt = oneDayEvent.getMembers().stream()
+        this.participantCnt = (int) oneDayEvent.getMembers().stream()
                 .filter(m -> m.getRole().equals(MemberRole.MEMBER))
-                .map(OneDayEventMemberResponseDto::new)
-                .collect(Collectors.toList()).size() + 1;
+                .map(OneDayEventMemberResponseDto::new).count() + 1;
         this.capacity = oneDayEvent.getCapacity();
     }
 

@@ -1,17 +1,17 @@
 package com.ssafy.cobook.service.dto.post;
 
 import com.ssafy.cobook.domain.post.Post;
-import com.ssafy.cobook.service.dto.book.BookDetailsDto;
-import com.ssafy.cobook.service.dto.club.ClubByPostDto;
-import com.ssafy.cobook.service.dto.user.UserByPostDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Value;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.ssafy.cobook.config.WebMvcConfig.SERVER_PORT;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,7 +34,7 @@ public class PostByMembersResDto {
         this.userId = post.getUser().getId();
         this.nickName = post.getUser().getNickName();
         if (post.getUser().getProfileImg() != null) {
-            this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.userId;
+            this.profileImg = "https://i3a111.p.ssafy.io:"+ SERVER_PORT + "/api/profile/images/" + this.userId;
         }
         this.onelineReview = post.getOnelineReview();
         this.rank = post.getRank();

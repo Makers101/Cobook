@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ssafy.cobook.config.WebMvcConfig.SERVER_PORT;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClubDetailResDto {
@@ -38,7 +40,9 @@ public class ClubDetailResDto {
     public ClubDetailResDto(Club club) {
         this.id = club.getId();
         this.name = club.getName();
-        this.clubImg = "http://i3a111.p.ssafy.io:8080/api/clubs/images/" + this.id;
+        if (club.getClubImg() != null) {
+            this.clubImg = "https://i3a111.p.ssafy.io/api/clubs/images/" + this.id;
+        }
         this.onelineDescription = club.getOnelineDescription();
         this.description = club.getDescription();
         this.residence = club.getResidence();
@@ -65,8 +69,8 @@ public class ClubDetailResDto {
                 .collect(Collectors.toList());
         this.memberCnt = members.size() + 1;
         this.candidates = club.getMembers().stream()
-                .filter(m->m.getRole().equals(MemberRole.WAITING))
-                .map(m->m.getUser().getId())
+                .filter(m -> m.getRole().equals(MemberRole.WAITING))
+                .map(m -> m.getUser().getId())
                 .collect(Collectors.toList());
     }
 }

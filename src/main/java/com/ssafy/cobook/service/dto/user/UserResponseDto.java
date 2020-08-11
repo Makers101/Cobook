@@ -4,6 +4,8 @@ import com.ssafy.cobook.domain.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.ssafy.cobook.config.WebMvcConfig.SERVER_PORT;
+
 @NoArgsConstructor
 @Getter
 public class UserResponseDto {
@@ -23,7 +25,7 @@ public class UserResponseDto {
         this.nickName = user.getNickName();
         this.description = user.getDescription();
         if (user.getProfileImg() != null) {
-            this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.id;
+            this.profileImg = "http://i3a111.p.ssafy.io:" + SERVER_PORT + "/api/profile/images/" + this.id;
         }
         this.platformType = user.getPlatformType();
         this.platformId = user.getPlatformId();

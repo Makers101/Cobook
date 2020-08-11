@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ssafy.cobook.config.WebMvcConfig.SERVER_PORT;
+
 @Getter
 @NoArgsConstructor
 public class ProfileResponseDto {
@@ -31,10 +33,8 @@ public class ProfileResponseDto {
         this.email = user.getEmail();
         this.nickName = user.getNickName();
         this.description = user.getDescription();
-        this.profileImg = user.getProfileImg();
-
         if (user.getProfileImg() != null) {
-            this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.id;
+            this.profileImg = "http://i3a111.p.ssafy.io:" + SERVER_PORT + "/api/profile/images/" + this.id;
         }
 
         this.likeGenres = user.getUserGenres().stream()
