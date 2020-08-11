@@ -189,10 +189,10 @@ public class ClubService {
 
     public ClubByFollowSimpleDto addFollow(Long userId, Long clubId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNSIGNED));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
         Boolean isFollow = false;
 
