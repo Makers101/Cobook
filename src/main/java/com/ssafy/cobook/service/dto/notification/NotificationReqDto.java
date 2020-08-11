@@ -1,6 +1,5 @@
 package com.ssafy.cobook.service.dto.notification;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
