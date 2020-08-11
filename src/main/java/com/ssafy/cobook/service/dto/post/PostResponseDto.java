@@ -2,6 +2,7 @@ package com.ssafy.cobook.service.dto.post;
 
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.posttag.PostTag;
+import com.ssafy.cobook.service.dto.book.BookByFeedDto;
 import com.ssafy.cobook.service.dto.book.BookByPostDto;
 import com.ssafy.cobook.service.dto.club.ClubByPostDto;
 import com.ssafy.cobook.service.dto.tag.TagByPostDto;
@@ -21,7 +22,7 @@ public class PostResponseDto implements Comparable<PostResponseDto> {
     private Long id;
     private UserByPostDto user;
     private ClubByPostDto club;
-    private BookByPostDto book;
+    private BookByFeedDto book;
     private String onelineReview;
     private Integer rank;
     private Boolean open;
@@ -41,7 +42,7 @@ public class PostResponseDto implements Comparable<PostResponseDto> {
         } else {
             this.user = new UserByPostDto(post.getUser());
         }
-        this.book = new BookByPostDto(post.getBook());
+        this.book = new BookByFeedDto(post.getBook());
         this.onelineReview = post.getOnelineReview();
         this.rank = post.getRank();
         this.open = post.getOpen();
