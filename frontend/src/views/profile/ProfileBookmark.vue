@@ -5,7 +5,7 @@
         class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
         v-for="bookmark in bookmarks"
         :key="bookmark.id"
-        @click="toPostDetail(bookmark.id)">
+        @click="selectFeed(bookmark.id)">
         <div class="card m-0 ">
           <div class="additional d-flex justify-content-start px-1">
             <div class="user-card">
