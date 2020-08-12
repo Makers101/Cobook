@@ -17,15 +17,18 @@ export default {
       mediaStreamConstraints: {
         audio: false,
         video: true,
-      }
+      },
+      isChannelReady: false,
+      isInitiator: false,
+      isStarted: false
     }
   },
   mounted() {
     'use strict';
 
-    var isChannelReady = false;
-    var isInitiator = false;
-    var isStarted = false;
+    var isChannelReady = this.isChannelReady;
+    var isInitiator = this.isInitiator;
+    var isStarted = this.isStarted;
     var localStream;
     var pc;
     var remoteStream;
@@ -59,6 +62,7 @@ export default {
 
     // var socket = io.connect();
     var socket = this.$socket
+    console.log(socket)
 
     if (room !== '') {
       socket.emit('create or join', room);
