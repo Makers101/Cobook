@@ -133,7 +133,7 @@
             v-if="selectedClub.leader.profileImg">
           <img
             class="rounded-circle image"
-            :src="'http://placehold.jp/150x150.png?text=' + selectedClub.leader.nickName"
+            src="http://bit.do/anonymouseuser"
             :alt="selectedClub.leader.nickName"
             v-else>
           <div class="overlay rounded-circle">
@@ -153,7 +153,7 @@
             v-if="member.profileImg">
           <img
             class="rounded-circle image"
-            :src="'http://placehold.jp/150x150.png?text=' + memter.nickName"
+            src="http://bit.do/anonymouseuser"
             :alt="member.nickName"
             v-else>
           <div class="overlay rounded-circle">
