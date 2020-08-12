@@ -12,7 +12,6 @@ import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
-    @Query("select f from Follow as f join fetch f.toUser")
     List<Follow> findAllByFromUser(User fromUser);
 
     @Query("SELECT f FROM Follow AS f WHERE f.fromUser= ?1 AND f.toUser= ?2")
