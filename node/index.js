@@ -14,9 +14,9 @@ var fileServer = new(nodeStatic.Server)();
 
 try {
   const option = {
-    ca: fs.readFileSync('/etc/letsencrypt/live/3a111.p.ssafy.io/fullchain.pem'),
-    key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/3a111.p.ssafy.io/privkey.pem'), 'utf8').toString(),
-    cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/3a111.p.ssafy.io/cert.pem'), 'utf8').toString(),
+    ca: fs.readFileSync('/etc/letsencrypt/live/i3a111.p.ssafy.io/fullchain.pem'),
+    key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/i3a111.p.ssafy.io/privkey.pem'), 'utf8').toString(),
+    cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/i3a111.p.ssafy.io/cert.pem'), 'utf8').toString(),
   };
 
   var app = https.createServer(option, function(req, res) {
