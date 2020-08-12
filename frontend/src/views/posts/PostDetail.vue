@@ -190,16 +190,16 @@
                       <div class="m-0 col-3 text-left">
                         <span class="rounded-circle">
                           <img
-                            v-if="!post.profileImg"
+                            v-if="!post.user.profileImg"
                             class="img-fluid feed-profile-img" 
                             src="@/assets/anonymous.png" 
                             alt="유저 프로필 사진">
                           <img 
                             v-else
                             class="img-fluid feed-profile-img" 
-                            :src="post.profileImg" alt="작성자 프로필 사진">
+                            :src="post.user.profileImg" alt="작성자 프로필 사진">
                         </span>
-                        <small class="ml-2">{{ post.nickName }}</small>
+                        <small class="ml-2">{{ post.user.nickName }}</small>
                       </div>
                       <div class="changeFont m-0 col-9 text-left">
                         "{{ post.onelineReview }}"
@@ -457,7 +457,7 @@ export default {
   height: 25px;
   width: 25px;
   border-radius: 50%;
-  border: 1px solid black;
+  border: 1px solid rgb(0, 0, 0, 0.2);
 }
 
 .small-text {
