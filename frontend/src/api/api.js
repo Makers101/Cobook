@@ -38,5 +38,8 @@ export default {
 
     // noti
     noti: '/noti',
+
+    //search
+    search: '/search'
   }
 }
