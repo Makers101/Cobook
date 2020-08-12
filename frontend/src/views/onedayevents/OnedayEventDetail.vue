@@ -3,7 +3,7 @@
     
     <!-- onedayEvent-detail-header -->
     <div class="row">
-      <div class="bookImg-container pointer col-2 p-0">
+      <div class="bookImg-container pointer col-2 p-0" @click="toBookDetail(selectedOnedayEvent.book.id)">
         <img
           class="book-image img-fluid"
           :src="selectedOnedayEvent.book.bookImg"
@@ -274,7 +274,10 @@ export default {
       } else {
         return false
       }
-    }
+    },
+    toBookDetail(bookId) {
+      router.push({ name: 'BookDetail', params: { bookId: bookId}})
+    },
   },
   created() {
     this.findOnedayEvent(this.$route.params.onedayEventId)
@@ -302,7 +305,9 @@ export default {
     display: block;
     width: 100%;
     height: 100%;
-    border-radius: 25px;
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
   }
 
   .onedayEvent-closed-false {
