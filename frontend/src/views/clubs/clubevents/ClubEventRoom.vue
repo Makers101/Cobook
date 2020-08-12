@@ -34,9 +34,14 @@ export default {
 
     var pcConfig = {
       'iceServers': [{
-        'urls': 'stun:stun.l.google.com:19302'
-      }]
-    };
+          'urls': 'stun:stun.l.google.com:19302'
+        },
+        {
+          urls: 'turn:numb.viagenie.ca',
+          credential: 'muazkh',
+          username: 'webrtc@live.com'
+        }
+      ]};
 
     // Set up audio and video regardless of what devices are present.
     var sdpConstraints = {
@@ -48,7 +53,7 @@ export default {
 
     /////////////////////////////////////////////
 
-    var room = 'foo';
+    var room = `clubEventRoom-${this.roomId}`;
     // Could prompt for room name:
     // room = prompt('Enter room name:');
 
