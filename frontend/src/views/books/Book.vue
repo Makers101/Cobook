@@ -17,7 +17,7 @@
                 <!-- 책 이미지 -->
                 <div class="w-50 mr-3">
                   <img 
-                    style="height: 200px;" 
+                    class="book-image" 
                     :src="selectedBook.bookImg" 
                     alt="책 이미지">
                 </div>
@@ -82,7 +82,8 @@
               <div v-for="genre in selectedBook.Genres" :key="genre.id">
                 <p>#{{ genre.name }}</p>
               </div>
-              <div class="text-right mt-auto">
+              <div class="d-flex justify-content-between mt-3">
+                <button class="btn btn-green m-0" @click="clickPostCreate(selectedBook.id)">리뷰 작성하러 가기</button>
                 <button class="btn btn-green m-0"><a class="url" :href="selectedBook.url" target="_blank">자세히보기</a></button>
               </div>
             </div>
@@ -135,7 +136,7 @@
                 <div>
                   <h5 class="mb-1">아직 다른 유저들이 작성한 리뷰는 없어요 ㅠ_ㅠ</h5>
                   <h5>리뷰... 작성해주시겠어요?</h5>
-                  <button class="btn btn-green mt-3" @click="clickPostCreate(selectedPost.book.id)">리뷰 작성하러 가기</button>
+                  <button class="btn btn-green mt-3" @click="clickPostCreate(selectedBook.id)">리뷰 작성하러 가기</button>
                 </div>
               </div>
             
@@ -176,7 +177,7 @@ export default {
     },
     postDetail(postId) {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
-    },
+    }
   },
   mounted() {
     this.findBook(this.$route.params.bookId)
@@ -207,6 +208,11 @@ body {
     width: 100%;
 }
 
+.book-image {
+  height: 200px;
+  box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+  border-radius: 6px;
+}
 
 
 /*** OPEN BOOK ***/
