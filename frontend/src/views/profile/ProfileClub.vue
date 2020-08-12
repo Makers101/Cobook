@@ -215,6 +215,14 @@ export default {
     text-align: start;
   }
 
+  .card {
+    background-color: #fff;
+    background: linear-gradient(#f8f8f8, #fff);
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
   .card-head {
     position: relative;
   }
