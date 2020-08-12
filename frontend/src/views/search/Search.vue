@@ -1,44 +1,52 @@
 <template>
-  <div>
-    <div class="col-3 text-left mt-2 search-bar">
-      <h4>검색 결과:</h4>
+  <div class="row no-gutters">
+    <div class="col-3 text-left pl-2 search-bar">
+      <h4 class="mt-4">검색 결과:</h4>
       <p>000</p>
       <hr>
       <h5 class="font-weight-bold">필터</h5>
-      <div class="filter d-flex p-2">
-        <div class="bg-beige mr-2" style="border-radius:50%">
-          <i class="fas fa-user p-2"></i>
+      <router-link class="m-0" :to="{name: 'SearchUser'}">
+        <div class="filter d-flex p-2">
+          <div class="bg-beige mr-2" style="border-radius:50%">
+            <i class="fas fa-user p-2"></i>
+          </div>
+          <span>유저</span>
         </div>
-        <p class="m-0">유저</p>
-      </div>
-      <div class="filter d-flex  p-2">
-        <div class="bg-beige mr-2" style="border-radius:50%">
-          <i class="fas fa-comment-dots p-2"></i>
+      </router-link>
+      <router-link class="m-0" :to="{name: 'SearchPost'}">
+        <div class="filter d-flex  p-2">
+          <div class="bg-beige mr-2" style="border-radius:50%">
+            <i class="fas fa-comment-dots p-2"></i>
+          </div>
+          <span>리뷰</span>
         </div>
-        <p class="m-0">리뷰</p>
-      </div>
-      <div class="filter d-flex p-2">
-        <div class="bg-beige mr-2" style="border-radius:50%">
-          <i class="fas fa-book-open p-2"></i>
+      </router-link>
+      <router-link class="m-0" :to="{name: 'SearchBook'}">
+        <div class="filter d-flex p-2">
+          <div class="bg-beige mr-2" style="border-radius:50%">
+              <i class="fas fa-book-open p-2"></i>
+          </div>
+          <span class="m-0">도서</span>
         </div>
-        <p class="m-0">도서</p>
-      </div>
-      <div class="filter d-flex p-2">
-        <div class="bg-beige mr-2" style="border-radius:50%">
-           <i class="fas fa-users p-2"></i>
+      </router-link>
+      <router-link class="m-0" :to="{name: 'SearchClub'}">
+        <div class="filter d-flex p-2">
+          <div class="bg-beige mr-2" style="border-radius:50%">
+              <i class="fas fa-users p-2"></i>
+          </div>
+          <span class="m-0">클럽</span>
         </div>
-        <p class="m-0">클럽</p>
-      </div>
-      <div class="filter d-flex p-2">
-        <div class="bg-beige mr-2" style="border-radius:50%;">
-          <span class="mdi mdi-calendar-star p-2" width="50px"></span>
+      </router-link>
+      <router-link class="m-0" :to="{name: 'SearchOneDayEvent'}">
+        <div class="filter d-flex p-2">
+          <div class="bg-beige mr-2" style="border-radius:50%;">
+            <span class="mdi mdi-calendar-star p-2" width="50px"></span>
+          </div>
+          <span class="m-0">원데이 이벤트</span>
         </div>
-        <p class="m-0">원데이 이벤트</p>
-      </div>
+      </router-link>
     </div>
-    <router-view class="col-0">
-
-    </router-view>
+    <router-view class="col-9"></router-view>
   </div>
 </template>
 
@@ -49,6 +57,9 @@ export default {
 </script>
 
 <style scoped>
+a:link, a:active, a:visited {
+  color: black;
+}
 .search-bar {
   height: 90vh;
   border-right: 1px solid rgb(0, 0, 0, 0.2);
@@ -58,5 +69,6 @@ export default {
 .filter:hover {
   background-color: #88A498;
   color: #F8F8F8;
+  text-decoration: none !important;
 }
 </style>
