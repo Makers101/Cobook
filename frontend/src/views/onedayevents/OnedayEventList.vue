@@ -157,6 +157,14 @@ export default {
     transform: translate( -50%, -50% );
   }
 
+  .card {
+    background-color: #fff;
+    background: linear-gradient(#f8f8f8, #fff);
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
   .btn-toggle-true {
     border-color: #88A498;
     color: #88A498;
