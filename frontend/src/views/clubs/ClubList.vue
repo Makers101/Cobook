@@ -246,9 +246,8 @@ export default {
     color: #F8F8F8;
     text-align: center;
     position: absolute;
-    top: 11%;
-    left: 89%;
-    transform: translate( -50%, -50% );
+    top: 5%;
+    right: 3%;
     padding: 6px;
   }
 
