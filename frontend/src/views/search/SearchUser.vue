@@ -16,7 +16,7 @@
             style="max-width: 50%; border-radius: 50%;" 
             :src="user.profileImg" alt="작성자 프로필 사진">
           <!-- 프로필 닉네임 -->
-          <p class="user-nickName">{{ user.nickName }}</p>
+          <p class="user-nickName pointer" @click="selectUser(user.id)"><strong>{{ user.nickName }}</strong></p>
         </div>
         <!-- 팔로잉 여부 -->
         <div class="d-flex align-items-center mr-3">
@@ -53,6 +53,9 @@ export default {
       } else {
         user.isFollow = true
       }
+    },
+    selectUser(userId) {
+      this.$router.push({ name: 'Profile', params: { userId: userId }})
     },
   },
   created() {
