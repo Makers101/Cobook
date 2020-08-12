@@ -60,15 +60,23 @@
                       <span>{{ selectedBook.pubDate | moment('YYYY-MM-DD')}}</span>
                     </div>
                   </div>
+                  <div class="row no-gutters align-items-center text-left">
+                    <div v-for="genre in selectedBook.likeGenres" :key="genre.id">
+                      <p>#{{ genre }}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
               <!-- 책 줄거리 -->
               <div class="mt-3 text-left" v-if="selectedBook.contents !== ''">
                 <h6 class="mb-2"><strong>줄거리</strong></h6>
-                {{ selectedBook.contents }}
+                {{ selectedBook.contents }}...
               </div>
               <div class="mt-5" v-else>
                 <h6>줄거리가 없습니다.</h6>
+              </div>
+              <div v-for="genre in selectedBook.Genres" :key="genre.id">
+                <p>#{{ genre.name }}</p>
               </div>
               <div class="text-right mt-auto">
                 <button class="btn btn-green m-0"><a class="url" :href="selectedBook.url" target="_blank">자세히보기</a></button>
