@@ -174,7 +174,7 @@ const profileStore = {
             name: clubEvent.name,
             start: clubEvent.datetime.slice(0, 16),
             end: '',
-            color: 'indigo',
+            color: '#AA706A',
             timed: false,
             clubEvent: clubEvent
           }
@@ -187,7 +187,7 @@ const profileStore = {
             name: onedayEvent.name,
             start: onedayEvent.datetime.slice(0, 16),
             end: '',
-            color: 'green',
+            color: '#7393C2',
             timed: false,
             onedayEvent: onedayEvent
           }
@@ -200,7 +200,7 @@ const profileStore = {
             name: post.book.title,
             start: post.createdAt.slice(0, 10),
             end: '',
-            color: 'orange',
+            color: '#b484bf',
             timed: false,
             post: post
           }
