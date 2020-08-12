@@ -1,14 +1,33 @@
 'use strict';
 
 var os = require('os');
+const fs = require('fs');
+const path = require('path')
 var nodeStatic = require('node-static');
-var http = require('http');
+var https = require('https');
 var socketIO = require('socket.io');
 
 var fileServer = new(nodeStatic.Server)();
-var app = http.createServer(function(req, res) {
+var app = https.createServer(function(req, res) {
   fileServer.serve(req, res);
 }).listen(8000);
+
+try {
+  const option = {
+    ca: fs.readFileSync('/etc/letsencrypt/live/i3a111.p.ssafy.io/fullchain.pem'),
+    key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/i3a111.p.ssafy.io/privkey.pem'), 'utf8').toString(),
+    cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/i3a111.p.ssafy.io/cert.pem'), 'utf8').toString(),
+  };
+
+  https.createServer(option, app).listen(sslport, () => {
+    console.success(`[HTTPS] Soda Server is started on port ${colors.cyan(sslport)}`);
+  });
+
+} catch (error) {
+  console.error('[HTTPS] HTTPS 오류가 발생하였습니다. HTTPS 서버는 실행되지 않습니다.');
+  console.warn(error);
+}
+
 
 var io = socketIO.listen(app);
 io.sockets.on('connection', function(socket) {
