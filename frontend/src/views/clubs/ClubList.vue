@@ -233,6 +233,14 @@ export default {
     position: relative;
   }
 
+  .card {
+    background-color: #fff;
+    background: linear-gradient(#f8f8f8, #fff);
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
   .club-recruit {
     background-color: rgba(221, 118, 0, 0.8); 
     color: #F8F8F8;
