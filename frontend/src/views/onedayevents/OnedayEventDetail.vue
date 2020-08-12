@@ -158,10 +158,11 @@
       </div>
       <div class="d-flex scroll-sect" id="scroll-area-post" v-if="selectedOnedayEvent.memberPosts.length">
         <div 
-          class="col-4 pointer"
+          class="px-3 pointer"
           v-for="post in selectedOnedayEvent.memberPosts"
           :key="post.id"
-          @click="toPostDetail(post.id)">
+          @click="toPostDetail(post.id)"
+          style="min-width: 345.59px; max-width: 345.59px;">
           <div class="card m-0 ">
             <div class="additional d-flex justify-content-center">
               <div class="user-card">
@@ -284,7 +285,7 @@ export default {
       if(e.preventDefault) { e.preventDefault(); } /* Chrome, Safari, Firefox */
       e.returnValue = false; /* IE7, IE8 */
     }
-    if (this.selectedOnedayEvent.memberPosts.length > 3) {
+    if (this.selectedOnedayEvent.memberPosts.length >= 3) {
       const scrollAreaClub = document.querySelector('#scroll-area-post')
       scrollAreaClub.addEventListener('wheel', (e) => {
         scrollAreaClub.scrollLeft += e.deltaY;
