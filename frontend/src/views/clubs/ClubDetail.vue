@@ -396,9 +396,8 @@ export default {
     color: #F8F8F8;
     text-align: center;
     position: absolute;
-    top: 9%;
-    left: 18%;
-    transform: translate( -50%, -50% );
+    top: 3%;
+    left: 5%;
     padding: 6px;
   }
 
@@ -407,9 +406,8 @@ export default {
     color: #F8F8F8;
     text-align: center;
     position: absolute;
-    top: 9%;
-    left: 18%;
-    transform: translate( -50%, -50% );
+    top: 3%;
+    left: 5%;
     padding: 6px;
   }
 
