@@ -13,7 +13,7 @@
             <v-list-item-avatar>
               <v-avatar>
                 <img v-if="item.profileImg" :src="`${item.profileImg}`">
-                <img v-else src="http://placehold.jp/200x200.png">
+                <img v-else src="http://bit.do/anonymouseuser">
               </v-avatar>
             </v-list-item-avatar>
             <v-list-item-content class="text-left">
