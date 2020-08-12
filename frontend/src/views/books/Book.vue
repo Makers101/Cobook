@@ -45,7 +45,7 @@
                   <div class="row no-gutters align-items-center text-left">
                     <div class="col-5 col-lg-4">
                       <strong>출판사</strong>
-                      <img class="ml-1 mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px">
+                      <img class="ml-1" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px">
                     </div>
                     <div class="col-7 col-lg-8">
                       <span>{{ selectedBook.publisher }}</span>
@@ -54,10 +54,19 @@
                   <div class="row no-gutters align-items-center text-left">
                     <div class="col-5 col-lg-4">
                       <strong>출판일</strong>
-                      <img class="ml-1 mr-2" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> 
+                      <img class="ml-1" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> 
                     </div>
                     <div class="col-7 col-lg-8">
                       <span>{{ selectedBook.pubDate | moment('YYYY-MM-DD')}}</span>
+                    </div>
+                  </div>
+                  <div class="row no-gutters align-items-center text-left">
+                    <div class="col-5 col-lg-4">
+                      <strong>장르</strong>
+                      <i class="fas fa-theater-masks color-green ml-2"></i> 
+                    </div>
+                    <div class="col-7 col-lg-8">
+                      <span>{{ selectedBook.genre.name }}</span>
                     </div>
                   </div>
                 </div>
@@ -65,10 +74,13 @@
               <!-- 책 줄거리 -->
               <div class="mt-3 text-left" v-if="selectedBook.contents !== ''">
                 <h6 class="mb-2"><strong>줄거리</strong></h6>
-                {{ selectedBook.contents }}
+                {{ selectedBook.contents }}...
               </div>
               <div class="mt-5" v-else>
                 <h6>줄거리가 없습니다.</h6>
+              </div>
+              <div v-for="genre in selectedBook.Genres" :key="genre.id">
+                <p>#{{ genre.name }}</p>
               </div>
               <div class="text-right mt-auto">
                 <button class="btn btn-green m-0"><a class="url" :href="selectedBook.url" target="_blank">자세히보기</a></button>
@@ -579,5 +591,16 @@ p, h1, h2, h3, h4, h5, h6, div {
   background: #88A498 ; 
   -webkit-border-radius: 15px; border-radius: 15px; 
   /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
+}
+
+.btn-genre {
+  background-color: #88A498;
+  color: #F8F8F8;
+  opacity: 1;
+}
+
+.book-genre {
+  border: 1px solid #88A498;
+  border-radius: 10%;
 }
 </style>

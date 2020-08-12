@@ -45,6 +45,14 @@ import BookDetail from '@/views/books/Book'
 //pagenotfound
 import PageNotFound from '@/views/PageNotFound'
 
+// search
+import Search from '@/views/search/Search'
+import SearchBook from '@/views/search/SearchBook'
+import SearchClub from '@/views/search/SearchClub'
+import SearchOneDayEvent from '@/views/search/SearchOneDayEvent'
+import SearchPost from '@/views/search/SearchPost'
+import SearchUser from '@/views/search/SearchUser'
+
 
 Vue.use(VueRouter)
 
@@ -225,6 +233,39 @@ Vue.use(VueRouter)
     path: '/books/:bookId',
     name: 'BookDetail',
     component: BookDetail
+  },
+  // Search
+  {
+    path: '/search/:content',
+    name: 'Search',
+    component: Search,
+    children: [
+      {
+        path: 'user',
+        component: SearchUser,
+        name: 'SearchUser'
+      },
+      {
+        path: 'review',
+        component: SearchPost,
+        name: 'SearchPost'
+      },
+      {
+        path: 'book',
+        component: SearchBook,
+        name: 'SearchBook'
+      },
+      {
+        path: 'club',
+        component: SearchClub,
+        name: 'SearchClub'
+      },
+      {
+        path: 'onedayevent',
+        component: SearchOneDayEvent,
+        name: 'SearchOneDayEvent'
+      },
+    ]
   },
   // 404 Pages
   {

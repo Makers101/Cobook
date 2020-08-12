@@ -9,6 +9,7 @@ import clubStore from '@/store/modules/clubStore'
 import onedayEventStore from '@/store/modules/onedayEventStore'
 import postStore from '@/store/modules/postStore'
 import profileStore from '@/store/modules/profileStore'
+import searchStore from '@/store/modules/searchStore'
 
 import router from '@/router'
 import axios from 'axios'
@@ -122,6 +123,7 @@ export default new Vuex.Store({
     clubStore: clubStore,
     onedayEventStore: onedayEventStore,
     postStore: postStore,
-    profileStore: profileStore
+    profileStore: profileStore,
+    searchStore: searchStore,
   }
 })
