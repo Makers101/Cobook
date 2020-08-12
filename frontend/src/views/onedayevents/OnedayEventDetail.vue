@@ -82,7 +82,7 @@
 
     <!-- onedayEvent-detail-members -->
     <div>
-      <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity + 1 }})</h4>
+      <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity }})</h4>
       <div class="d-flex justify-content-start">
         <div class="profile-container pointer mr-3" @click="selectUser(selectedOnedayEvent.leader.id)">
           <img
@@ -217,7 +217,7 @@ export default {
     ...mapState(['myaccount']),
     ...mapState('onedayEventStore', ['selectedOnedayEvent']),
     isRecruit() {
-      if (this.selectedOnedayEvent.participantCnt === (this.selectedOnedayEvent.capacity + 1)) {
+      if (this.selectedOnedayEvent.participantCnt === (this.selectedOnedayEvent.capacity)) {
         return false
       } else {
         return true
