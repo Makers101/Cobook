@@ -57,5 +57,6 @@ export default {
 
 .filter:hover {
   background-color: #88A498;
+  color: #F8F8F8;
 }
 </style>
