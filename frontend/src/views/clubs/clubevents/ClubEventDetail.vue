@@ -98,7 +98,7 @@
               v-if="selectedClubEvent.leader.profileImg">
             <img
               class="rounded-circle profile-image"
-              :src="'http://placehold.jp/150x150.png?text=' + selectedClubEvent.leader.nickName"
+              src="http://bit.do/anonymouseuser"
               :alt="selectedClubEvent.leader.nickName"
               v-else>
             <div class="overlay rounded-circle">
@@ -118,7 +118,7 @@
               v-if="participant.profileImg">
             <img
               class="rounded-circle profile-image"
-              :src="'http://placehold.jp/150x150.png?text=' + participant.nickName"
+              src="http://bit.do/anonymouseuser"
               :alt="participant.nickName"
               v-else>
             <div class="overlay rounded-circle">
@@ -178,7 +178,8 @@
                   <div class="points center">
                     <i class="fas fa-heart mr-1"></i> {{ post.likeUsers.length }}
                   </div>
-                  <img :src="post.profileImg">  
+                  <img :src="post.profileImg" v-if="post.profileImg">
+                  <img src="http://bit.do/anonymouseuser" v-else>
                 </div>
               </div>
               <div class="general d-flex flex-column justify-content-between">
