@@ -2,7 +2,7 @@
   <div class="custom-container mt-3 mb-5">
 
     <!-- club-detail-header -->
-    <div class="row">
+    <div class="row pl-2">
 
       <!-- club-detail-clubImg -->
       <img
@@ -108,7 +108,7 @@
                 가입 취소
               </button>
               <button
-                class="btn btn-warning mr"
+                class="btn btn-warning"
                 v-if="!isLeader && isMember"
                 @click="clickClubSecede(selectedClub.id)">
                 클럽 탈퇴
@@ -378,6 +378,14 @@ export default {
     width: 80%;
     font-weight: bold;
   }
+  
+  .card {
+    background-color: #fff;
+    background: linear-gradient(#f8f8f8, #fff);
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
+  }
 
   .clubEvent-left {
     position: relative;
@@ -410,9 +418,11 @@ export default {
   }
 
   .club-image {
-    border-radius: 25px;
-    padding: 8px;
-    height: 200px;
+    padding: 0;
+    max-height: 200px;
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
   }
 
   .clubEvent-name {
