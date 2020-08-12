@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="col-3 text-left ml-2">
+    <div class="col-3 text-left mt-2 search-bar">
       <h4>검색 결과:</h4>
       <p>000</p>
       <hr>
-      <h5>필터</h5>
+      <h5 class="font-weight-bold">필터</h5>
       <div>
         <div class="float-left bg-beige mr-2" style="border-radius:50%">
           <i class="fas fa-user p-2"></i>
@@ -34,13 +34,11 @@
           <span class="mdi mdi-calendar-star p-2" width="50px"></span>
         </div>
         <p>원데이 이벤트</p>
-        
       </div>
-      
     </div>
-    <div class="col-9">
+    <router-view class="col-0">
 
-    </div>
+    </router-view>
   </div>
 </template>
 
@@ -51,5 +49,9 @@ export default {
 </script>
 
 <style scoped>
-
+.search-bar {
+  height: 90vh;
+  border-right: 1px solid rgb(0, 0, 0, 0.2);
+  box-shadow: 1px 0px 10px 1px rgb(0, 0, 0, 0.2);
+}
 </style>
