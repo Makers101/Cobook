@@ -260,7 +260,7 @@ export default {
         questions: []
       },
       date: new Date().toISOString().substr(0, 10),
-      time: '00:00',
+      time: '12:00',
       valid: true,
       lazy:false,
       searchBook: null,
