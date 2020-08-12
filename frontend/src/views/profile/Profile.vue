@@ -10,7 +10,7 @@
           v-if="profile.profileImg">
         <img
           class="profile-image bg-light-ivory"
-          :src="'http://placehold.jp/200x200.png?text=' + profile.nickName"
+          src="http://bit.do/anonymouseuser"
           :alt="profile.nickName"
           v-else>
       </div>
