@@ -16,8 +16,9 @@ const searchStore = {
     }
   },
   actions: {
-    fetchUserList({commit, rootGetters}, content) {
-      axios.get(SERVER.URL + SERVER.ROUTES.search + '/' + content + SERVER.ROUTES, rootGetters.config)
+    fetchUsers({commit, rootGetters}, content) {
+      console.log()
+      axios.get(SERVER.URL + SERVER.ROUTES.search + SERVER.ROUTES.myaccount + '/' + content, rootGetters.config)
         .then(res => {
           commit('SET_USERS', res.data)
         })
