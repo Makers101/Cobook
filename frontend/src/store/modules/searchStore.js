@@ -22,13 +22,13 @@ const searchStore = {
       state.books = books
     },
     SET_POSTS(state, posts) {
-      state.books = posts
+      state.posts = posts
     },
     SET_CLUBS(state, clubs) {
-      state.books = clubs
+      state.clubs = clubs
     },
     SET_EVENTS(state, events) {
-      state.books = events
+      state.events = events
     },
 
   },
@@ -48,6 +48,24 @@ const searchStore = {
           console.log(err.data)
         })
     },
+    fetchPosts({commit}, content) {
+      axios.get(SERVER.URL + SERVER.ROUTES.search + SERVER.ROUTES.posts + '/' + content)
+        .then(res => {
+          commit('SET_POSTS', res.data)
+        })
+        .catch(err => {
+          console.log(err.data)
+        })
+    },
+    fetchClubs({commit}, content) {
+      axios.get(SERVER.URL + SERVER.ROUTES.search + SERVER.ROUTES.clubs + '/' + content)
+        .then(res => {
+          commit('SET_POSTS', res.data)
+        })
+        .catch(err => {
+          console.log(err.data)
+        })
+    }
   },
    
 }
