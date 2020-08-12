@@ -105,7 +105,7 @@
                               v-if="!post.profileImg"
                               class="img-fluid feed-profile-img mt-2"
                               style="max-width: 50%; border-radius: 50%;" 
-                              src="@/assets/anonymous.png" 
+                              src="http://bit.do/anonymouseuser"
                               alt="유저 프로필 사진">
                             <img 
                               v-else
