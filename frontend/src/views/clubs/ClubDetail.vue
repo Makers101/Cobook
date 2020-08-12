@@ -178,10 +178,11 @@
       <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 클럽 이벤트</h4>
       <div class="d-flex scroll-sect" id="scroll-area-event" v-if="selectedClub.clubEvents.length">
         <div
-          class="col-4 pointer"
+          class="px-3 pointer"
           v-for="clubEvent in selectedClub.clubEvents"
           :key="clubEvent.id"
-          @click="selectClubEvent(clubEvent.id)">
+          @click="selectClubEvent(clubEvent.id)"
+          style="min-width: 345.59px; max-width: 345.59px;">
           <div class="card m-0">
             <div class="row no-gutters">
               <div class="col-6 clubEvent-left">
@@ -325,7 +326,7 @@ export default {
       e.returnValue = false; /* IE7, IE8 */
     }
 
-    if (this.selectedClub.clubEvents.length > 3) {
+    if (this.selectedClub.clubEvents.length >= 3) {
       const scrollAreaEvent = document.querySelector('#scroll-area-event')
       scrollAreaEvent.addEventListener('wheel', (e) => {
         scrollAreaEvent.scrollLeft += e.deltaY;

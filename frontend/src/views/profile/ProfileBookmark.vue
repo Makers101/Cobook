@@ -162,13 +162,13 @@ export default {
 }
 
 
-.card:hover .additional {
+.additional:hover {
   width: 100%;
   border-radius: 0 5px 5px 0;
 }
 
 
-.card:hover.user-card {
+.additional:hover.user-card {
   position: absolute;
   left: 0;
 }

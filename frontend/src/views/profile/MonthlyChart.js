@@ -39,8 +39,7 @@ export default {
           }
         },
         responsive: true,
-        maintainAspectRatio: false,
-        height: 200
+        maintainAspectRatio: true,
       })
   }
 };

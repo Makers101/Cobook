@@ -174,7 +174,7 @@ const profileStore = {
             name: clubEvent.name,
             start: clubEvent.datetime.slice(0, 16),
             end: '',
-            color: 'indigo',
+            color: '#AA706A',
             timed: false,
             clubEvent: clubEvent
           }
@@ -187,7 +187,7 @@ const profileStore = {
             name: onedayEvent.name,
             start: onedayEvent.datetime.slice(0, 16),
             end: '',
-            color: 'green',
+            color: '#7393C2',
             timed: false,
             onedayEvent: onedayEvent
           }
@@ -200,7 +200,7 @@ const profileStore = {
             name: post.book.title,
             start: post.createdAt.slice(0, 10),
             end: '',
-            color: 'orange',
+            color: '#b484bf',
             timed: false,
             post: post
           }
@@ -221,48 +221,102 @@ const profileStore = {
               {
                 label: "장르별 독서량",
                 // backgroundColor: [
-                //   '#f94144',
-                //   '#f3722c',
-                //   '#f8961e',
-                //   '#f9c74f',
-                //   '#90be6d',
-                //   '#43aa8b',
-                //   '#577590'
+                //   '#4B5916',
+                //   '#69724C',
+                //   '#7C3D09',
+                //   '#845225',
+                //   '#14312A',
                 // ],
                 // backgroundColor: [
-                //   '#FF8989',
-                //   '#F5B68B',
-                //   '#FFE285',
-                //   '#A0CC82',
-                //   '#73A9DB',
-                //   '#637B9B',
+                //   '#BF5B04',
+                //   '#CD7E59',
+                //   '#457373',
+                //   '#DDB247',
+                //   '#D9C179'
                 // ],
                 // backgroundColor: [
-                  
-                //   '#E3CDB8',
-                //   '#A6664B',
-                //   '#332929',
-                //   '#414D41',
-                //   '#7F8C7F',
-                //   '#DFE6E4',
+                //   '#4B5916',
+                //   '#8D9365',
+                //   '#A87543',
+                //   '#A86326',
+                //   '#73303C'
+                // ],
+                // backgroundColor: [
+                //   '#281B24',
+                //   '#3C4B4D',
+                //   '#F2AB26',
+                //   '#D87D0D',
+                //   '#890A03'
+                // ],
+                // backgroundColor: [
+                //   '#174029',
+                //   '#3D7345',
+                //   '#A68F7B',
+                //   '#A86326',
+                //   '#593622'
+                // ],
+                // backgroundColor: [
+                //   '#574301',
+                //   '#A86326',
+                //   '#8D9365',
+                //   '#D9B29C',
+                //   '#8C0303'
+                // ],
+                // backgroundColor: [
+                //   '#027368',
+                //   '#034001',
+                //   '#0D0D0D',
+                //   '#988148',
+                //   '#D9A282'
+                // ],
+                // backgroundColor: [
+                //   '#02323A',
+                //   '#7F7601',
+                //   '#D9B29C',
+                //   '#A66249',
+                //   '#5E0202'
+                // ],
+                // backgroundColor: [
+                //   '#2F3D30',
+                //   '#8C826C',
+                //   '#57605C',
+                //   '#404654',
+                //   '#34273B'
                 // ],
                 backgroundColor: [
-                  '#344043',
-                  '#498B91',
-                  '#6CADAE',
-                  '#85C7CC',
-                  '#ADD6D8',
-                  '#C6D8D9'
+                  '#CB997E',
+                  '#DDBEA9',
+                  '#FFDEC5',
+                  '#A5A58D',
+                  '#D7D5CB',
+                  '#F0EFEB',
                 ],
                 data: []
               }
             ]
           }
-          res.data.genreByPostData.forEach(genre => {
-            pieData.labels.push(genre.name)
-            pieData.datasets[0].data.push(genre.count)
-          });
-          commit('SET_PIEDATA', pieData)
+          if (res.data.genreByPostData.length > 5) {
+            for (let i = 0; i < 5; i++) {
+              // const genre = res.data.genreByPostData[i]
+              pieData.labels.push(res.data.genreByPostData[i].name)
+              pieData.datasets[0].data.push(res.data.genreByPostData[i].count)
+            }
+            
+            let etcCount = 0
+            for (let i = 5; i < res.data.genreByPostData.length; i++) {
+              etcCount += res.data.genreByPostData[i].count
+            }
+            pieData.labels.push('기타')
+            pieData.datasets[0].data.push(etcCount)
+            commit('SET_PIEDATA', pieData)
+
+          } else {
+            res.data.genreByPostData.forEach(genre => {
+              pieData.labels.push(genre.name)
+              pieData.datasets[0].data.push(genre.count)
+            });
+            commit('SET_PIEDATA', pieData)
+          }
           
           const barData = {
             labels: [],

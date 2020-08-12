@@ -1,5 +1,5 @@
 <template>
-  <div class="my-3">
+  <div class="mt-3 mb-5">
     
     <!-- profile-clubs -->
     <h5 class="text-left font-weight-bold mb-0 ml-3" v-if="clubs.length">{{ profile.nickName }}님의 Club</h5>
@@ -147,7 +147,7 @@ export default {
       e.returnValue = false; /* IE7, IE8 */
     }
 
-    if (this.clubs.length > 3) {
+    if (this.clubs.length >= 3) {
       const scrollAreaClub = document.querySelector('#scroll-area-club')
       scrollAreaClub.addEventListener('wheel', (e) => {
         scrollAreaClub.scrollLeft += e.deltaY;
@@ -155,7 +155,7 @@ export default {
       })
     }
 
-    if (this.integratedEvents.length > 3) {
+    if (this.integratedEvents.length >= 3) {
       const scrollAreaEvent = document.querySelector('#scroll-area-event')
       scrollAreaEvent.addEventListener('wheel', (e) => {
         scrollAreaEvent.scrollLeft += e.deltaY;
