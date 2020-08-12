@@ -1,37 +1,17 @@
 <template>
   <div class="mt-5">
     <div class="d-flex justify-content-center"> 
-      <div class="w-75">
+      <div class="book-container">
         <div class="row no-gutters row-cols-1 row-cols-md-3">
-          <div class="col mb-4 p-3">
-            <div class="card h-100">
-              <img class="bookImg card-img-top" src="https://images-na.ssl-images-amazon.com/images/I/712KSYstH9L.jpg">
-              <div class="overlay">
-                <div class="text">
-                  <p>Little Chinese Seamstress</p>
-                  <small>By. Dal Sijie</small>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col mb-4 p-3">
-            <div class="card h-100">
-              <img class="bookImg card-img-top" src="https://images-na.ssl-images-amazon.com/images/I/712KSYstH9L.jpg">
-              <div class="overlay">
-                <div class="text">
-                  <p>Little Chinese Seamstress</p>
-                  <small>By. Dal Sijie</small>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col mb-4 p-3">
-            <div class="card h-100">
-              <img class="bookImg card-img-top" src="https://images-na.ssl-images-amazon.com/images/I/712KSYstH9L.jpg">
-              <div class="overlay">
-                <div class="text">
-                  <p>Little Chinese Seamstress</p>
-                  <small>By. Dal Sijie</small>
+          <div  v-for="book in books" :key="book.id">
+            <div class="col mb-4 p-3">
+              <div class="card h-100">
+                <img class="bookImg card-img-top" :src="book.bookImg">
+                <div class="overlay">
+                  <div class="text">
+                    <p class="m-0">{{ book.title }}</p>
+                    <small>By. {{book.author}}</small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -43,12 +23,26 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'SearchBook',
+  computed: {
+     ...mapState('searchStore', ['books']),
+  },
+  methods: {
+    ...mapActions('searchStore', ['fetchBooks']),
+  },
+  created() {
+    this.fetchBooks(this.$route.params.content)
+  }
 }
 </script>
 
 <style scoped>
+.book-container {
+  width: 60%
+}
+
 .card {
   box-shadow: 8px 8px 10px 3px rgb(0, 0, 0, 0.2)
 }
@@ -85,11 +79,12 @@ export default {
 }
 
 .text {
+  width: 80%;
   color: white;
-  font-size: 20px;
+  font-size: 1em;
   position: absolute;
-  padding-left: 0.3em;
-  padding-right: 0.3em;
+  padding-left: 0.05em;
+  padding-right: 0.05em;
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
@@ -97,16 +92,21 @@ export default {
   transform: translate(-50%, -50%);
   transition: all 0.3s ease-in-out 0s;
   text-align: center;
+  -webkit-line-clamp: 6; 
 }
 
+  
 .text p {
   color: #fff;
-  padding-left: 5px;
-  font-size: 0.75em;
+  text-shadow: 1px 1px 2px rgb(0,0,0,0.7);
+  font-size: 1em;
   font-weight: 300;
-  letter-spacing: 0.15em;
-  margin-bottom: 0.5em;
   white-space: pre-wrap;
   word-break: keep-all;
+  overflow: hidden;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 4; 
+  -webkit-box-orient: vertical;
 }
 </style>
