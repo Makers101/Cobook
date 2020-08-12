@@ -70,14 +70,14 @@
           <div class="row no-gutters">
             <div class="col-6 onedayEvent-left">
               <img class="bg-image" :src="onedayEvent.book.bookImg" width="100%">
-              <span class="badge mb-0 onedayEvent-recruit" v-if="onedayEvent.participantCnt < onedayEvent.capacity + 1">모집중</span>
+              <span class="badge mb-0 onedayEvent-recruit" v-if="onedayEvent.participantCnt < onedayEvent.capacity">모집중</span>
               <!-- <span class="badge mb-0 onedayEvent-closed-false" v-else>풀방</span> -->
             </div>
             <div class="col-6 text-left d-flex flex-column align-items-start p-2">
               <p class="onedayEvent-name font-weight-bold" lt="book">{{ onedayEvent.name }}</p>
               <span class="badge badge-genre">{{ onedayEvent.book.genre }}</span>
               <div class="mt-auto">
-                <p class="mb-0"><small><i class="fas fa-users"></i> {{ onedayEvent.participantCnt}} / {{ onedayEvent.capacity + 1 }}</small></p>
+                <p class="mb-0"><small><i class="fas fa-users"></i> {{ onedayEvent.participantCnt}} / {{ onedayEvent.capacity }}</small></p>
                 <p class="mb-0"><small><i class="fas fa-map-marker-alt"></i> {{ onedayEvent.place }}</small></p>
                 <p class="onedayEvent-date mb-0"><small>{{ onedayEvent.datetime | moment('YYYY-MM-DD HH:mm') }}</small></p>
               </div>
