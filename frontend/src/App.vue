@@ -298,6 +298,10 @@ export default {
   max-height: 960px;
 }
 
+#nav {
+  box-shadow: 0px 2px 5px rgb(0, 0, 0, 0.2)
+}
+
 #nav a, i {
   font-size: 1.1rem;
   font-weight: 900;
