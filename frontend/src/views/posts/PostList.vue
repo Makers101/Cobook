@@ -1,7 +1,24 @@
 <template>
   <div class="container">
+
+    <!-- clubs-banner -->
+    <!-- <div class="club-banner">
+      <img
+        class="club-banner-img"
+        src="https://user-images.githubusercontent.com/57381062/88907929-3090a500-d294-11ea-94c0-601ed914d2e4.jpg" 
+        alt="">
+      <div class="club-banner-text">
+        <h3 class="font-weight-bold">피드</h3>
+        <p class="mb-0">
+          피드는 내가 선호하는 유저와 장르의 책 리뷰를 제공합니다. 
+          <br>
+          다른 유저의 책 감상을 탐험해보세요!
+        </p>
+      </div>
+    </div> -->
+
     <div class="m-0">
-      <h2 class="mt-3 text-left"> 팔로잉 리뷰</h2>
+      <h2 class="mt-3 ml-5 mb-0 text-left"> 팔로잉 리뷰</h2>
       <div class="row scroll-sect book-reviews" id="scroll-area-follow">
         <div class="row-inner">
           <div class="tile pointer" v-for="post in postsByFollow" :key="`post_${post.id}`"  @click="postDetail(post.id)">
@@ -29,7 +46,7 @@
 
     <div class="m-0" v-for="postSet in postsByGenre" :key="postSet.genre">
       <div v-if="postSet.posts.length">
-        <h2 class="mt-3 text-left">{{ postSet.genre }}</h2>
+        <h2 class="mt-3 ml-5 mb-0 text-left">{{ postSet.genre }}</h2>
         <div class="row scroll-sect book-reviews" :id="'scroll-area-' + postSet.genre">
           <div class="row-inner">
             <div class="tile pointer" v-for="post in postSet.posts" :key="`post_${post.id}`"  @click="postDetail(post.id)">
@@ -149,6 +166,28 @@ export default {
 
 
 <style scoped>
+
+.club-banner {
+  position: relative;
+}
+
+.club-banner-img {
+  width: 100%;
+  height: 200px;
+  vertical-align: middle;
+  filter: brightness(0.7)
+}
+
+.club-banner-text {
+  color: #F8F8F8;
+  text-align: center;
+  text-shadow: 2px 2px 2px rgb(100, 100, 100);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate( -50%, -50% );
+}
+
 .row {
   overflow: scroll;
   width: 100%;
