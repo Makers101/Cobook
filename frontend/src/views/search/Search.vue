@@ -5,35 +5,35 @@
       <p>000</p>
       <hr>
       <h5 class="font-weight-bold">필터</h5>
-      <div>
-        <div class="float-left bg-beige mr-2" style="border-radius:50%">
+      <div class="filter d-flex p-2">
+        <div class="bg-beige mr-2" style="border-radius:50%">
           <i class="fas fa-user p-2"></i>
         </div>
-        <p >유저</p>
+        <p class="m-0">유저</p>
       </div>
-      <div>
-        <div class="float-left bg-beige mr-2" style="border-radius:50%">
+      <div class="filter d-flex  p-2">
+        <div class="bg-beige mr-2" style="border-radius:50%">
           <i class="fas fa-comment-dots p-2"></i>
         </div>
-        <p>리뷰</p>
+        <p class="m-0">리뷰</p>
       </div>
-      <div>
-        <div class="float-left bg-beige mr-2" style="border-radius:50%">
+      <div class="filter d-flex p-2">
+        <div class="bg-beige mr-2" style="border-radius:50%">
           <i class="fas fa-book-open p-2"></i>
         </div>
-        <p>도서</p>
+        <p class="m-0">도서</p>
       </div>
-      <div>
-        <div class="float-left bg-beige mr-2" style="border-radius:50%">
+      <div class="filter d-flex p-2">
+        <div class="bg-beige mr-2" style="border-radius:50%">
            <i class="fas fa-users p-2"></i>
         </div>
-        <p>클럽</p>
+        <p class="m-0">클럽</p>
       </div>
-      <div>
-        <div class="float-left bg-beige mr-2" style="border-radius:50%;">
+      <div class="filter d-flex p-2">
+        <div class="bg-beige mr-2" style="border-radius:50%;">
           <span class="mdi mdi-calendar-star p-2" width="50px"></span>
         </div>
-        <p>원데이 이벤트</p>
+        <p class="m-0">원데이 이벤트</p>
       </div>
     </div>
     <router-view class="col-0">
@@ -52,6 +52,10 @@ export default {
 .search-bar {
   height: 90vh;
   border-right: 1px solid rgb(0, 0, 0, 0.2);
-  box-shadow: 1px 0px 10px 1px rgb(0, 0, 0, 0.2);
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.2)
+}
+
+.filter:hover {
+  background-color: #88A498;
 }
 </style>
