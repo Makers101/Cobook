@@ -71,7 +71,7 @@
             <div class="col-6 onedayEvent-left">
               <img class="bg-image" :src="onedayEvent.book.bookImg" width="100%">
               <span class="badge mb-0 onedayEvent-recruit" v-if="onedayEvent.participantCnt < onedayEvent.capacity">모집중</span>
-              <!-- <span class="badge mb-0 onedayEvent-closed-false" v-else>풀방</span> -->
+              <!-- <span class="badge mb-0 onedayEvent-recruit-false" v-else>만석</span> -->
             </div>
             <div class="col-6 text-left d-flex flex-column align-items-start p-2">
               <p class="onedayEvent-name font-weight-bold" lt="book">{{ onedayEvent.name }}</p>
@@ -190,20 +190,18 @@ export default {
     color: #F8F8F8;
     text-align: center;
     position: absolute;
-    top: 9%;
-    left: 18%;
-    transform: translate( -50%, -50% );
+    top: 3%;
+    left: 5%;
     padding: 6px;
   }
 
-  .onedayEvent-closed-true {
+  .onedayEvent-recruit-false {
     background-color: #707070; 
     color: #F8F8F8;
     text-align: center;
     position: absolute;
-    top: 9%;
-    left: 18%;
-    transform: translate( -50%, -50% );
+    top: 3%;
+    left: 5%;
     padding: 6px;
   }
 
