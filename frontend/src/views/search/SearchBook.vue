@@ -40,7 +40,7 @@ export default {
 
 <style scoped>
 .book-container {
-  width: 60%
+  width: 70%
 }
 
 .card {
