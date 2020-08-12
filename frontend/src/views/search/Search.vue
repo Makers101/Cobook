@@ -1,7 +1,7 @@
 <template>
   <div class="row no-gutters">
-    <div class="col-3 text-left pl-2 search-bar">
-      <h4 class="mt-4">검색 결과:</h4>
+    <div class="col-3 text-left p-3 search-bar">
+      <h4 class="mt-3"><strong>검색 결과:</strong></h4>
       <p>000</p>
       <hr>
       <h5 class="font-weight-bold">필터</h5>
@@ -14,7 +14,7 @@
         </div>
       </router-link>
       <router-link class="m-0" :to="{name: 'SearchPost'}">
-        <div class="filter d-flex  p-2">
+        <div class="filter d-flex p-2">
           <div class="bg-beige mr-2" style="border-radius:50%">
             <i class="fas fa-comment-dots p-2"></i>
           </div>
@@ -66,9 +66,13 @@ a:link, a:active, a:visited {
   box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.2)
 }
 
-.filter:hover {
+.filter:hover, a:hover {
   background-color: #88A498;
   color: #F8F8F8;
   text-decoration: none !important;
+}
+
+hr {
+  border-top: 2px solid rgba(0,0, 0, 0.1);
 }
 </style>
