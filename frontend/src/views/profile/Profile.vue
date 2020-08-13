@@ -112,7 +112,7 @@ export default {
       let notiData = new Object()
       notiData = {
         to: this.profile.id,
-        clubId: 0,
+        dataId: 0,
         isRead: false,
         type: "follow"
       }
