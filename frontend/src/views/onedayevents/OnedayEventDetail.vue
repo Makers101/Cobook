@@ -158,7 +158,7 @@
       </div>
       <div class="d-flex scroll-sect" id="scroll-area-post" v-if="selectedOnedayEvent.memberPosts.length">
         <div 
-          class="px-3 pointer"
+          class="px-3 pb-3 pointer"
           v-for="post in selectedOnedayEvent.memberPosts"
           :key="post.id"
           @click="toPostDetail(post.id)"
@@ -424,6 +424,18 @@ export default {
   background-color: #fff;
   background: linear-gradient(#f8f8f8, #fff);
   box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  margin: 1.5rem;
+}
+
+.card:hover {
+  /* width: 300px; */
+  height: 250px;
+  background-color: #fff;
+  background: linear-gradient(#f8f8f8, #fff);
+  box-shadow: 0 8px 16px -8px rgba(0,0,0,0.8);
   border-radius: 6px;
   overflow: hidden;
   position: relative;
