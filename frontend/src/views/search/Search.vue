@@ -61,7 +61,9 @@ a:link, a:active, a:visited {
   color: black;
 }
 .search-bar {
-  height: 90vh;
+  height: 100vh;
+  position: sticky;
+  top: 0px;
   border-right: 1px solid rgb(0, 0, 0, 0.2);
   box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.2)
 }

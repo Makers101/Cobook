@@ -7,23 +7,66 @@ const searchStore = {
   namespaced: true,
   state: {
     users: null,
+    books: null,
+    posts: null,
+    clubs: null,
+    events: null,
   },
   getters: {
   },
   mutations: {
-    SET_USERS(state, users){
+    SET_USERS(state, users) {
       state.users = users
-    }
+    },
+    SET_BOOKS(state, books) {
+      state.books = books
+    },
+    SET_POSTS(state, posts) {
+      state.posts = posts
+    },
+    SET_CLUBS(state, clubs) {
+      state.clubs = clubs
+    },
+    SET_EVENTS(state, events) {
+      state.events = events
+    },
+
   },
   actions: {
-    fetchUserList({commit, rootGetters}, content) {
-      axios.get(SERVER.URL + SERVER.ROUTES.search + '/' + content + SERVER.ROUTES, rootGetters.config)
+    fetchUsers({commit, rootGetters}, content) {
+      axios.get(SERVER.URL + SERVER.ROUTES.search + SERVER.ROUTES.myaccount + '/' + content, rootGetters.config)
         .then(res => {
           commit('SET_USERS', res.data)
         })
-    }
+    },
+    fetchBooks({commit}, content) {
+      axios.get(SERVER.URL + SERVER.ROUTES.search + SERVER.ROUTES.books + '/' + content)
+        .then(res => {
+          commit('SET_BOOKS', res.data)
+        })
+        .catch(err => {
+          console.log(err.data)
+        })
+    },
+    fetchPosts({commit}, content) {
+      axios.get(SERVER.URL + SERVER.ROUTES.search + SERVER.ROUTES.posts + '/' + content)
+        .then(res => {
+          commit('SET_POSTS', res.data)
+        })
+        .catch(err => {
+          console.log(err.data)
+        })
+    },
+    fetchClubs({commit}, content) {
+      axios.get(SERVER.URL + SERVER.ROUTES.search + SERVER.ROUTES.clubs + '/' + content)
+        .then(res => {
+          commit('SET_CLUBS', res.data)
+        })
+        .catch(err => {
+          console.log(err.data)
+        })
+    },
   },
-   
 }
 
 export default searchStore

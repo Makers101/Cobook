@@ -79,6 +79,7 @@
                     {{ user.nickName }}
                   </span>
                 </li>
+                <li class="autocomplete-result d-flex" @click="search(keyword)">검색결과 더보기 ...</li>
               </ul>
             </div>
             <ul class="navbar-nav mr-auto col-2 d-flex justify-content-between">
@@ -251,6 +252,9 @@ export default {
     // }
     clickNoti() {
       console.log(1)
+    },
+    search(keyword){
+      this.$router.push({name: 'SearchUser', params: { content : keyword }})
     }
   },
   watch: {
