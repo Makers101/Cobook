@@ -3,9 +3,9 @@
     <div class="d-flex justify-content-center" v-if="books.length"> 
       <div class="book-container">
         <div class="row no-gutters row-cols-1 row-cols-md-3">
-          <div  v-for="book in books" :key="book.id">
+          <div v-for="book in books" :key="book.id">
             <div class="col mb-4 p-3">
-              <div class="card h-100">
+              <div class="card h-100 pointer" @click="bookDetail(book.id)">
                 <img class="bookImg card-img-top" :src="book.bookImg">
                 <div class="overlay">
                   <div class="text">
@@ -35,6 +35,9 @@ export default {
   },
   methods: {
     ...mapActions('searchStore', ['fetchBooks']),
+    bookDetail(bookId) {
+      this.$router.push({ name: 'BookDetail', params: { bookId: bookId}})
+    },
   },
   created() {
     this.fetchBooks(this.$route.params.content)

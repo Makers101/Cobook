@@ -7,6 +7,7 @@
             class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
             v-for="club in clubs"
             :key="`club_${club.id}`"
+            @click="selectClub(club.id)"
             >
             <div class="card">
               <div class="card-head club-image-container">
@@ -67,6 +68,9 @@ export default {
   },
   methods: {
     ...mapActions('searchStore', ['fetchClubs']),
+    selectClub(clubId) {
+      this.$router.push({ name: 'ClubDetail', params: { clubId: clubId }})
+    },
   },
   created() {
     this.fetchClubs(this.$route.params.content)

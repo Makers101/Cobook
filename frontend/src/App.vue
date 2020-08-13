@@ -89,12 +89,12 @@
               </ul> -->
             </div>
             <ul class="navbar-nav d-flex align-items-center">
-              <li class="nav-item">
+              <li class="nav-item mx-4">
                 <router-link class="nav-link" :to="{ name: 'PostCreate' }">
                   <i class="fas fa-pen"></i>
                 </router-link>
               </li>
-              <li class="nav-item dropdown pointer">
+              <li class="nav-item dropdown pointer mr-4">
                 <div 
                   class="nav-link dropdown-toggle" 
                   id="navbarDropdown" 

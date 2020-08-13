@@ -7,7 +7,7 @@
             class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
             v-for="feed in posts"
             :key="feed.id"
-            @click="selectFeed(feed.id)">
+            @click="postDetail(feed.id)">
             <div class="card m-0">
               <div class="additional d-flex justify-content-start px-1">
                 <div class="user-card">
@@ -78,6 +78,9 @@ export default {
   },
   methods: {
     ...mapActions('searchStore', ['fetchPosts']),
+    postDetail(postId) {
+      this.$router.push({ name: 'PostDetail', params: { postId: postId }})
+    },
   },
   created() {
     this.fetchPosts(this.$route.params.content)
