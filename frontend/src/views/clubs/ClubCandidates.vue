@@ -101,7 +101,7 @@
 
     <div>
       <h4 class="text-left font-weight-bold mb-3">북클럽 가입 신청</h4>
-      <div class="list-group">
+      <div class="list-group" v-if="candidates.length">
         <div class="list-group-item d-flex justify-content-between align-items-center" v-for="candidate in candidates" :key="candidate.userId">
           <div class="d-flex justify-content-start align-items-center pointer" @click="toProfile(candidate.userId)">
             <img class="rounded-circle profile-image" :src="candidate.profileImg" alt="" v-if="candidate.profileImg">
@@ -114,11 +114,22 @@
           </div>
         </div>
       </div>
+      <div class="mt-5" v-else>
+        <h5>아직 클럽에 가입 신청한 유저가 없습니다. :) </h5>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+const swalDelete = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-danger ',
+    cancelButton: 'btn btn-success mr-2'
+  },
+  buttonsStyling: false
+})
 import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
@@ -171,11 +182,19 @@ export default {
       this.selectedClub.recruit = !this.selectedClub.recruit
     },
     clickClubDelete(clubId) {
-      if (confirm('북클럽을 삭제하시겠습니까?') === true) {
-        this.deleteClub(clubId)
-      } else {
-        return false
-      }
+      swalDelete.fire({
+        text: "북클럽을 삭제하시겠습니까?",
+        showCancelButton: true,
+        confirmButtonText: '네',
+        cancelButtonText: '아니오',
+        reverseButtons: true,
+        icon: "warning",
+      })
+      .then((result) => {
+        if (result.value) {
+          this.deleteClub(clubId)
+        } 
+      });
     },
     toProfile(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
