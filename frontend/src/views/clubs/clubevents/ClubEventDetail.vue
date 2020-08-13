@@ -158,8 +158,8 @@
 
       <!-- clubEvent-detail-posts -->
       <div>
-        <div class="d-flex justify-content-between align-items-center">
-          <h4 class="text-left font-weight-bold mb-3">멤버의 책 리뷰</h4>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="text-left font-weight-bold mb-0">멤버의 책 리뷰</h4>
           <button class="btn btn-green" @click="toPostCreate(selectedClubEvent.book.id)">책 리뷰 작성하기</button>
         </div>
         <div class="d-flex scroll-sect" id="scroll-area-post" v-if="selectedClubEvent.memberPosts.length">
