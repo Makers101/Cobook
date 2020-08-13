@@ -380,9 +380,9 @@ export default {
           || this.onedayEventCreateData.bookId
           || this.onedayEventCreateData.place
           || this.offlinePlace
-          || this.onedayEventCreateData.capacity !== 1
-          || this.date !== new Date().toISOString().substr(0, 10)
-          || this.time !== '00:00'
+          || this.onedayEventCreateData.capacity
+          || this.date !== this.localDatetime('date')
+          || this.time !== this.localDatetime('time')
           || this.onedayEventCreateData.questions.length > 0
          ) {
         if (confirm('생성 중인 원데이 이벤트가 있습니다. 정말 넘어가시겠습니까?') === true) {
