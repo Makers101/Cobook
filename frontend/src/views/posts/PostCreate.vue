@@ -8,7 +8,7 @@
         src="https://user-images.githubusercontent.com/57381062/88908323-abf25680-d294-11ea-8edf-3b22787e7f04.jpg"
         alt="">
       <div class="post-banner-text">
-        <h3 class="font-weight-bold">게시물 만들기</h3>
+        <h3 class="font-weight-bold">리뷰 작성하기</h3>
         <p class="mb-0">
           멋진 책 리뷰를 작성해주세요. :)
         </p>
@@ -175,7 +175,7 @@
               class="button btn-green"
               @click="clickCreate"
             >
-              게시글 생성
+              리뷰 생성
             </v-btn>
           </v-card-actions>
         </v-form>
@@ -284,7 +284,7 @@ export default {
           || (window.$('#summernote').summernote('code') !== '<p><br></p>')
           || (this.postCreateData.tags.length !== 0)
          ) {
-        if (confirm('작성 중인 게시물이 있습니다. 정말 넘어가시겠습니까?') === true) {
+        if (confirm('작성 중인 리뷰가 있습니다. 정말 넘어가시겠습니까?') === true) {
           next()
         } else {
           return false
