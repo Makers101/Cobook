@@ -15,7 +15,7 @@
                   <img class="bg-image" :src="event.book.bookImg" width="100%">
                   <div class="badges">
                     <span class="badge mb-0 clubEvent-badge" v-if="event.capacity">원데이</span>
-                    <span class="badge mb-0 onedayEvent-badge" v-else>클럽</span>
+                    <span class="badge mb-0 onedayEvent-badge" v-else>북클럽</span>
                     <span class="badge ml-1 mb-0 event-closed-true" v-if="event.closed">종료</span>
                     <span class="badge ml-1 mb-0 event-closed-false" v-else>예정</span>
                   </div>
@@ -75,7 +75,11 @@ export default {
   },
   created() {
     this.fetchOnedayevents(this.$route.params.content)
-  }
+  },
+  beforeRouteUpdate (to, from, next) {
+    next();
+    this.fetchOnedayevents(this.params.content)
+  },
 
 }
 </script>

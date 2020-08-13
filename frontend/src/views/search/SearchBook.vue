@@ -38,7 +38,11 @@ export default {
   },
   created() {
     this.fetchBooks(this.$route.params.content)
-  }
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.fetchBooks(this.params.content)
+    next();
+  },
 }
 </script>
 

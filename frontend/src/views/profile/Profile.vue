@@ -58,7 +58,7 @@
     <!-- routers -->
     <div class="d-flex justify-content-between mt-4">
       <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileFeed', params: { userId:this.$route.params.userId }}">리뷰</router-link>
-      <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileClub', params: { userId:this.$route.params.userId }}">클럽 · 이벤트</router-link>
+      <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileClub', params: { userId:this.$route.params.userId }}">북클럽 · 이벤트</router-link>
       <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileBookmark', params: { userId:this.$route.params.userId }}">북마크</router-link>
       <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileOverview', params: { userId:this.$route.params.userId }}">일정 · 통계</router-link>
     </div>

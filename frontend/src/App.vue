@@ -34,7 +34,7 @@
               <li class="nav-item">
                 <router-link class="nav-link" :to="{ name: 'ClubList' }">
                   <!-- <i class="fas fa-users"></i> -->
-                  클럽
+                  북클럽
                 </router-link>
               </li>
               <li class="nav-item">

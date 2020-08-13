@@ -81,7 +81,11 @@ export default {
   },
   created() {
     this.fetchPosts(this.$route.params.content)
-  }
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.fetchPosts(this.params.content)
+    next();
+  },
 }
 </script>
 

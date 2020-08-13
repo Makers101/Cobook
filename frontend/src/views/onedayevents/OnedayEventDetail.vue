@@ -66,7 +66,7 @@
                 참가 신청
               </button>
               <button
-                class="btn btn-warning"
+                class="btn btn-secondary"
                 v-if="isParticipant && !isLeader"
                 @click="clickParticipateOnedayEvent('cancel')">
                 참가 취소
@@ -209,6 +209,22 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+})
+
+const swalDelete = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-danger ',
+    cancelButton: 'btn btn-success mr-2'
+  },
+  buttonsStyling: false
+})
 import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
@@ -247,17 +263,33 @@ export default {
     },
     clickParticipateOnedayEvent(type) {
       if (type === 'apply') {
-        if (confirm('원데이 이벤트에 참가하시겠습니까?') === true) {
-          this.participateOnedayEvent(this.$route.params.onedayEventId)
-        } else {
-          return false
-        }
+        swal.fire({
+        // title: "Are you sure?",
+          text: "원데이 이벤트에 참가하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니오',
+          icon: "warning",
+        })
+        .then((result) => {
+          if (result.value) {
+            this.participateOnedayEvent(this.$route.params.onedayEventId)
+          } 
+        });
       } else if (type === 'cancel') {
-        if (confirm('원데이 이벤트 참가를 취소하시겠습니까?') === true) {
-          this.participateOnedayEvent(this.$route.params.onedayEventId)
-        } else {
-          return false
-        }
+        swal.fire({
+        // title: "Are you sure?",
+          text: "원데이 이벤트 참가를 취소하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니오',
+          icon: "warning",
+        })
+        .then((result) => {
+          if (result.value) {
+            this.participateOnedayEvent(this.$route.params.onedayEventId)
+          } 
+        });
       }
     },
     toPostDetail(postId) {
@@ -270,11 +302,20 @@ export default {
       router.push({ name: 'OnedayEventUpdate', params: { onedayEventId: onedayEventId }})
     },
     clickOnedayEventDelete(onedayEventId) {
-      if (confirm('원데이 이벤트를 삭제하시겠습니까?') === true) {
-        this.deleteOnedayEvent(onedayEventId)
-      } else {
-        return false
-      }
+      swalDelete.fire({
+        // title: "Are you sure?",
+          text: "원데이 이벤트를 삭제하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니오',
+          reverseButtons: true,
+          icon: "warning",
+        })
+        .then((result) => {
+          if (result.value) {
+            this.deleteOnedayEvent(onedayEventId)
+          } 
+        });
     },
     toBookDetail(bookId) {
       router.push({ name: 'BookDetail', params: { bookId: bookId}})

@@ -2,7 +2,7 @@
   <div class="mt-3 mb-5">
     
     <!-- profile-clubs -->
-    <h5 class="text-left font-weight-bold mb-0 ml-3">{{ profile.nickName }}님의 Club</h5>
+    <h5 class="text-left font-weight-bold mb-0 ml-3">{{ profile.nickName }}님의 Book Club</h5>
     <div class="d-flex my-2 club-list scroll-sect" id="scroll-area-club" v-if="clubs.length">
       <div 
         class="px-3 pb-3"
@@ -50,7 +50,7 @@
     </div>
     <div v-else>
       <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
-      <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 가입한 클럽이 없습니다. </h3>
+      <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 가입한 북클럽이 없습니다. </h3>
     </div>
 
     <!-- profile-events -->
@@ -69,7 +69,7 @@
               <img class="bg-image" :src="event.book.bookImg" width="100%">
               <div class="badges">
                 <span class="badge mb-0 clubEvent-badge" v-if="event.capacity">원데이</span>
-                <span class="badge mb-0 onedayEvent-badge" v-else>클럽</span>
+                <span class="badge mb-0 onedayEvent-badge" v-else>북클럽</span>
                 <span class="badge ml-1 mb-0 event-closed-true" v-if="event.closed">종료</span>
                 <span class="badge ml-1 mb-0 event-closed-false" v-else>예정</span>
               </div>

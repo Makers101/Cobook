@@ -51,14 +51,14 @@
                 aria-expanded="false"
                 v-if="isLeader"
               >
-                클럽 설정
+                북클럽 설정
               </button>
               <div class="dropdown-menu py-0">
                 <button 
                   class="dropdown-item setting-btn text-center"
                   type="button"
                   @click="toClubEventCreate">
-                  클럽 이벤트 생성
+                  북클럽 이벤트 생성
                 </button>
                 <button 
                   class="dropdown-item setting-btn text-center"
@@ -86,13 +86,13 @@
                   class="dropdown-item setting-btn text-center"
                   type="button"
                   @click="toClubUpdate(selectedClub.id)">
-                  클럽 정보 수정
+                  북클럽 정보 수정
                 </button>
                 <button 
                   class="dropdown-item setting-btn text-center"
                   type="button"
                   @click="clickClubDelete(selectedClub.id)">
-                  클럽 삭제
+                  북클럽 삭제
                 </button>
               </div>
               <button
@@ -111,7 +111,7 @@
                 class="btn btn-warning"
                 v-if="!isLeader && isMember"
                 @click="clickClubSecede(selectedClub.id)">
-                클럽 탈퇴
+                북클럽 탈퇴
               </button>
             </div>
           </div>
@@ -123,7 +123,7 @@
 
     <!-- club-detail-members -->
     <div>
-      <h4 class="text-left font-weight-bold mb-3">클럽 멤버({{ selectedClub.memberCnt }})</h4>
+      <h4 class="text-left font-weight-bold mb-3">북클럽 멤버({{ selectedClub.memberCnt }})</h4>
       <div class="d-flex justify-content-start">
         <div class="profile-container pointer mr-3" @click="selectUser(selectedClub.leader.id)">
           <img
@@ -167,7 +167,7 @@
 
     <!-- club-description -->
     <div>
-      <h4 class="text-left font-weight-bold mb-3">클럽 설명</h4>
+      <h4 class="text-left font-weight-bold mb-3">북클럽 설명</h4>
       <p class="text-left px-2 description">{{ selectedClub.description }}</p>
     </div>
 
@@ -175,7 +175,7 @@
 
     <!-- club-clubEvents -->
     <div>
-      <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 클럽 이벤트</h4>
+      <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 북클럽 이벤트</h4>
       <div class="d-flex scroll-sect" id="scroll-area-event" v-if="selectedClub.clubEvents.length">
         <div
           class="px-3 pointer pb-3"
@@ -205,7 +205,7 @@
       </div>
 
       <div class="no-content d-flex justify-content-center align-items-center" v-else>
-        <p class="mb-0">아직 {{ selectedClub.name }}의 클럽 이벤트가 없습니다 ㄴ(°0°)ㄱ</p>
+        <p class="mb-0">아직 {{ selectedClub.name }}의 북클럽 이벤트가 없습니다 ㄴ(°0°)ㄱ</p>
       </div>
     </div>  
     
@@ -215,13 +215,29 @@
     <!-- <div>
       <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}의 게시물</h4>
       <div class="no-content d-flex justify-content-center align-items-center" v-if="!selectedClub.posts">
-        <p class="mb-0">아직 {{ selectedClub.name }}의 게시물이 없습니다 ㄴ(°0°)ㄱ</p>
+        < class="mb-0">아직 {{ selectedClub.name }}의 게시물이 없습니다 ㄴ(°0°)ㄱ</p>
       </div>
     </div> -->
   </div>
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+})
+
+const swalDelete = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-danger ',
+    cancelButton: 'btn btn-success mr-2'
+  },
+  buttonsStyling: false
+})
 import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
@@ -264,7 +280,10 @@ export default {
       if (this.isMember || this.isLeader) {
         router.push({ name: 'ClubEventDetail', params: { clubId: this.$route.params.clubId, clubEventId: clubEventId }})
       } else {
-        alert('아쉽지만 클럽 멤버만 접근 가능합니다.')
+        Swal.fire({
+          icon: 'error',
+          text: '아쉽지만 북클럽 멤버만 접근 가능합니다.',
+        })
       }
     },
     selectUser(userId) {
@@ -285,10 +304,16 @@ export default {
       this.createNoti(notiData)
       
       if (type === 'apply') {
-        alert('가입 신청이 완료 되었습니다. 설레는 마음으로 기다려주세요 :)')
+        Swal.fire({
+          icon: 'success',
+          html: '<p>가입 신청이 완료 되었습니다.<br>설레는 마음으로 기다려주세요 :)</p>',
+        })
         this.applyClub(clubId)
       } else if (type === 'cancel') {
-        alert('가입 신청이 취소 되었습니다 :)')
+        Swal.fire({
+          icon: 'success',
+          html: '<p>가입 신청이 취소 되었습니다 :)</p>',
+        })
         this.applyClub(clubId)
       }
     },
@@ -296,11 +321,19 @@ export default {
       router.push({ name: 'ClubCandidates', params: { clubId: clubId }})
     },
     clickClubSecede(clubId) {
-      if (confirm('클럽을 탈퇴하시겠습니까?') === true) {
-        this.secedeClub(clubId)
-      } else {
-        return false
-      }
+       swal.fire({
+        // title: "Are you sure?",
+          text: "북클럽을 탈퇴하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니오',
+          icon: "warning",
+        })
+        .then((result) => {
+          if (result.value) {
+            this.secedeClub(clubId)
+          } 
+        });
     },
     toClubEventCreate() {
       router.push({ name: 'ClubEventCreate' })
@@ -309,11 +342,19 @@ export default {
       router.push({ name: 'ClubUpdate', params: { clubId: clubId } })
     },
     clickClubDelete(clubId) {
-      if (confirm('클럽을 삭제하시겠습니까?') === true) {
-        this.deleteClub(clubId)
-      } else {
-        return false
-      }
+      swalDelete.fire({
+          text: "북클럽을 삭제하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니오',
+          reverseButtons: true,
+          icon: "warning",
+        })
+        .then((result) => {
+          if (result.value) {
+            this.deleteClub(clubId)
+          } 
+        });
     }
   },
   created() {

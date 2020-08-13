@@ -8,11 +8,11 @@
         src="https://user-images.githubusercontent.com/57381062/88907929-3090a500-d294-11ea-94c0-601ed914d2e4.jpg" 
         alt="">
       <div class="club-banner-text">
-        <h3 class="font-weight-bold">클럽</h3>
+        <h3 class="font-weight-bold">북클럽</h3>
         <p class="mb-0">
-          클럽은 정기적으로 함께 책을 읽는 사람들의 모임입니다.
+          북클럽은 정기적으로 함께 책을 읽는 사람들의 모임입니다.
           <br>
-          취향이 맞는 클럽에 참여하여 함께 읽는 즐거움을 경험해보세요.
+          취향이 맞는 북클럽에 참여하여 함께 읽는 즐거움을 경험해보세요.
         </p>
       </div>
     </div>
@@ -55,7 +55,7 @@
           </button>
         </span>
       </div>
-      <button class="btn btn-green mx-1" @click="toClubCreate">클럽 생성</button>
+      <button class="btn btn-green mx-1" @click="toClubCreate">북클럽 생성</button>
     </div>
     <hr class="my-0">
 
