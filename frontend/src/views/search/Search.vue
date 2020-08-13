@@ -41,7 +41,7 @@
           <div class="bg-beige mr-2" style="border-radius:50%">
               <i class="fas fa-users p-2"></i>
           </div>
-          <span class="m-0">클럽</span>
+          <span class="m-0">북클럽</span>
         </div>
       </router-link>
       <router-link class="m-0" :to="{name: 'SearchOneDayEvent'}">
