@@ -5,6 +5,7 @@ import router from '@/router'
 const postStore = {
   namespaced: true,
   state: {
+    postsByPopularity: null,
     postsByFollow: null,
     postsByGenre: null,
     selectedPost: null,
@@ -14,6 +15,9 @@ const postStore = {
   getters: {
   },
   mutations: {
+    SET_POSTS_BY_POPULARITY(state, postsByPopularity) {
+      state.postsByPopularity = postsByPopularity
+    },
     SET_POSTS_BY_FOLLOW(state, postsByFollow) {
       state.postsByFollow = postsByFollow
     },
@@ -31,6 +35,15 @@ const postStore = {
     },
   },
   actions: {
+    fetchPostsByPopularity({ commit, rootGetters }) {
+      axios.get(SERVER.URL + SERVER.ROUTES.posts + '/popular', rootGetters.config)
+        .then(res => {
+          commit('SET_POSTS_BY_POPULARITY', res.data)
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
     fetchPostsByFollow({ commit, rootGetters }) {
       axios.get(SERVER.URL + SERVER.ROUTES.posts + '/follows', rootGetters.config)
         .then(res => {

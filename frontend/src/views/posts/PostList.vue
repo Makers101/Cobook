@@ -1,11 +1,11 @@
 <template>
-  <div class="container">
+  <div class="custom-container">
 
     <!-- clubs-banner -->
-    <!-- <div class="club-banner">
+    <div class="club-banner">
       <img
         class="club-banner-img"
-        src="https://user-images.githubusercontent.com/57381062/88907929-3090a500-d294-11ea-94c0-601ed914d2e4.jpg" 
+        src="https://user-images.githubusercontent.com/57381062/90099601-d6a0dc80-dd75-11ea-82b9-841824eb5e91.jpg" 
         alt="">
       <div class="club-banner-text">
         <h3 class="font-weight-bold">피드</h3>
@@ -15,13 +15,13 @@
           다른 유저의 책 감상을 탐험해보세요!
         </p>
       </div>
-    </div> -->
+    </div>
 
-    <div class="m-0">
-      <h2 class="mt-3 ml-5 mb-0 text-left"> 팔로잉 리뷰</h2>
-      <div class="row scroll-sect book-reviews" id="scroll-area-follow">
+    <div class="m-0 my-5">
+      <h5 class="feed-titles">#인기 리뷰</h5>
+      <div class="row scroll-sect book-reviews" id="scroll-area-popularity">
         <div class="row-inner">
-          <div class="tile pointer" v-for="post in postsByFollow" :key="`post_${post.id}`"  @click="postDetail(post.id)">
+          <div class="tile pointer" v-for="post in postsByPopularity" :key="`post_${post.id}`"  @click="postDetail(post.id)">
             <div class="tile-media">
               <div class="content">
                 <div class="content-overlay"></div>
@@ -44,33 +44,67 @@
       </div>
     </div>
 
-    <div class="m-0" v-for="postSet in postsByGenre" :key="postSet.genre">
-      <div v-if="postSet.posts.length">
-        <h2 class="mt-3 ml-5 mb-0 text-left">{{ postSet.genre }}</h2>
-        <div class="row scroll-sect book-reviews" :id="'scroll-area-' + postSet.genre">
-          <div class="row-inner">
-            <div class="tile pointer" v-for="post in postSet.posts" :key="`post_${post.id}`"  @click="postDetail(post.id)">
-              <div class="tile-media">
-                <div class="content">
-                  <div class="content-overlay"></div>
-                  <img :src="post.book.bookImg" alt="책 표지 이미지" class="content-image">
-                  <div class="content-details fadeIn-top">
-                    <p><span v-for="index in post.rank" :key="index"> <i class="fas fa-star" style="color:yellow"></i> </span></p>
-                    <div class="text-left p-0 m-0"><i class="fas fa-quote-left quote"></i></div>
-                    <p class="m-0" @click="postDetail(post.id)">{{ post.onelineReview }}</p> 
-                    <div class="text-right p-0 m-0"><i class="fas fa-quote-right quote"></i></div>
-                    <small @click="postDetail(post.id)">
-                      <span v-if="post.user.profileImg"><img class="profile-img mr-2" :src="post.user.profileImg"></span>
-                      <span v-else ><img class="profile-img mr-2" src="http://bit.do/anonymouseuser"></span>
-                      <span>{{ post.user.nickName }}</span>
-                    </small> 
-                  </div>
+    <div class="m-0 my-5">
+      <h5 class="feed-titles">#팔로잉 리뷰</h5>
+      <div class="row scroll-sect book-reviews" id="scroll-area-follow" v-if="postsByFollow.length">
+        <div class="row-inner">
+          <div class="tile pointer" v-for="post in postsByFollow" :key="`post_${post.id}`"  @click="postDetail(post.id)">
+            <div class="tile-media">
+              <div class="content">
+                <div class="content-overlay"></div>
+                <img :src="post.book.bookImg" alt="책 표지 이미지" class="content-image">
+                <div class="content-details fadeIn-top">
+                  <p><span v-for="index in post.rank" :key="index"> <i class="fas fa-star" style="color:yellow"></i> </span></p>
+                  <div class="text-left p-0 m-0"><i class="fas fa-quote-left quote"></i></div>
+                  <p class="m-0" @click="postDetail(post.id)">{{ post.onelineReview }}</p> 
+                  <div class="text-right p-0 m-0"><i class="fas fa-quote-right quote"></i></div>
+                  <small @click="postDetail(post.id)">
+                    <span v-if="post.user.profileImg"><img class="profile-img mr-2" :src="post.user.profileImg"></span>
+                    <span v-else ><img class="profile-img mr-2" src="http://bit.do/anonymouseuser"></span>
+                    <span>{{ post.user.nickName }}</span>
+                  </small> 
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 200px" v-else >
+        <h3>아직 팔로우 하는 유저가 없습니다 ㄴ(°0°)ㄱ</h3>
+        <p>새로운 유저를 팔로우 하고 리뷰를 받아보세요 :)</p>
+      </div>
+    </div>
+
+    <div class="m-0 my-5" v-for="postSet in postsByGenre" :key="postSet.genre">
+      <h5 class="feed-titles">#{{ postSet.genre }} 리뷰</h5>
+      <div class="row scroll-sect book-reviews" :id="'scroll-area-' + postSet.genre" v-if="postSet.posts.length">
+        <div class="row-inner">
+          <div class="tile pointer" v-for="post in postSet.posts" :key="`post_${post.id}`"  @click="postDetail(post.id)">
+            <div class="tile-media">
+              <div class="content">
+                <div class="content-overlay"></div>
+                <img :src="post.book.bookImg" alt="책 표지 이미지" class="content-image">
+                <div class="content-details fadeIn-top">
+                  <p><span v-for="index in post.rank" :key="index"> <i class="fas fa-star" style="color:yellow"></i> </span></p>
+                  <div class="text-left p-0 m-0"><i class="fas fa-quote-left quote"></i></div>
+                  <p class="m-0" @click="postDetail(post.id)">{{ post.onelineReview }}</p> 
+                  <div class="text-right p-0 m-0"><i class="fas fa-quote-right quote"></i></div>
+                  <small @click="postDetail(post.id)">
+                    <span v-if="post.user.profileImg"><img class="profile-img mr-2" :src="post.user.profileImg"></span>
+                    <span v-else ><img class="profile-img mr-2" src="http://bit.do/anonymouseuser"></span>
+                    <span>{{ post.user.nickName }}</span>
+                  </small> 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 200px" v-else >
+        <h3>아직 {{ postSet.genre }} 장르의 리뷰가 없습니다 ㄴ(°0°)ㄱ</h3>
+        <p>{{ postSet.genre }} 장르의 첫 번째 리뷰를 작성해보세요 :)</p>
+      </div>
+      
     </div>
     <!-- <infinite-loading class="col-12" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
   </div>
@@ -96,11 +130,11 @@ export default {
   },
   computed: {
     ...mapState(['myaccount']),
-    ...mapState('postStore', ['postsByFollow', 'postsByGenre']),
+    ...mapState('postStore', ['postsByPopularity', 'postsByFollow', 'postsByGenre']),
   },
   methods: {
     ...mapActions(['findMyAccount']),
-    ...mapActions('postStore', ['fetchPostsByFollow', 'fetchPostsByGenre', 'createLike', 'createBookmark']),
+    ...mapActions('postStore', ['fetchPostsByPopularity', 'fetchPostsByFollow', 'fetchPostsByGenre', 'createLike', 'createBookmark']),
     clubDetail(clubId) {
       this.$router.push({ name: 'ClubDetail', params: { clubId: clubId }})
     },
@@ -134,6 +168,7 @@ export default {
   //   }
   // },
   created() {
+    this.fetchPostsByPopularity()
     this.fetchPostsByFollow()
     this.fetchPostsByGenre()
     this.findMyAccount()
@@ -145,18 +180,29 @@ export default {
       e.returnValue = false; /* IE7, IE8 */
     }
 
-    const scrollArea = document.querySelector('#scroll-area-follow')
-    scrollArea.addEventListener('wheel', (e) => {
-      scrollArea.scrollLeft += e.deltaY;
-      stopWheel()
-    })
-
-    this.postsByGenre.forEach(postSet => {
-      let scrollAreaGenre = document.querySelector(`#scroll-area-${postSet.genre}`)
-      scrollAreaGenre.addEventListener('wheel', (e) => {
-        scrollAreaGenre.scrollLeft += e.deltaY;
+    const scrollAreaPopularity = document.querySelector('#scroll-area-popularity')
+    if (scrollAreaPopularity) {
+      scrollAreaPopularity.addEventListener('wheel', (e) => {
+        scrollAreaPopularity.scrollLeft += e.deltaY;
         stopWheel()
       })
+    }
+
+    const scrollAreaFollow = document.querySelector('#scroll-area-follow')
+    if (scrollAreaFollow) {
+      scrollAreaFollow.addEventListener('wheel', (e) => {
+        scrollAreaFollow.scrollLeft += e.deltaY;
+        stopWheel()
+      })
+    }
+
+    this.postsByGenre.forEach(postSet => {
+      if (document.querySelector(`#scroll-area-${postSet.genre}`)) {
+        document.querySelector(`#scroll-area-${postSet.genre}`).addEventListener('wheel', (e) => {
+          document.querySelector(`#scroll-area-${postSet.genre}`).scrollLeft += e.deltaY;
+          stopWheel()
+        })
+      }
     });
   }
 }
@@ -175,7 +221,7 @@ export default {
   width: 100%;
   height: 200px;
   vertical-align: middle;
-  filter: brightness(0.7)
+  filter: brightness(0.5)
 }
 
 .club-banner-text {
@@ -196,9 +242,9 @@ export default {
 .row-inner {
   white-space: nowrap;
   transition: 0.45s all;
-  margin: 50px 10px;
-  padding-left: 45px;
-  padding-right: 60px;
+  /* margin: 50px 10px; */
+  /* padding-left: 45px;
+  padding-right: 60px; */
 }
 
 .tile {
@@ -223,6 +269,9 @@ img {
 {
   /*move to the left */
   transform: translateX(calc(250px*(-0.5)/2));
+  margin: 50px 10px;
+  padding-left: 45px;
+  padding-right: 60px;
 }
 
 .row-inner:hover .tile {
@@ -377,4 +426,10 @@ img {
   border-radius: 50%;
 }
 
+.feed-titles {
+  text-shadow: 2px 2px 2px rgb(206, 206, 206);
+  margin-bottom: 1rem;
+  text-align: left;
+  font-weight: bold;
+}
 </style>
