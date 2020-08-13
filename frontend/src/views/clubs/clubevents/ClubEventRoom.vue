@@ -48,16 +48,16 @@ export default {
       'iceServers': [{
           'urls': 'stun:stun.l.google.com:19302'
         },
-        {
-          urls: 'turn:relay.backups.cz',
-          credential: 'webrtc',
-          username: 'webrtc'
-        },
-        {
-          urls: 'turn:relay.backups.cz?transport=tcp',
-          credential: 'webrtc',
-          username: 'webrtc'
-        },
+        // {
+        //   urls: 'turn:relay.backups.cz',
+        //   credential: 'webrtc',
+        //   username: 'webrtc'
+        // },
+        // {
+        //   urls: 'turn:relay.backups.cz?transport=tcp',
+        //   credential: 'webrtc',
+        //   username: 'webrtc'
+        // },
       ]};
 
     // Set up audio and video regardless of what devices are present.
