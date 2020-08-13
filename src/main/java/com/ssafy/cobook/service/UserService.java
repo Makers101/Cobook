@@ -84,9 +84,13 @@ public class UserService {
 
         User user = getUser(userLoginRequestDto.getEmail());
 
+
         String encodePassword = user.getPassword();
         String rawPassword = userLoginRequestDto.getPassword();
 
+        if (user.getAccept() == null) {
+            throw new UserException("아직 이메일 인증이 되지 않은 회원입니다.", ErrorCode.WRONG_EMAIL_CHECK_AUTH);
+        }
         if (!passwordEncoder.matches(rawPassword, encodePassword)) {
             throw new UserException("잘못된 비밀번호입니다.", ErrorCode.WRONG_PASSWORD);
         }
