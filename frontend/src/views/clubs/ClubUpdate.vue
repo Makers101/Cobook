@@ -8,9 +8,9 @@
         src="https://user-images.githubusercontent.com/57381062/88908102-70f02300-d294-11ea-9c03-7aac0e803ea0.jpg"
         alt="">
       <div class="club-banner-text">
-        <h3 class="font-weight-bold">클럽 정보 수정</h3>
+        <h3 class="font-weight-bold">북클럽 정보 수정</h3>
         <p class="mb-0">
-           클럽의 기본 정보를 수정해보세요 :)
+           북클럽의 기본 정보를 수정해보세요 :)
         </p>
       </div>
     </div>
@@ -40,7 +40,7 @@
                   counter
                   maxlength="30"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽명"
+                  label="북클럽명"
                 ></v-text-field>
               </v-col>
               
@@ -74,7 +74,7 @@
                   disabled
                   color="blue-grey lighten-2"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽장"
+                  label="북클럽장"
                 ></v-text-field>
               </v-col>
 
@@ -98,7 +98,7 @@
                   counter
                   maxlength="100"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽 설명"
+                  label="북클럽 설명"
                 ></v-textarea>
               </v-col>
 
@@ -186,7 +186,7 @@
               class="button btn-green"
               @click="clickUpdate"
             >
-              클럽 수정
+              북클럽 수정
             </v-btn>
           </v-card-actions>
 
@@ -312,7 +312,7 @@ export default {
           || this.clubUpdateData.basicData.genres.length !== this.selectedClub.genres.length
           || this.clubImg
          ) {
-        if (confirm('수정 중인 클럽이 있습니다. 정말 넘어가시겠습니까?') === true) {
+        if (confirm('수정 중인 북클럽이 있습니다. 정말 넘어가시겠습니까?') === true) {
           next()
         } else {
           return false
