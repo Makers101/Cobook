@@ -10,7 +10,7 @@ const searchStore = {
     books: null,
     posts: null,
     clubs: null,
-    events: null,
+    onedayevents: null,
   },
   getters: {
   },
@@ -27,8 +27,8 @@ const searchStore = {
     SET_CLUBS(state, clubs) {
       state.clubs = clubs
     },
-    SET_EVENTS(state, events) {
-      state.events = events
+    SET_ONEDAYEVENTS(state, onedayevents) {
+      state.onedayevents = onedayevents
     },
 
   },
@@ -66,6 +66,15 @@ const searchStore = {
           console.log(err.data)
         })
     },
+    fetchOnedayevents({commit}, content) {
+      axios.get(SERVER.URL + SERVER.ROUTES.search + SERVER.ROUTES.onedayevents + '/' + content)
+        .then(res => {
+          commit('SET_ONEDAYEVENTS', res.data)
+        })
+        .catch(err => {
+          console.log(err.data)
+        })
+    }
   },
 }
 
