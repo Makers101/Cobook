@@ -49,12 +49,12 @@ export default {
           'urls': 'stun:stun.l.google.com:19302'
         },
         {
-          url: 'turn:relay.backups.cz',
+          urls: 'turn:relay.backups.cz',
           credential: 'webrtc',
           username: 'webrtc'
         },
         {
-          url: 'turn:relay.backups.cz?transport=tcp',
+          urls: 'turn:relay.backups.cz?transport=tcp',
           credential: 'webrtc',
           username: 'webrtc'
         },
