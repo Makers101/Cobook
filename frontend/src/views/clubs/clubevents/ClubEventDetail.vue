@@ -224,6 +224,22 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+})
+
+const swalDelete = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-danger ',
+    cancelButton: 'btn btn-success mr-2'
+  },
+  buttonsStyling: false
+})
 import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
@@ -263,17 +279,31 @@ export default {
     },
     clickParticipateClubEvent(type) {
       if (type === 'apply') {
-        if (confirm('북클럽 이벤트에 참가하시겠습니까?') === true) {
-          this.participateClubEvent(this.params)
-        } else {
-          return false
-        }
+        swal.fire({
+          text: "북클럽 이벤트에 참가하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니오',
+          icon: "warning",
+        })
+        .then((result) => {
+          if (result.value) {
+            this.participateClubEvent(this.params)
+          } 
+        });
       } else if (type === 'cancel') {
-        if (confirm('북클럽 이벤트 참가를 취소하시겠습니까?') === true) {
-          this.participateClubEvent(this.params)
-        } else {
-          return false
-        }
+        swal.fire({
+          text: "북클럽 이벤트 참가를 취소하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니오',
+          icon: "warning",
+        })
+        .then((result) => {
+          if (result.value) {
+            this.participateClubEvent(this.params)
+          } 
+        });
       }
     },
     toPostDetail(postId) {
@@ -289,11 +319,19 @@ export default {
       router.push({ name: 'ClubEventUpdate', params: { clubEventId: clubEventId }})
     },
     clickClubEventDelete() {
-      if (confirm('북클럽 이벤트를 삭제하시겠습니까?') === true) {
-        this.deleteClubEvent(this.params)
-      } else {
-        return false
-      }
+      swalDelete.fire({
+          text: "북클럽 이벤트를 삭제하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니오',
+          reverseButtons: true,
+          icon: "warning",
+        })
+        .then((result) => {
+          if (result.value) {
+            this.deleteClubEvent(this.params)
+          } 
+        });
     },
     enterRoom(roomId) {
       router.push({name: 'ClubEventRoom', params: { roomId: roomId }})
