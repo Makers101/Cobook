@@ -72,10 +72,15 @@ export default {
       this.$router.push({name: 'SearchUser', params: { content : keyword }})
     }
   },
-  beforeRouteUpdate (to, from, next) {
-    next();
+  created() {
     this.search(this.params.content)
   },
+  beforeRouteLeave (to, from, next) {
+    this.search(this.keyword)
+    next();
+  },
+    
+    
 }
 </script>
 
