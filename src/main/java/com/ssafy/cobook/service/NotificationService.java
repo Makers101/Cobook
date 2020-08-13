@@ -124,7 +124,7 @@ public class NotificationService {
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         } else if (type.equals("follow")) { // 팔로우
-            if (!followRepository.findByToUser(fromUser, toUser).isPresent()) { // 팔로우를 신청했다면 테이블에 이미 존재하므로 없을 때 삭제
+            if (!followRepository.findByToUserAndFromUser(fromUser.getId(), toUser.getId()).isPresent()) { // 팔로우를 신청했다면 테이블에 이미 존재하므로 없을 때 삭제
                 notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
