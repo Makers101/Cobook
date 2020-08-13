@@ -178,7 +178,7 @@
       <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 클럽 이벤트</h4>
       <div class="d-flex scroll-sect" id="scroll-area-event" v-if="selectedClub.clubEvents.length">
         <div
-          class="px-3 pointer"
+          class="px-3 pointer pb-3"
           v-for="clubEvent in selectedClub.clubEvents"
           :key="clubEvent.id"
           @click="selectClubEvent(clubEvent.id)"
@@ -383,6 +383,14 @@ export default {
     background-color: #fff;
     background: linear-gradient(#f8f8f8, #fff);
     box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    background-color: #fff;
+    background: linear-gradient(#f8f8f8, #fff);
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.8);
     border-radius: 6px;
     overflow: hidden;
   }

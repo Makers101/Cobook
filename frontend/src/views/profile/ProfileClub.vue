@@ -5,7 +5,7 @@
     <h5 class="text-left font-weight-bold mb-0 ml-3">{{ profile.nickName }}님의 Club</h5>
     <div class="d-flex my-2 club-list scroll-sect" id="scroll-area-club" v-if="clubs.length">
       <div 
-        class="px-3"
+        class="px-3 pb-3"
         v-for="club in clubs"
         :key="`club_${club.id}`"
         style="min-width: 345.59px; max-width: 345.59px">
@@ -58,7 +58,7 @@
     <h5 class="text-left font-weight-bold mb-0 ml-3 mt-5">{{ profile.nickName }}님의 이벤트</h5>
     <div class="d-flex events-list my-2 scroll-sect" id="scroll-area-event" v-if="integratedEvents.length">
       <div 
-        class="px-3 pointer"
+        class="px-3 pb-3 pointer"
         v-for="event in integratedEvents"
         :key="`event_${event.id}`"
         @click="selectEvent(event.id, event.clubId)"
@@ -223,6 +223,14 @@ export default {
     background-color: #fff;
     background: linear-gradient(#f8f8f8, #fff);
     box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    background-color: #fff;
+    background: linear-gradient(#f8f8f8, #fff);
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.8);
     border-radius: 6px;
     overflow: hidden;
   }
