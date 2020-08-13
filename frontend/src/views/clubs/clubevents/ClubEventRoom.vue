@@ -21,7 +21,15 @@ export default {
       isChannelReady: false,
       isInitiator: false,
       isStarted: false,
+      remoteVideo: null,
       peerIdx: 1
+    }
+  },
+  watch: {
+    peerIdx() {
+      this.remoteVideo = document.querySelector(`#remoteVideo-${this.peerIdx}`)
+      console.log(this.peerIdx)
+      console.log(this.remoteVideo)
     }
   },
   mounted() {
@@ -41,9 +49,11 @@ export default {
           'urls': 'stun:stun.l.google.com:19302'
         },
         {
-          urls: 'turn:numb.viagenie.ca',
-          credential: 'muazkh',
-          username: 'webrtc@live.com'
+          "urls": [
+          "turn:13.250.13.83:3478?transport=udp"
+          ],
+          "username": "YzYNCouZM1mhqhmseWk6",
+          "credential": "YzYNCouZM1mhqhmseWk6"
         }
       ]};
 
@@ -128,7 +138,7 @@ export default {
     ////////////////////////////////////////////////////
 
     var localVideo = document.querySelector('#localVideo');
-    var remoteVideo = document.querySelector(`#remoteVideo-${this.peerIdx}`);
+    // var remoteVideo = document.querySelector(`#remoteVideo-${this.peerIdx}`);
 
     navigator.mediaDevices.getUserMedia({
       audio: false,
