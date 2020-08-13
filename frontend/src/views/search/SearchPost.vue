@@ -1,6 +1,6 @@
 <template>
   <div class="mt-5">
-    <div style="">
+    <div>
       <div style="max-width:70%; margin:auto;">
         <div class="row rows-cols-1 row-cols-md-3" v-if="this.posts.length">
           <div 
