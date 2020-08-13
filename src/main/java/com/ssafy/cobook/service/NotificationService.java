@@ -110,9 +110,9 @@ public class NotificationService {
             }
         } else if (type.equals("like") || type.equals("comment")) {
             post = getPost(notificationReqDto.getDataId());
-            toId = notificationReqDto.getToUserId();
+            toId = notificationReqDto.getTo();
         } else {
-            toId = notificationReqDto.getToUserId();
+            toId = notificationReqDto.getTo();
         }
 
         User fromUser = getUser(fromUserId);
