@@ -3,7 +3,7 @@
     
     <!-- onedayEvent-detail-header -->
     <div class="row">
-      <div class="bookImg-container pointer col-2 p-0">
+      <div class="bookImg-container pointer col-2 p-0" @click="toBookDetail(selectedOnedayEvent.book.id)">
         <img
           class="book-image img-fluid"
           :src="selectedOnedayEvent.book.bookImg"
@@ -82,7 +82,7 @@
 
     <!-- onedayEvent-detail-members -->
     <div>
-      <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity + 1 }})</h4>
+      <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity }})</h4>
       <div class="d-flex justify-content-start">
         <div class="profile-container pointer mr-3" @click="selectUser(selectedOnedayEvent.leader.id)">
           <img
@@ -92,7 +92,7 @@
             v-if="selectedOnedayEvent.leader.profileImg">
           <img
             class="rounded-circle profile-image"
-            :src="'http://placehold.jp/150x150.png?text=' + selectedOnedayEvent.leader.nickName"
+            src="http://bit.do/anonymouseuser"
             :alt="selectedOnedayEvent.leader.nickName"
             v-else>
           <div class="overlay rounded-circle">
@@ -112,7 +112,7 @@
             v-if="participant.profileImg">
           <img
             class="rounded-circle profile-image"
-            :src="'http://placehold.jp/150x150.png?text=' + participant.nickName"
+            src="http://bit.do/anonymouseuser"
             :alt="participant.nickName"
             v-else>
           <div class="overlay rounded-circle">
@@ -172,7 +172,8 @@
                 <div class="points center">
                   <i class="fas fa-heart mr-1"></i> {{ post.likeUsers.length }}
                 </div>
-                <img :src="post.profileImg">  
+                <img :src="post.profileImg" v-if="post.profileImg">
+                <img src="http://bit.do/anonymouseuser" v-else>
               </div>
             </div>
             <div class="general d-flex flex-column justify-content-between">
@@ -216,7 +217,7 @@ export default {
     ...mapState(['myaccount']),
     ...mapState('onedayEventStore', ['selectedOnedayEvent']),
     isRecruit() {
-      if (this.selectedOnedayEvent.participantCnt === (this.selectedOnedayEvent.capacity + 1)) {
+      if (this.selectedOnedayEvent.participantCnt === (this.selectedOnedayEvent.capacity)) {
         return false
       } else {
         return true
@@ -274,7 +275,10 @@ export default {
       } else {
         return false
       }
-    }
+    },
+    toBookDetail(bookId) {
+      router.push({ name: 'BookDetail', params: { bookId: bookId}})
+    },
   },
   created() {
     this.findOnedayEvent(this.$route.params.onedayEventId)
@@ -302,7 +306,9 @@ export default {
     display: block;
     width: 100%;
     height: 100%;
-    border-radius: 25px;
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
   }
 
   .onedayEvent-closed-false {

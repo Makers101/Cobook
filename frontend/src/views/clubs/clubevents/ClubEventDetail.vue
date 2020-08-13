@@ -4,7 +4,7 @@
     
       <!-- clubEvent-detail-header -->
       <div class="row">
-        <div class="bookImg-container pointer col-2 p-0">
+        <div class="bookImg-container pointer col-2 p-0" @click="toBookDetail(selectedClubEvent.book.id)">
           <img
             class="book-image img-fluid"
             :src="selectedClubEvent.book.bookImg"
@@ -98,7 +98,7 @@
               v-if="selectedClubEvent.leader.profileImg">
             <img
               class="rounded-circle profile-image"
-              :src="'http://placehold.jp/150x150.png?text=' + selectedClubEvent.leader.nickName"
+              src="http://bit.do/anonymouseuser"
               :alt="selectedClubEvent.leader.nickName"
               v-else>
             <div class="overlay rounded-circle">
@@ -118,7 +118,7 @@
               v-if="participant.profileImg">
             <img
               class="rounded-circle profile-image"
-              :src="'http://placehold.jp/150x150.png?text=' + participant.nickName"
+              src="http://bit.do/anonymouseuser"
               :alt="participant.nickName"
               v-else>
             <div class="overlay rounded-circle">
@@ -178,7 +178,8 @@
                   <div class="points center">
                     <i class="fas fa-heart mr-1"></i> {{ post.likeUsers.length }}
                   </div>
-                  <img :src="post.profileImg">  
+                  <img :src="post.profileImg" v-if="post.profileImg">
+                  <img src="http://bit.do/anonymouseuser" v-else>
                 </div>
               </div>
               <div class="general d-flex flex-column justify-content-between">
@@ -296,7 +297,10 @@ export default {
     },
     enterRoom(roomId) {
       router.push({name: 'ClubEventRoom', params: { roomId: roomId }})
-    }
+    },
+    toBookDetail(bookId) {
+      router.push({ name: 'BookDetail', params: { bookId: bookId}})
+    },
   },
   created() {
     this.findClub(this.params.clubId)
@@ -326,7 +330,9 @@ export default {
     display: block;
     width: 100%;
     height: 100%;
-    border-radius: 25px;
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
   }
 
   .clubEvent-closed-false {

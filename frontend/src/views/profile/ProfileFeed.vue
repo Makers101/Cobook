@@ -119,10 +119,6 @@ export default {
   height: 3rem;
 }
 
-.card {
-  cursor: pointer;
-}
-
 /* card */
 
   /* card css 여기! */

@@ -70,14 +70,14 @@
           <div class="row no-gutters">
             <div class="col-6 onedayEvent-left">
               <img class="bg-image" :src="onedayEvent.book.bookImg" width="100%">
-              <span class="badge mb-0 onedayEvent-recruit" v-if="onedayEvent.participantCnt < onedayEvent.capacity + 1">모집중</span>
-              <!-- <span class="badge mb-0 onedayEvent-closed-false" v-else>풀방</span> -->
+              <span class="badge mb-0 onedayEvent-recruit" v-if="onedayEvent.participantCnt < onedayEvent.capacity">모집중</span>
+              <!-- <span class="badge mb-0 onedayEvent-recruit-false" v-else>만석</span> -->
             </div>
             <div class="col-6 text-left d-flex flex-column align-items-start p-2">
               <p class="onedayEvent-name font-weight-bold" lt="book">{{ onedayEvent.name }}</p>
               <span class="badge badge-genre">{{ onedayEvent.book.genre }}</span>
               <div class="mt-auto">
-                <p class="mb-0"><small><i class="fas fa-users"></i> {{ onedayEvent.participantCnt}} / {{ onedayEvent.capacity + 1 }}</small></p>
+                <p class="mb-0"><small><i class="fas fa-users"></i> {{ onedayEvent.participantCnt}} / {{ onedayEvent.capacity }}</small></p>
                 <p class="mb-0"><small><i class="fas fa-map-marker-alt"></i> {{ onedayEvent.place }}</small></p>
                 <p class="onedayEvent-date mb-0"><small>{{ onedayEvent.datetime | moment('YYYY-MM-DD HH:mm') }}</small></p>
               </div>
@@ -157,6 +157,14 @@ export default {
     transform: translate( -50%, -50% );
   }
 
+  .card {
+    background-color: #fff;
+    background: linear-gradient(#f8f8f8, #fff);
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
   .btn-toggle-true {
     border-color: #88A498;
     color: #88A498;
@@ -182,20 +190,18 @@ export default {
     color: #F8F8F8;
     text-align: center;
     position: absolute;
-    top: 9%;
-    left: 18%;
-    transform: translate( -50%, -50% );
+    top: 3%;
+    left: 5%;
     padding: 6px;
   }
 
-  .onedayEvent-closed-true {
+  .onedayEvent-recruit-false {
     background-color: #707070; 
     color: #F8F8F8;
     text-align: center;
     position: absolute;
-    top: 9%;
-    left: 18%;
-    transform: translate( -50%, -50% );
+    top: 3%;
+    left: 5%;
     padding: 6px;
   }
 

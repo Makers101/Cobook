@@ -81,7 +81,7 @@
                         <img
                           v-if="!selectedPost.user.profileImg"
                           class="img-fluid feed-profile-img mr-1" 
-                          src="@/assets/anonymous.png" 
+                          src="http://bit.do/anonymouseuser" 
                           alt="유저 프로필 사진">
                         <img 
                           v-else
@@ -192,7 +192,7 @@
                           <img
                             v-if="!post.user.profileImg"
                             class="img-fluid feed-profile-img" 
-                            src="@/assets/anonymous.png" 
+                            src="http://bit.do/anonymouseuser"
                             alt="유저 프로필 사진">
                           <img 
                             v-else
@@ -229,7 +229,7 @@
                           <img
                             v-if="!comment.user.profileImg"
                             class="img-fluid feed-profile-img" 
-                            src="@/assets/anonymous.png" 
+                            src="http://bit.do/anonymouseuser"
                             alt="유저 프로필 사진">
                           <img 
                             v-else

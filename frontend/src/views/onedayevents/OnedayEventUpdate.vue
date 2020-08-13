@@ -197,8 +197,20 @@
               </v-col>
 
               <!-- onedayEvent-update-capacity -->
-              <v-col class="mt-5" cols="12">
-                <v-card-text class="p-0">
+              <v-col cols="6">
+                <v-text-field
+                  v-model="onedayEventUpdateData.capacity"
+                  color="blue-grey lighten-2"
+                  :rules="[
+                            v => !!v || '필수항목입니다.',
+                            v => v !== '1' || '2 이상의 숫자를 입력해주세요 :)',
+                            v => v[0] !== '0' || '올바른 숫자를 입력해주세요 :)',
+                            v => /^\d*$/.test(v) || '올바른 숫자를 입력해주세요 :)'
+                          ]"
+                  label="총원"
+                  placeholder="2 이상의 숫자를 입력해주세요 :)"
+                ></v-text-field>
+                <!-- <v-card-text class="p-0">
                   <v-slider
                     v-model="onedayEventUpdateData.capacity"
                     label="모집 인원"
@@ -209,7 +221,7 @@
                     thumb-label="always"
                     ticks
                   ></v-slider>
-                </v-card-text>
+                </v-card-text> -->
               </v-col>
 
               <!-- onedayEvent-update-questions -->
@@ -274,7 +286,7 @@ export default {
         questions: []
       },
       date: new Date().toISOString().substr(0, 10),
-      time: '00:00',
+      time: '12:00',
       valid: true,
       lazy:false,
       searchBook: null,
@@ -330,6 +342,8 @@ export default {
       if (this.offlineEnabled) {
         this.onedayEventUpdateData.place = this.offlinePlace
       }
+      this.onedayEventUpdateData.capacity = Number(this.onedayEventUpdateData.capacity)
+
       const dataContainer = {
         onedayEventUpdateData: this.onedayEventUpdateData,
         onedayEventId: this.onedayEventId

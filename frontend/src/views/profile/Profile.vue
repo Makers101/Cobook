@@ -10,7 +10,7 @@
           v-if="profile.profileImg">
         <img
           class="profile-image bg-light-ivory"
-          :src="'http://placehold.jp/200x200.png?text=' + profile.nickName"
+          src="http://bit.do/anonymouseuser"
           :alt="profile.nickName"
           v-else>
       </div>
@@ -19,8 +19,8 @@
           <div class="d-flex justify-content-between">
             <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>
             <span v-if="myaccount.id !== profile.id">
-              <button v-if="checkFollow(profile)" class="btn px-4 btn-following" @click="clickedFollow(profile, 'unfollow')">언팔로우</button>
-              <button v-else class="btn btn-follow px-4" @click="clickedFollow(profile, 'follow')">팔로우</button>
+              <button v-if="checkFollow(profile)" class="btn px-4 btn-secondary" @click="clickedFollow(profile, 'unfollow')">언팔로우</button>
+              <button v-else class="btn btn-green px-4" @click="clickedFollow(profile, 'follow')">팔로우</button>
             </span>
           </div>
           <p class="profile-description">{{ profile.description }}</p>

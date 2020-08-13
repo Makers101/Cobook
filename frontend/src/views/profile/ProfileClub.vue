@@ -2,7 +2,7 @@
   <div class="mt-3 mb-5">
     
     <!-- profile-clubs -->
-    <h5 class="text-left font-weight-bold mb-0 ml-3" v-if="clubs.length">{{ profile.nickName }}님의 Club</h5>
+    <h5 class="text-left font-weight-bold mb-0 ml-3">{{ profile.nickName }}님의 Club</h5>
     <div class="d-flex my-2 club-list scroll-sect" id="scroll-area-club" v-if="clubs.length">
       <div 
         class="px-3"
@@ -55,7 +55,7 @@
 
     <!-- profile-events -->
 
-    <h5 class="text-left font-weight-bold mb-0 ml-3 mt-5" v-if="integratedEvents.length">{{ profile.nickName }}님의 이벤트</h5>
+    <h5 class="text-left font-weight-bold mb-0 ml-3 mt-5">{{ profile.nickName }}님의 이벤트</h5>
     <div class="d-flex events-list my-2 scroll-sect" id="scroll-area-event" v-if="integratedEvents.length">
       <div 
         class="px-3 pointer"
@@ -67,8 +67,12 @@
           <div class="row no-gutters">
             <div class="col-6 event-left">
               <img class="bg-image" :src="event.book.bookImg" width="100%">
-              <span class="badge mb-0 event-closed-true" v-if="event.closed">종료</span>
-              <span class="badge mb-0 event-closed-false" v-else>예정</span>
+              <div class="badges">
+                <span class="badge mb-0 clubEvent-badge" v-if="event.capacity">원데이</span>
+                <span class="badge mb-0 onedayEvent-badge" v-else>클럽</span>
+                <span class="badge ml-1 mb-0 event-closed-true" v-if="event.closed">종료</span>
+                <span class="badge ml-1 mb-0 event-closed-false" v-else>예정</span>
+              </div>
             </div>
             <div class="col-6 text-left d-flex flex-column align-items-start p-2">
               <p class="event-name font-weight-bold" lt="book">{{ event.name }}</p>
@@ -215,6 +219,14 @@ export default {
     text-align: start;
   }
 
+  .card {
+    background-color: #fff;
+    background: linear-gradient(#f8f8f8, #fff);
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
   .card-head {
     position: relative;
   }
@@ -250,14 +262,30 @@ export default {
     position: relative;
   }
 
+  .badges {
+    position: absolute;
+    top: 3%;
+    left: 6%;
+  }
+
+  .clubEvent-badge {
+    background-color: #AA706A; 
+    color: #F8F8F8;
+    text-align: center;
+    padding: 6px;
+  }
+
+  .onedayEvent-badge {
+    background-color: #7393C2; 
+    color: #F8F8F8;
+    text-align: center;
+    padding: 6px;
+  }
+
   .event-closed-true {
     background-color: #707070; 
     color: #F8F8F8;
     text-align: center;
-    position: absolute;
-    top: 9%;
-    left: 18%;
-    transform: translate( -50%, -50% );
     padding: 6px;
   }
 
@@ -265,10 +293,6 @@ export default {
     background-color: rgba(221, 118, 0, 0.8); 
     color: #F8F8F8;
     text-align: center;
-    position: absolute;
-    top: 9%;
-    left: 18%;
-    transform: translate( -50%, -50% );
     padding: 6px;
   }
 
