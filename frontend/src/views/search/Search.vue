@@ -69,16 +69,16 @@ export default {
   },
   methods: {
     search(keyword){
-      this.$router.push({name: 'SearchUser', params: { content : keyword }})
+      this.$router.push({name: 'Search', params: { content : keyword }})
     }
   },
   created() {
-    this.search(this.params.content)
+    this.search(this.$route.params.content)
   },
-  beforeRouteLeave (to, from, next) {
-    this.search(this.keyword)
-    next();
+  mounted(){
+    this.$router.push({ name: 'SearchUser', params: { content: this.$route.params.content}})
   },
+
     
     
 }
