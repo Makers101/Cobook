@@ -1,6 +1,6 @@
 <template>
-  <div class="my-3">
-    <div v-if="users.length">
+  <div class="mt-5">
+    <div v-if="users.length" class="mb-4">
       <div v-for="user in users" :key="user.id" class="d-flex justify-content-center w-100 mt-3">
         <div class="d-flex justify-content-between user">
           <div class="d-flex profile-image">
