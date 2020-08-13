@@ -4,7 +4,7 @@
       클럽 이벤트 방 번호: {{ roomId }}
     </p>
     <video id="localVideo" autoplay playsinline></video>
-    <video id="remoteVideo" autoplay playsinline></video>
+    <video v-for="idx in [1, 2, 3, 4, 5, 6, 7, 8, 9]" :key="`remote-${idx}`" :id="`remoteVideo-${idx}`" autoplay playsinline></video>
   </div>
 </template>
 
@@ -20,7 +20,8 @@ export default {
       },
       isChannelReady: false,
       isInitiator: false,
-      isStarted: false
+      isStarted: false,
+      peerIdx: 1
     }
   },
   mounted() {
@@ -66,7 +67,7 @@ export default {
 
     if (room !== '') {
       socket.emit('create or join', room);
-      console.log('Attempted to create or  join room', room);
+      console.log('Attempted to create or join room', room);
     }
 
     socket.on('created', function(room) {
@@ -127,7 +128,7 @@ export default {
     ////////////////////////////////////////////////////
 
     var localVideo = document.querySelector('#localVideo');
-    var remoteVideo = document.querySelector('#remoteVideo');
+    var remoteVideo = document.querySelector(`#remoteVideo-${this.peerIdx}`);
 
     navigator.mediaDevices.getUserMedia({
       audio: false,
