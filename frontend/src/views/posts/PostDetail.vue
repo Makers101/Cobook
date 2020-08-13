@@ -245,7 +245,7 @@
                       <div
                         class="btn text-danger btn-sm m-0 p-0 col-3"
                         v-if="comment.user.id === myaccount.id"
-                        @click="deleteComment({ postId: commentCreateData.postId, commentId: comment.id })"
+                        @click="clickDeleteComment(commentCreateData, comment.id)"
                       > 삭제
                       </div>
                     </div>
@@ -302,7 +302,15 @@
 </template>
 
 <script>
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-danger',
+    cancelButton: 'btn btn-success mr-2'
+  },
+  buttonsStyling: false
+})
 import { mapState, mapActions } from 'vuex'
+import Swal from 'sweetalert2'
 import router from '@/router'
 export default {
   name: 'PostDetail',
@@ -358,7 +366,10 @@ export default {
       if (this.commentCreateData.content.length === 1){
         this.commentCreateData.content = null
         this.btnActive = false
-        alert("댓글을 작성해주세요.")
+        Swal.fire({
+          icon: 'error',
+          text: '댓글을 작성해주세요.'
+        })
       } else {
         this.createComment(this.commentCreateData)
         .then(() => {
@@ -395,7 +406,10 @@ export default {
       copyText.select();
       document.execCommand("copy");
       document.body.removeChild(copyText)
-      alert("주소가 복사 되었습니다.")
+      Swal.fire({
+          icon: 'success',
+          text: '주소가 복사되었습니다'
+        })
     },
     falseDialog(commentCreateData, comment) {
       this.dialog = false
@@ -405,11 +419,36 @@ export default {
       router.push({ name: 'PostUpdate', params: { postId: postId }})
     },
     clickDeletePost(postId) {
-      if (confirm('리뷰를 삭제하시겠습니까?') === true) {
-        this.deletePost(postId)
-      } else {
-        return false
-      }
+      swal.fire({
+        // title: "Are you sure?",
+        text: "정말 리뷰를 삭제하시겠습니까?",
+        showCancelButton: true,
+        confirmButtonText: '삭제',
+        cancelButtonText: '취소',
+        reverseButtons: true,
+        icon: "warning",
+      })
+      .then((result) => {
+        if (result.value) {
+          this.deletePost(postId)
+        } 
+      });
+    },
+    clickDeleteComment(commentCreateData, commentId) {
+      swal.fire({
+        // title: "Are you sure?",
+        text: "정말 삭제하시겠습니까?",
+        showCancelButton: true,
+        confirmButtonText: '삭제',
+        cancelButtonText: '취소',
+        reverseButtons: true,
+        icon: "warning",
+      })
+      .then((result) => {
+        if (result.value) {
+          this.deleteComment({ postId: commentCreateData.postId, commentId: commentId })
+        } 
+      });
     },
     postDetail(postId) {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
@@ -1714,5 +1753,9 @@ figcaption p {
 		left: -80px;
 		font-size: 90%;
 	}
+}
+
+.btn-danger {
+  margin-right: 10px !important;
 }
 </style>
