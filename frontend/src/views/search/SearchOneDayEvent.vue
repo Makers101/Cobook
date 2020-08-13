@@ -75,7 +75,11 @@ export default {
   },
   created() {
     this.fetchOnedayevents(this.$route.params.content)
-  }
+  },
+  beforeRouteUpdate (to, from, next) {
+    next();
+    this.fetchOnedayevents(this.params.content)
+  },
 
 }
 </script>
