@@ -50,10 +50,11 @@ public class NotificationService {
                 .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_POST));
     }
 
-    private Club getClub(Long clubId){
+    private Club getClub(Long clubId) {
         return clubRepository.findById(clubId)
                 .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_CLUB));
     }
+
     private void saveNotificationData(Long fromUserId, DatabaseReference notiRef) {
         notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -144,14 +145,11 @@ public class NotificationService {
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         } else { // 댓글
-            if(postCommentRepository.findByUserAndPost(fromUser, post).isPresent()){
-                saveNotificationData(fromUserId, notiRef);
-            } else{
-                saveNoti.setValueAsync(notificationSaveDto);
-            }
+            saveNoti.setValueAsync(notificationSaveDto);
         }
     }
 
+}
 
 
     @Transactional
