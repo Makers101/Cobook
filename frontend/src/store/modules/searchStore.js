@@ -60,14 +60,13 @@ const searchStore = {
     fetchClubs({commit}, content) {
       axios.get(SERVER.URL + SERVER.ROUTES.search + SERVER.ROUTES.clubs + '/' + content)
         .then(res => {
-          commit('SET_POSTS', res.data)
+          commit('SET_CLUBS', res.data)
         })
         .catch(err => {
           console.log(err.data)
         })
-    }
+    },
   },
-   
 }
 
 export default searchStore
