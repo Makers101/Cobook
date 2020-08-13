@@ -66,17 +66,6 @@ public class SearchService {
                 .collect(Collectors.toList());
     }
 
-    private boolean checkTags(PostBySearchResDto post, String keyword) {
-        List<TagByPostDto> tagList = post.getTags();
-
-        for (TagByPostDto tag : tagList) {
-            if (tag.getName().equals(keyword)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public List<ClubBySearchResDto> searchClubs(String keyword) {
         return clubRepository.findByKeyword(keyword);
     }
