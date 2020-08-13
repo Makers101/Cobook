@@ -2,6 +2,7 @@ package com.ssafy.cobook.service.dto.post;
 
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.posttag.PostTag;
+import com.ssafy.cobook.service.dto.book.BookByFeedDto;
 import com.ssafy.cobook.service.dto.book.BookByPostDto;
 import com.ssafy.cobook.service.dto.book.BookDetailsDto;
 import com.ssafy.cobook.service.dto.book.BookSimpleResDto;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 public class PostBySearchResDto {
 
     private Long id;
-    private BookByPostDto book;
+    private BookByFeedDto book;
     private ClubByPostDto club;
     private UserByPostDto user;
     private List<Long> bookmarkUsers;
@@ -37,7 +38,7 @@ public class PostBySearchResDto {
 
     public PostBySearchResDto(Post post){
         this.id = post.getId();
-        this.book = new BookByPostDto(post.getBook());
+        this.book = new BookByFeedDto(post.getBook());
         if (post.ofClub()) {
             this.club = new ClubByPostDto(post.getClub());
         } else {
