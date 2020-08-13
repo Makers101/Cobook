@@ -1,6 +1,6 @@
 <template>
   <div class="mt-5">
-    <div class="d-flex justify-content-center"> 
+    <div class="d-flex justify-content-center" v-if="books.length"> 
       <div class="book-container">
         <div class="row no-gutters row-cols-1 row-cols-md-3">
           <div  v-for="book in books" :key="book.id">
@@ -18,6 +18,10 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="no-result" v-else>
+      <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
+      <h3 class="mt-3">검색된 키워드의 도서가 없습니다. </h3>
     </div>
   </div>
 </template>
@@ -108,5 +112,12 @@ export default {
   display: -webkit-box;
   -webkit-line-clamp: 4; 
   -webkit-box-orient: vertical;
+}
+
+.no-result {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -150px 0px 0px -200px;
 }
 </style>
