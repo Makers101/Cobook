@@ -152,6 +152,7 @@
                     v-model="date"
                     @input="onedayEventDate = false"
                     color="blue-grey lighten-2"
+                    :min="localDatetime('date')"
                   >
                   </v-date-picker>
                 </v-menu>
@@ -192,6 +193,7 @@
                     :allowed-minutes="m => m % 30 === 0"
                     format="24hr"
                     @click:minute="$refs.menu.save(time)"
+                    :min="localDatetime('time')"
                   ></v-time-picker>
                 </v-menu>
               </v-col>
@@ -283,8 +285,8 @@ export default {
         capacity: null,
         questions: []
       },
-      date: new Date().toISOString().substr(0, 10),
-      time: '12:00',
+      date: null,
+      time: null,
       valid: true,
       lazy:false,
       searchBook: null,
@@ -346,7 +348,30 @@ export default {
       if (this.offlinePlace === '온라인') {
         this.offlinePlace = null
       }
-    }
+    },
+    localDatetime(type) {
+      const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+      const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
+      if (type === 'time') {
+        if (this.date === localISOTime.slice(0, 10)) {
+          if (Number(localISOTime.slice(14, 16)) < 30) {
+            return localISOTime.slice(11, 13) + ':30'
+          } else {
+            return (Number(localISOTime.slice(11, 13)) + 1)%24 + ':00'
+          }
+        } else {
+          return ''
+        }
+      } else if (type === 'date') {
+        return localISOTime.slice(0, 10)
+      } else {
+        return ''
+      }
+    },
+  },
+  mounted() {
+    this.date = this.localDatetime('date')
+    this.time = this.localDatetime('time')
   },
   beforeRouteLeave(to, from, next) {
     if (!this.clicked) {
