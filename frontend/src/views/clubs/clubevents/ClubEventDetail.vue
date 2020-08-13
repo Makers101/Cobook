@@ -88,7 +88,7 @@
 
       <!-- clubEvent-detail-members -->
       <div>
-        <h4 class="text-left font-weight-bold mb-3">클럽 이벤트 멤버({{ selectedClubEvent.participantCnt }})</h4>
+        <h4 class="text-left font-weight-bold mb-3">북클럽 이벤트 멤버({{ selectedClubEvent.participantCnt }})</h4>
         <div class="d-flex justify-content-start">
           <div class="profile-container pointer mr-3" @click="selectUser(selectedClubEvent.leader.id)">
             <img
@@ -132,7 +132,7 @@
 
       <!-- clubEvent-detail-description -->
       <div>
-        <h4 class="text-left font-weight-bold mb-3">클럽 이벤트 설명</h4>
+        <h4 class="text-left font-weight-bold mb-3">북클럽 이벤트 설명</h4>
         <p class="text-left px-2 description">{{ selectedClubEvent.description }}</p>
       </div>
 
@@ -217,8 +217,8 @@
         src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png"
         width="150px"
         class="mt-3">
-      <h3 class="my-3">아쉽지만 클럽 멤버만 접근 가능합니다.</h3>
-      <button class="btn btn-green" @click="toSelectedClub(selectedClub.id)">클럽으로 돌아가기</button>
+      <h3 class="my-3">아쉽지만 북클럽 멤버만 접근 가능합니다.</h3>
+      <button class="btn btn-green" @click="toSelectedClub(selectedClub.id)">북클럽으로 돌아가기</button>
     </div>
   </div>
 </template>
@@ -263,13 +263,13 @@ export default {
     },
     clickParticipateClubEvent(type) {
       if (type === 'apply') {
-        if (confirm('클럽 이벤트에 참가하시겠습니까?') === true) {
+        if (confirm('북클럽 이벤트에 참가하시겠습니까?') === true) {
           this.participateClubEvent(this.params)
         } else {
           return false
         }
       } else if (type === 'cancel') {
-        if (confirm('클럽 이벤트 참가를 취소하시겠습니까?') === true) {
+        if (confirm('북클럽 이벤트 참가를 취소하시겠습니까?') === true) {
           this.participateClubEvent(this.params)
         } else {
           return false
@@ -289,7 +289,7 @@ export default {
       router.push({ name: 'ClubEventUpdate', params: { clubEventId: clubEventId }})
     },
     clickClubEventDelete() {
-      if (confirm('클럽 이벤트를 삭제하시겠습니까?') === true) {
+      if (confirm('북클럽 이벤트를 삭제하시겠습니까?') === true) {
         this.deleteClubEvent(this.params)
       } else {
         return false
