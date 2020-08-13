@@ -70,7 +70,11 @@ export default {
   },
   created() {
     this.fetchClubs(this.$route.params.content)
-  }
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.fetchClubs(this.params.content)
+    next();
+  },
 }
 </script>
 
