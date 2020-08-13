@@ -47,9 +47,9 @@
             </div>
           </div>
         </div>
-        <div v-else>
+        <div class="no-result" v-else>
           <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
-          <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 가입한 클럽이 없습니다. </h3>
+          <h3 class="mt-3">검색된 키워드의 클럽이 없습니다. </h3>
         </div>
       </div>
     </div>
@@ -166,6 +166,13 @@ export default {
   position: absolute;
   top: 3%;
   left: 6%;
+}
+
+.no-result {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -150px 0px 0px -200px;
 }
 
 </style>
