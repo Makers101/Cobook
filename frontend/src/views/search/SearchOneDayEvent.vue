@@ -62,15 +62,8 @@ export default {
   },
   methods: {
     ...mapActions('searchStore', ['fetchOnedayevents']),
-    selectClub(club_id) {
-      this.router.push({ name: 'ClubDetail', params: { clubId: club_id }})
-    },
-    selectEvent(eventId, clubId) {
-      if (clubId) {
-        this.router.push({ name: 'ClubEventDetail', params: { clubId: clubId, clubEventId: eventId }})
-      } else {
-        this.router.push({ name: 'OnedayEventDetail', params: { onedayEventId: eventId }})
-      }
+    selectEvent(eventId) {
+      this.$router.push({ name: 'OnedayEventDetail', params: { onedayEventId: eventId }})
     },
   },
   created() {
