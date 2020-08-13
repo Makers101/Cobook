@@ -405,7 +405,7 @@ export default {
       router.push({ name: 'PostUpdate', params: { postId: postId }})
     },
     clickDeletePost(postId) {
-      if (confirm('게시물을 삭제하시겠습니까?') === true) {
+      if (confirm('리뷰를 삭제하시겠습니까?') === true) {
         this.deletePost(postId)
       } else {
         return false
