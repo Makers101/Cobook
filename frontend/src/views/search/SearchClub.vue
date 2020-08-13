@@ -17,13 +17,13 @@
                   @click="selectClub(club.id)"
                   v-if="club.clubImg"
                 >
-                <!-- <img
+                <img
                   class="card-img-top to-detail"
                   :src="'http://placehold.jp/300x150.png?text=' + club.name"
                   :alt="club.name"
                   @click="selectClub(club.id)"
                   v-else
-                > -->
+                >
                 <span class="badge mb-0 club-recruit" v-if="club.recruit">모집중</span>
               </div>        
               <div class="card-body">
