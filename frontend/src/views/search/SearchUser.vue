@@ -67,6 +67,10 @@ export default {
   created() {
     this.fetchUsers(this.$route.params.content)
   },
+  beforeRouteUpdate (to, from, next) {
+    this.fetchUser(this.params.content)
+    next();
+  },
   
 }
 </script>
