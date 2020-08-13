@@ -46,7 +46,7 @@ public class SearchService {
         Boolean isFollow;
 
         for (User user : userList) {
-            if (followRepository.findByToUser(fromUser, user).isPresent()) {
+            if (followRepository.findByToUserAndFromUser(fromUser.getId(), user.getId()).isPresent()) {
                 isFollow = true;
             } else {
                 isFollow = false;
