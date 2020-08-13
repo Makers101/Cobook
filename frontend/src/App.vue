@@ -231,6 +231,8 @@ export default {
         this.$router.push({name: 'ClubCandidates', params: { clubId: noti.dataId }})
       } else if (noti.type === 'follow') {
         this.$router.push({name: 'Profile', params: { userId: noti.dataId }})
+      } else if (noti.type === 'like' || noti.type === 'comment') {
+        this.$router.push({name: 'PostDetail', params: { postId: noti.dataId }})
       }
     },
     // clickNoti() {
