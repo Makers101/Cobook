@@ -1,13 +1,13 @@
 <template>
   <div class="custom-container">
 
-    <!-- clubs-banner -->
-    <div class="club-banner">
+    <!-- posts-banner -->
+    <div class="posts-banner">
       <img
-        class="club-banner-img"
-        src="https://user-images.githubusercontent.com/57381062/90099601-d6a0dc80-dd75-11ea-82b9-841824eb5e91.jpg" 
+        class="posts-banner-img"        
+        :src="bannerImages[2]"
         alt="">
-      <div class="club-banner-text">
+      <div class="posts-banner-text">
         <h3 class="font-weight-bold">피드</h3>
         <p class="mb-0">
           피드는 내가 선호하는 유저와 장르의 책 리뷰를 제공합니다. 
@@ -122,6 +122,13 @@ export default {
   // },
   data() {
     return {
+      bannerImages: [
+        'https://user-images.githubusercontent.com/57381062/90099601-d6a0dc80-dd75-11ea-82b9-841824eb5e91.jpg',
+        'https://user-images.githubusercontent.com/57381062/90129061-ee428a00-dda2-11ea-9e31-f6cfe006a951.jpg',
+        'https://user-images.githubusercontent.com/57381062/90130466-7a55b100-dda5-11ea-9960-e061294dbd34.jpg',
+        'https://user-images.githubusercontent.com/57381062/90130484-85104600-dda5-11ea-9167-7dcd85b5e810.jpg',
+        'https://user-images.githubusercontent.com/57381062/90130506-8b9ebd80-dda5-11ea-8354-7ce8458fb3f8.jpg'
+      ]
       // postList: [], 
       // page: 3,
       // limit: 0,
@@ -213,18 +220,18 @@ export default {
 
 <style scoped>
 
-.club-banner {
+.posts-banner {
   position: relative;
 }
 
-.club-banner-img {
+.posts-banner-img {
   width: 100%;
   height: 200px;
   vertical-align: middle;
-  filter: brightness(0.5)
+  filter: brightness(0.7)
 }
 
-.club-banner-text {
+.posts-banner-text {
   color: #F8F8F8;
   text-align: center;
   text-shadow: 2px 2px 2px rgb(100, 100, 100);
@@ -263,13 +270,15 @@ img {
 
 .book-reviews {
   margin-bottom: 30px;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .row-inner:hover
 {
   /*move to the left */
   transform: translateX(calc(250px*(-0.5)/2));
-  margin: 50px 10px;
+  margin: 60px 10px;
   padding-left: 45px;
   padding-right: 60px;
 }
