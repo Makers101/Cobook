@@ -8,9 +8,9 @@
         src="https://user-images.githubusercontent.com/57381062/88908347-b57bbe80-d294-11ea-9d31-a88d3d0b3b23.jpg"
         alt="clubEvent-banner">
       <div class="clubEvent-banner-text">
-        <h3 class="font-weight-bold">클럽 이벤트 만들기</h3>
+        <h3 class="font-weight-bold">북클럽 이벤트 만들기</h3>
         <p class="mb-0">
-          클럽 이벤트를 만들어 멤버들과 함께 책을 읽고 좋은 대화를 나눠보세요 :)
+          북클럽 이벤트를 만들어 멤버들과 함께 책을 읽고 좋은 대화를 나눠보세요 :)
         </p>
       </div>
     </div>
@@ -42,7 +42,7 @@
                   counter
                   maxlength="30"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽 이벤트 명"
+                  label="북클럽 이벤트 명"
                 ></v-text-field>
               </v-col>
 
@@ -89,14 +89,14 @@
                   counter
                   maxlength="100"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽 이벤트 설명"
+                  label="북클럽 이벤트 설명"
                 ></v-textarea>
               </v-col>
 
               <!-- clubEvent-create-place -->
               <v-col class="mt-5" cols="12">
                 <div class="d-flex justify-content-start">
-                  <label class="v-label theme--light">클럽 이벤트 장소</label>
+                  <label class="v-label theme--light">북클럽 이벤트 장소</label>
                 </div>
                 <v-radio-group
                   v-model="clubEventCreateData.place"
@@ -112,7 +112,7 @@
                       class="mx-3 mb-2"
                       v-model="offlinePlace"
                       :disabled="!offlineEnabled"
-                      label="클럽 이벤트 장소"
+                      label="북클럽 이벤트 장소"
                       counter
                       maxlength="30"
                       :rules="placeRules"
@@ -232,7 +232,7 @@
               class="button btn-green"
               @click="clickCreate"
             >
-              클럽 이벤트 생성
+              북클럽 이벤트 생성
             </v-btn>
           </v-card-actions>
         </v-form>
@@ -334,7 +334,7 @@ export default {
           || this.time !== '00:00'
           || this.clubEventCreateData.questions.length > 0
          ) {
-        if (confirm('생성 중인 클럽 이벤트가 있습니다. 정말 넘어가시겠습니까?') === true) {
+        if (confirm('생성 중인 북클럽 이벤트가 있습니다. 정말 넘어가시겠습니까?') === true) {
           next()
         } else {
           return false
