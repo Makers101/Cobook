@@ -50,6 +50,35 @@ public class NotificationService {
                 .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_POST));
     }
 
+    private Club getClub(Long clubId){
+        return clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_CLUB));
+    }
+    private void saveNotificationData(Long fromUserId, DatabaseReference notiRef) {
+        notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                exFindData:
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    String postKey = data.getKey();
+                    for (DataSnapshot values : data.getChildren()) {
+                        if (values.getKey().equals("from")) {
+                            if (values.getValue() == fromUserId) {
+                                DatabaseReference deleteRef = notiRef.child(postKey);
+                                deleteRef.removeValueAsync();
+                                break exFindData;
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+            }
+        });
+    }
+
     @Transactional
     public void saveNoti(NotificationReqDto notificationReqDto, Long fromUserId) {
         LocalDateTime curDateTime = LocalDateTime.now();
@@ -70,8 +99,8 @@ public class NotificationService {
         Post post = null;
 
         if (type.equals("club")) {
-            club = clubRepository.findById(notificationReqDto.getDataId())
-                    .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_CLUB));
+            club = getClub(notificationReqDto.getDataId());
+
             List<ClubMember> clubMemberList = clubMemberRepository.findByClub(club); // 해당 클럽의 멤버들을 뽑아서
             for (ClubMember clubMember : clubMemberList) {
                 if (clubMember.getRole().equals(MemberRole.LEADER)) {
@@ -97,115 +126,33 @@ public class NotificationService {
 
 
         if (type.equals("club")) { // 클럽 가입 신청
-            if (!clubMemberRepository.findByUserAndClub(fromUser, club).isPresent()) { // 가입신청을 눌러서 데이터가 생김 => 데이터가 없을 때 삭제 알림이 가야함
-                notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        exFindData:
-                        for (DataSnapshot data : snapshot.getChildren()) {
-                            String postKey = data.getKey();
-                            for (DataSnapshot values : data.getChildren()) {
-                                if (values.getKey().equals("from")) {
-                                    if (values.getValue() == fromUserId) {
-                                        DatabaseReference deleteRef = notiRef.child(postKey);
-                                        deleteRef.removeValueAsync();
-                                        break exFindData;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                    }
-                });
-            } else { // 테이블에 값이 존재하는 경우에는 가입신청을 한거라서, 데이터를 생성해줌
+            if (clubMemberRepository.findByUserAndClub(fromUser, club).isPresent()) {
+                saveNotificationData(fromUserId, notiRef);
+            } else {
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         } else if (type.equals("follow")) { // 팔로우
-            if (!followRepository.findByToUserAndFromUser(fromUser.getId(), toUser.getId()).isPresent()) { // 팔로우를 신청했다면 테이블에 이미 존재하므로 없을 때 삭제
-                notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        exFindData:
-                        for (DataSnapshot data : snapshot.getChildren()) {
-                            String postKey = data.getKey();
-                            for (DataSnapshot values : data.getChildren()) {
-                                if (values.getKey().equals("from")) {
-                                    if (values.getValue() == fromUserId) {
-                                        DatabaseReference deleteRef = notiRef.child(postKey);
-                                        deleteRef.removeValueAsync();
-                                        break exFindData;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                    }
-                });
-            } else { //아닌 경우는 저장
+            if (followRepository.findByToUserAndFromUser(fromUser.getId(), toUser.getId()).isPresent()) {
+                saveNotificationData(fromUserId, notiRef);
+            } else {
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         } else if (type.equals("like")) { // 좋아요
-            if (!postLikeRepository.findByUserAndPost(fromUser, post).isPresent()) {
-                notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        exFindData:
-                        for (DataSnapshot data : snapshot.getChildren()) {
-                            String postKey = data.getKey();
-                            for (DataSnapshot values : data.getChildren()) {
-                                if (values.getKey().equals("from")) {
-                                    if (values.getValue() == fromUserId) {
-                                        DatabaseReference deleteRef = notiRef.child(postKey);
-                                        deleteRef.removeValueAsync();
-                                        break exFindData;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                    }
-                });
+            if (postLikeRepository.findByUserAndPost(fromUser, post).isPresent()) {
+                saveNotificationData(fromUserId, notiRef);
             } else {
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         } else { // 댓글
-            if(!postCommentRepository.findByUserAndPost(fromUser, post).isPresent()){
-                notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        exFindData:
-                        for (DataSnapshot data : snapshot.getChildren()) {
-                            String postKey = data.getKey();
-                            for (DataSnapshot values : data.getChildren()) {
-                                if (values.getKey().equals("from")) {
-                                    if (values.getValue() == fromUserId) {
-                                        DatabaseReference deleteRef = notiRef.child(postKey);
-                                        deleteRef.removeValueAsync();
-                                        break exFindData;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                    }
-                });
+            if(postCommentRepository.findByUserAndPost(fromUser, post).isPresent()){
+                saveNotificationData(fromUserId, notiRef);
             } else{
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         }
     }
+
+
 
     @Transactional
     public void readNoti(String notiId, Long userId) {
