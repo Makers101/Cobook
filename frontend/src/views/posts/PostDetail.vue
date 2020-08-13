@@ -335,8 +335,17 @@ export default {
     ...mapState('postStore', ['selectedPost', 'comments']),
   },
   methods: {
+    ...mapActions(['createNoti']),
     ...mapActions('postStore', ['findPost', 'fetchComments', 'createComment', 'createLike', 'createBookmark', 'deleteComment', 'deletePost']),
     clickLike(post) {
+      let notiData = new Object()
+      notiData = {
+        to: this.selectedPost.user.id,
+        dataId: this.selectedPost.id,
+        isRead: false,
+        type: "like"
+      }
+      this.createNoti(notiData)
       this.createLike(post.id)
       if (post.likeUsers.includes(this.myaccount.id)) {
         const idx = post.likeUsers.indexOf(this.myaccount.id)
@@ -355,6 +364,14 @@ export default {
       }
     },
     clickComment() {
+      let notiData = new Object()
+      notiData = {
+        to: this.selectedPost.user.id,
+        dataId: this.selectedPost.id,
+        isRead: false,
+        type: "comment"
+      }
+      this.createNoti(notiData)
       this.createComment(this.commentCreateData)
         .then(() => {
           this.commentCreateData.content = null
@@ -371,6 +388,14 @@ export default {
           text: '댓글을 작성해주세요.'
         })
       } else {
+        let notiData = new Object()
+        notiData = {
+          to: this.selectedPost.user.id,
+          dataId: this.selectedPost.id,
+          isRead: false,
+          type: "comment"
+        }
+        this.createNoti(notiData)
         this.createComment(this.commentCreateData)
         .then(() => {
           this.commentCreateData.content = null

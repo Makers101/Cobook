@@ -106,18 +106,21 @@
                   @click="clickNoti"
                 >
                   <i class="fas fa-bell"></i>
+                  <small class="badge rounded-circle badge-danger go-left" v-if="notis">{{ notis.length }}</small>
                 </div>
-                <!-- <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
+                <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
                   <div
                     class="dropdown-item setting-btn"
                     v-for="(noti, idx) in notis"
                     :key="`noti-${idx}`"
                     @click="toRoute(noti)"
                   >
-                    <p v-if="noti.type==='club'">{{ findUsers[noti.from] }}님이 '{{ findClubs[noti.clubId] }}' club에 가입신청했습니다.</p>
+                    <p v-if="noti.type==='club'">{{ findUsers[noti.from] }}님이 '{{ findClubs[noti.dataId] }}' 북클럽에 가입신청했습니다.</p>
                     <p v-if="noti.type==='follow'">{{ findUsers[noti.from] }}님이 팔로우했습니다.</p>
+                    <p v-if="noti.type==='like'">{{ findUsers[noti.from] }}님이 게시물을 좋아합니다.</p>
+                    <p v-if="noti.type==='comment'">{{ findUsers[noti.from] }}님이 댓글을 작성했습니다.</p>
                   </div>
-                </div> -->
+                </div>
               </li>
               <li class="nav-item dropdown">
                 <div 
@@ -166,21 +169,21 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-// import firebase from 'firebase/app'
-// import 'firebase/database'
+import firebase from 'firebase/app'
+import 'firebase/database'
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyA9KKQn0uKuErmQMJsMbhw25-iG8chHLdI",
-//   authDomain: "co-book-original.firebaseapp.com",
-//   databaseURL: "https://co-book-original.firebaseio.com",
-//   projectId: "co-book-original",
-//   storageBucket: "co-book-original.appspot.com",
-//   messagingSenderId: "21513194733",
-//   appId: "1:21513194733:web:5ac45b8faee796d5b910e4",
-//   measurementId: "G-YNYKTYY7B8"
-// };
+const firebaseConfig = {
+  apiKey: "AIzaSyA9KKQn0uKuErmQMJsMbhw25-iG8chHLdI",
+  authDomain: "co-book-original.firebaseapp.com",
+  databaseURL: "https://co-book-original.firebaseio.com",
+  projectId: "co-book-original",
+  storageBucket: "co-book-original.appspot.com",
+  messagingSenderId: "21513194733",
+  appId: "1:21513194733:web:5ac45b8faee796d5b910e4",
+  measurementId: "G-YNYKTYY7B8"
+};
 
-// firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
 export default {
   name: 'App',
@@ -198,7 +201,7 @@ export default {
     ...mapState(['genres', 'myaccount', 'books', 'users', 'authToken']),
   },
   methods: {
-    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'fetchNotis', 'logout']),
+    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'logout']),
     searchUser() {
       if (!this.keyword) {
         this.isActive = false
@@ -251,16 +254,14 @@ export default {
     //     .catch(err => console.log(err))
     // }
     // Firebase
-    // clickNoti() {
-    //   // console.log(firebase.database())
-    //   firebase.database().ref('noti/' + this.myaccount.id).on('value', data => {
-    //     this.notis = Object.values(data.val()).reverse()
-    //     console.log(this.notis)
-    //   })
-    // }
     clickNoti() {
-      console.log(1)
+      firebase.database().ref('noti/' + this.myaccount.id).on('value', data => {
+        this.notis = Object.values(data.val()).reverse()
+      })
     },
+    // clickNoti() {
+    //   console.log(1)
+    // },
     search(keyword){
       this.$router.push({name: 'SearchUser', params: { content : keyword }})
     }
@@ -272,6 +273,7 @@ export default {
     },
     myaccount() {
       const mapData = []
+      this.clickNoti()
       this.myaccount.myClubs.forEach(club => {
         mapData.push([club.id, club.name])
       })
@@ -283,7 +285,6 @@ export default {
     this.findMyAccount()
     this.fetchBooks()
     this.fetchUsers()
-    this.fetchNotis()
   },
 }
 </script>
@@ -511,5 +512,9 @@ input::-webkit-input-placeholder {
 
 .dropdown-toggle:after {
   content: none;
+}
+
+.go-left {
+  margin-left: -2px;
 }
 </style>
