@@ -141,7 +141,7 @@ export default {
     ////////////////////////////////////////////////////
 
     var localVideo = document.querySelector('#localVideo');
-    // var remoteVideo = document.querySelector(`#remoteVideo-${this.peerIdx}`);
+    var remoteVideo = document.querySelector(`#remoteVideo-${this.peerIdx}`);
 
     navigator.mediaDevices.getUserMedia({
       audio: false,
