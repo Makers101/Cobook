@@ -13,6 +13,7 @@ import com.ssafy.cobook.service.dto.book.BookBySearchResDto;
 import com.ssafy.cobook.service.dto.club.ClubBySearchResDto;
 import com.ssafy.cobook.service.dto.onedayevent.OneDayEventBySearchDto;
 import com.ssafy.cobook.service.dto.post.PostBySearchResDto;
+import com.ssafy.cobook.service.dto.tag.TagByPostDto;
 import com.ssafy.cobook.service.dto.user.UserBySearchResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -43,10 +45,10 @@ public class SearchService {
 
         Boolean isFollow;
 
-        for (User user: userList){
-            if(followRepository.findByToUser(fromUser, user).isPresent()){
+        for (User user : userList) {
+            if (followRepository.findByToUser(fromUser, user).isPresent()) {
                 isFollow = true;
-            } else{
+            } else {
                 isFollow = false;
             }
             searchUserList.add(new UserBySearchResDto(user, isFollow));
@@ -60,7 +62,19 @@ public class SearchService {
     }
 
     public List<PostBySearchResDto> searchPosts(String keyword) {
-        return postRepository.findByKeyword(keyword);
+        return postRepository.findByKeyword(keyword).stream()
+                .collect(Collectors.toList());
+    }
+
+    private boolean checkTags(PostBySearchResDto post, String keyword) {
+        List<TagByPostDto> tagList = post.getTags();
+
+        for (TagByPostDto tag : tagList) {
+            if (tag.getName().equals(keyword)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<ClubBySearchResDto> searchClubs(String keyword) {
