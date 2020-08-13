@@ -2,7 +2,7 @@
   <div class="mt-5">
     <div>
       <div style="max-width:70%; margin:auto;">
-        <div class="row rows-cols-1 row-cols-md-3" v-if="this.posts.length">
+        <div class="row rows-cols-1 row-cols-md-3" v-if="posts.length">
           <div 
             class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
             v-for="feed in posts"
@@ -59,9 +59,9 @@
             </div>
           </div>
         </div>
-        <div v-else>
+        <div class="no-result" v-else>
           <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
-          <h3 class="mt-3">현재 <strong>{{ profile.nickName }}</strong>님이 작성한 피드가 없습니다. </h3>
+          <h3 class="mt-3">검색된 키워드의 피드가 없습니다. </h3>
         </div>  
       </div>
     </div>
@@ -319,6 +319,13 @@ mark {
 .fa-heart {
   color: red;
   text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.7);
+}
+
+.no-result {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -150px 0px 0px -200px;
 }
 
 </style>
