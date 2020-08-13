@@ -45,10 +45,10 @@ public class SearchService {
 
         Boolean isFollow;
 
-        for (User user: userList){
-            if(followRepository.findByToUser(fromUser, user).isPresent()){
+        for (User user : userList) {
+            if (followRepository.findByToUser(fromUser, user).isPresent()) {
                 isFollow = true;
-            } else{
+            } else {
                 isFollow = false;
             }
             searchUserList.add(new UserBySearchResDto(user, isFollow));
@@ -62,21 +62,15 @@ public class SearchService {
     }
 
     public List<PostBySearchResDto> searchPosts(String keyword) {
-//        List<PostBySearchResDto> postList = (postRepository.findByExceptKeyword(keyword).stream()
-//                .filter(post -> checkTags(post, keyword))
-//                .collect(Collectors.toList()));
-
         return postRepository.findByKeyword(keyword).stream()
                 .collect(Collectors.toList());
-
-//        return postList;
     }
 
     private boolean checkTags(PostBySearchResDto post, String keyword) {
         List<TagByPostDto> tagList = post.getTags();
 
-        for (TagByPostDto tag : tagList){
-            if(tag.getName().equals(keyword)){
+        for (TagByPostDto tag : tagList) {
+            if (tag.getName().equals(keyword)) {
                 return true;
             }
         }

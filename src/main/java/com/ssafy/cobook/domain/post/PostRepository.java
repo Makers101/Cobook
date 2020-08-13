@@ -33,9 +33,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p join p.tags as t WHERE p.onelineReview LIKE %:keyword% OR t.tag.tagName = :keyword")
     List<PostBySearchResDto> findByKeyword(@Param("keyword") String keyword);
 
-    @Query("SELECT p FROM Post p WHERE p.onelineReview NOT LIKE %:keyword%")
-    List<PostBySearchResDto> findByExceptKeyword(@Param("keyword") String keyword);
-
     @Query("SELECT p FROM Post p where p.creatDateTime between :startDateTime AND :endDateTime")
     List<Post> findByPeriods(LocalDateTime startDateTime, LocalDateTime endDateTime);
 
