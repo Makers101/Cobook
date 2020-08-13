@@ -355,8 +355,8 @@ export default {
           || this.clubEventCreateData.bookId
           || this.clubEventCreateData.place
           || this.offlinePlace
-          || this.date !== new Date().toISOString().substr(0, 10)
-          || this.time !== '00:00'
+          || this.date !== this.localDatetime('date')
+          || this.time !== this.localDatetime('time')
           || this.clubEventCreateData.questions.length > 0
          ) {
         if (confirm('생성 중인 클럽 이벤트가 있습니다. 정말 넘어가시겠습니까?') === true) {
