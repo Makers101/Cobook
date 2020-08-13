@@ -2,7 +2,7 @@
   <div>
     <div id="app">
       <div id="nav" v-if="authToken != null">
-        <nav class="navbar navbar-expand-md navbar-light navbar-bg-color">
+        <nav class="navbar navbar-expand-md navbar-light navbar-bg-color d-flex justify-content-between">
           <router-link class="navbar-brand" to="/">
             <img 
               class="img-fluid logo-img"
@@ -23,8 +23,8 @@
             <span class="navbar-toggler-icon"></span>
           </button>
 
-          <div class="collapse navbar-collapse row" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto col-3 d-flex justify-content-between">
+          <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
               <li class="nav-item">
                 <router-link class="nav-link" :to="{ name: 'PostList' }">
                   <!-- <i class="fas fa-home"></i> -->
@@ -44,14 +44,20 @@
                 </router-link>
               </li>
             </ul>
-            <div class="autocomplete col-3 text-right offset-4 " id="search-bar">
+            <!-- v-if="this.$route.name!=='SearchUser'" -->
+            <div class="d-flex justify-content-end">
+              <div 
+                class="autocomplete text-right" 
+                id="search-bar" 
+                v-if="this.$route.name!=='SearchUser' && this.$route.name!=='SearchBook' && this.$route.name!=='SearchClub' && this.$route.name!=='SearchOnedayEvent' && this.$route.name!=='SearchPost'" >
               <input 
                 type="search" 
                 v-model="keyword" 
                 @input="searchUser"
                 @blur="focusout"
+                @keyup.enter="search(keyword)"
                 >
-              <ul 
+              <!-- <ul 
                 class="autocomplete-results px-3"
                 v-show="searchedUsers"
                 >
@@ -80,9 +86,9 @@
                   </span>
                 </li>
                 <li class="autocomplete-result d-flex" @click="search(keyword)">검색결과 더보기 ...</li>
-              </ul>
+              </ul> -->
             </div>
-            <ul class="navbar-nav mr-auto col-2 d-flex justify-content-between">
+            <ul class="navbar-nav d-flex align-items-center">
               <li class="nav-item">
                 <router-link class="nav-link" :to="{ name: 'PostCreate' }">
                   <i class="fas fa-pen"></i>
@@ -133,6 +139,8 @@
                 </div>
               </li>
             </ul>
+            </div>
+            
           </div>
         </nav>
       </div>
@@ -414,7 +422,7 @@ input::-webkit-input-placeholder {
 /* autocomplete */
 .autocomplete {
   position: relative;
-  width: 130px;
+  width: 180px;
 }
 
 .autocomplete-results {
