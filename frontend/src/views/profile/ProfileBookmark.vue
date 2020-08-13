@@ -116,11 +116,6 @@ export default {
   height: 3rem;
 }
 
-
-.card {
-  cursor: pointer;
-}
-
 /* card */
 
   /* card css 여기! */
@@ -137,6 +132,17 @@ export default {
   background-color: #fff;
   background: linear-gradient(#f8f8f8, #fff);
   box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  margin: 1.5rem;
+}
+
+.card:hover {
+  height: 250px;
+  background-color: #fff;
+  background: linear-gradient(#f8f8f8, #fff);
+  box-shadow: 0 8px 16px -8px rgba(0,0,0,0.8);
   border-radius: 6px;
   overflow: hidden;
   position: relative;
