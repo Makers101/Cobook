@@ -35,7 +35,9 @@ public class ClubBySearchResDto {
                 .map(ClubMemberResponseDto::new)
                 .collect(Collectors.toList()).size()+1;
         this.followerCnt = club.getFollowList().size();
-        this.clubImg = club.getClubImg();
+        if (club.getClubImg() != null) {
+            this.clubImg = "https://i3a111.p.ssafy.io:8090/api/clubs/images/" + this.id;
+        }
         this.name = club.getName();
         this.onelineDescription = club.getOnelineDescription();
         this.description = club.getDescription();

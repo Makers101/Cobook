@@ -157,4 +157,11 @@ public class PostController {
         List<PostResponseDtoByGenre> response = postService.getGenresPosts(userId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @ApiOperation(value = "7일 기준 인기도 순으로 게시글 조회")
+    @GetMapping("/popular")
+    public ResponseEntity<List<PostResponseDto>> getPopularPosts() {
+        List<PostResponseDto> response = postService.getPopularPosts();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
