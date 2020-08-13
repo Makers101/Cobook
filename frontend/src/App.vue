@@ -106,6 +106,7 @@
                   @click="clickNoti"
                 >
                   <i class="fas fa-bell"></i>
+                  <small class="badge rounded-circle badge-danger go-left" v-if="notis">{{ notis.length }}</small>
                 </div>
                 <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
                   <div
@@ -254,10 +255,8 @@ export default {
     // }
     // Firebase
     clickNoti() {
-      // console.log(firebase.database())
       firebase.database().ref('noti/' + this.myaccount.id).on('value', data => {
         this.notis = Object.values(data.val()).reverse()
-        console.log(this.notis)
       })
     },
     // clickNoti() {
@@ -274,6 +273,7 @@ export default {
     },
     myaccount() {
       const mapData = []
+      this.clickNoti()
       this.myaccount.myClubs.forEach(club => {
         mapData.push([club.id, club.name])
       })
@@ -512,5 +512,9 @@ input::-webkit-input-placeholder {
 
 .dropdown-toggle:after {
   content: none;
+}
+
+.go-left {
+  margin-left: -2px;
 }
 </style>
