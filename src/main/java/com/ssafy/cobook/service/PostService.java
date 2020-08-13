@@ -35,9 +35,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -379,12 +382,35 @@ public class PostService {
         for (String genre : genres) {
             PostResponseDtoByGenre dto = new PostResponseDtoByGenre(genre);
             List<PostResponseDto> result = postRepository.findAll().stream()
-                    .filter(p->p.intrested(genre))
+                    .filter(p -> p.intrested(genre))
                     .map(PostResponseDto::new)
                     .collect(Collectors.toList());
             dto.setPosts(result);
             posts.add(dto);
         }
         return posts;
+    }
+
+
+    public List<PostResponseDto> getPopularPosts() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime before7days = today.minusDays(7);
+
+        List<PostResponseDto> popularList = postRepository.findByPeriods(before7days, today).stream()
+                .filter((post) -> (today.isAfter(post.getCreatDateTime()) || today.isEqual(post.getCreatDateTime())) && before7days.isBefore(post.getCreatDateTime()))
+                .sorted((post1, post2) -> calculatePopularity(today, post2) - calculatePopularity(today, post1))
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
+        return popularList;
+    }
+
+    private Integer calculatePopularity(LocalDateTime today, Post post) {
+        LocalDateTime creatDateTime = post.getCreatDateTime();
+        Long todayTimeToSecods = TimeUnit.MICROSECONDS.toSeconds(Timestamp.valueOf(today).getTime());
+        Integer postLikesCount = post.getPostLikes().size();
+        Long createTimeToSeconds = TimeUnit.MICROSECONDS.toSeconds(Timestamp.valueOf(creatDateTime).getTime());
+
+        Integer popularity = Math.toIntExact((postLikesCount + 1) / (todayTimeToSecods - createTimeToSeconds + 3600));
+        return popularity;
     }
 }
