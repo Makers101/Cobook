@@ -8,9 +8,9 @@
         src="https://user-images.githubusercontent.com/57381062/88908347-b57bbe80-d294-11ea-9d31-a88d3d0b3b23.jpg"
         alt="clubEvent-banner">
       <div class="clubEvent-banner-text">
-        <h3 class="font-weight-bold">클럽 이벤트 수정</h3>
+        <h3 class="font-weight-bold">북클럽 이벤트 수정</h3>
         <p class="mb-0">
-          클럽 이벤트의 기본 정보를 수정해보세요 :)
+          북클럽 이벤트의 기본 정보를 수정해보세요 :)
         </p>
       </div>
     </div>
@@ -42,7 +42,7 @@
                   counter
                   maxlength="30"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽 이벤트 명"
+                  label="북클럽 이벤트 명"
                 ></v-text-field>
               </v-col>
 
@@ -89,14 +89,14 @@
                   counter
                   maxlength="100"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽 이벤트 설명"
+                  label="북클럽 이벤트 설명"
                 ></v-textarea>
               </v-col>
 
               <!-- clubEvent-update-place -->
               <v-col class="mt-5" cols="12">
                 <div class="d-flex justify-content-start">
-                  <label class="v-label theme--light">클럽 이벤트 장소</label>
+                  <label class="v-label theme--light">북클럽 이벤트 장소</label>
                 </div>
                 <v-radio-group
                   v-model="clubEventUpdateData.place"
@@ -112,7 +112,7 @@
                       class="mx-3 mb-2"
                       v-model="offlinePlace"
                       :disabled="!offlineEnabled"
-                      label="클럽 이벤트 장소"
+                      label="북클럽 이벤트 장소"
                       counter
                       maxlength="30"
                       :rules="placeRules"
@@ -124,7 +124,7 @@
               <!-- clubEvent-update-date -->
               <v-col class="pb-0" cols="12">
                 <div class="d-flex justify-content-start">
-                  <label class="v-label theme--light">클럽 이벤트 일시</label>
+                  <label class="v-label theme--light">북클럽 이벤트 일시</label>
                 </div>
               </v-col>
               <v-col cols="6">
@@ -232,7 +232,7 @@
               class="button btn-green"
               @click="clickUpdate"
             >
-              클럽 이벤트 수정
+              북클럽 이벤트 수정
             </v-btn>
           </v-card-actions>
         </v-form>
@@ -359,7 +359,7 @@ export default {
           || this.time !== this.selectedClubEvent.datetime.slice(11, 16)
           || this.clubEventUpdateData.questions.length !== this.selectedClubEvent.questions.length
          ) {
-        if (confirm('수정 중인 클럽 이벤트가 있습니다. 정말 넘어가시겠습니까?') === true) {
+        if (confirm('수정 중인 북클럽 이벤트가 있습니다. 정말 넘어가시겠습니까?') === true) {
           next()
         } else {
           return false
