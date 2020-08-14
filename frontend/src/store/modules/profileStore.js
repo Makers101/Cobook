@@ -341,6 +341,7 @@ const profileStore = {
         })
     },
     updateProfile({ rootState, rootGetters, dispatch }, profileUpdateData) {
+      console.log(('HELLO'))
       axios.put(SERVER.URL + SERVER.ROUTES.profile, profileUpdateData.basicData, rootGetters.config )
         .then(res => {
           const userId = res.data.userId
@@ -354,14 +355,22 @@ const profileStore = {
               })
                 .then(() => {
                   dispatch('findMyAccount', null, { root: true })
+                  if (router.currentRoute.name === 'PostList') {
+                    router.push({ name: 'PostList'})
+                  } else {
                   router.push({ name: 'Profile', params: { userId: userId }})
+                  }
                 })
                 .catch(err => {
                   console.log(err.response.data)
                 })
           } else {
             dispatch('findMyAccount', null, { root: true })
+            if (router.currentRoute.name === 'PostList') {
+              router.push({ name: 'PostList'})
+            } else {
             router.push({ name: 'Profile', params: { userId: userId }})
+            }
           }
         })
         .catch(err => {

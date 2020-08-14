@@ -69,6 +69,14 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+})
 import { mapState, mapActions } from 'vuex'
 import FollowerForm from './FollowerForm'
 import FollowingForm from './FollowingForm'
@@ -104,9 +112,73 @@ export default {
     ...mapActions('profileStore', ['findProfile', 'clickFollow', 'fetchFollowerList', 'fetchFollowingList', 'findOverview', 'fetchClubEvents', 'fetchOnedayEvents']),
     clickedFollow(profile, type) {
       if (type === 'unfollow') {
-        if (confirm('팔로우를 취소하시겠습니까?') === false) {
-          return false
-        }
+        swal.fire({
+        // title: "Are you sure?",
+          text: "팔로우를 취소하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니오',
+          icon: "warning",
+        })
+        .then((result) => {
+          if (result.value) {
+            let notiData = new Object()
+            notiData = {
+              to: this.profile.id,
+              clubId: 0,
+              isRead: false,
+              type: "follow"
+            }
+            this.createNoti(notiData)
+            this.clickFollow(profile.id)
+            var temp = {
+              isFollow: true,
+              nickname: this.myaccount.nickName,
+              profileImg: this.myaccount.profileImg,
+              toUserId: this.myaccount.id
+            }
+            var flag = false
+            for (let [index, key] of profile.followerList.entries()) {
+              // 일치하는 id가 있다면 followerList에서 제거
+              if (key.toUserId === this.myaccount.id){
+                flag = true
+                profile.followerList.splice(index, 1);
+                break;
+              }
+            }
+            if (flag === false){
+              profile.followerList.push(temp)
+            }
+          } 
+        });
+      } else {
+        let notiData = new Object()
+          notiData = {
+            to: this.profile.id,
+            clubId: 0,
+            isRead: false,
+            type: "follow"
+          }
+          this.createNoti(notiData)
+          this.clickFollow(profile.id)
+          var temp = {
+            isFollow: true,
+            nickname: this.myaccount.nickName,
+            profileImg: this.myaccount.profileImg,
+            toUserId: this.myaccount.id
+          }
+          var flag = false
+          for (let [index, key] of profile.followerList.entries()) {
+            // 일치하는 id가 있다면 followerList에서 제거
+            if (key.toUserId === this.myaccount.id){
+              flag = true
+              profile.followerList.splice(index, 1);
+              break;
+            }
+          }
+          if (flag === false){
+            profile.followerList.push(temp)
+          }
       }
 
       let notiData = new Object()
