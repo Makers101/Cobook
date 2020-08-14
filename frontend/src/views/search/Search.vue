@@ -76,7 +76,10 @@ export default {
     this.search(this.$route.params.content)
   },
   mounted(){
-    this.$router.push({ name: 'SearchUser', params: { content: this.$route.params.content}})
+    if (this.$route.params.content[0]==='#') {
+      this.$router.push({ name: 'SearchPost', params: { content: this.$route.params.content.slice(1,)}})
+    }
+    // this.$router.push({ name: 'SearchUser', params: { content: this.$route.params.content}})
   },
 
     
