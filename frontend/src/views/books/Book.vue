@@ -82,7 +82,7 @@
               <div v-for="genre in selectedBook.Genres" :key="genre.id">
                 <p>#{{ genre.name }}</p>
               </div>
-              <div class="d-flex justify-content-between mt-3">
+              <div class="d-flex justify-content-between mt-auto">
                 <button class="btn btn-green m-0" @click="clickPostCreate(selectedBook.id)" v-if="selectedBook.posts.length">리뷰 작성하러 가기</button>
                 <button v-else></button>
                 <button class="btn btn-green m-0"><a class="url" :href="selectedBook.url" target="_blank">자세히보기</a></button>
