@@ -2,7 +2,74 @@
   <div class="mt-3 mb-5">
     
     <!-- profile-clubs -->
-    <h5 class="text-left font-weight-bold mb-0 ml-3">{{ profile.nickName }}님의 Book Club</h5>
+    
+    <div class="my-5">
+      <h5 class="text-left font-weight-bold ml-3">{{ profile.nickName }}님의 북클럽</h5>
+      <carousel
+        :loop="true"
+        :navigationEnabled="true"
+        navigationNextLabel="<h3><i class='fas fa-angle-right'></i></h3>"
+        navigationPrevLabel="<h3><i class='fas fa-angle-left'></i></h3>"
+        :perPageCustom="[[1, 1], [1000, 2], [1500, 3]]"
+        paginationActiveColor="#3c756a"
+        paginationColor="#88A498"
+        paginationPadding="4"
+        paginationSize="10"
+        easing="linear"
+        speed="300"
+        v-if="clubs.length">
+      
+        <slide
+          v-for="club in clubs"
+          :key="`club_${club.id}`">
+          <div class="card pointer mx-auto my-auto" @click="selectClub(club.id)" style="width: 315px">
+            <div class="card-head club-image-container">
+              <img
+                class="card-img-top club-image to-detail"
+                :src="club.clubImg"
+                :alt="club.name"
+                @click="selectClub(club.id)"
+                v-if="club.clubImg"
+              >
+              <img
+                class="card-img-top to-detail"
+                :src="'http://placehold.jp/300x150.png?text=' + club.name"
+                :alt="club.name"
+                @click="selectClub(club.id)"
+                v-else
+              >
+              <span class="badge mb-0 club-recruit" v-if="club.recruit">모집중</span>
+            </div>        
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="card-title font-weight-bold mb-0 club-name to-detail" @click="selectClub(club.id)">{{ club.name }}</h4>
+              </div>
+              <p class="card-text text-left club-oneline">{{ club.onelineDescription }}</p>
+              <div class="d-flex justify-content-start my-3">
+                <span
+                  class="badge badge-genre mr-2"
+                  v-for="genre in club.genres"
+                  :key="`club_genre_${genre.id}`">
+                  #{{ genre.name }}
+                </span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <small class="color-black club-residence">주로 <span class="color-black font-weight-bold">{{ club.residence }}</span>에서 만남 :)</small>
+                <small class="color-black club-memberCnt"><i class="fas fa-users"></i> {{ club.memberCnt }}</small>
+              </div>
+            </div>
+          </div>
+        </slide>
+      </carousel>
+
+      <div v-else>
+        <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
+        <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 가입한 북클럽이 없습니다. </h3>
+      </div>
+    </div>
+    
+    
+    <!-- <h5 class="text-left font-weight-bold mb-0 ml-3">{{ profile.nickName }}님의 북클럽</h5>
     <div class="d-flex my-2 club-list scroll-sect" id="scroll-area-club" v-if="clubs.length">
       <div 
         class="px-3 pb-3"
@@ -51,11 +118,62 @@
     <div v-else>
       <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
       <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 가입한 북클럽이 없습니다. </h3>
-    </div>
+    </div> -->
 
     <!-- profile-events -->
 
-    <h5 class="text-left font-weight-bold mb-0 ml-3 mt-5">{{ profile.nickName }}님의 이벤트</h5>
+    <div class="my-5">
+      <h5 class="text-left font-weight-bold ml-3">{{ profile.nickName }}님의 이벤트</h5>
+      <carousel
+        :loop="true"
+        :navigationEnabled="true"
+        navigationNextLabel="<h3><i class='fas fa-angle-right'></i></h3>"
+        navigationPrevLabel="<h3><i class='fas fa-angle-left'></i></h3>"
+        :perPageCustom="[[1, 1], [1000, 2], [1500, 3]]"
+        paginationActiveColor="#3c756a"
+        paginationColor="#88A498"
+        paginationPadding="4"
+        paginationSize="10"
+        easing="linear"
+        speed="300"
+        v-if="integratedEvents.length">
+      
+        <slide
+          v-for="event in integratedEvents"
+          :key="`event_${event.id}`">
+          <div class="card pointer mx-auto my-auto" @click="selectEvent(event.id, event.clubId)" style="width: 315px">
+            <div class="row no-gutters">
+              <div class="col-6 event-left">
+                <img class="bg-image" :src="event.book.bookImg" width="100%">
+                <div class="badges">
+                  <span class="badge mb-0 clubEvent-badge" v-if="event.capacity">원데이</span>
+                  <span class="badge mb-0 onedayEvent-badge" v-else>북클럽</span>
+                  <span class="badge ml-1 mb-0 event-closed-true" v-if="event.closed">종료</span>
+                  <span class="badge ml-1 mb-0 event-closed-false" v-else>예정</span>
+                </div>
+              </div>
+              <div class="col-6 text-left d-flex flex-column align-items-start p-2">
+                <p class="event-name font-weight-bold" lt="book">{{ event.name }}</p>
+                <span class="badge badge-genre">{{ event.book.genre }}</span>
+                <div class="mt-auto">
+                  <p class="mb-0" v-if="event.capacity"><small><i class="fas fa-users"></i> {{ event.participantCnt}} / {{ event.capacity + 1 }}</small></p>
+                  <p class="mb-0" v-else><small><i class="fas fa-users"></i> {{ event.participantCnt}}</small></p>
+                  <p class="mb-0"><small><i class="fas fa-map-marker-alt"></i> {{ event.place }}</small></p>
+                  <p class="event-date mb-0"><small>{{ event.datetime | moment('YYYY-MM-DD HH:mm') }}</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </slide>
+      </carousel>
+
+      <div v-else>
+        <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
+        <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 참여한 이벤트가 없습니다. </h3>
+      </div>
+    </div>
+
+    <!-- <h5 class="text-left font-weight-bold mb-0 ml-3 mt-5">{{ profile.nickName }}님의 이벤트</h5>
     <div class="d-flex events-list my-2 scroll-sect" id="scroll-area-event" v-if="integratedEvents.length">
       <div 
         class="px-3 pb-3 pointer"
@@ -91,17 +209,22 @@
     <div v-else>
       <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
       <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 참여한 이벤트가 없습니다. </h3>
-    </div>
+    </div> -->
 
   </div>
 </template>
 
 <script>
+import { Carousel, Slide } from 'vue-carousel'
 import { mapState, mapActions } from 'vuex'
 import router from '@/router'
 
 export default {
   name: 'ProfileClub',
+  components: {
+    Carousel,
+    Slide
+  },
   data() {
     return {
       popular_filter: false,
