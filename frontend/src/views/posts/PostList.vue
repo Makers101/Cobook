@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container">
+  <v-app class="custom-container">
 
     <!-- posts-banner -->
     <div class="posts-banner">
@@ -17,97 +17,178 @@
       </div>
     </div>
 
-    <div class="m-0 my-5">
-      <h5 class="feed-titles">#인기 리뷰</h5>
-      <div class="row scroll-sect book-reviews" id="scroll-area-popularity">
-        <div class="row-inner">
-          <div class="tile pointer" v-for="post in postsByPopularity" :key="`post_${post.id}`"  @click="postDetail(post.id)">
-            <div class="tile-media">
-              <div class="content">
-                <div class="content-overlay"></div>
-                <img :src="post.book.bookImg" alt="책 표지 이미지" class="content-image">
-                <div class="content-details fadeIn-top">
-                  <p><span v-for="index in post.rank" :key="index"> <i class="fas fa-star" style="color:yellow"></i> </span></p>
-                  <div class="text-left p-0 m-0"><i class="fas fa-quote-left quote"></i></div>
-                  <p class="m-0" @click="postDetail(post.id)">{{ post.onelineReview }}</p> 
-                  <div class="text-right p-0 m-0"><i class="fas fa-quote-right quote"></i></div>
-                  <small @click="postDetail(post.id)">
-                    <span v-if="post.user.profileImg"><img class="profile-img mr-2" :src="post.user.profileImg"></span>
-                    <span v-else ><img class="profile-img mr-2" src="http://bit.do/anonymouseuser"></span>
-                    <span>{{ post.user.nickName }}</span>
-                  </small> 
+    <div v-if="myaccount.likeGenres.length">
+      <div class="m-0 my-5">
+        <h5 class="feed-titles">#인기 리뷰</h5>
+        <div class="row scroll-sect book-reviews" id="scroll-area-popularity">
+          <div class="row-inner">
+            <div class="tile pointer" v-for="post in postsByPopularity" :key="`post_${post.id}`"  @click="postDetail(post.id)">
+              <div class="tile-media">
+                <div class="content">
+                  <div class="content-overlay"></div>
+                  <img :src="post.book.bookImg" alt="책 표지 이미지" class="content-image">
+                  <div class="content-details fadeIn-top">
+                    <p><span v-for="index in post.rank" :key="index"> <i class="fas fa-star" style="color:yellow"></i> </span></p>
+                    <div class="text-left p-0 m-0"><i class="fas fa-quote-left quote"></i></div>
+                    <p class="m-0" @click="postDetail(post.id)">{{ post.onelineReview }}</p> 
+                    <div class="text-right p-0 m-0"><i class="fas fa-quote-right quote"></i></div>
+                    <small @click="postDetail(post.id)">
+                      <span v-if="post.user.profileImg"><img class="profile-img mr-2" :src="post.user.profileImg"></span>
+                      <span v-else ><img class="profile-img mr-2" src="http://bit.do/anonymouseuser"></span>
+                      <span>{{ post.user.nickName }}</span>
+                    </small> 
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="m-0 my-5">
-      <h5 class="feed-titles">#팔로잉 리뷰</h5>
-      <div class="row scroll-sect book-reviews" id="scroll-area-follow" v-if="postsByFollow.length">
-        <div class="row-inner">
-          <div class="tile pointer" v-for="post in postsByFollow" :key="`post_${post.id}`"  @click="postDetail(post.id)">
-            <div class="tile-media">
-              <div class="content">
-                <div class="content-overlay"></div>
-                <img :src="post.book.bookImg" alt="책 표지 이미지" class="content-image">
-                <div class="content-details fadeIn-top">
-                  <p><span v-for="index in post.rank" :key="index"> <i class="fas fa-star" style="color:yellow"></i> </span></p>
-                  <div class="text-left p-0 m-0"><i class="fas fa-quote-left quote"></i></div>
-                  <p class="m-0" @click="postDetail(post.id)">{{ post.onelineReview }}</p> 
-                  <div class="text-right p-0 m-0"><i class="fas fa-quote-right quote"></i></div>
-                  <small @click="postDetail(post.id)">
-                    <span v-if="post.user.profileImg"><img class="profile-img mr-2" :src="post.user.profileImg"></span>
-                    <span v-else ><img class="profile-img mr-2" src="http://bit.do/anonymouseuser"></span>
-                    <span>{{ post.user.nickName }}</span>
-                  </small> 
+      <div class="m-0 my-5">
+        <h5 class="feed-titles">#팔로잉 리뷰</h5>
+        <div class="row scroll-sect book-reviews" id="scroll-area-follow" v-if="postsByFollow.length">
+          <div class="row-inner">
+            <div class="tile pointer" v-for="post in postsByFollow" :key="`post_${post.id}`"  @click="postDetail(post.id)">
+              <div class="tile-media">
+                <div class="content">
+                  <div class="content-overlay"></div>
+                  <img :src="post.book.bookImg" alt="책 표지 이미지" class="content-image">
+                  <div class="content-details fadeIn-top">
+                    <p><span v-for="index in post.rank" :key="index"> <i class="fas fa-star" style="color:yellow"></i> </span></p>
+                    <div class="text-left p-0 m-0"><i class="fas fa-quote-left quote"></i></div>
+                    <p class="m-0" @click="postDetail(post.id)">{{ post.onelineReview }}</p> 
+                    <div class="text-right p-0 m-0"><i class="fas fa-quote-right quote"></i></div>
+                    <small @click="postDetail(post.id)">
+                      <span v-if="post.user.profileImg"><img class="profile-img mr-2" :src="post.user.profileImg"></span>
+                      <span v-else ><img class="profile-img mr-2" src="http://bit.do/anonymouseuser"></span>
+                      <span>{{ post.user.nickName }}</span>
+                    </small> 
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 200px" v-else >
+          <h3>아직 팔로우 하는 유저가 없습니다 ㄴ(°0°)ㄱ</h3>
+          <p>새로운 유저를 팔로우 하고 리뷰를 받아보세요 :)</p>
+        </div>
       </div>
-      <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 200px" v-else >
-        <h3>아직 팔로우 하는 유저가 없습니다 ㄴ(°0°)ㄱ</h3>
-        <p>새로운 유저를 팔로우 하고 리뷰를 받아보세요 :)</p>
-      </div>
-    </div>
 
-    <div class="m-0 my-5" v-for="postSet in postsByGenre" :key="postSet.genre">
-      <h5 class="feed-titles">#{{ postSet.genre }} 리뷰</h5>
-      <div class="row scroll-sect book-reviews" :id="'scroll-area-' + postSet.genre" v-if="postSet.posts.length">
-        <div class="row-inner">
-          <div class="tile pointer" v-for="post in postSet.posts" :key="`post_${post.id}`"  @click="postDetail(post.id)">
-            <div class="tile-media">
-              <div class="content">
-                <div class="content-overlay"></div>
-                <img :src="post.book.bookImg" alt="책 표지 이미지" class="content-image">
-                <div class="content-details fadeIn-top">
-                  <p><span v-for="index in post.rank" :key="index"> <i class="fas fa-star" style="color:yellow"></i> </span></p>
-                  <div class="text-left p-0 m-0"><i class="fas fa-quote-left quote"></i></div>
-                  <p class="m-0" @click="postDetail(post.id)">{{ post.onelineReview }}</p> 
-                  <div class="text-right p-0 m-0"><i class="fas fa-quote-right quote"></i></div>
-                  <small @click="postDetail(post.id)">
-                    <span v-if="post.user.profileImg"><img class="profile-img mr-2" :src="post.user.profileImg"></span>
-                    <span v-else ><img class="profile-img mr-2" src="http://bit.do/anonymouseuser"></span>
-                    <span>{{ post.user.nickName }}</span>
-                  </small> 
+      <div class="m-0 my-5" v-for="postSet in postsByGenre" :key="postSet.genre">
+        <h5 class="feed-titles">#{{ postSet.genre }} 리뷰</h5>
+        <div class="row scroll-sect book-reviews" :id="'scroll-area-' + postSet.genre" v-if="postSet.posts.length">
+          <div class="row-inner">
+            <div class="tile pointer" v-for="post in postSet.posts" :key="`post_${post.id}`"  @click="postDetail(post.id)">
+              <div class="tile-media">
+                <div class="content">
+                  <div class="content-overlay"></div>
+                  <img :src="post.book.bookImg" alt="책 표지 이미지" class="content-image">
+                  <div class="content-details fadeIn-top">
+                    <p><span v-for="index in post.rank" :key="index"> <i class="fas fa-star" style="color:yellow"></i> </span></p>
+                    <div class="text-left p-0 m-0"><i class="fas fa-quote-left quote"></i></div>
+                    <p class="m-0" @click="postDetail(post.id)">{{ post.onelineReview }}</p> 
+                    <div class="text-right p-0 m-0"><i class="fas fa-quote-right quote"></i></div>
+                    <small @click="postDetail(post.id)">
+                      <span v-if="post.user.profileImg"><img class="profile-img mr-2" :src="post.user.profileImg"></span>
+                      <span v-else ><img class="profile-img mr-2" src="http://bit.do/anonymouseuser"></span>
+                      <span>{{ post.user.nickName }}</span>
+                    </small> 
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 200px" v-else >
+          <h3>아직 {{ postSet.genre }} 장르의 리뷰가 없습니다 ㄴ(°0°)ㄱ</h3>
+          <p>{{ postSet.genre }} 장르의 첫 번째 리뷰를 작성해보세요 :)</p>
+        </div>
+        
       </div>
-      <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 200px" v-else >
-        <h3>아직 {{ postSet.genre }} 장르의 리뷰가 없습니다 ㄴ(°0°)ㄱ</h3>
-        <p>{{ postSet.genre }} 장르의 첫 번째 리뷰를 작성해보세요 :)</p>
-      </div>
-      
+      <!-- <infinite-loading class="col-12" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
     </div>
-    <!-- <infinite-loading class="col-12" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
-  </div>
+    <div v-else>
+      <v-row justify="center">
+        <v-dialog v-model="dialog" persistent max-width="600px">
+          <v-card>
+            <v-card-title>
+              <span class="headline">선호하는 책 장르를 선택해주세요.</span>
+            </v-card-title>
+            <v-card-text>
+              <v-form
+              v-model="valid"
+              :lazy-validation="lazy"
+              >
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-autocomplete
+                        v-model="profileUpdateData.basicData.genres"
+                        v-if="genres"
+                        :items="genres"
+                        chips
+                        hide-selected
+                        color="blue-grey lighten-2"
+                        counter="3"
+                        :rules="[
+                          v => (v.length !== 0) || '필수항목입니다.',
+                          v => (v.length < 4) || '최대 3개의 관심 장르를 고를 수 있습니다.'
+                        ]"
+                        label="관심 장르"
+                        item-text="name"
+                        item-value="id"
+                        multiple
+                        :search-input.sync="searchGenre"
+                        @change="isGenreNull()"
+                        @keypress.enter="isGenreNull()"
+                      >
+                        <template v-slot:selection="data">
+                          <v-chip
+                            v-bind="data.attrs"
+                            :input-value="data.selected"
+                            close
+                            @click="data.select"
+                            @click:close="remove(profileUpdateData.basicData.genres, data.item)"
+                          >
+                            {{ data.item.name }}
+                          </v-chip>
+                        </template>
+                        <template v-slot:item="data">
+                          <template v-if="typeof data.item !== 'object'">
+                            <v-list-item-content v-text="data.item"></v-list-item-content>
+                          </template>
+                          <template v-else>
+                            <v-list-item-content>
+                              <v-list-item-title v-text="data.item.name"></v-list-item-title>
+                            </v-list-item-content>
+                          </template>
+                        </template>
+                      </v-autocomplete>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              <small>*필수입니다.</small>
+              </v-form>
+              
+            </v-card-text>
+            <v-card-actions class="d-flex justify-content-end">
+              <v-spacer></v-spacer>
+                <v-btn
+                  :disabled="!valid"
+                  class="btn btn-green"
+                  @click="clickUpdateProfile()"
+                >
+                  장르 추가
+                </v-btn>
+              </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+    </div>
+    
+  </v-app>
 </template>
 
 <script>
@@ -128,25 +209,45 @@ export default {
         'https://user-images.githubusercontent.com/57381062/90130466-7a55b100-dda5-11ea-9960-e061294dbd34.jpg',
         'https://user-images.githubusercontent.com/57381062/90130484-85104600-dda5-11ea-9167-7dcd85b5e810.jpg',
         'https://user-images.githubusercontent.com/57381062/90130506-8b9ebd80-dda5-11ea-8354-7ce8458fb3f8.jpg'
-      ]
+      ],
       // postList: [], 
       // page: 3,
       // limit: 0,
       // loading: false,
+      profileUpdateData: {
+        basicData: {
+          nickName: null,
+          description: null,
+          genres: null,
+        },
+        profileImgFormData: null,
+      },
+      valid: true,
+      lazy: false,
+      searchGenre: null,
+      clicked: false,
+      dialog: true
     }
   },
   computed: {
-    ...mapState(['myaccount']),
+    ...mapState(['myaccount', 'genres']),
     ...mapState('postStore', ['postsByPopularity', 'postsByFollow', 'postsByGenre']),
   },
   methods: {
     ...mapActions(['findMyAccount']),
+    ...mapActions('profileStore', ['updateProfile']),
     ...mapActions('postStore', ['fetchPostsByPopularity', 'fetchPostsByFollow', 'fetchPostsByGenre', 'createLike', 'createBookmark']),
     clubDetail(clubId) {
       this.$router.push({ name: 'ClubDetail', params: { clubId: clubId }})
     },
     postDetail(postId) {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
+    },
+    clickUpdateProfile() {
+      
+      this.updateProfile(this.profileUpdateData)
+      
+      this.dialog = close
     },
     // getPosts() {
     //   if (this.posts.slice(this.page, this.page + 3).length) {
@@ -167,7 +268,19 @@ export default {
     // },
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
-    }
+    },
+    remove (data, item) {
+      const index = data.indexOf(item.id)
+      if (index >= 0) data.splice(index, 1)
+    },
+    isGenreNull() {
+      this.$nextTick(() => {
+        this.searchGenre = null
+      })
+    },
+    validate() {
+      this.$refs.form.validate()
+    },
   },
   // watch: {
   //   posts() {
@@ -177,8 +290,12 @@ export default {
   created() {
     this.fetchPostsByPopularity()
     this.fetchPostsByFollow()
-    this.fetchPostsByGenre()
     this.findMyAccount()
+    this.fetchPostsByGenre()
+  },
+  beforeUpdate() {
+    this.profileUpdateData.basicData.nickName = this.myaccount.nickName;
+    this.profileUpdateData.basicData.description = this.myaccount.description;
   },
   updated() {
     function stopWheel(e){
@@ -211,6 +328,12 @@ export default {
         })
       }
     });
+  },
+  beforeRouteUpdate() {
+    this.fetchPostsByPopularity()
+    this.fetchPostsByFollow()
+    this.findMyAccount()
+    this.fetchPostsByGenre()
   }
 }
 
@@ -440,5 +563,9 @@ img {
   margin-bottom: 1rem;
   text-align: left;
   font-weight: bold;
+}
+
+.v-card .row {
+  overflow: hidden;
 }
 </style>
