@@ -296,9 +296,9 @@ export default {
     clickApplyClub(type, clubId) {
       let notiData = new Object()
       notiData = {
-        from: this.myaccount.id,
         to: this.selectedClub.leader.id,
         dataId: this.selectedClub.id,
+        isRead: false,
         type: "club"
       }
       this.createNoti(notiData)
