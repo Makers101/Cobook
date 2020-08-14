@@ -15,6 +15,7 @@
     "scrollmonitor": "^1.2.4",
     "sweetalert2": "^9.17.1",
     "vue": "^2.6.11",
+    "vue-carousel": "^0.18.0",
     "vue-chartjs": "^3.5.0",
     "vue-cookies": "^1.7.3",
     "vue-google-oauth2": "^1.5.5",
