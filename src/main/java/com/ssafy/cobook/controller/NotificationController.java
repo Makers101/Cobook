@@ -56,4 +56,12 @@ public class NotificationController {
         notificationService.deleteNoti(notiId, userId);
         return ResponseEntity.ok().build();
     }
+
+    @ApiOperation(value = "댓글 삭제 시, 알람 삭제")
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<Void> deleteCommentsNotification(@RequestBody final NotificationReqDto requestDto, @PathVariable("commentId") final Long commentId) {
+        Long userId = requestDto.getTo();
+        notificationService.deleteCommentAlert(commentId, userId);
+        return ResponseEntity.ok().build();
+    }
 }

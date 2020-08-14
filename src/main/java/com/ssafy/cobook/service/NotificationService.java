@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -68,9 +69,9 @@ public class NotificationService {
                     for (DataSnapshot valueForFrom : data.getChildren()) {
                         if (valueForFrom.getKey().equals("from")) {
                             if (valueForFrom.getValue() == fromUserId) {
-                                for(DataSnapshot valueForType: data.getChildren()){
-                                    if(valueForType.getKey().equals("type")){
-                                        if(valueForType.getValue().equals(type)){
+                                for (DataSnapshot valueForType : data.getChildren()) {
+                                    if (valueForType.getKey().equals("type")) {
+                                        if (valueForType.getValue().equals(type)) {
                                             DatabaseReference deleteRef = notiRef.child(postKey);
                                             deleteRef.removeValueAsync();
                                             break exFindData;
@@ -137,18 +138,14 @@ public class NotificationService {
 
         if (type.equals("club")) { // 클럽 가입 신청
             if (clubMemberRepository.findByUserAndClub(fromUser, club).isPresent()) {
-                System.out.println("삭제 들어옴");
                 saveNotificationData(fromUserId, notiRef, type);
             } else {
-                System.out.println("저장 들어옴");
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         } else if (type.equals("follow")) { // 팔로우
             if (followRepository.findByToUserAndFromUser(fromUser.getId(), toUser.getId()).isPresent()) {
-                System.out.println("들어옴");
                 saveNotificationData(fromUserId, notiRef, type);
             } else {
-                System.out.println("저장들어옴");
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         } else if (type.equals("like")) { // 좋아요
@@ -158,10 +155,12 @@ public class NotificationService {
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         } else { // 댓글
+            PostComment postComment = postCommentRepository.findByLastComment(fromUser, post).stream()
+                    .limit(1)
+                    .collect(Collectors.toList()).get(0);
+            notificationSaveDto.setCommentId(postComment.getId());
             saveNoti.setValueAsync(notificationSaveDto);
-
         }
-
     }
 
 
@@ -181,6 +180,37 @@ public class NotificationService {
         DatabaseReference notiRef = ref.child(userId.toString()); // noti의 child node: to의 아이디 값
         DatabaseReference deleteRef = notiRef.child(notiId);
         deleteRef.removeValueAsync();
+    }
+
+    @Transactional
+    public void deleteCommentAlert(Long commentId, Long userId) {
+        if (postCommentRepository.findById(commentId).isPresent()) {
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference ref = database.getReference("noti"); // 최상위 root: noti
+            DatabaseReference notiRef = ref.child(userId.toString()); // noti의 child node: to의 아이디 값
+            notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    exFindData:
+                    for (DataSnapshot data : snapshot.getChildren()) {
+                        String postKey = data.getKey();
+                        for (DataSnapshot value : data.getChildren()) {
+                            if (value.getKey().equals("commentId")) {
+                                if (value.getValue() == commentId) {
+                                    DatabaseReference deleteRef = notiRef.child(postKey);
+                                    deleteRef.removeValueAsync();
+                                    break exFindData;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                }
+            });
+        }
     }
 
 }
