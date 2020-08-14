@@ -166,9 +166,10 @@
                       <!-- 뱃지 -->
                       <div>
                         <span
-                        class="badge bg-green rounded-pill px-3 py-2 mr-2"
+                        class="badge bg-green rounded-pill px-3 py-2 mr-2 pointer"
                         v-for="tag in selectedPost.tags"
                         :key="`tag-${tag.id}`"
+                        @click="searchTag('#' + tag.name)"
                         >#{{ tag.name }}</span>
                       </div>
                     </div>
@@ -483,6 +484,9 @@ export default {
     },
     clickPostCreate(bookId) {
       this.$router.push({ name: 'PostCreate', params: { selectedBookId: bookId }})
+    },
+    searchTag(tag) {
+      this.$router.push({ name: 'SearchPost', params: {content: tag}})
     }
   },
   created() {
