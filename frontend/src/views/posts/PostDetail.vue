@@ -66,11 +66,11 @@
                         alt="책 이미지"
                         @click="bookDetail(selectedPost.book.id)"> -->
                     </div>
-                    <div class="col-9 text-left pr-3 align-self-center">
+                    <div class="col-8 text-left pr-3 align-self-center">
                       <p><mark>{{ selectedPost.book.title }}</mark></p>
-                      <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953039-4a9da800-d2d3-11ea-8f6b-5792b4f87c45.png" width="20px"> {{ selectedPost.book.author }} </p>
-                      <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px"> {{ selectedPost.book.publisher }}</p>
-                      <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> {{ selectedPost.book.pubDate.slice(0,4) }}년 {{ selectedPost.book.pubDate.slice(5,7) }}월 {{ selectedPost.book.pubDate.slice(8,10) }}일</p>
+                      <p class="book-info"><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953039-4a9da800-d2d3-11ea-8f6b-5792b4f87c45.png" width="20px"> {{ selectedPost.book.author }} </p>
+                      <p class="book-info"><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px"> {{ selectedPost.book.publisher }}</p>
+                      <p class="book-info"><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> {{ selectedPost.book.pubDate.slice(0,4) }}년 {{ selectedPost.book.pubDate.slice(5,7) }}월 {{ selectedPost.book.pubDate.slice(8,10) }}일</p>
                     </div>
                   </div>
                   <!-- 작성자 정보 및 좋아요/ 북마크 -->
@@ -169,7 +169,7 @@
                         class="badge bg-green rounded-pill px-3 py-2 mr-2 pointer"
                         v-for="tag in selectedPost.tags"
                         :key="`tag-${tag.id}`"
-                        @click="searchTag('#' + tag.name)"
+                        @click="searchTag(tag.name)"
                         >#{{ tag.name }}</span>
                       </div>
                     </div>
@@ -501,13 +501,23 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     if (this.commentCreateData.content) {
-      if (confirm('작성 중인 댓글이 있습니다. 정말 넘어가시겠습니까?') === true) {
-        next()
-      } else {
-        return false
-      }
+      swal.fire({
+        // title: "Are you sure?",
+        text: "작성 중인 댓글이 있습니다. 정말 넘어가시겠습니까?",
+        showCancelButton: true,
+        confirmButtonText: '네',
+        cancelButtonText: '취소',
+        reverseButtons: true,
+        icon: "warning",
+      })
+      .then((result) => {
+        if (result.value) {
+          next()
+        }
+      });
+    } else {
+      next()
     }
-    next()
   },
   beforeRouteUpdate (to, from, next) {
     this.findPost(to.params.postId)
@@ -520,6 +530,9 @@ export default {
 </script>
 
 <style scoped>
+.book-info {
+  font-size: 0.9em;
+}
 
 .feed-profile-img {
   height: 25px;
@@ -650,7 +663,7 @@ body {
 
 /* Header/Footer */
 .open-book header {
-    padding-bottom: 1em;
+    padding-bottom: z;
 }
 
 .open-book header *,
