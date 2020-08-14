@@ -49,11 +49,11 @@ public class NotificationController {
     }
 
     @ApiOperation(value = "알람 삭제")
-//    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @DeleteMapping("/{notiId}")
-    public ResponseEntity<Void> deleteNotification(@PathVariable("notiId") final String notiId) {
-//        Long userId = ((User) authentication.getPrincipal()).getId();
-        notificationService.deleteNoti(notiId, 15L);
+    public ResponseEntity<Void> deleteNotification(@ApiIgnore final Authentication authentication, @PathVariable("notiId") final String notiId) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        notificationService.deleteNoti(notiId, userId);
         return ResponseEntity.ok().build();
     }
 }

@@ -24,4 +24,8 @@ public class NotificationSaveDto {
         this.isRead = isRead;
         this.type = type;
     }
+
+    public void setDataId(Long dataId){
+        this.dataId = dataId;
+    }
 }
