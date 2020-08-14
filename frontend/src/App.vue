@@ -258,7 +258,11 @@ export default {
     // Firebase
     clickNoti() {
       firebase.database().ref('noti/' + this.myaccount.id).on('value', data => {
-        this.notis = Object.values(data.val()).reverse()
+        if (data.val()) {
+          this.notis = Object.values(data.val()).reverse()
+        } else {
+          this.notis = null
+        }
       })
     },
     // clickNoti() {
