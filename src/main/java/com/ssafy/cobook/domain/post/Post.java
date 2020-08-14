@@ -3,6 +3,7 @@ package com.ssafy.cobook.domain.post;
 import com.ssafy.cobook.domain.baseEntity.BaseEntity;
 import com.ssafy.cobook.domain.book.Book;
 import com.ssafy.cobook.domain.club.Club;
+import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.postbookmark.PostBookMark;
 import com.ssafy.cobook.domain.postcomment.PostComment;
 import com.ssafy.cobook.domain.postlike.PostLike;
@@ -142,7 +143,7 @@ public class Post extends BaseEntity {
         this.tags.clear();
     }
 
-    public boolean intrested(String genre) {
-        return this.book.getGenre().getGenreName().equals(genre);
+    public boolean intrested(Genre genre) {
+        return this.book.getGenre().equals(genre);
     }
 }

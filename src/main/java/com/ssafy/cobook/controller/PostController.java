@@ -1,11 +1,14 @@
 package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.domain.user.User;
+import com.ssafy.cobook.service.BookService;
 import com.ssafy.cobook.service.PostService;
+import com.ssafy.cobook.service.dto.book.BookResponseByGenres;
 import com.ssafy.cobook.service.dto.post.*;
 import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.tag.TagResponseDto;
+import com.ssafy.cobook.service.dto.user.UserByPostDto;
 import com.ssafy.cobook.util.PageRequest;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -34,6 +37,7 @@ public class PostController {
     private static final Logger logger = LoggerFactory.getLogger(PostController.class);
 
     private final PostService postService;
+    private final BookService bookService;
 
     @ApiOperation(value = "게시글 전체 조회")
     @GetMapping
@@ -163,5 +167,17 @@ public class PostController {
     public ResponseEntity<List<PostResponseDto>> getPopularPosts() {
         List<PostResponseDto> response = postService.getPopularPosts();
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @ApiOperation(value = "내 관심 장르에 포스트가 없을 때")
+    @GetMapping("/genres/{genreId}")
+    public ResponseEntity<List<BookResponseByGenres>> getInterestGenreBook(@PathVariable("genreId") Long genreId) {
+        List<BookResponseByGenres> response = bookService.findBookByGenre(genreId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/recommendusers")
+    public ResponseEntity<List<UserByPostDto>> getRecommendUser() {
+        return ResponseEntity.status(HttpStatus.OK).body(postService.recommend());
     }
 }
