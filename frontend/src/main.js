@@ -9,8 +9,8 @@ import VueCookies from 'vue-cookies'
 import GAuth from 'vue-google-oauth2'
 
 import io from 'socket.io-client'
-// const socket = io('https://i3a111.p.ssafy.io:8000')
-const socket = io('http://localhost:8000')
+const socket = io('https://i3a111.p.ssafy.io:8000')
+// const socket = io('http://localhost:8000')
 
 Vue.prototype.$socket = socket
 
