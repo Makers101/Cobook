@@ -3,7 +3,7 @@
     
     <!-- onedayEvent-detail-header -->
     <div class="row">
-      <div class="bookImg-container pointer col-2 p-0">
+      <div class="bookImg-container pointer col-2 p-0" @click="toBookDetail(selectedOnedayEvent.book.id)">
         <img
           class="book-image img-fluid"
           :src="selectedOnedayEvent.book.bookImg"
@@ -66,7 +66,7 @@
                 참가 신청
               </button>
               <button
-                class="btn btn-warning"
+                class="btn btn-secondary"
                 v-if="isParticipant && !isLeader"
                 @click="clickParticipateOnedayEvent('cancel')">
                 참가 취소
@@ -82,7 +82,61 @@
 
     <!-- onedayEvent-detail-members -->
     <div>
-      <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity + 1 }})</h4>
+      <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity }})</h4>
+      <carousel
+        :loop="true"
+        :navigationEnabled="true"
+        navigationNextLabel="<h3><i class='fas fa-angle-right'></i></h3>"
+        navigationPrevLabel="<h3><i class='fas fa-angle-left'></i></h3>"
+        :perPageCustom="[[1, 1], [600, 2], [900, 3], [1200, 4], [1400, 5]]"
+        paginationActiveColor="#3c756a"
+        paginationColor="#88A498"
+        paginationPadding="4"
+        paginationSize="10"
+        easing="linear"
+        speed="300">
+        <slide>
+          <div class="profile-container pointer" @click="selectUser(selectedOnedayEvent.leader.id)">
+            <img
+              class="rounded-circle profile-image mx-auto"
+              :src="selectedOnedayEvent.leader.profileImg"
+              :alt="selectedOnedayEvent.leader.nickName"
+              v-if="selectedOnedayEvent.leader.profileImg">
+            <img
+              class="rounded-circle profile-image mx-auto"
+              src="http://bit.do/anonymouseuser"
+              :alt="selectedOnedayEvent.leader.nickName"
+              v-else>
+            <div class="overlay rounded-circle mx-auto">
+              <div class="text">{{ selectedOnedayEvent.leader.nickName }}</div>
+            </div>
+          </div>
+        </slide>
+        
+        <slide v-for="participant in selectedOnedayEvent.participants" :key="participant.id">
+          <div
+            class="profile-container pointer"
+            @click="selectUser(participant.id)">
+            <img
+              class="rounded-circle profile-image mx-auto"
+              :src="participant.profileImg"
+              :alt="participant.nickName"
+              v-if="participant.profileImg">
+            <img
+              class="rounded-circle profile-image mx-auto"
+              src="http://bit.do/anonymouseuser"
+              :alt="participant.nickName"
+              v-else>
+            <div class="overlay rounded-circle mx-auto">
+              <div class="text">{{ participant.nickName }}</div>
+            </div>
+          </div>
+        </slide>
+      </carousel>
+    </div>
+
+    <!-- <div>
+      <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity }})</h4>
       <div class="d-flex justify-content-start">
         <div class="profile-container pointer mr-3" @click="selectUser(selectedOnedayEvent.leader.id)">
           <img
@@ -92,7 +146,7 @@
             v-if="selectedOnedayEvent.leader.profileImg">
           <img
             class="rounded-circle profile-image"
-            :src="'http://placehold.jp/150x150.png?text=' + selectedOnedayEvent.leader.nickName"
+            src="http://bit.do/anonymouseuser"
             :alt="selectedOnedayEvent.leader.nickName"
             v-else>
           <div class="overlay rounded-circle">
@@ -112,7 +166,7 @@
             v-if="participant.profileImg">
           <img
             class="rounded-circle profile-image"
-            :src="'http://placehold.jp/150x150.png?text=' + participant.nickName"
+            src="http://bit.do/anonymouseuser"
             :alt="participant.nickName"
             v-else>
           <div class="overlay rounded-circle">
@@ -120,7 +174,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <hr>
 
@@ -150,18 +204,78 @@
 
     <hr v-if="isParticipant || isLeader">
 
+
     <!-- onedayEvent-detail-posts -->
     <div v-if="isParticipant || isLeader">
-      <div class="d-flex justify-content-between align-items-center">
-        <h4 class="text-left font-weight-bold mb-3">멤버의 책 리뷰</h4>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="text-left font-weight-bold mb-0">멤버의 책 리뷰</h4>
         <button class="btn btn-green" @click="toPostCreate(selectedOnedayEvent.book.id)">책 리뷰 작성하기</button>
       </div>
-      <div class="d-flex my-2 scroll-sect" id="scroll-area-post" v-if="selectedOnedayEvent.memberPosts.length">
+
+      <carousel
+        :loop="true"
+        :navigationEnabled="true"
+        navigationNextLabel="<h3><i class='fas fa-angle-right'></i></h3>"
+        navigationPrevLabel="<h3><i class='fas fa-angle-left'></i></h3>"
+        :perPageCustom="[[1, 1], [1000, 2], [1500, 3]]"
+        paginationActiveColor="#3c756a"
+        paginationColor="#88A498"
+        paginationPadding="4"
+        paginationSize="10"
+        easing="linear"
+        speed="300"
+        v-if="selectedOnedayEvent.memberPosts.length">
+      
+        <slide
+          v-for="post in selectedOnedayEvent.memberPosts"
+          :key="post.id">
+          <div class="card pointer mx-auto my-auto" @click="toPostDetail(post.id)" style="width: 315px">
+            <div class="additional d-flex justify-content-center">
+              <div class="user-card">
+                <div class="level center">
+                  {{ post.nickName }}
+                </div>
+                <div class="points center">
+                  <i class="fas fa-heart mr-1"></i> {{ post.likeUsers.length }}
+                </div>
+                <img :src="post.profileImg" v-if="post.profileImg">
+                <img src="http://bit.do/anonymouseuser" v-else>
+              </div>
+            </div>
+            <div class="general d-flex flex-column justify-content-between">
+              <div class="w-100 h-100 d-flex flex-column justify-content-around">
+                <div class="mb-2">
+                  <span class="mb-3 star-container" v-for="index in post.rank" :key="index"><i class="fas fa-star" style="color:yellow"></i></span>
+                </div>
+                <p class="text-left m-0"><i class="fas fa-quote-left"></i></p>
+                <p class="card-text px-3" style="word-break:keep-all;">{{ post.onelineReview }}</p>
+                <p class="text-right m-0"><i class="fas fa-quote-right"></i></p>
+              </div>
+              <div class="more">
+                <span class="text-black-50"><small>{{ post.createdAt | moment('YYYY-MM-DD')}}</small></span>
+              </div>
+            </div>
+          </div>
+        </slide>
+      </carousel>
+
+      <div class="no-content d-flex justify-content-center align-items-center" v-else>
+        <p class="mb-0">아직 멤버의 책 리뷰가 없습니다 ㄴ(°0°)ㄱ</p>
+      </div>
+    </div>
+
+    <!-- <div v-if="isParticipant || isLeader">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="text-left font-weight-bold mb-0">멤버의 책 리뷰</h4>
+        <button class="btn btn-green" @click="toPostCreate(selectedOnedayEvent.book.id)">책 리뷰 작성하기</button>
+      </div>
+      <div class="d-flex scroll-sect" id="scroll-area-post" v-if="selectedOnedayEvent.memberPosts.length">
         <div 
-          class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
+          class="px-3 pb-3 pointer"
           v-for="post in selectedOnedayEvent.memberPosts"
           :key="post.id"
-          @click="toPostDetail(post.id)">
+          @click="toPostDetail(post.id)"
+          style="min-width: 345.59px; max-width: 345.59px;">
           <div class="card m-0 ">
             <div class="additional d-flex justify-content-center">
               <div class="user-card">
@@ -171,46 +285,14 @@
                 <div class="points center">
                   <i class="fas fa-heart mr-1"></i> {{ post.likeUsers.length }}
                 </div>
-                <img :src="post.profileImg">  
+                <img :src="post.profileImg" v-if="post.profileImg">
+                <img src="http://bit.do/anonymouseuser" v-else>
               </div>
-              <!-- <div class="more-info">
-                <h4><i class="fas fa-star"></i>{{ post.rank }}</h4>
-                <div class="coords">
-                  <span>Group Name</span>
-                  <span>Joined January 2019</span>
-                </div>
-                <div class="coords">
-                  <span>Position/Role</span>
-                  <span>City, Country</span>
-                </div>
-                <div class="stats">
-                  <div>
-                    <div class="title">Awards</div>
-                    <i class="fa fa-trophy"></i>
-                    <div class="value">2</div>
-                  </div>
-                  <div>
-                    <div class="title">Matches</div>
-                    <i class="fa fa-gamepad"></i>
-                    <div class="value">27</div>
-                  </div>
-                  <div>
-                    <div class="title">Pals</div>
-                    <i class="fa fa-group"></i>
-                    <div class="value">123</div>
-                  </div>
-                  <div>
-                    <div class="title">Coffee</div>
-                    <i class="fa fa-coffee"></i>
-                    <div class="value infinity">∞</div>
-                  </div>
-                </div>
-              </div> -->
             </div>
             <div class="general d-flex flex-column justify-content-between">
               <div class="w-100 h-100 d-flex flex-column justify-content-around">
                 <div class="mb-2">
-                  <span class="mb-3" v-for="index in post.rank" :key="index"><i class="fas fa-star"></i></span>
+                  <span class="mb-3 star-container" v-for="index in post.rank" :key="index"><i class="fas fa-star" style="color:yellow"></i></span>
                 </div>
                 <p class="text-left m-0"><i class="fas fa-quote-left"></i></p>
                 <p class="card-text px-3" style="word-break:keep-all;">{{ post.onelineReview }}</p>
@@ -227,7 +309,7 @@
       <div class="no-content d-flex justify-content-center align-items-center" v-else>
         <p class="mb-0">아직 멤버의 책 리뷰가 없습니다 ㄴ(°0°)ㄱ</p>
       </div>
-    </div>
+    </div> -->
 
     <!-- <hr> -->
 
@@ -240,15 +322,36 @@
 </template>
 
 <script>
+import { Carousel, Slide } from 'vue-carousel'
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+})
+
+const swalDelete = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-danger ',
+    cancelButton: 'btn btn-success mr-2'
+  },
+  buttonsStyling: false
+})
 import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'OnedayEventDetail',
+  components: {
+    Carousel,
+    Slide
+  },
   computed: {
     ...mapState(['myaccount']),
     ...mapState('onedayEventStore', ['selectedOnedayEvent']),
     isRecruit() {
-      if (this.selectedOnedayEvent.participantCnt === (this.selectedOnedayEvent.capacity + 1)) {
+      if (this.selectedOnedayEvent.participantCnt === (this.selectedOnedayEvent.capacity)) {
         return false
       } else {
         return true
@@ -278,17 +381,33 @@ export default {
     },
     clickParticipateOnedayEvent(type) {
       if (type === 'apply') {
-        if (confirm('원데이 이벤트에 참가하시겠습니까?') === true) {
-          this.participateOnedayEvent(this.$route.params.onedayEventId)
-        } else {
-          return false
-        }
+        swal.fire({
+        // title: "Are you sure?",
+          text: "원데이 이벤트에 참가하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니오',
+          icon: "warning",
+        })
+        .then((result) => {
+          if (result.value) {
+            this.participateOnedayEvent(this.$route.params.onedayEventId)
+          } 
+        });
       } else if (type === 'cancel') {
-        if (confirm('원데이 이벤트 참가를 취소하시겠습니까?') === true) {
-          this.participateOnedayEvent(this.$route.params.onedayEventId)
-        } else {
-          return false
-        }
+        swal.fire({
+        // title: "Are you sure?",
+          text: "원데이 이벤트 참가를 취소하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니오',
+          icon: "warning",
+        })
+        .then((result) => {
+          if (result.value) {
+            this.participateOnedayEvent(this.$route.params.onedayEventId)
+          } 
+        });
       }
     },
     toPostDetail(postId) {
@@ -301,28 +420,41 @@ export default {
       router.push({ name: 'OnedayEventUpdate', params: { onedayEventId: onedayEventId }})
     },
     clickOnedayEventDelete(onedayEventId) {
-      if (confirm('원데이 이벤트를 삭제하시겠습니까?') === true) {
-        this.deleteOnedayEvent(onedayEventId)
-      } else {
-        return false
-      }
-    }
+      swalDelete.fire({
+        // title: "Are you sure?",
+          text: "원데이 이벤트를 삭제하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니오',
+          reverseButtons: true,
+          icon: "warning",
+        })
+        .then((result) => {
+          if (result.value) {
+            this.deleteOnedayEvent(onedayEventId)
+          } 
+        });
+    },
+    toBookDetail(bookId) {
+      router.push({ name: 'BookDetail', params: { bookId: bookId}})
+    },
   },
   created() {
     this.findOnedayEvent(this.$route.params.onedayEventId)
   },
-  mounted() {
+  updated() {
     function stopWheel(e){
       if(!e){ e = window.event; } /* IE7, IE8, Chrome, Safari */
       if(e.preventDefault) { e.preventDefault(); } /* Chrome, Safari, Firefox */
       e.returnValue = false; /* IE7, IE8 */
     }
-
-    const scrollAreaClub = document.querySelector('#scroll-area-post')
-    scrollAreaClub.addEventListener('wheel', (e) => {
-      scrollAreaClub.scrollLeft += e.deltaY;
-      stopWheel()
-    })
+    if (this.selectedOnedayEvent.memberPosts.length >= 3) {
+      const scrollAreaClub = document.querySelector('#scroll-area-post')
+      scrollAreaClub.addEventListener('wheel', (e) => {
+        scrollAreaClub.scrollLeft += e.deltaY;
+        stopWheel()
+      })
+    }
   },
 }
 </script>
@@ -333,7 +465,9 @@ export default {
     display: block;
     width: 100%;
     height: 100%;
-    border-radius: 25px;
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
   }
 
   .onedayEvent-closed-false {
@@ -369,6 +503,11 @@ export default {
     opacity: 0;
     transition: .5s ease;
     background-color: #3e3f3f;
+  }
+
+  .profile-container .overlay {
+    height: 150px;
+    width: 150px;
   }
 
   .profile-container:hover .overlay {
@@ -430,6 +569,10 @@ export default {
     padding: 6px;
   }
 
+  .star-container {
+    text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.7);
+  }
+
   /* card css 여기! */
 
 .center {
@@ -445,6 +588,18 @@ export default {
   background-color: #fff;
   background: linear-gradient(#f8f8f8, #fff);
   box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  margin: 1.5rem;
+}
+
+.card:hover {
+  /* width: 300px; */
+  height: 250px;
+  background-color: #fff;
+  background: linear-gradient(#f8f8f8, #fff);
+  box-shadow: 0 8px 16px -8px rgba(0,0,0,0.8);
   border-radius: 6px;
   overflow: hidden;
   position: relative;
@@ -506,8 +661,8 @@ export default {
 
 .card .additional .user-card .level {
   white-space: pre-wrap;
-  width: 100%;
-  word-break: keep-all;
+  width: 90%;
+  word-break: break-all;
 }
 
 .card .additional .user-card .points {
@@ -604,6 +759,38 @@ export default {
   padding: 1rem;
 }
 
+  .scroll-sect {
+    overflow: hidden;
+  }
 
+  .scroll-sect::-webkit-scrollbar {
+    width: 8px; height: 8px; border: 3px solid white; 
+  } 
+
+  .scroll-sect::-webkit-scrollbar-button,.scroll-sect::-webkit-scrollbar-button:END {
+    background-color: white;
+  }
+
+  .scroll-sect::-webkit-scrollbar-button:start:decrement{
+  }
+
+  .scroll-sect::-webkit-scrollbar-track {
+    background: white; 
+    -webkit-border-radius: 10px white; 
+    border-radius:10px white;
+    /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.2) */
+  }
+
+  .scroll-sect::-webkit-scrollbar-thumb {
+    height: 10px; 
+    width: 50px; 
+    background: #88A498; 
+    -webkit-border-radius: 15px; border-radius: 15px; 
+    /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
+  }
+
+  .scroll-sect:hover{
+    overflow-x: scroll;
+  }
 /* https://www.gamasutra.com/db_area/images/news/2018/Jun/320213/supermario64thumb1.jpg */
 </style>

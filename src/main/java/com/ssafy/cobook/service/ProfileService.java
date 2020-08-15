@@ -100,7 +100,7 @@ public class ProfileService {
                 .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
 
-        if (followRepository.findByToUser(fromUser, toUser).isPresent()) {
+        if (followRepository.findByToUserAndFromUser(fromUser.getId(), toUser.getId()).isPresent()) {
             followRepository.deleteByUser(fromUser.getId(), toUser.getId());
             return;
         } else {
@@ -111,36 +111,21 @@ public class ProfileService {
     // 팔로잉 리스트를 가져온다
     public List<UserByFollowDto> getFollowingList(Long fromUserId, Long toUserId) {
 
-
         User toUser = userRepository.findById(toUserId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER)); // 지금 접속자
 
         User fromUser = userRepository.findById(fromUserId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER)); // 지금 접속한 페이지
 
-        // 1. isFollow인 애 찾기
-        List<UserByFollowDto> followList = Optional.ofNullable(followRepository.findAllByFollowing(toUser.getId(), fromUser.getId())
-                .stream()
+        List<UserByFollowDto> followingList = followRepository.findAllByFromUser(fromUser).stream()
                 .map(Follow::getToUser)
                 .map(UserByFollowDto::new)
-                .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
+                .collect(Collectors.toList());
 
-        followList.forEach(userByFollowDto -> userByFollowDto.setIsFollow(true));
-
-        // 2. isNotFollow 애 찾기
-        List<UserByFollowDto> notFollowList = Optional.ofNullable(followRepository.findAllByNotFollowing(toUser.getId(), fromUser.getId())
-                .stream()
-                .map(Follow::getToUser)
-                .map(UserByFollowDto::new)
-                .collect(Collectors.toList())).orElse(Collections.emptyList());
-
-        List<UserByFollowDto> followingList = new ArrayList<>();
-        if (!followList.isEmpty()) {
-            followingList.addAll(0, followList);
-        }
-        if (!notFollowList.isEmpty()) {
-            followingList.addAll(0, notFollowList);
+        for(UserByFollowDto users : followingList){
+            if(followRepository.findByToUserAndFromUser(users.getToUserId(), toUser.getId()).isPresent()){
+                users.setIsFollow(true);
+            }
         }
 
         return followingList;
@@ -154,30 +139,15 @@ public class ProfileService {
         User fromUser = userRepository.findById(fromUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
-        // 1. isFollow인 애 찾기
-        List<UserByFollowDto> followList = Optional.ofNullable(followRepository.findAllByFollower(toUser.getId(), fromUser.getId())
-                .stream()
+        List<UserByFollowDto> followerList = followRepository.findAllByToUser(fromUser).stream()
                 .map(Follow::getFromUser)
                 .map(UserByFollowDto::new)
-                .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
+                .collect(Collectors.toList());
 
-        followList.forEach(userByFollowDto -> userByFollowDto.setIsFollow(true));
-
-        // 2. isNotFollow 애 찾기
-        List<UserByFollowDto> notFollowList = Optional.ofNullable(followRepository.findAllByNotFollower(toUser.getId(), fromUser.getId())
-                .stream()
-                .map(Follow::getFromUser)
-                .map(UserByFollowDto::new)
-                .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
-
-        List<UserByFollowDto> followerList = new ArrayList<>();
-        if (!followerList.isEmpty()) {
-            followerList.addAll(0, followList);
-        }
-        if (!notFollowList.isEmpty()) {
-            followerList.addAll(0, notFollowList);
+        for(UserByFollowDto users : followerList){
+            if(followRepository.findByToUserAndFromUser(users.getToUserId(), toUser.getId()).isPresent()){
+                users.setIsFollow(true);
+            }
         }
 
         return followerList;
@@ -229,7 +199,7 @@ public class ProfileService {
     public void saveImg(Long userId, MultipartFile profileImg) throws IOException {
         uploadFile(profileImg);
         User user = getUserById(userId);
-        user.setProfile("http://i3a111.p.ssafy.io:8080/api/profile/images/profile/" + profileImg.getOriginalFilename());
+        user.setProfile("profile/" + profileImg.getOriginalFilename());
     }
 
     private void uploadFile(MultipartFile file) throws IOException {
@@ -240,7 +210,7 @@ public class ProfileService {
 
     public String getFilePath(Long userId) {
         User user = getUserById(userId);
-        return user.getProfileImg().replace("http://i3a111.p.ssafy.io:8080/api/profile/images/", "");
+        return user.getProfileImg();
     }
 
     public List<PostResponseDto> getUserFeed(Long userId) {

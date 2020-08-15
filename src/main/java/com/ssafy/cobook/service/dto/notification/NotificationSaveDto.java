@@ -15,6 +15,7 @@ public class NotificationSaveDto {
     private Long dataId;
     private Boolean isRead;
     private String type;
+    private Long commentId;
 
 
     public NotificationSaveDto(String createdAt, Long dataId, Long from, Boolean isRead, String type){
@@ -23,5 +24,9 @@ public class NotificationSaveDto {
         this.from = from;
         this.isRead = isRead;
         this.type = type;
+    }
+
+    public void setCommentId(Long commentId){
+        this.commentId = commentId;
     }
 }

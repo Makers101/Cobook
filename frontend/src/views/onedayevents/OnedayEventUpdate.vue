@@ -152,6 +152,7 @@
                     v-model="date"
                     @input="onedayEventDate = false"
                     color="blue-grey lighten-2"
+                    :min="localDatetime('date')"
                   >
                   </v-date-picker>
                 </v-menu>
@@ -192,13 +193,26 @@
                     :allowed-minutes="m => m % 30 === 0"
                     format="24hr"
                     @click:minute="$refs.menu.save(time)"
+                    :min="localDatetime('time')"
                   ></v-time-picker>
                 </v-menu>
               </v-col>
 
               <!-- onedayEvent-update-capacity -->
-              <v-col class="mt-5" cols="12">
-                <v-card-text class="p-0">
+              <v-col cols="6">
+                <v-text-field
+                  v-model="onedayEventUpdateData.capacity"
+                  color="blue-grey lighten-2"
+                  :rules="[
+                            v => !!v || '필수항목입니다.',
+                            v => v !== '1' || '2 이상의 숫자를 입력해주세요 :)',
+                            v => v[0] !== '0' || '올바른 숫자를 입력해주세요 :)',
+                            v => /^\d*$/.test(v) || '올바른 숫자를 입력해주세요 :)'
+                          ]"
+                  label="총원"
+                  placeholder="2 이상의 숫자를 입력해주세요 :)"
+                ></v-text-field>
+                <!-- <v-card-text class="p-0">
                   <v-slider
                     v-model="onedayEventUpdateData.capacity"
                     label="모집 인원"
@@ -209,7 +223,7 @@
                     thumb-label="always"
                     ticks
                   ></v-slider>
-                </v-card-text>
+                </v-card-text> -->
               </v-col>
 
               <!-- onedayEvent-update-questions -->
@@ -259,6 +273,15 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-danger',
+    cancelButton: 'btn btn-success mr-2'
+  },
+  buttonsStyling: false
+})
+
 export default {
   name: 'OnedayEventUpdate',
   data() {
@@ -273,8 +296,8 @@ export default {
         capacity: null,
         questions: []
       },
-      date: new Date().toISOString().substr(0, 10),
-      time: '00:00',
+      date: null,
+      time: null,
       valid: true,
       lazy:false,
       searchBook: null,
@@ -330,6 +353,8 @@ export default {
       if (this.offlineEnabled) {
         this.onedayEventUpdateData.place = this.offlinePlace
       }
+      this.onedayEventUpdateData.capacity = Number(this.onedayEventUpdateData.capacity)
+
       const dataContainer = {
         onedayEventUpdateData: this.onedayEventUpdateData,
         onedayEventId: this.onedayEventId
@@ -340,7 +365,26 @@ export default {
       if (this.offlinePlace === '온라인') {
         this.offlinePlace = null
       }
-    }
+    },
+    localDatetime(type) {
+      const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+      const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
+      if (type === 'time') {
+        if (this.date === localISOTime.slice(0, 10)) {
+          if (Number(localISOTime.slice(14, 16)) < 30) {
+            return localISOTime.slice(11, 13) + ':30'
+          } else {
+            return (Number(localISOTime.slice(11, 13)) + 1)%24 + ':00'
+          }
+        } else {
+          return ''
+        }
+      } else if (type === 'date') {
+        return localISOTime.slice(0, 10)
+      } else {
+        return ''
+      }
+    },
   },
   mounted() {
     this.findOnedayEvent(this.onedayEventId)
@@ -375,13 +419,22 @@ export default {
           || this.time !== this.selectedOnedayEvent.datetime.slice(11, 16)
           || this.onedayEventUpdateData.questions.length !== this.selectedOnedayEvent.questions.length
          ) {
-        if (confirm('수정 중인 원데이 이벤트가 있습니다. 정말 넘어가시겠습니까?') === true) {
-          next()
-        } else {
-          return false
-        }
-      }
-      next()
+            swal.fire({
+                html: "<p>수정 중인 원데이 이벤트가 있습니다.</p><p>정말 넘어가시겠습니까?</p>",
+                showCancelButton: true,
+                confirmButtonText: '네',
+                cancelButtonText: '취소',
+                reverseButtons: true,
+                icon: "warning",
+              })
+              .then((result) => {
+                if (result.value) {
+                  next()
+                }
+              });
+            } else {
+              next()
+            }
     } else {
       next()
     }

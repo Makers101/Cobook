@@ -28,6 +28,7 @@ import com.ssafy.cobook.service.dto.post.*;
 import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.tag.TagResponseDto;
+import com.ssafy.cobook.service.dto.user.UserByPostDto;
 import com.ssafy.cobook.util.PageRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +36,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -371,20 +376,47 @@ public class PostService {
 
     public List<PostResponseDtoByGenre> getGenresPosts(Long userId) {
         User user = getUserById(userId);
-        List<String> genres = user.getUserGenres().stream()
+        List<Genre> genres = user.getUserGenres().stream()
                 .map(UserGenre::getGenre)
-                .map(Genre::getGenreName)
                 .collect(Collectors.toList());
         List<PostResponseDtoByGenre> posts = new ArrayList<>();
-        for (String genre : genres) {
+        for (Genre genre : genres) {
             PostResponseDtoByGenre dto = new PostResponseDtoByGenre(genre);
             List<PostResponseDto> result = postRepository.findAll().stream()
-                    .filter(p->p.intrested(genre))
+                    .filter(p -> p.intrested(genre))
                     .map(PostResponseDto::new)
                     .collect(Collectors.toList());
             dto.setPosts(result);
             posts.add(dto);
         }
         return posts;
+    }
+
+
+    public List<PostResponseDto> getPopularPosts() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime before7days = today.minusDays(7);
+        return postRepository.findByPeriods(before7days, today).stream()
+                .filter((post) -> (today.isAfter(post.getCreatDateTime()) || today.isEqual(post.getCreatDateTime())) && before7days.isBefore(post.getCreatDateTime()))
+                .sorted((post1, post2) -> calculatePopularity(today, post2) - calculatePopularity(today, post1))
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    private Integer calculatePopularity(LocalDateTime today, Post post) {
+        LocalDateTime creatDateTime = post.getCreatDateTime();
+        Long todayTimeToSecods = TimeUnit.MICROSECONDS.toSeconds(Timestamp.valueOf(today).getTime());
+        int postLikesCount = post.getPostLikes().size();
+        Long createTimeToSeconds = TimeUnit.MICROSECONDS.toSeconds(Timestamp.valueOf(creatDateTime).getTime());
+
+        return Math.toIntExact((postLikesCount + 1) / (todayTimeToSecods - createTimeToSeconds + 3600));
+    }
+
+    public List<UserByPostDto> recommend() {
+        return userRepository.findAll().stream()
+                .sorted(Comparator.comparingInt(o -> -o.getPosts().size()))
+                .limit(5)
+                .map(UserByPostDto::new)
+                .collect(Collectors.toList());
     }
 }

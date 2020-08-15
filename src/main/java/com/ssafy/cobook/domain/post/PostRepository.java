@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 //            "join fetch p.club join fetch p.book join fetch p.bookMarks join fetch p.postLikes join fetch p.tags")
 //    List<Post> findAllFetch();
 
-    @Query("SELECT p FROM Post p where p.onelineReview like %:keyword% OR p.review like %:keyword%")
+    @Query("SELECT p FROM Post p join p.tags as t WHERE p.onelineReview LIKE %:keyword% OR t.tag.tagName = :keyword")
     List<PostBySearchResDto> findByKeyword(@Param("keyword") String keyword);
+
+    @Query("SELECT p FROM Post p where p.creatDateTime between :startDateTime AND :endDateTime")
+    List<Post> findByPeriods(LocalDateTime startDateTime, LocalDateTime endDateTime);
+
 }

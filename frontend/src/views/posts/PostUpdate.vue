@@ -8,7 +8,7 @@
         src="https://user-images.githubusercontent.com/57381062/88908323-abf25680-d294-11ea-8edf-3b22787e7f04.jpg"
         alt="">
       <div class="post-banner-text">
-        <h3 class="font-weight-bold">게시물 수정</h3>
+        <h3 class="font-weight-bold">리뷰 수정</h3>
         <p class="mb-0">
           책 리뷰를 수정해주세요 :)
         </p>
@@ -176,7 +176,7 @@
               class="button btn-green"
               @click="clickUpdate"
             >
-              게시글 수정
+              리뷰 수정
             </v-btn>
           </v-card-actions>
         </v-form>
@@ -188,6 +188,15 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-danger',
+    cancelButton: 'btn btn-success mr-2'
+  },
+  buttonsStyling: false
+})
+
 export default {
   name: 'PostUpdate',
   data() {
@@ -306,13 +315,22 @@ export default {
           || (window.$('#summernote').summernote('code') !== '<p><br></p>') && (window.$('#summernote').summernote('code') !== this.selectedPost.review)
           || this.postUpdateData.basicData.tags.length !== this.selectedPost.tags.length
          ) {
-        if (confirm('수정 중인 게시물이 있습니다. 정말 넘어가시겠습니까?') === true) {
-          next()
+        swal.fire({
+            text: "수정 중인 리뷰가 있습니다. 정말 넘어가시겠습니까?",
+            showCancelButton: true,
+            confirmButtonText: '네',
+            cancelButtonText: '취소',
+            reverseButtons: true,
+            icon: "warning",
+          })
+          .then((result) => {
+            if (result.value) {
+              next()
+            }
+          });
         } else {
-          return false
+          next()
         }
-      }
-      next()
     } else {
       next()
     }

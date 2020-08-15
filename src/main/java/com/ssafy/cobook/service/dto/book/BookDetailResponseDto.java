@@ -1,6 +1,7 @@
 package com.ssafy.cobook.service.dto.book;
 
 import com.ssafy.cobook.domain.book.Book;
+import com.ssafy.cobook.service.dto.genre.GenreResponseDto;
 import com.ssafy.cobook.service.dto.post.PostByMembersResDto;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class BookDetailResponseDto {
     private String url;
     private String pubDate;
     private List<PostByMembersResDto> posts;
+    private GenreResponseDto genre;
 
     public BookDetailResponseDto(Book book, List<PostByMembersResDto> posts) {
         this.id = book.getId();
@@ -34,5 +36,6 @@ public class BookDetailResponseDto {
         this.url = book.getUrl();
         this.pubDate = book.getPubDate().toString();
         this.posts = posts;
+        this.genre = new GenreResponseDto(book.getGenre());
     }
 }

@@ -8,9 +8,9 @@
         src="https://user-images.githubusercontent.com/57381062/88908347-b57bbe80-d294-11ea-9d31-a88d3d0b3b23.jpg"
         alt="clubEvent-banner">
       <div class="clubEvent-banner-text">
-        <h3 class="font-weight-bold">클럽 이벤트 만들기</h3>
+        <h3 class="font-weight-bold">북클럽 이벤트 만들기</h3>
         <p class="mb-0">
-          클럽 이벤트를 만들어 멤버들과 함께 책을 읽고 좋은 대화를 나눠보세요 :)
+          북클럽 이벤트를 만들어 멤버들과 함께 책을 읽고 좋은 대화를 나눠보세요 :)
         </p>
       </div>
     </div>
@@ -42,7 +42,7 @@
                   counter
                   maxlength="30"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽 이벤트 명"
+                  label="북클럽 이벤트 명"
                 ></v-text-field>
               </v-col>
 
@@ -89,14 +89,14 @@
                   counter
                   maxlength="100"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽 이벤트 설명"
+                  label="북클럽 이벤트 설명"
                 ></v-textarea>
               </v-col>
 
               <!-- clubEvent-create-place -->
               <v-col class="mt-5" cols="12">
                 <div class="d-flex justify-content-start">
-                  <label class="v-label theme--light">클럽 이벤트 장소</label>
+                  <label class="v-label theme--light">북클럽 이벤트 장소</label>
                 </div>
                 <v-radio-group
                   v-model="clubEventCreateData.place"
@@ -112,7 +112,7 @@
                       class="mx-3 mb-2"
                       v-model="offlinePlace"
                       :disabled="!offlineEnabled"
-                      label="클럽 이벤트 장소"
+                      label="북클럽 이벤트 장소"
                       counter
                       maxlength="30"
                       :rules="placeRules"
@@ -152,6 +152,7 @@
                     v-model="date"
                     @input="clubEventDate = false"
                     color="blue-grey lighten-2"
+                    :min="localDatetime('date')"
                   >
                   </v-date-picker>
                 </v-menu>
@@ -192,6 +193,7 @@
                     :allowed-minutes="m => m % 30 === 0"
                     format="24hr"
                     @click:minute="$refs.menu.save(time)"
+                    :min="localDatetime('time')"
                   ></v-time-picker>
                 </v-menu>
               </v-col>
@@ -232,7 +234,7 @@
               class="button btn-green"
               @click="clickCreate"
             >
-              클럽 이벤트 생성
+              북클럽 이벤트 생성
             </v-btn>
           </v-card-actions>
         </v-form>
@@ -243,6 +245,15 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-danger',
+    cancelButton: 'btn btn-success mr-2'
+  },
+  buttonsStyling: false
+})
+
 export default {
   name: 'ClubEventCreate',
   data() {
@@ -255,8 +266,8 @@ export default {
         bookId: null,
         questions: []
       },
-      date: new Date().toISOString().substr(0, 10),
-      time: '00:00',
+      date: null,
+      time: null,
       valid: true,
       lazy:false,
       searchBook: null,
@@ -321,7 +332,30 @@ export default {
       if (this.offlinePlace === '온라인') {
         this.offlinePlace = null
       }
-    }
+    },
+    localDatetime(type) {
+      const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+      const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
+      if (type === 'time') {
+        if (this.date === localISOTime.slice(0, 10)) {
+          if (Number(localISOTime.slice(14, 16)) < 30) {
+            return localISOTime.slice(11, 13) + ':30'
+          } else {
+            return (Number(localISOTime.slice(11, 13)) + 1)%24 + ':00'
+          }
+        } else {
+          return ''
+        }
+      } else if (type === 'date') {
+        return localISOTime.slice(0, 10)
+      } else {
+        return ''
+      }
+    },
+  },
+  mounted() {
+    this.date = this.localDatetime('date')
+    this.time = this.localDatetime('time')
   },
   beforeRouteLeave(to, from, next) {
     if (!this.clicked) {
@@ -330,17 +364,26 @@ export default {
           || this.clubEventCreateData.bookId
           || this.clubEventCreateData.place
           || this.offlinePlace
-          || this.date !== new Date().toISOString().substr(0, 10)
-          || this.time !== '00:00'
+          || this.date !== this.localDatetime('date')
+          || this.time !== this.localDatetime('time')
           || this.clubEventCreateData.questions.length > 0
          ) {
-        if (confirm('생성 중인 클럽 이벤트가 있습니다. 정말 넘어가시겠습니까?') === true) {
-          next()
-        } else {
-          return false
-        }
-      }
-      next()
+            swal.fire({
+              html: "<p>생성 중인 북클럽 이벤트가 있습니다.</p><p>정말 넘어가시겠습니까?</p>",
+              showCancelButton: true,
+              confirmButtonText: '네',
+              cancelButtonText: '취소',
+              reverseButtons: true,
+              icon: "warning",
+            })
+            .then((result) => {
+              if (result.value) {
+                next()
+              }
+            });
+          } else {
+            next()
+          }
     } else {
       next()
     }

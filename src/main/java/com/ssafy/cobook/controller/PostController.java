@@ -1,11 +1,14 @@
 package com.ssafy.cobook.controller;
 
 import com.ssafy.cobook.domain.user.User;
+import com.ssafy.cobook.service.BookService;
 import com.ssafy.cobook.service.PostService;
+import com.ssafy.cobook.service.dto.book.BookResponseByGenres;
 import com.ssafy.cobook.service.dto.post.*;
 import com.ssafy.cobook.service.dto.postcomment.CommentsReqDto;
 import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import com.ssafy.cobook.service.dto.tag.TagResponseDto;
+import com.ssafy.cobook.service.dto.user.UserByPostDto;
 import com.ssafy.cobook.util.PageRequest;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -21,9 +24,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(("/api/posts"))
 @RequiredArgsConstructor
@@ -32,6 +37,7 @@ public class PostController {
     private static final Logger logger = LoggerFactory.getLogger(PostController.class);
 
     private final PostService postService;
+    private final BookService bookService;
 
     @ApiOperation(value = "게시글 전체 조회")
     @GetMapping
@@ -43,7 +49,7 @@ public class PostController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping
     public ResponseEntity<PostSaveResDto> savePosts(@ApiIgnore final Authentication authentication,
-                                                    @RequestBody final PostSaveReqDto requestDto) {
+                                                    @RequestBody @Valid final PostSaveReqDto requestDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.savePosts(requestDto, userId));
     }
@@ -86,7 +92,7 @@ public class PostController {
     @PostMapping("/{postId}/comments")
     public ResponseEntity<Void> addComments(@ApiIgnore final Authentication authentication,
                                             @PathVariable("postId") final Long postId,
-                                            @RequestBody final CommentsReqDto dto) {
+                                            @RequestBody @Valid final CommentsReqDto dto) {
         System.out.println(authentication.toString());
         System.out.println(authentication.getPrincipal().toString());
         Long userId = ((User) authentication.getPrincipal()).getId();
@@ -105,7 +111,7 @@ public class PostController {
     @PutMapping("/{postId}")
     public ResponseEntity<Void> updatePost(@ApiIgnore final Authentication authentication,
                                            @PathVariable("postId") final Long postId,
-                                           @RequestBody final PostUpdateReqDto requestDto) {
+                                           @RequestBody @Valid final PostUpdateReqDto requestDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         postService.updatePost(postId, userId, requestDto);
         return ResponseEntity.ok().build();
@@ -154,5 +160,24 @@ public class PostController {
         Long userId = ((User) authentication.getPrincipal()).getId();
         List<PostResponseDtoByGenre> response = postService.getGenresPosts(userId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @ApiOperation(value = "7일 기준 인기도 순으로 게시글 조회")
+    @GetMapping("/popular")
+    public ResponseEntity<List<PostResponseDto>> getPopularPosts() {
+        List<PostResponseDto> response = postService.getPopularPosts();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @ApiOperation(value = "내 관심 장르에 포스트가 없을 때")
+    @GetMapping("/genres/{genreId}")
+    public ResponseEntity<List<BookResponseByGenres>> getInterestGenreBook(@PathVariable("genreId") Long genreId) {
+        List<BookResponseByGenres> response = bookService.findBookByGenre(genreId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/recommendusers")
+    public ResponseEntity<List<UserByPostDto>> getRecommendUser() {
+        return ResponseEntity.status(HttpStatus.OK).body(postService.recommend());
     }
 }

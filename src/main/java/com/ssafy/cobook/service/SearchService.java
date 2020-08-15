@@ -2,20 +2,27 @@ package com.ssafy.cobook.service;
 
 import com.ssafy.cobook.domain.book.BookRepository;
 import com.ssafy.cobook.domain.club.ClubRepository;
+import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.onedayevent.OneDayEventRepository;
 import com.ssafy.cobook.domain.post.PostRepository;
+import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
+import com.ssafy.cobook.exception.ErrorCode;
+import com.ssafy.cobook.exception.UserException;
 import com.ssafy.cobook.service.dto.book.BookBySearchResDto;
 import com.ssafy.cobook.service.dto.club.ClubBySearchResDto;
 import com.ssafy.cobook.service.dto.onedayevent.OneDayEventBySearchDto;
 import com.ssafy.cobook.service.dto.post.PostBySearchResDto;
+import com.ssafy.cobook.service.dto.tag.TagByPostDto;
 import com.ssafy.cobook.service.dto.user.UserBySearchResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,10 +34,27 @@ public class SearchService {
     private final PostRepository postRepository;
     private final ClubRepository clubRepository;
     private final OneDayEventRepository oneDayEventRepository;
+    private final FollowRepository followRepository;
 
 
-    public List<UserBySearchResDto> searchUsers(String keyword) {
-        return userRepository.findByKeyword(keyword);
+    public List<UserBySearchResDto> searchUsers(String keyword, Long userId) {
+        User fromUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
+        List<User> userList = userRepository.findByKeyword(keyword);
+        List<UserBySearchResDto> searchUserList = new ArrayList<>();
+
+        Boolean isFollow;
+
+        for (User user : userList) {
+            if (followRepository.findByToUserAndFromUser(fromUser.getId(), user.getId()).isPresent()) {
+                isFollow = true;
+            } else {
+                isFollow = false;
+            }
+            searchUserList.add(new UserBySearchResDto(user, isFollow));
+        }
+
+        return searchUserList;
     }
 
     public List<BookBySearchResDto> searchBooks(String keyword) {
@@ -38,7 +62,8 @@ public class SearchService {
     }
 
     public List<PostBySearchResDto> searchPosts(String keyword) {
-        return postRepository.findByKeyword(keyword);
+        return postRepository.findByKeyword(keyword).stream()
+                .collect(Collectors.toList());
     }
 
     public List<ClubBySearchResDto> searchClubs(String keyword) {

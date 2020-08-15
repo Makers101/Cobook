@@ -49,7 +49,7 @@ public class UserService {
     @Transactional
     public UserResponseIdDto signUp(UserSaveRequestDto userSaveRequestDto, Boolean isFind) {
         if (userRepository.findByNickName(userSaveRequestDto.getNickName()).isPresent()) {
-            throw new UserException("이미 가입된 메일입니다", ErrorCode.MEMBER_DUPLICATED_NICKNAME);
+            throw new UserException("이미 존재하는 닉네임입니다", ErrorCode.MEMBER_DUPLICATED_NICKNAME);
         }
 
         if (userRepository.findByEmail(userSaveRequestDto.getEmail()).isPresent()) {
@@ -84,9 +84,13 @@ public class UserService {
 
         User user = getUser(userLoginRequestDto.getEmail());
 
+
         String encodePassword = user.getPassword();
         String rawPassword = userLoginRequestDto.getPassword();
 
+        if (user.getAccept() == null) {
+            throw new UserException("아직 이메일 인증이 되지 않은 회원입니다.", ErrorCode.WRONG_EMAIL_CHECK_AUTH);
+        }
         if (!passwordEncoder.matches(rawPassword, encodePassword)) {
             throw new UserException("잘못된 비밀번호입니다.", ErrorCode.WRONG_PASSWORD);
         }
@@ -120,7 +124,7 @@ public class UserService {
             messageHelper.setTo(recipient);
             if (!isFind) { // 이메일 인증
                 messageHelper.setSubject("Cobook 회원가입 인증이메일입니다.");
-                URL url = new URL("http://i3a111.p.ssafy.io:8080/api/users/authentication/" + token);
+                URL url = new URL("http://i3a111.p.ssafy.io:8090/api/users/authentication/" + token);
                 String content = stringBuilder.append("하단의 링크로 접속하여 인증해주세요!")
                         .append("\n")
                         .append(url)
@@ -128,7 +132,7 @@ public class UserService {
                 messageHelper.setText(content, true);
             } else {
                 messageHelper.setSubject("Cobook 비밀번호 변경 메일입니다.");
-                URL url = new URL("http://i3a111.p.ssafy.io:8080/api/users/resetPassword/" + token);
+                URL url = new URL("http://i3a111.p.ssafy.io:8090/api/users/resetPassword/" + token);
 //                URL url = new URL("http://localhost:8080/api/users/resetPassword/" + token);
                 String content = stringBuilder.append("하단의 링크로 접속하여 새로운 비밀번호를 입력해주세요!")
                         .append("\n")

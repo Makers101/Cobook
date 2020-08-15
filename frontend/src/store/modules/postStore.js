@@ -5,7 +5,9 @@ import router from '@/router'
 const postStore = {
   namespaced: true,
   state: {
-    posts: null,
+    postsByPopularity: null,
+    postsByFollow: null,
+    postsByGenre: null,
     selectedPost: null,
     comments: null,
     tags: null,
@@ -13,8 +15,14 @@ const postStore = {
   getters: {
   },
   mutations: {
-    SET_POSTS(state, posts) {
-      state.posts = posts
+    SET_POSTS_BY_POPULARITY(state, postsByPopularity) {
+      state.postsByPopularity = postsByPopularity
+    },
+    SET_POSTS_BY_FOLLOW(state, postsByFollow) {
+      state.postsByFollow = postsByFollow
+    },
+    SET_POSTS_BY_GENRE(state, postsByGenre) {
+      state.postsByGenre = postsByGenre
     },
     SET_SELECTED_POST(state, post) {
       state.selectedPost = post
@@ -27,10 +35,28 @@ const postStore = {
     },
   },
   actions: {
-    fetchPosts({ commit }) {
-      axios.get(SERVER.URL + SERVER.ROUTES.posts)
+    fetchPostsByPopularity({ commit, rootGetters }) {
+      axios.get(SERVER.URL + SERVER.ROUTES.posts + '/popular', rootGetters.config)
         .then(res => {
-          commit('SET_POSTS', res.data)
+          commit('SET_POSTS_BY_POPULARITY', res.data)
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
+    fetchPostsByFollow({ commit, rootGetters }) {
+      axios.get(SERVER.URL + SERVER.ROUTES.posts + '/follows', rootGetters.config)
+        .then(res => {
+          commit('SET_POSTS_BY_FOLLOW', res.data)
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
+    fetchPostsByGenre({ commit, rootGetters }) {
+      axios.get(SERVER.URL + SERVER.ROUTES.posts + '/genres', rootGetters.config)
+        .then(res => {
+          commit('SET_POSTS_BY_GENRE', res.data)
         })
         .catch(err => {
           console.log(err.response.data)

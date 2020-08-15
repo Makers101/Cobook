@@ -10,7 +10,7 @@
           v-if="profile.profileImg">
         <img
           class="profile-image bg-light-ivory"
-          :src="'http://placehold.jp/200x200.png?text=' + profile.nickName"
+          src="http://bit.do/anonymouseuser"
           :alt="profile.nickName"
           v-else>
       </div>
@@ -19,8 +19,8 @@
           <div class="d-flex justify-content-between">
             <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>
             <span v-if="myaccount.id !== profile.id">
-              <button v-if="checkFollow(profile)" class="btn px-4 btn-following" @click="clickedFollow(profile, 'unfollow')">언팔로우</button>
-              <button v-else class="btn btn-follow px-4" @click="clickedFollow(profile, 'follow')">팔로우</button>
+              <button v-if="checkFollow(profile)" class="btn px-4 btn-secondary" @click="clickedFollow(profile, 'unfollow')">언팔로우</button>
+              <button v-else class="btn btn-green px-4" @click="clickedFollow(profile, 'follow')">팔로우</button>
             </span>
           </div>
           <p class="profile-description">{{ profile.description }}</p>
@@ -58,7 +58,7 @@
     <!-- routers -->
     <div class="d-flex justify-content-between mt-4">
       <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileFeed', params: { userId:this.$route.params.userId }}">리뷰</router-link>
-      <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileClub', params: { userId:this.$route.params.userId }}">클럽 · 이벤트</router-link>
+      <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileClub', params: { userId:this.$route.params.userId }}">북클럽 · 이벤트</router-link>
       <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileBookmark', params: { userId:this.$route.params.userId }}">북마크</router-link>
       <router-link class="nav-link bg-beige text-left" :to="{name: 'ProfileOverview', params: { userId:this.$route.params.userId }}">일정 · 통계</router-link>
     </div>
@@ -69,6 +69,14 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+})
 import { mapState, mapActions } from 'vuex'
 import FollowerForm from './FollowerForm'
 import FollowingForm from './FollowingForm'
@@ -104,37 +112,73 @@ export default {
     ...mapActions('profileStore', ['findProfile', 'clickFollow', 'fetchFollowerList', 'fetchFollowingList', 'findOverview', 'fetchClubEvents', 'fetchOnedayEvents']),
     clickedFollow(profile, type) {
       if (type === 'unfollow') {
-        if (confirm('팔로우를 취소하시겠습니까?') === false) {
-          return false
-        }
-      }
-
-      let notiData = new Object()
-      notiData = {
-        to: this.profile.id,
-        clubId: 0,
-        isRead: false,
-        type: "follow"
-      }
-      this.createNoti(notiData)
-      this.clickFollow(profile.id)
-      var temp = {
-        isFollow: true,
-        nickname: this.myaccount.nickName,
-        profileImg: this.myaccount.profileImg,
-        toUserId: this.myaccount.id
-      }
-      var flag = false
-      for (let [index, key] of profile.followerList.entries()) {
-        // 일치하는 id가 있다면 followerList에서 제거
-        if (key.toUserId === this.myaccount.id){
-          flag = true
-          profile.followerList.splice(index, 1);
-          break;
-        }
-      }
-      if (flag === false){
-        profile.followerList.push(temp)
+        swal.fire({
+        // title: "Are you sure?",
+          text: "팔로우를 취소하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니오',
+          icon: "warning",
+        })
+        .then((result) => {
+          if (result.value) {
+            let notiData = new Object()
+            notiData = {
+              to: this.profile.id,
+              clubId: 0,
+              isRead: false,
+              type: "follow"
+            }
+            this.createNoti(notiData)
+            this.clickFollow(profile.id)
+            var temp = {
+              isFollow: true,
+              nickname: this.myaccount.nickName,
+              profileImg: this.myaccount.profileImg,
+              toUserId: this.myaccount.id
+            }
+            var flag = false
+            for (let [index, key] of profile.followerList.entries()) {
+              // 일치하는 id가 있다면 followerList에서 제거
+              if (key.toUserId === this.myaccount.id){
+                flag = true
+                profile.followerList.splice(index, 1);
+                break;
+              }
+            }
+            if (flag === false){
+              profile.followerList.push(temp)
+            }
+          } 
+        });
+      } else {
+        let notiData = new Object()
+          notiData = {
+            to: this.profile.id,
+            clubId: 0,
+            isRead: false,
+            type: "follow"
+          }
+          this.createNoti(notiData)
+          this.clickFollow(profile.id)
+          var temp = {
+            isFollow: true,
+            nickname: this.myaccount.nickName,
+            profileImg: this.myaccount.profileImg,
+            toUserId: this.myaccount.id
+          }
+          var flag = false
+          for (let [index, key] of profile.followerList.entries()) {
+            // 일치하는 id가 있다면 followerList에서 제거
+            if (key.toUserId === this.myaccount.id){
+              flag = true
+              profile.followerList.splice(index, 1);
+              break;
+            }
+          }
+          if (flag === false){
+            profile.followerList.push(temp)
+          }
       }
     },
     checkFollow(profile) {

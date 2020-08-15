@@ -17,9 +17,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/onedayevents")
 @RequiredArgsConstructor
@@ -33,7 +35,7 @@ public class OneDayEventController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping
     public ResponseEntity<OneDayEventSaveResDto> saveOneDayEvent(@ApiIgnore final Authentication authentication,
-                                                                 @RequestBody final OneDayEventSaveReqDto requestDto) {
+                                                                 @RequestBody @Valid final OneDayEventSaveReqDto requestDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         OneDayEventSaveResDto saveResDto = oneDayEventService.saveEvent(userId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(saveResDto);
@@ -70,7 +72,7 @@ public class OneDayEventController {
     @PutMapping("/{eventId}")
     public ResponseEntity<Void> updateEvents(@ApiIgnore final Authentication authentication,
                                              @PathVariable("eventId") final Long eventId,
-                                             @RequestBody final OneDayEventUpdateReqDto requestDto) {
+                                             @RequestBody @Valid final OneDayEventUpdateReqDto requestDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         oneDayEventService.updatePost(userId, eventId, requestDto);
         return ResponseEntity.ok().build();

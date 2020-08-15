@@ -23,5 +23,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void updatePassword(@Param("userId") Long userId, @Param("password") String password);
 
     @Query("SELECT u FROM User u where u.nickName like %:keyword%")
-    List<UserBySearchResDto> findByKeyword(@Param("keyword") String keyword);
+    List<User> findByKeyword(@Param("keyword") String keyword);
 }

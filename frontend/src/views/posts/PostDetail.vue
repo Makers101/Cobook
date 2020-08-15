@@ -20,7 +20,7 @@
                     <div class="col-3">
                       <ul class="align">
                         <li>
-                          <figure class="book" @click="bookDetail(selectedPost.book.id)">
+                          <figure class="book pointer" @click="bookDetail(selectedPost.book.id)">
                             <!-- front -->
                             <ul class="hardcover_front">
                               <li>
@@ -66,11 +66,11 @@
                         alt="책 이미지"
                         @click="bookDetail(selectedPost.book.id)"> -->
                     </div>
-                    <div class="col-9 text-left pr-3 align-self-center">
+                    <div class="col-8 text-left pr-3 align-self-center">
                       <p><mark>{{ selectedPost.book.title }}</mark></p>
-                      <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953039-4a9da800-d2d3-11ea-8f6b-5792b4f87c45.png" width="20px"> {{ selectedPost.book.author }} </p>
-                      <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px"> {{ selectedPost.book.publisher }}</p>
-                      <p><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> {{ selectedPost.book.pubDate.slice(0,4) }}년 {{ selectedPost.book.pubDate.slice(5,7) }}월 {{ selectedPost.book.pubDate.slice(8,10) }}일</p>
+                      <p class="book-info"><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953039-4a9da800-d2d3-11ea-8f6b-5792b4f87c45.png" width="20px"> {{ selectedPost.book.author }} </p>
+                      <p class="book-info"><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px"> {{ selectedPost.book.publisher }}</p>
+                      <p class="book-info"><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> {{ selectedPost.book.pubDate.slice(0,4) }}년 {{ selectedPost.book.pubDate.slice(5,7) }}월 {{ selectedPost.book.pubDate.slice(8,10) }}일</p>
                     </div>
                   </div>
                   <!-- 작성자 정보 및 좋아요/ 북마크 -->
@@ -81,7 +81,7 @@
                         <img
                           v-if="!selectedPost.user.profileImg"
                           class="img-fluid feed-profile-img mr-1" 
-                          src="@/assets/anonymous.png" 
+                          src="http://bit.do/anonymouseuser" 
                           alt="유저 프로필 사진">
                         <img 
                           v-else
@@ -166,9 +166,10 @@
                       <!-- 뱃지 -->
                       <div>
                         <span
-                        class="badge bg-green rounded-pill px-3 py-2 mr-2"
+                        class="badge bg-green rounded-pill px-3 py-2 mr-2 pointer"
                         v-for="tag in selectedPost.tags"
                         :key="`tag-${tag.id}`"
+                        @click="searchTag(tag.name)"
                         >#{{ tag.name }}</span>
                       </div>
                     </div>
@@ -190,16 +191,16 @@
                       <div class="m-0 col-3 text-left">
                         <span class="rounded-circle">
                           <img
-                            v-if="!post.profileImg"
+                            v-if="!post.user.profileImg"
                             class="img-fluid feed-profile-img" 
-                            src="@/assets/anonymous.png" 
+                            src="http://bit.do/anonymouseuser"
                             alt="유저 프로필 사진">
                           <img 
                             v-else
                             class="img-fluid feed-profile-img" 
-                            :src="post.profileImg" alt="작성자 프로필 사진">
+                            :src="post.user.profileImg" alt="작성자 프로필 사진">
                         </span>
-                        <small class="ml-2">{{ post.nickName }}</small>
+                        <small class="ml-2">{{ post.user.nickName }}</small>
                       </div>
                       <div class="changeFont m-0 col-9 text-left">
                         "{{ post.onelineReview }}"
@@ -229,7 +230,7 @@
                           <img
                             v-if="!comment.user.profileImg"
                             class="img-fluid feed-profile-img" 
-                            src="@/assets/anonymous.png" 
+                            src="http://bit.do/anonymouseuser"
                             alt="유저 프로필 사진">
                           <img 
                             v-else
@@ -245,7 +246,7 @@
                       <div
                         class="btn text-danger btn-sm m-0 p-0 col-3"
                         v-if="comment.user.id === myaccount.id"
-                        @click="deleteComment({ postId: commentCreateData.postId, commentId: comment.id })"
+                        @click="clickDeleteComment(commentCreateData, comment.id)"
                       > 삭제
                       </div>
                     </div>
@@ -302,7 +303,15 @@
 </template>
 
 <script>
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-danger',
+    cancelButton: 'btn btn-success mr-2'
+  },
+  buttonsStyling: false
+})
 import { mapState, mapActions } from 'vuex'
+import Swal from 'sweetalert2'
 import router from '@/router'
 export default {
   name: 'PostDetail',
@@ -327,8 +336,17 @@ export default {
     ...mapState('postStore', ['selectedPost', 'comments']),
   },
   methods: {
+    ...mapActions(['createNoti']),
     ...mapActions('postStore', ['findPost', 'fetchComments', 'createComment', 'createLike', 'createBookmark', 'deleteComment', 'deletePost']),
     clickLike(post) {
+      let notiData = new Object()
+      notiData = {
+        to: this.selectedPost.user.id,
+        dataId: this.selectedPost.id,
+        isRead: false,
+        type: "like"
+      }
+      this.createNoti(notiData)
       this.createLike(post.id)
       if (post.likeUsers.includes(this.myaccount.id)) {
         const idx = post.likeUsers.indexOf(this.myaccount.id)
@@ -347,6 +365,14 @@ export default {
       }
     },
     clickComment() {
+      let notiData = new Object()
+      notiData = {
+        to: this.selectedPost.user.id,
+        dataId: this.selectedPost.id,
+        isRead: false,
+        type: "comment"
+      }
+      this.createNoti(notiData)
       this.createComment(this.commentCreateData)
         .then(() => {
           this.commentCreateData.content = null
@@ -358,8 +384,19 @@ export default {
       if (this.commentCreateData.content.length === 1){
         this.commentCreateData.content = null
         this.btnActive = false
-        alert("댓글을 작성해주세요.")
+        Swal.fire({
+          icon: 'error',
+          text: '댓글을 작성해주세요.'
+        })
       } else {
+        let notiData = new Object()
+        notiData = {
+          to: this.selectedPost.user.id,
+          dataId: this.selectedPost.id,
+          isRead: false,
+          type: "comment"
+        }
+        this.createNoti(notiData)
         this.createComment(this.commentCreateData)
         .then(() => {
           this.commentCreateData.content = null
@@ -395,7 +432,10 @@ export default {
       copyText.select();
       document.execCommand("copy");
       document.body.removeChild(copyText)
-      alert("주소가 복사 되었습니다.")
+      Swal.fire({
+          icon: 'success',
+          text: '주소가 복사되었습니다'
+        })
     },
     falseDialog(commentCreateData, comment) {
       this.dialog = false
@@ -405,11 +445,36 @@ export default {
       router.push({ name: 'PostUpdate', params: { postId: postId }})
     },
     clickDeletePost(postId) {
-      if (confirm('게시물을 삭제하시겠습니까?') === true) {
-        this.deletePost(postId)
-      } else {
-        return false
-      }
+      swal.fire({
+        // title: "Are you sure?",
+        text: "정말 리뷰를 삭제하시겠습니까?",
+        showCancelButton: true,
+        confirmButtonText: '삭제',
+        cancelButtonText: '취소',
+        reverseButtons: true,
+        icon: "warning",
+      })
+      .then((result) => {
+        if (result.value) {
+          this.deletePost(postId)
+        } 
+      });
+    },
+    clickDeleteComment(commentCreateData, commentId) {
+      swal.fire({
+        // title: "Are you sure?",
+        text: "정말 삭제하시겠습니까?",
+        showCancelButton: true,
+        confirmButtonText: '삭제',
+        cancelButtonText: '취소',
+        reverseButtons: true,
+        icon: "warning",
+      })
+      .then((result) => {
+        if (result.value) {
+          this.deleteComment({ postId: commentCreateData.postId, commentId: commentId })
+        } 
+      });
     },
     postDetail(postId) {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
@@ -419,6 +484,9 @@ export default {
     },
     clickPostCreate(bookId) {
       this.$router.push({ name: 'PostCreate', params: { selectedBookId: bookId }})
+    },
+    searchTag(tag) {
+      this.$router.push({ name: 'SearchPost', params: {content: tag}})
     }
   },
   created() {
@@ -433,13 +501,23 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     if (this.commentCreateData.content) {
-      if (confirm('작성 중인 댓글이 있습니다. 정말 넘어가시겠습니까?') === true) {
-        next()
-      } else {
-        return false
-      }
+      swal.fire({
+        // title: "Are you sure?",
+        text: "작성 중인 댓글이 있습니다. 정말 넘어가시겠습니까?",
+        showCancelButton: true,
+        confirmButtonText: '네',
+        cancelButtonText: '취소',
+        reverseButtons: true,
+        icon: "warning",
+      })
+      .then((result) => {
+        if (result.value) {
+          next()
+        }
+      });
+    } else {
+      next()
     }
-    next()
   },
   beforeRouteUpdate (to, from, next) {
     this.findPost(to.params.postId)
@@ -452,12 +530,15 @@ export default {
 </script>
 
 <style scoped>
+.book-info {
+  font-size: 0.9em;
+}
 
 .feed-profile-img {
   height: 25px;
   width: 25px;
   border-radius: 50%;
-  border: 1px solid black;
+  border: 1px solid rgb(0, 0, 0, 0.2);
 }
 
 .small-text {
@@ -582,7 +663,7 @@ body {
 
 /* Header/Footer */
 .open-book header {
-    padding-bottom: 1em;
+    padding-bottom: z;
 }
 
 .open-book header *,
@@ -1714,5 +1795,9 @@ figcaption p {
 		left: -80px;
 		font-size: 90%;
 	}
+}
+
+.btn-danger {
+  margin-right: 10px !important;
 }
 </style>

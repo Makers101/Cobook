@@ -46,7 +46,6 @@ const onedayEventStore = {
           .catch(err => console.log(err.response.data))
       },
       updateOnedayEvent({ rootGetters, dispatch }, dataContainer) {
-        console.log(dataContainer)
         axios.put(
           SERVER.URL + SERVER.ROUTES.onedayevents + '/' + dataContainer.onedayEventId,
           dataContainer.onedayEventUpdateData,

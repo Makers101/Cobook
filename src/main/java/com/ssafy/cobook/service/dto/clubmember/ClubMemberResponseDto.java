@@ -1,7 +1,6 @@
 package com.ssafy.cobook.service.dto.clubmember;
 
 import com.ssafy.cobook.domain.clubmember.ClubMember;
-import com.ssafy.cobook.domain.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +16,7 @@ public class ClubMemberResponseDto {
         this.id = clubMember.getUser().getId();
         this.nickName = clubMember.getUser().getNickName();
         if (clubMember.getUser().getProfileImg() != null) {
-            this.profileImg = "http://i3a111.p.ssafy.io:8080/api/profile/images/" + this.id;
+            this.profileImg = "https://i3a111.p.ssafy.io:8090/api/profile/images/" + this.id;
         }
     }
 }

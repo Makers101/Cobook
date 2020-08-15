@@ -1,8 +1,8 @@
 <template>
   <div>
     <div id="app">
-      <div id="nav">
-        <nav class="navbar navbar-expand-md navbar-light navbar-bg-color">
+      <div id="nav" v-if="authToken != null">
+        <nav class="navbar navbar-expand-md navbar-light navbar-bg-color d-flex justify-content-between">
           <router-link class="navbar-brand" to="/">
             <img 
               class="img-fluid logo-img"
@@ -23,8 +23,8 @@
             <span class="navbar-toggler-icon"></span>
           </button>
 
-          <div class="collapse navbar-collapse row" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto col-3 d-flex justify-content-between">
+          <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
               <li class="nav-item">
                 <router-link class="nav-link" :to="{ name: 'PostList' }">
                   <!-- <i class="fas fa-home"></i> -->
@@ -34,7 +34,7 @@
               <li class="nav-item">
                 <router-link class="nav-link" :to="{ name: 'ClubList' }">
                   <!-- <i class="fas fa-users"></i> -->
-                  클럽
+                  북클럽
                 </router-link>
               </li>
               <li class="nav-item">
@@ -44,14 +44,20 @@
                 </router-link>
               </li>
             </ul>
-            <div class="autocomplete col-3 text-right offset-4 " id="search-bar">
+            <!-- v-if="this.$route.name!=='SearchUser'" -->
+            <div class="d-flex justify-content-end">
+              <div 
+                class="autocomplete text-right" 
+                id="search-bar" 
+                v-if="this.$route.name!=='SearchUser' && this.$route.name!=='SearchBook' && this.$route.name!=='SearchClub' && this.$route.name!=='SearchOnedayEvent' && this.$route.name!=='SearchPost'" >
               <input 
                 type="search" 
                 v-model="keyword" 
                 @input="searchUser"
                 @blur="focusout"
+                @keyup.enter="search(keyword)"
                 >
-              <ul 
+              <!-- <ul 
                 class="autocomplete-results px-3"
                 v-show="searchedUsers"
                 >
@@ -79,15 +85,16 @@
                     {{ user.nickName }}
                   </span>
                 </li>
-              </ul>
+                <li class="autocomplete-result d-flex" @click="search(keyword)">검색결과 더보기 ...</li>
+              </ul> -->
             </div>
-            <ul class="navbar-nav mr-auto col-2 d-flex justify-content-between">
-              <li class="nav-item">
+            <ul class="navbar-nav d-flex align-items-center">
+              <li class="nav-item mx-4">
                 <router-link class="nav-link" :to="{ name: 'PostCreate' }">
-                  <i class="fas fa-plus-circle"></i>
+                  <i class="fas fa-pen"></i>
                 </router-link>
               </li>
-              <li class="nav-item dropdown pointer">
+              <li class="nav-item dropdown pointer mr-4">
                 <div 
                   class="nav-link dropdown-toggle" 
                   id="navbarDropdown" 
@@ -99,18 +106,21 @@
                   @click="clickNoti"
                 >
                   <i class="fas fa-bell"></i>
+                  <small class="badge rounded-circle badge-danger go-left" v-if="notis">{{ notis.length }}</small>
                 </div>
-                <!-- <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
+                <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
                   <div
                     class="dropdown-item setting-btn"
                     v-for="(noti, idx) in notis"
                     :key="`noti-${idx}`"
                     @click="toRoute(noti)"
                   >
-                    <p v-if="noti.type==='club'">{{ findUsers[noti.from] }}님이 '{{ findClubs[noti.clubId] }}' club에 가입신청했습니다.</p>
+                    <p v-if="noti.type==='club'">{{ findUsers[noti.from] }}님이 '{{ findClubs[noti.dataId] }}' 북클럽에 가입신청했습니다.</p>
                     <p v-if="noti.type==='follow'">{{ findUsers[noti.from] }}님이 팔로우했습니다.</p>
+                    <p v-if="noti.type==='like'">{{ findUsers[noti.from] }}님이 게시물을 좋아합니다.</p>
+                    <p v-if="noti.type==='comment'">{{ findUsers[noti.from] }}님이 댓글을 작성했습니다.</p>
                   </div>
-                </div> -->
+                </div>
               </li>
               <li class="nav-item dropdown">
                 <div 
@@ -132,8 +142,18 @@
                 </div>
               </li>
             </ul>
+            </div>
+            
           </div>
         </nav>
+      </div>
+      <div class="mt-5" v-else>
+        <img 
+          class="img-fluid logo-img"
+          style="height: 50px"
+          src="@/assets/new logo.png" 
+          alt="로고 이미지"
+        >
       </div>
       <router-view/>
     </div>
@@ -149,21 +169,21 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-// import firebase from 'firebase/app'
-// import 'firebase/database'
+import firebase from 'firebase/app'
+import 'firebase/database'
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyA9KKQn0uKuErmQMJsMbhw25-iG8chHLdI",
-//   authDomain: "co-book-original.firebaseapp.com",
-//   databaseURL: "https://co-book-original.firebaseio.com",
-//   projectId: "co-book-original",
-//   storageBucket: "co-book-original.appspot.com",
-//   messagingSenderId: "21513194733",
-//   appId: "1:21513194733:web:5ac45b8faee796d5b910e4",
-//   measurementId: "G-YNYKTYY7B8"
-// };
+const firebaseConfig = {
+  apiKey: "AIzaSyA9KKQn0uKuErmQMJsMbhw25-iG8chHLdI",
+  authDomain: "co-book-original.firebaseapp.com",
+  databaseURL: "https://co-book-original.firebaseio.com",
+  projectId: "co-book-original",
+  storageBucket: "co-book-original.appspot.com",
+  messagingSenderId: "21513194733",
+  appId: "1:21513194733:web:5ac45b8faee796d5b910e4",
+  measurementId: "G-YNYKTYY7B8"
+};
 
-// firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
 export default {
   name: 'App',
@@ -178,10 +198,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['genres', 'myaccount', 'books', 'users']),
+    ...mapState(['genres', 'myaccount', 'books', 'users', 'authToken']),
   },
   methods: {
-    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'fetchNotis', 'logout']),
+    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'logout']),
     searchUser() {
       if (!this.keyword) {
         this.isActive = false
@@ -211,6 +231,8 @@ export default {
         this.$router.push({name: 'ClubCandidates', params: { clubId: noti.dataId }})
       } else if (noti.type === 'follow') {
         this.$router.push({name: 'Profile', params: { userId: noti.dataId }})
+      } else if (noti.type === 'like' || noti.type === 'comment') {
+        this.$router.push({name: 'PostDetail', params: { postId: noti.dataId }})
       }
     },
     // clickNoti() {
@@ -234,15 +256,20 @@ export default {
     //     .catch(err => console.log(err))
     // }
     // Firebase
-    // clickNoti() {
-    //   // console.log(firebase.database())
-    //   firebase.database().ref('noti/' + this.myaccount.id).on('value', data => {
-    //     this.notis = Object.values(data.val()).reverse()
-    //     console.log(this.notis)
-    //   })
-    // }
     clickNoti() {
-      console.log(1)
+      firebase.database().ref('noti/' + this.myaccount.id).on('value', data => {
+        if (data.val()) {
+          this.notis = Object.values(data.val()).reverse()
+        } else {
+          this.notis = null
+        }
+      })
+    },
+    // clickNoti() {
+    //   console.log(1)
+    // },
+    search(keyword){
+      this.$router.push({name: 'SearchUser', params: { content : keyword }})
     }
   },
   watch: {
@@ -252,6 +279,7 @@ export default {
     },
     myaccount() {
       const mapData = []
+      this.clickNoti()
       this.myaccount.myClubs.forEach(club => {
         mapData.push([club.id, club.name])
       })
@@ -263,7 +291,6 @@ export default {
     this.findMyAccount()
     this.fetchBooks()
     this.fetchUsers()
-    this.fetchNotis()
   },
 }
 </script>
@@ -288,6 +315,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   max-height: 960px;
+}
+
+#nav {
+  box-shadow: 0px 2px 5px rgb(0, 0, 0, 0.2)
 }
 
 #nav a, i {
@@ -398,7 +429,7 @@ input::-webkit-input-placeholder {
 /* autocomplete */
 .autocomplete {
   position: relative;
-  width: 130px;
+  width: 180px;
 }
 
 .autocomplete-results {
@@ -483,5 +514,13 @@ input::-webkit-input-placeholder {
 
 .menus {
   font-size: 17px !important;
+}
+
+.dropdown-toggle:after {
+  content: none;
+}
+
+.go-left {
+  margin-left: -2px;
 }
 </style>

@@ -124,12 +124,12 @@ public class ClubService {
     public void fileSave(Long clubId, MultipartFile clubImg) throws IOException {
         uploadFile(clubImg);
         Club club = getClub(clubId);
-        club.setProfile("http://i3a111.p.ssafy.io:8080/api/clubs/images/club/" + clubImg.getOriginalFilename());
+        club.setProfile("club/" + clubImg.getOriginalFilename());
     }
 
     public String getFilePath(Long id) {
         Club club = getClub(id);
-        return club.getClubImg().replace("http://i3a111.p.ssafy.io:8080/api/clubs/images/", "");
+        return club.getClubImg();
     }
 
     @Transactional

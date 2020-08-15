@@ -8,9 +8,9 @@
         src="https://user-images.githubusercontent.com/57381062/88908102-70f02300-d294-11ea-9c03-7aac0e803ea0.jpg"
         alt="club-banner-img">
       <div class="club-banner-text">
-        <h3 class="font-weight-bold">클럽 만들기</h3>
+        <h3 class="font-weight-bold">북클럽 만들기</h3>
         <p class="mb-0">
-          멋진 독서 클럽을 만들어보세요 :)
+          멋진 독서 북클럽을 만들어보세요 :)
         </p>
       </div>
     </div>
@@ -38,7 +38,7 @@
                   counter
                   maxlength="30"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽명"
+                  label="북클럽명"
                 ></v-text-field>
               </v-col>
               
@@ -72,7 +72,7 @@
                   disabled
                   color="blue-grey lighten-2"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽장"
+                  label="북클럽장"
                 ></v-text-field>
               </v-col>
 
@@ -96,7 +96,7 @@
                   counter
                   maxlength="100"
                   :rules="[v => !!v || '필수항목입니다.']"
-                  label="클럽 설명"
+                  label="북클럽 설명"
                 ></v-textarea>
               </v-col>
 
@@ -184,7 +184,7 @@
               class="button btn-green"
               @click="clickCreate"
             >
-              클럽 생성
+              북클럽 생성
             </v-btn>
           </v-card-actions>
 
@@ -196,6 +196,15 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-danger',
+    cancelButton: 'btn btn-success mr-2'
+  },
+  buttonsStyling: false
+})
+
 export default {
   name: 'ClubCreate',
   data() {
@@ -290,13 +299,22 @@ export default {
           || this.clubCreateData.basicData.genres.length > 0
           || this.clubImg
          ) {
-        if (confirm('생성 중인 클럽이 있습니다. 정말 넘어가시겠습니까?') === true) {
-          next()
-        } else {
-          return false
-        }
-      }
-      next()
+            swal.fire({
+              html: "<p>생성 중인 북클럽이 있습니다.</p><p>정말 넘어가시겠습니까?</p>",
+              showCancelButton: true,
+              confirmButtonText: '네',
+              cancelButtonText: '취소',
+              reverseButtons: true,
+              icon: "warning",
+            })
+            .then((result) => {
+              if (result.value) {
+                next()
+              }
+            });
+          } else {
+            next()
+          }
     } else {
       next()
     }

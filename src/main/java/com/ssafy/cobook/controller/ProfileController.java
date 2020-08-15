@@ -1,6 +1,5 @@
 package com.ssafy.cobook.controller;
 
-
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.ProfileService;
 import com.ssafy.cobook.service.dto.club.ClubResDto;
@@ -18,23 +17,25 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
-
 @Slf4j
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/profile")
 @RequiredArgsConstructor
@@ -49,7 +50,7 @@ public class ProfileController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PutMapping()
     public ResponseEntity<UserResponseIdDto> updateProfile(@ApiIgnore final Authentication authentication,
-                                                           @RequestBody final UserUpdateReqDto userUpdateDto) {
+                                                           @RequestBody @Valid final UserUpdateReqDto userUpdateDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         return ResponseEntity.status(HttpStatus.OK).body(profileService.updateUserInfo(userId, userUpdateDto));
     }

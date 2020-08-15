@@ -17,7 +17,7 @@
                 <!-- 책 이미지 -->
                 <div class="w-50 mr-3">
                   <img 
-                    style="height: 200px;" 
+                    class="book-image" 
                     :src="selectedBook.bookImg" 
                     alt="책 이미지">
                 </div>
@@ -45,7 +45,7 @@
                   <div class="row no-gutters align-items-center text-left">
                     <div class="col-5 col-lg-4">
                       <strong>출판사</strong>
-                      <img class="ml-1 mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px">
+                      <img class="ml-1" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px">
                     </div>
                     <div class="col-7 col-lg-8">
                       <span>{{ selectedBook.publisher }}</span>
@@ -54,10 +54,19 @@
                   <div class="row no-gutters align-items-center text-left">
                     <div class="col-5 col-lg-4">
                       <strong>출판일</strong>
-                      <img class="ml-1 mr-2" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> 
+                      <img class="ml-1" src="https://user-images.githubusercontent.com/25967949/88953046-4bced500-d2d3-11ea-8a79-23e48bd595f1.png" width="20px"> 
                     </div>
                     <div class="col-7 col-lg-8">
                       <span>{{ selectedBook.pubDate | moment('YYYY-MM-DD')}}</span>
+                    </div>
+                  </div>
+                  <div class="row no-gutters align-items-center text-left">
+                    <div class="col-5 col-lg-4">
+                      <strong>장르</strong>
+                      <i class="fas fa-theater-masks color-green ml-2"></i> 
+                    </div>
+                    <div class="col-7 col-lg-8">
+                      <span>{{ selectedBook.genre.name }}</span>
                     </div>
                   </div>
                 </div>
@@ -65,12 +74,17 @@
               <!-- 책 줄거리 -->
               <div class="mt-3 text-left" v-if="selectedBook.contents !== ''">
                 <h6 class="mb-2"><strong>줄거리</strong></h6>
-                {{ selectedBook.contents }}
+                {{ selectedBook.contents }}...
               </div>
               <div class="mt-5" v-else>
                 <h6>줄거리가 없습니다.</h6>
               </div>
-              <div class="text-right mt-auto">
+              <div v-for="genre in selectedBook.Genres" :key="genre.id">
+                <p>#{{ genre.name }}</p>
+              </div>
+              <div class="d-flex justify-content-between mt-auto">
+                <button class="btn btn-green m-0" @click="clickPostCreate(selectedBook.id)" v-if="selectedBook.posts.length">리뷰 작성하러 가기</button>
+                <button v-else></button>
                 <button class="btn btn-green m-0"><a class="url" :href="selectedBook.url" target="_blank">자세히보기</a></button>
               </div>
             </div>
@@ -92,7 +106,7 @@
                               v-if="!post.profileImg"
                               class="img-fluid feed-profile-img mt-2"
                               style="max-width: 50%; border-radius: 50%;" 
-                              src="@/assets/anonymous.png" 
+                              src="http://bit.do/anonymouseuser"
                               alt="유저 프로필 사진">
                             <img 
                               v-else
@@ -123,7 +137,7 @@
                 <div>
                   <h5 class="mb-1">아직 다른 유저들이 작성한 리뷰는 없어요 ㅠ_ㅠ</h5>
                   <h5>리뷰... 작성해주시겠어요?</h5>
-                  <button class="btn btn-green mt-3" @click="clickPostCreate(selectedPost.book.id)">리뷰 작성하러 가기</button>
+                  <button class="btn btn-green mt-3" @click="clickPostCreate(selectedBook.id)">리뷰 작성하러 가기</button>
                 </div>
               </div>
             
@@ -164,7 +178,7 @@ export default {
     },
     postDetail(postId) {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
-    },
+    }
   },
   mounted() {
     this.findBook(this.$route.params.bookId)
@@ -195,6 +209,11 @@ body {
     width: 100%;
 }
 
+.book-image {
+  height: 200px;
+  box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+  border-radius: 6px;
+}
 
 
 /*** OPEN BOOK ***/
@@ -546,7 +565,7 @@ p, h1, h2, h3, h4, h5, h6, div {
 }
 
 .post-onelineReview {
-  word-break: keep-all;
+  word-break: break-word;
 }
 
 .review-list {
@@ -579,5 +598,16 @@ p, h1, h2, h3, h4, h5, h6, div {
   background: #88A498 ; 
   -webkit-border-radius: 15px; border-radius: 15px; 
   /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
+}
+
+.btn-genre {
+  background-color: #88A498;
+  color: #F8F8F8;
+  opacity: 1;
+}
+
+.book-genre {
+  border: 1px solid #88A498;
+  border-radius: 10%;
 }
 </style>
