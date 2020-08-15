@@ -12,20 +12,20 @@
       <p>{{ this.$route.params.content }}</p>
       <hr>
       <h5 class="font-weight-bold">필터</h5>
-      <router-link class="m-0" :to="{name: 'SearchUser'}">
-        <div class="filter d-flex p-2">
-          <div class="bg-beige mr-2" style="border-radius:50%">
-            <i class="fas fa-user p-2"></i>
-          </div>
-          <span>유저</span>
-        </div>
-      </router-link>
       <router-link class="m-0" :to="{name: 'SearchPost'}">
         <div class="filter d-flex p-2">
           <div class="bg-beige mr-2" style="border-radius:50%">
             <i class="fas fa-comment-dots p-2"></i>
           </div>
           <span>리뷰</span>
+        </div>
+      </router-link>
+      <router-link class="m-0" :to="{name: 'SearchUser'}">
+        <div class="filter d-flex p-2">
+          <div class="bg-beige mr-2" style="border-radius:50%">
+            <i class="fas fa-user p-2"></i>
+          </div>
+          <span>유저</span>
         </div>
       </router-link>
       <router-link class="m-0" :to="{name: 'SearchBook'}">
@@ -76,7 +76,8 @@ export default {
     this.search(this.$route.params.content)
   },
   mounted(){
-    this.$router.push({ name: 'SearchUser', params: { content: this.$route.params.content}})
+      this.$router.push({ name: 'SearchPost', params: { content: this.$route.params.content}})
+    // this.$router.push({ name: 'SearchUser', params: { content: this.$route.params.content}})
   },
 
     

@@ -137,6 +137,14 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-danger',
+    cancelButton: 'btn btn-success mr-2'
+  },
+  buttonsStyling: false
+})
 
 export default {
   name: 'ProfileUpdate',
@@ -211,13 +219,22 @@ export default {
           || this.profileUpdateData.basicData.genres.length !== this.myaccount.likeGenres.length
           || this.profileImg
          ) {
-        if (confirm('수정 중인 프로필이 있습니다. 정말 넘어가시겠습니까?') === true) {
-          next()
-        } else {
-          return false
-        }
-      }
-      next()
+            swal.fire({
+                text: "수정 중인 프로필이 있습니다. 정말 넘어가시겠습니까?",
+                showCancelButton: true,
+                confirmButtonText: '네',
+                cancelButtonText: '취소',
+                reverseButtons: true,
+                icon: "warning",
+              })
+              .then((result) => {
+                if (result.value) {
+                  next()
+                }
+              });
+            } else {
+              next()
+            }
     } else {
       next()
     }

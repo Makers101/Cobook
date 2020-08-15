@@ -4,17 +4,25 @@
       <div style="max-width:70%; margin:auto;">
         <div class="row rows-cols-1 row-cols-md-3" v-if="posts.length">
           <div 
-            class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
+            class="col-12 col-sm-12 col-lg-6 mb-4 pointer"
             v-for="feed in posts"
             :key="feed.id"
             @click="postDetail(feed.id)">
             <div class="card m-0">
-              <div class="additional d-flex justify-content-start px-1">
+              <div class="additional d-flex justify-content-start px-1"> 
                 <div class="user-card">
-                  <div class="points center">
-                    <i class="fas fa-heart mr-1"></i> {{ feed.likeUsers.length }}
+                  <div class="left-container">
+                    <div class="d-flex flex-column justify-content-between">
+                      <div class="points center">
+                        <i class="fas fa-heart mr-1"></i> {{ feed.likeUsers.length }}
+                      </div>
+                      <div class="image-container">
+                        <img :src="feed.book.bookImg">  
+                      </div>
+                    </div>
+
                   </div>
-                  <img class="mt-5" :src="feed.book.bookImg">  
+                  
                 </div>
                 <div class="more-info d-flex flex-column justify-content-around">
                   <p class="book-title my-2">{{ feed.book.title }}</p>
@@ -49,8 +57,15 @@
                     <span class="mb-3 star-container" v-for="index in feed.rank" :key="index"><i class="fas fa-star" style="color:yellow"></i></span>
                   </div>
                   <p class="text-left m-0"><i class="fas fa-quote-left"></i></p>
-                  <p class="card-text px-3" style="word-break:keep-all;">{{ feed.onelineReview }}</p>
+                  <p class="card-text px-3 feed-onelineReview" >{{ feed.onelineReview }}</p>
                   <p class="text-right m-0"><i class="fas fa-quote-right"></i></p>
+                  <div class="d-flex justify-content-center">
+                    <div v-for="tag in feed.tags" :key="`tag-${tag.id}`">
+                      <span class="badge bg-green rounded-pill px-3 py-2 mr-2">#{{ tag.name }}</span>
+                    </div>
+                  </div>
+
+                  
                 </div>
                 <div class="more">
                   <span class="text-black-50"><small>{{ feed.createdAt | moment('YYYY-MM-DD')}}</small></span>
@@ -150,7 +165,7 @@ export default {
 
 .card .additional {
   position: absolute;
-  width: 33%;
+  width: 34%;
   height: 100%;
   background: linear-gradient(#88A498, #88A487);
   transition: width 0.4s;
@@ -163,36 +178,42 @@ export default {
 }
 
 
-.additional:hover {
+.card .additional:hover {
   width: 100%;
   border-radius: 0 5px 5px 0;
 }
 
 
-.additional:hover.user-card {
+.card .additional:hover .user-card {
   position: absolute;
-  left: 0;
+  width: 34%;
+  display: flex;
+  justify-content: center;
+}
+
+.card .additional:hover .user-card img {
+  max-width: 90%;
 }
 
 .card .additional .user-card {
-  width: 120px;
+  width: 100%;
   height: 100%;
-  position: relative;
+  position: absolute;
   float: left;
 }
 
-.card .additional .user-card::after {
+/* .card .additional .user-card::after {
   content: "";
   display: block;
   position: absolute;
   top: 10%;
   right: -2px;
   height: 80%;
-}
+} */
 
 .card .additional .user-card .level,
 .card .additional .user-card .points {
-  top: 15%;
+  top: 10%;
   color: #fff;
   text-transform: uppercase;
   font-size: 0.75em;
@@ -210,24 +231,48 @@ export default {
 }
 
 .card .additional .user-card .points {
-  top: 85%;
+  top: 90%;
 }
 
 .card .additional .user-card img {
-  /* top: 10%; */
-  margin-top: 30%;
-  max-width: 80%;
-  /* left: 14%; */
+  max-width: 90%;
   border-radius: 5%;
+  margin-top: 20px;
   /* position: absolute; */
 }
 
-.card .additional .more-info {
-  width: 58%;
-  float: left;
+.card .additional:hover .more-info {
+  display: block !important;
+  width: 66%;
+  left: 34%;
   position: absolute;
-  left: 120px;
   height: 100%;
+}
+
+
+
+/* .card .additional:hover .user-card .points {
+
+} */
+
+.left-container {
+  display: flex;
+  justify-content: center;
+}
+
+.card .additional:hover .left-container {
+  justify-content: start;
+  left: 10%;
+}
+
+.card .additional:hover .left-container .image-container {
+  justify-content: center;
+}
+
+.card .additional .more-info {
+  display: none !important;
+  
+  /* left: 100%; */
 }
 
 .card .additional .more-info h1 {
@@ -254,46 +299,6 @@ export default {
 
 .card .additional .coords span + span {
   float: right;
-}
-
-.card .additional .stats {
-  font-size: 2rem;
-  display: flex;
-  position: absolute;
-  bottom: 1rem;
-  left: 1rem;
-  right: 1rem;
-  top: auto;
-  color: #fff;
-}
-
-.card.green .additional .stats {
-  color: #325C46;
-}
-
-.card .additional .stats > div {
-  flex: 1;
-  text-align: center;
-}
-
-.card .additional .stats i {
-  display: block;
-}
-
-.card .additional .stats div.title {
-  font-size: 0.75rem;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.card .additional .stats div.value {
-  font-size: 1.5rem;
-  font-weight: bold;
-  line-height: 1.5rem;
-}
-
-.card .additional .stats div.value.infinity {
-  font-size: 2.5rem;
 }
 
 .card .general {
@@ -334,5 +339,18 @@ mark {
   left: 50%;
   margin: -150px 0px 0px -200px;
 }
+
+.feed-onelineReview {
+  word-break: keep-all;
+  overflow: hidden;
+  white-space: normal;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 5; 
+  -webkit-box-orient: vertical;
+  /* height: 3rem; */
+}
+
 
 </style>
