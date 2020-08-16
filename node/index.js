@@ -49,6 +49,11 @@ io.sockets.on('connection', function(socket) {
       socket.leave(messageData['room'])
       log('Client leave', messageData['room']);
     }
+    // let roomMembers
+    io.in(messageData['room']).clients((error, clients) => {
+      if (error) throw error;
+      log(messageData['room'], clients, socket.id);
+    })
   });
 
   socket.on('create or join', function(room) {
