@@ -24,13 +24,14 @@
           v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&passwordChangeData.passwordConfirm.length!==0}"
           placeholder="비밀번호를 다시 입력해주세요."
           class="inputs"
+          @click="isSubmit && clickChangePassword(passwordChangeData)"
           required
         />
         <label for="password-confirm"></label>
         <div class="error-text ml-3" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
       </div>
       <div class="buttons mt-4 mb-3">
-        <button class="btn change-button" :class="{disabled: !isSubmit}" @click="clickChangePassword(passwordChangeData)" >비밀번호 변경하기</button>
+        <button class="btn change-button" :class="{disabled: !isSubmit}" @click="isSubmit && clickChangePassword(passwordChangeData)" >비밀번호 변경하기</button>
       </div>
     </div>
   </div>
