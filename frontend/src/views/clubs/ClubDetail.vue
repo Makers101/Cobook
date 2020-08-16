@@ -102,13 +102,13 @@
                 가입 신청
               </button>
               <button
-                class="btn btn-warning"
+                class="btn btn-gray"
                 v-if="selectedClub.recruit && isCandidate"
                 @click="clickApplyClub('cancel', selectedClub.id)">
                 가입 취소
               </button>
               <button
-                class="btn btn-warning"
+                class="btn btn-gray"
                 v-if="!isLeader && isMember"
                 @click="clickClubSecede(selectedClub.id)">
                 북클럽 탈퇴
@@ -335,8 +335,8 @@ const swal = Swal.mixin({
 
 const swalDelete = Swal.mixin({
   customClass: {
-    confirmButton: 'btn btn-danger ',
-    cancelButton: 'btn btn-success mr-2'
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
   },
   buttonsStyling: false
 })
@@ -432,7 +432,7 @@ export default {
           text: "북클럽을 탈퇴하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -448,12 +448,12 @@ export default {
       router.push({ name: 'ClubUpdate', params: { clubId: clubId } })
     },
     clickClubDelete(clubId) {
-      swalDelete.fire({
+      swal.fire({
           text: "북클럽을 삭제하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
-          reverseButtons: true,
+          cancelButtonText: '아니요',
+          // reverseButtons: true,
           icon: "warning",
         })
         .then((result) => {

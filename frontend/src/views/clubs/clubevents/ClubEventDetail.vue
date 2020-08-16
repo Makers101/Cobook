@@ -72,7 +72,7 @@
                   참가 신청
                 </button>
                 <button
-                  class="btn btn-warning"
+                  class="btn btn-gray"
                   v-if="selectedClubEvent.isMember & isParticipant & !isLeader"
                   @click="clickParticipateClubEvent('cancel')">
                   참가 취소
@@ -348,8 +348,8 @@ const swal = Swal.mixin({
 
 const swalDelete = Swal.mixin({
   customClass: {
-    confirmButton: 'btn btn-danger ',
-    cancelButton: 'btn btn-success mr-2'
+    confirmButton: 'btn btn-danger mr-2',
+    cancelButton: 'btn btn-success'
   },
   buttonsStyling: false
 })
@@ -400,7 +400,7 @@ export default {
           text: "북클럽 이벤트에 참가하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -413,7 +413,7 @@ export default {
           text: "북클럽 이벤트 참가를 취소하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -436,12 +436,11 @@ export default {
       router.push({ name: 'ClubEventUpdate', params: { clubEventId: clubEventId }})
     },
     clickClubEventDelete() {
-      swalDelete.fire({
+      swal.fire({
           text: "북클럽 이벤트를 삭제하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
-          reverseButtons: true,
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {

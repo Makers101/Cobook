@@ -276,8 +276,8 @@ import { mapState, mapActions } from 'vuex'
 import Swal from 'sweetalert2'
 const swal = Swal.mixin({
   customClass: {
-    confirmButton: 'btn btn-danger',
-    cancelButton: 'btn btn-success mr-2'
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
   },
   buttonsStyling: false
 })
@@ -423,8 +423,7 @@ export default {
                 html: "<p>수정 중인 원데이 이벤트가 있습니다.</p><p>정말 넘어가시겠습니까?</p>",
                 showCancelButton: true,
                 confirmButtonText: '네',
-                cancelButtonText: '취소',
-                reverseButtons: true,
+                cancelButtonText: '아니요',
                 icon: "warning",
               })
               .then((result) => {
