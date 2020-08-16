@@ -174,7 +174,7 @@ const profileStore = {
             name: clubEvent.name,
             start: clubEvent.datetime.slice(0, 16),
             end: '',
-            color: '#AA706A',
+            color: '#b484bf',
             timed: false,
             clubEvent: clubEvent
           }
@@ -200,7 +200,7 @@ const profileStore = {
             name: post.book.title,
             start: post.createdAt.slice(0, 10),
             end: '',
-            color: '#b484bf',
+            color: '#74a892',
             timed: false,
             post: post
           }
@@ -341,7 +341,6 @@ const profileStore = {
         })
     },
     updateProfile({ rootState, rootGetters, dispatch }, profileUpdateData) {
-      console.log(('HELLO'))
       axios.put(SERVER.URL + SERVER.ROUTES.profile, profileUpdateData.basicData, rootGetters.config )
         .then(res => {
           const userId = res.data.userId
@@ -355,10 +354,10 @@ const profileStore = {
               })
                 .then(() => {
                   dispatch('findMyAccount', null, { root: true })
-                  if (router.currentRoute.name === 'PostList') {
+                  if (router.currentRoute.name === 'ProfileUpdate') {
                     router.push({ name: 'PostList'})
                   } else {
-                  router.push({ name: 'Profile', params: { userId: userId }})
+                    router.push({ name: 'Profile', params: { userId: userId }})
                   }
                 })
                 .catch(err => {
@@ -367,6 +366,7 @@ const profileStore = {
           } else {
             dispatch('findMyAccount', null, { root: true })
             if (router.currentRoute.name === 'PostList') {
+              dispatch('postStore/fetchPostsByGenre', null, { root: true } )
               router.push({ name: 'PostList'})
             } else {
             router.push({ name: 'Profile', params: { userId: userId }})
