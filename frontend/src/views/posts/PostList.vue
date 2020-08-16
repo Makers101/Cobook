@@ -194,7 +194,7 @@
           </slide>
         </carousel>
 
-        <div class="my-5 pt-1" v-else >
+        <div class="my-5 pt-1" v-else>
           <div class="d-flex flex-column justify-content-center align-items-center mt-5">
             <h5 class='mb-1'>아직 {{ postSet.genre }} 장르의 리뷰가 없습니다 ㄴ(°0°)ㄱ</h5>
             <small>{{ postSet.genre }} 장르의 첫 번째 리뷰를 작성해보세요 :)</small>
@@ -205,7 +205,7 @@
               <div class="recommended-book">
                 <img :src="book.bookImg">
               </div>
-              <p>임시</p>
+              <p>{{ book.title }}</p>
             </div>
           </div>
         </div>
@@ -290,7 +290,6 @@
         </v-dialog>
       </v-row>
     </div>
-    
   </v-app>
 </template>
 
