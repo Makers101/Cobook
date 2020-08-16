@@ -21,7 +21,7 @@
           </div>
           <!-- 팔로잉 여부 -->
           <div class="d-flex align-items-center mr-3">
-            <button v-if="user.isFollow" class="btn btn-following" @click="clickedFollow(user, 'unfollow')">언팔로잉</button>
+            <button v-if="user.isFollow" class="btn btn-gray" @click="clickedFollow(user, 'unfollow')">언팔로잉</button>
             <button v-else class="btn btn-follow" @click="clickedFollow(user, 'follow')">팔로우</button>
             <!-- <button v-if="checkFollow(profile)" class="btn px-4 btn-following" @click="clickedFollow(profile, 'unfollow')">언팔로우</button>
             <button v-else class="btn btn-follow px-4" @click="clickedFollow(profile, 'follow')">팔로우</button> -->
