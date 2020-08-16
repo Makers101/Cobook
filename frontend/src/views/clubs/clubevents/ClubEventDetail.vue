@@ -72,7 +72,7 @@
                   참가 신청
                 </button>
                 <button
-                  class="btn btn-warning"
+                  class="btn btn-gray"
                   v-if="selectedClubEvent.isMember & isParticipant & !isLeader"
                   @click="clickParticipateClubEvent('cancel')">
                   참가 취소
