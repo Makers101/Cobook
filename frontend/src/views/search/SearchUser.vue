@@ -37,6 +37,15 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+})
+
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'SearchUser',
@@ -48,15 +57,21 @@ export default {
     ...mapActions('profileStore', ['clickFollow']),
     clickedFollow(user, type) {
       if (type === 'unfollow') {
-        if (confirm('팔로우를 취소하시겠습니까?') === false) {
-          return false
-        } 
-      }
-      this.clickFollow(user.id)
-
-      if (type === 'unfollow') {
-        user.isFollow = false
+        swal.fire({
+          text: "팔로우를 취소하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니요',
+          icon: "warning",
+        })
+          .then((result) => {
+            if (result.value) {
+              this.clickFollow(user.id)
+              user.isFollow = false
+            }
+          })
       } else {
+        this.clickFollow(user.id)
         user.isFollow = true
       }
     },
@@ -100,7 +115,8 @@ p {
 }
 
 .btn-following {
-  background-color: #88A498;
+  /*background-color: #88A498;*/
+  background-color: #999999;
   color: #F8F8F8;
 }
 
