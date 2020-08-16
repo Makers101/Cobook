@@ -305,11 +305,12 @@
 <script>
 const swal = Swal.mixin({
   customClass: {
-    confirmButton: 'btn btn-danger',
-    cancelButton: 'btn btn-success mr-2'
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
   },
   buttonsStyling: false
 })
+
 import { mapState, mapActions } from 'vuex'
 import Swal from 'sweetalert2'
 import router from '@/router'
@@ -446,12 +447,10 @@ export default {
     },
     clickDeletePost(postId) {
       swal.fire({
-        // title: "Are you sure?",
         text: "정말 리뷰를 삭제하시겠습니까?",
         showCancelButton: true,
-        confirmButtonText: '삭제',
-        cancelButtonText: '취소',
-        reverseButtons: true,
+        confirmButtonText: '네',
+        cancelButtonText: '아니요',
         icon: "warning",
       })
       .then((result) => {
@@ -462,12 +461,10 @@ export default {
     },
     clickDeleteComment(commentCreateData, commentId) {
       swal.fire({
-        // title: "Are you sure?",
         text: "정말 삭제하시겠습니까?",
         showCancelButton: true,
-        confirmButtonText: '삭제',
-        cancelButtonText: '취소',
-        reverseButtons: true,
+        confirmButtonText: '네',
+        cancelButtonText: '아니요',
         icon: "warning",
       })
       .then((result) => {
@@ -502,12 +499,10 @@ export default {
   beforeRouteLeave(to, from, next) {
     if (this.commentCreateData.content) {
       swal.fire({
-        // title: "Are you sure?",
-        text: "작성 중인 댓글이 있습니다. 정말 넘어가시겠습니까?",
+        html: "<p>작성 중인 댓글이 있습니다.</p><p>정말 넘어가시겠습니까?</p> ",
         showCancelButton: true,
         confirmButtonText: '네',
-        cancelButtonText: '취소',
-        reverseButtons: true,
+        cancelButtonText: '아니요',
         icon: "warning",
       })
       .then((result) => {
