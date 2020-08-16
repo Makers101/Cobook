@@ -124,7 +124,7 @@ export default {
             let notiData = new Object()
             notiData = {
               to: this.profile.id,
-              clubId: 0,
+              dataId: 0,
               isRead: false,
               type: "follow"
             }
@@ -152,32 +152,32 @@ export default {
         });
       } else {
         let notiData = new Object()
-          notiData = {
-            to: this.profile.id,
-            clubId: 0,
-            isRead: false,
-            type: "follow"
+        notiData = {
+          to: this.profile.id,
+          dataId: 0,
+          isRead: false,
+          type: "follow"
+        }
+        this.createNoti(notiData)
+        this.clickFollow(profile.id)
+        var temp = {
+          isFollow: true,
+          nickname: this.myaccount.nickName,
+          profileImg: this.myaccount.profileImg,
+          toUserId: this.myaccount.id
+        }
+        var flag = false
+        for (let [index, key] of profile.followerList.entries()) {
+          // 일치하는 id가 있다면 followerList에서 제거
+          if (key.toUserId === this.myaccount.id){
+            flag = true
+            profile.followerList.splice(index, 1);
+            break;
           }
-          this.createNoti(notiData)
-          this.clickFollow(profile.id)
-          var temp = {
-            isFollow: true,
-            nickname: this.myaccount.nickName,
-            profileImg: this.myaccount.profileImg,
-            toUserId: this.myaccount.id
-          }
-          var flag = false
-          for (let [index, key] of profile.followerList.entries()) {
-            // 일치하는 id가 있다면 followerList에서 제거
-            if (key.toUserId === this.myaccount.id){
-              flag = true
-              profile.followerList.splice(index, 1);
-              break;
-            }
-          }
-          if (flag === false){
-            profile.followerList.push(temp)
-          }
+        }
+        if (flag === false){
+          profile.followerList.push(temp)
+        }
       }
     },
     checkFollow(profile) {
