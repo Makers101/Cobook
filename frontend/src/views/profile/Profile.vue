@@ -19,7 +19,7 @@
           <div class="d-flex justify-content-between">
             <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>
             <span v-if="myaccount.id !== profile.id">
-              <button v-if="checkFollow(profile)" class="btn px-4 btn-secondary" @click="clickedFollow(profile, 'unfollow')">언팔로우</button>
+              <button v-if="checkFollow(profile)" class="btn px-4 btn-gray" @click="clickedFollow(profile, 'unfollow')">언팔로우</button>
               <button v-else class="btn btn-green px-4" @click="clickedFollow(profile, 'follow')">팔로우</button>
             </span>
           </div>
@@ -35,7 +35,7 @@
             <div>
               <button class="btn btn-genre mr-2" disabled v-for="genre in profile.likeGenres" :key="genre.id">#{{ genre.name }}</button>
             </div>
-            <button class="btn btn-secondary" v-if="myaccount.id === profile.id" @click="clickUpdate(profile.id)">프로필 수정</button>   
+            <button class="btn btn-gray" v-if="myaccount.id === profile.id" @click="clickUpdate(profile.id)">프로필 수정</button>   
           </div>
         </div>
       </div>
