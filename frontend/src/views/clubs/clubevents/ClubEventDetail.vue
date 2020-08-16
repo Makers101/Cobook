@@ -346,13 +346,6 @@ const swal = Swal.mixin({
   buttonsStyling: false
 })
 
-const swalDelete = Swal.mixin({
-  customClass: {
-    confirmButton: 'btn btn-danger mr-2',
-    cancelButton: 'btn btn-success'
-  },
-  buttonsStyling: false
-})
 import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
