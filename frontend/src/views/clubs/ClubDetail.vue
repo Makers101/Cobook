@@ -102,13 +102,13 @@
                 가입 신청
               </button>
               <button
-                class="btn btn-secondary"
+                class="btn btn-gray"
                 v-if="selectedClub.recruit && isCandidate"
                 @click="clickApplyClub('cancel', selectedClub.id)">
                 가입 취소
               </button>
               <button
-                class="btn btn-secondary"
+                class="btn btn-gray"
                 v-if="!isLeader && isMember"
                 @click="clickClubSecede(selectedClub.id)">
                 북클럽 탈퇴
