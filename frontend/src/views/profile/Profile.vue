@@ -247,6 +247,7 @@ export default {
 
 .router-link-active {
   background-color: #88A498 !important;
+  color: white !important;
 }
 
 .following {

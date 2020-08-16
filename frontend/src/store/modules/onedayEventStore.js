@@ -83,7 +83,7 @@ const onedayEventStore = {
         let new_onedayEvents1 = []
         if (filters.recruit_filter) {
           state.onedayEvents.forEach(onedayEvent => {
-            if (onedayEvent.participantCnt < (onedayEvent.capacity + 1)) {
+            if (onedayEvent.participantCnt < (onedayEvent.capacity)) {
               new_onedayEvents1.push(onedayEvent)
             }
           })
@@ -98,7 +98,7 @@ const onedayEventStore = {
               new_onedayEvents2.add(onedayEvent)
             }
           })
-          state.filteredOnedayEvents = new_onedayEvents2
+          state.filteredOnedayEvents = Array.from(new_onedayEvents2)
         } else {
           state.filteredOnedayEvents = new_onedayEvents1
         }

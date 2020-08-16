@@ -11,6 +11,7 @@ const postStore = {
     selectedPost: null,
     comments: null,
     tags: null,
+    recommendedUsers: null
   },
   getters: {
   },
@@ -33,6 +34,9 @@ const postStore = {
     SET_TAGS(state, tags) {
       state.tags = tags
     },
+    SET_RECOMMENDED_USERS(state, recommendedUsers) {
+      state.recommendedUsers = recommendedUsers
+    }
   },
   actions: {
     fetchPostsByPopularity({ commit, rootGetters }) {
@@ -47,7 +51,18 @@ const postStore = {
     fetchPostsByFollow({ commit, rootGetters }) {
       axios.get(SERVER.URL + SERVER.ROUTES.posts + '/follows', rootGetters.config)
         .then(res => {
-          commit('SET_POSTS_BY_FOLLOW', res.data)
+          if (res.data.length) {
+            commit('SET_POSTS_BY_FOLLOW', res.data)
+          } else {
+            axios.get(SERVER.URL + SERVER.ROUTES.posts + '/recommendusers')
+              .then(res => {
+                commit('SET_POSTS_BY_FOLLOW', [])
+                commit('SET_RECOMMENDED_USERS', res.data)
+              })
+              .catch(err => {
+                console.log(err.response.data)
+              })
+          }
         })
         .catch(err => {
           console.log(err.response.data)
@@ -56,7 +71,22 @@ const postStore = {
     fetchPostsByGenre({ commit, rootGetters }) {
       axios.get(SERVER.URL + SERVER.ROUTES.posts + '/genres', rootGetters.config)
         .then(res => {
-          commit('SET_POSTS_BY_GENRE', res.data)
+          const postsByGenre = []
+          res.data.forEach(postSet => {
+            if (postSet.posts.length) {
+              postsByGenre.push(postSet)
+            } else {
+              axios.get(SERVER.URL + SERVER.ROUTES.posts + '/genres/' + postSet.genreId)
+                .then(res => {
+                  postSet['books'] = res.data
+                  postsByGenre.push(postSet)
+                })
+                .catch(err => {
+                  console.log(err.response.data)
+                })
+            }       
+          });
+          commit('SET_POSTS_BY_GENRE', postsByGenre)
         })
         .catch(err => {
           console.log(err.response.data)
