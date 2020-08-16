@@ -189,8 +189,8 @@
 import Swal from 'sweetalert2'
 const swal = Swal.mixin({
   customClass: {
-    confirmButton: 'btn btn-danger',
-    cancelButton: 'btn btn-success mr-2'
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger '
   },
   buttonsStyling: false
 })
@@ -293,11 +293,10 @@ export default {
           || (this.postCreateData.tags.length !== 0)
          ) {
             swal.fire({
-              text: "작성 중인 리뷰가 있습니다. 정말 넘어가시겠습니까?",
+              html: "<p>작성 중인 리뷰가 있습니다.</p><p>정말 넘어가시겠습니까?</p>",
               showCancelButton: true,
               confirmButtonText: '네',
-              cancelButtonText: '취소',
-              reverseButtons: true,
+              cancelButtonText: '아니요',
               icon: "warning",
             })
             .then((result) => {
