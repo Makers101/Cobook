@@ -113,11 +113,10 @@ export default {
     clickedFollow(profile, type) {
       if (type === 'unfollow') {
         swal.fire({
-        // title: "Are you sure?",
           text: "팔로우를 취소하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
