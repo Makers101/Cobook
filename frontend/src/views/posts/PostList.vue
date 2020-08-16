@@ -244,9 +244,7 @@ export default {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
     },
     clickUpdateProfile() {
-      
       this.updateProfile(this.profileUpdateData)
-      
       this.dialog = close
     },
     // getPosts() {
@@ -334,6 +332,7 @@ export default {
     this.fetchPostsByFollow()
     this.findMyAccount()
     this.fetchPostsByGenre()
+    next()
   }
 }
 
