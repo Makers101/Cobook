@@ -28,7 +28,7 @@
           type="password"
           placeholder="비밀번호를 입력하세요."
           required
-          @keyup.enter="login(loginData)"
+          @keyup.enter="isSubmit  && login(loginData)"
         />
         <label for="password"></label>
         <div class="error-text ml-3" v-if="error.password">{{error.password}}</div>
@@ -41,7 +41,7 @@
         <button
           class="btn login-button"
           :class="{disabled: !isSubmit}"
-          @click="login(loginData)"
+          @click="isSubmit && login(loginData)"
         >로그인하기</button>
       </div>
 
