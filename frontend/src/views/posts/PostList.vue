@@ -115,8 +115,8 @@
         </carousel>
         <div class="my-5 pt-1" v-else >
           <div class="d-flex flex-column justify-content-center align-items-center mt-5">
-            <h5 class='mb-1'>아직 팔로우 하는 유저가 없습니다 ㄴ(°0°)ㄱ</h5>
-            <small>새로운 유저를 팔로우 하고 리뷰를 받아보세요 :)</small>
+            <h5 class="mb-1 font-weight-bold">아직 팔로우 하는 유저가 없습니다 ㄴ(°0°)ㄱ</h5>
+            <small class="mb-1 font-weight-bold">새로운 유저를 팔로우 하고 리뷰를 받아보세요 :)</small>
           </div>
           <div class="d-flex justify-content-center mt-3">
             <div
@@ -125,7 +125,7 @@
               v-for="user in recommendedUsers"
               :key="user.id"
               >
-              <div class="card profile-card p-3 px-2 d-flex flex-column align-items-center justify-content-center">
+              <div class="card profile-card py-4 px-2 d-flex flex-column align-items-center justify-content-center">
                 <div class="d-flex justify-content-center profile-image">
                   <img
                     v-if="!user.profileImg"
@@ -139,8 +139,8 @@
                 </div>
                 <p class="user-nickName pointer mb-0" @click="selectUser(user.id)"><strong>{{ user.nickName }}</strong></p>
                 <div class="d-flex align-items-center">
-                  <button v-if="user.isFollow" class="btn btn-following" @click="clickedFollow(user, 'unfollow')">언팔로잉</button>
-                  <button v-else class="btn btn-follow" @click="clickedFollow(user, 'follow')">팔로우</button>
+                  <button v-if="user.isFollow" class="btn btn-following small-btn p-1" @click="clickedFollow(user, 'unfollow')">언팔로잉</button>
+                  <button v-else class="btn btn-follow small-btn p-1" @click="clickedFollow(user, 'follow')">팔로우</button>
                 </div>
               </div>                
             </div>
@@ -196,16 +196,22 @@
 
         <div class="my-5 pt-1" v-else>
           <div class="d-flex flex-column justify-content-center align-items-center mt-5">
-            <h5 class='mb-1'>아직 {{ postSet.genre }} 장르의 리뷰가 없습니다 ㄴ(°0°)ㄱ</h5>
-            <small>{{ postSet.genre }} 장르의 첫 번째 리뷰를 작성해보세요 :)</small>
+            <h5 class="mb-1 font-weight-bold">아직 {{ postSet.genre }} 장르의 리뷰가 없습니다 ㄴ(°0°)ㄱ</h5>
+            <small class="mb-1 font-weight-bold">{{ postSet.genre }} 장르의 첫 번째 리뷰를 작성해보세요 :)</small>
           </div>
 
           <div class="d-flex justify-content-center mt-3" style="margin-bottom: 50px;">
-            <div v-for="book in postSet.books" :key="book.id">
-              <div class="recommended-book">
-                <img :src="book.bookImg">
+            <div
+              class="mx-3"
+              v-for="book in postSet.books"
+              :key="book.id"
+              :tooltip="book.title"
+              flow="down"
+            >
+              <div class="recommended-book pointer" @click="bookDetail(book.id)">
+                <img class="book-img" :src="book.bookImg">
               </div>
-              <p>{{ book.title }}</p>
+              <!-- <p class="">{{ book.title }}</p> -->
             </div>
           </div>
         </div>
@@ -770,13 +776,15 @@ img {
 }
 
 .profile-card {
-  width: 130px;
+  width: 120px;
+  border-radius: 15px;
   background-color: #fff;
   box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
 }
 
 .profile-card:hover {
-  width: 130px;
+  width: 120px;
+  border-radius: 15px;
   background-color: #fff;
   box-shadow: 0 8px 16px -8px rgba(0,0,0,0.8);
 }
@@ -784,8 +792,8 @@ img {
 .profile-image img {
   border: 1px solid rgb(0, 0, 0, 0.2);
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
 }
 
 .profile-card p {
@@ -823,7 +831,7 @@ img {
   z-index: 2;
   display: block;
   margin: 0 auto;
-  width: 160px;
+  width: 112px;
   height: auto;
   box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.4);
   transform-origin: 0 0;
@@ -860,5 +868,138 @@ img {
 .recommended-book:hover:after {
   right: -15px;
   width: 15px;
+}
+
+.book-img {
+  width: 112px;
+  height: 175px;
+}
+
+.small-btn {
+  font-size: 0.8rem;
+}
+
+.small-btn:hover {
+  font-size: 0.8rem;
+  background-color: #88A498;
+  color: #F8F8F8 !important;
+}
+
+/* tooltip */
+[tooltip] {
+  position: relative; /* opinion 1 */
+}
+/* START TOOLTIP STYLES */
+[tooltip] {
+  position: relative; /* opinion 1 */
+}
+/* Applies to all tooltips */
+[tooltip]::before,
+[tooltip]::after {
+  text-transform: none; /* opinion 2 */
+  font-size: .8em; /* opinion 3 */
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+  position: absolute;
+  display: none;
+  opacity: 0;
+}
+[tooltip]::before {
+  content: '';
+  border: 5px solid transparent; /* opinion 4 */
+  z-index: 1001; /* absurdity 1 */
+}
+[tooltip]::after {
+  content: attr(tooltip); /* magic! */
+  
+  /* most of the rest of this is opinion */
+  font-family:  'Noto Sans KR', Helvetica, sans-serif;
+  text-align: center;
+  
+  /* 
+    Let the content set the size of the tooltips 
+    but this will also keep them from being obnoxious
+    */
+  min-width: 3em;
+  max-width: 21em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 1ch 1.5ch;
+  border-radius: .3ch;
+  box-shadow: 0 1em 2em -.5em rgba(0, 0, 0, 0.35);
+  background: #333;
+  color: #fff;
+  z-index: 1000; /* absurdity 2 */
+}
+/* Make the tooltips respond to hover */
+[tooltip]:hover::before,
+[tooltip]:hover::after {
+  display: block;
+}
+/* don't show empty tooltips */
+[tooltip='']::before,
+[tooltip='']::after {
+  display: none !important;
+}
+/* FLOW: RIGHT */
+[tooltip][flow^="right"]::before {
+  top: 50%;
+  border-left-width: 0;
+  border-right-color: #333;
+  right: calc(0em - 5px);
+  transform: translate(.5em, -50%);
+}
+[tooltip][flow^="right"]::after {
+  top: 50%;
+  left: calc(100% + 5px);
+  transform: translate(.5em, -50%);
+}
+
+
+/* FLOW: DOWN */
+[tooltip][flow^="down"]::before {
+  top: 100%;
+  border-top-width: 0;
+  border-bottom-color: #333;
+}
+[tooltip][flow^="down"]::after {
+  top: calc(100% + 5px);
+}
+[tooltip][flow^="down"]::before,
+[tooltip][flow^="down"]::after {
+  left: 50%;
+  transform: translate(-50%, .5em);
+}
+
+
+/* KEYFRAMES */
+@keyframes tooltips-vert {
+  to {
+    opacity: .9;
+    transform: translate(-50%, 0);
+  }
+}
+@keyframes tooltips-horz {
+  to {
+    opacity: .9;
+    transform: translate(0, -50%);
+  }
+}
+/* FX All The Things */ 
+[tooltip]:not([flow]):hover::before,
+[tooltip]:not([flow]):hover::after,
+[tooltip][flow^="up"]:hover::before,
+[tooltip][flow^="up"]:hover::after,
+[tooltip][flow^="down"]:hover::before,
+[tooltip][flow^="down"]:hover::after {
+  animation: tooltips-vert 300ms ease-out forwards;
+}
+[tooltip][flow^="left"]:hover::before,
+[tooltip][flow^="left"]:hover::after,
+[tooltip][flow^="right"]:hover::before,
+[tooltip][flow^="right"]:hover::after {
+  animation: tooltips-horz 300ms ease-out forwards;
 }
 </style>

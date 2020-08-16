@@ -174,21 +174,21 @@
       <!-- 위로가기 버튼 -->
       <div>
       <div>
-        <button class="btn btn-green btn-up m-0" @click="scrollToTop()" >
+        <button class="btn btn-green btn-up m-0" @click="scrollToTop()" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail'">
           <i class="fas fa-caret-up" style="color:white;"></i>
         </button>
       </div>
       </div>
       <router-view class="router-view"/>
       <!-- footer -->
-      <div class="footer mt-5">
+      <div class="footer mt-5" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail'">
         <p class="footer-p">© 2020 Copyright: 만든이101 </p>
         <p class="m-0 pb-2">
-          <i class="fab fa-github"></i><a href="https://github.com/smhwang0109" target="_blank"> smhwang0109</a>
-          | <i class="fab fa-github"></i> <a href="https://github.com/scl2589" target="_blank"> chaelinshin96</a> 
-          | <i class="fab fa-github"></i><a href="https://github.com/SunHwan-Park" target="_blank"> SunHwan-Park</a>
-          | <i class="fab fa-github"></i><a href="https://github.com/genie97" target="_blank"> genie97</a>
-          | <i class="fab fa-github"></i><a href="https://github.com/pandaHun" target="_blank"> pandaHun</a>
+          <i class="fab fa-github github-color"></i><a href="https://github.com/smhwang0109" target="_blank"> smhwang0109</a>
+          | <i class="fab fa-github github-color"></i> <a href="https://github.com/scl2589" target="_blank"> chaelinshin96</a> 
+          | <i class="fab fa-github github-color"></i><a href="https://github.com/SunHwan-Park" target="_blank"> SunHwan-Park</a>
+          | <i class="fab fa-github github-color"></i><a href="https://github.com/genie97" target="_blank"> genie97</a>
+          | <i class="fab fa-github github-color"></i><a href="https://github.com/pandaHun" target="_blank"> pandaHun</a>
         </p>
       </div>
     </div>
@@ -352,7 +352,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  max-height: 200vh;
 }
 
 .router-view {
@@ -624,15 +623,22 @@ input::-webkit-input-placeholder {
 }
 
 .footer {
-  background-color: #88A498;
+  background-color: rgb(34, 34, 34);
   color: white;
-  position: static;
+  padding-top: 20px;
+  height: 100px;
   left: 0;
   bottom: 0;
   width: 100%;
   z-index: 99;
 }
+
 .footer a, .footer a:link {
+  color: white;
+  text-decoration: none;
+}
+
+.github-color {
   color: white;
 }
 </style>

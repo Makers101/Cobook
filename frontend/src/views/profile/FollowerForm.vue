@@ -82,9 +82,9 @@ export default {
     clickedFollow(item) {
       let notiData = new Object()
       notiData = {
-        from: this.myaccount.id,
-        to: this.profile.id,
-        dataId: this.profile.id,
+        to: item.toUserId,
+        dataId: 0,
+        isRead: false,
         type: "follow"
       }
       this.createNoti(notiData)
