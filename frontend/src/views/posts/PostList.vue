@@ -426,7 +426,6 @@ export default {
     this.fetchPostsByFollow()
     this.findMyAccount()
     this.fetchPostsByGenre()
-    next()
   }
 }
 
