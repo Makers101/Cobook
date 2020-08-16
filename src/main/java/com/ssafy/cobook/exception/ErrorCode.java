@@ -8,6 +8,7 @@ public enum ErrorCode {
     MEMBER_DUPLICATED_NICKNAME(1200, "이미 존재하는 닉네임입니다."),
     WRONG_EMAIL_CHECK_AUTH(1300, "인증되지 않는 유저입니다."),
     WRONG_PASSWORD(1400, "잘못된 비밀번호입니다."),
+    MEMBER_WRONG_PLATFORM_TYPE(1500, "소셜 회원이 아닙니다. 코북 로그인을 이용해주세요."),
     UNEXPECTED_CLUB(2000, "존재하지 않는 클럽입니다."),
     EXIST_CLUB_NAME(2100, "중복된 클럽 이름입니다."),
     ALREADY_APPLY_USER(2200, "이미 가입된 클럽입니다"),

@@ -218,6 +218,7 @@ public class ProfileService {
         return postRepository.findAllByUser(user)
                 .stream()
                 .filter(Post::getOpen)
+                .sorted((post1, post2) -> post2.getCreatDateTime().compareTo(post1.getCreatDateTime()))
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
     }
@@ -257,6 +258,7 @@ public class ProfileService {
         return postBookMarkRepository.findAllByUser(user)
                 .stream()
                 .map(PostBookMark::getPost)
+                .sorted((post1, post2) -> post2.getCreatDateTime().compareTo(post1.getCreatDateTime()))
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
     }
