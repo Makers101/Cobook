@@ -171,7 +171,21 @@
           alt="로고 이미지"
         >
       </div>
+      <!-- 위로가기 버튼 -->
+      <div>
+      <div>
+        <button class="btn btn-green btn-up m-0" @click="scrollToTop()" >
+          <i class="fas fa-caret-up" style="color:white;"></i>
+        </button>
+      </div>
+      </div>
       <router-view/>
+      
+      <!-- footer -->
+      <footer>
+        <p>만든이 101</p>
+        
+      </footer>
     </div>
     <div id="app2">
       <div class="media-q d-flex flex-column justify-content-center align-items-center">
@@ -286,6 +300,9 @@ export default {
     // },
     search(keyword){
       this.$router.push({name: 'SearchUser', params: { content : keyword }})
+    },
+    scrollToTop() {
+      window.scrollTo(0,0)
     }
   },
   watch: {
@@ -377,6 +394,12 @@ export default {
 .noti-profile-img {
   max-width: 100%;
   border-radius: 50%
+}
+
+.btn-up {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }
 
 /* Search bar */
