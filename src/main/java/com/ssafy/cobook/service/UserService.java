@@ -174,6 +174,9 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
+        if (user.getPlatformType().toString().equals("NONE")) {
+            throw new UserException(ErrorCode.MEMBER_WRONG_PLATFORM_TYPE);
+        }
         String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
         return token;
     }
