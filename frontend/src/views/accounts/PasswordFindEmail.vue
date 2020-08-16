@@ -8,7 +8,7 @@
         <button class="bg-green green-btn btn " type="button">메일 재발송하기</button>
       </div>
       <div class="button-container d-flex justify-content-center mt-3 mx-auto">
-        <button class="bg-beige beige-btn btn" type="button">메일함가기</button>
+        <button class="bg-beige beige-btn btn" type="button" @click="goToSite()">메일함가기</button>
       </div>
     </div>
   </div>
@@ -20,6 +20,13 @@ export default {
   data() {
     return {
       email: this.$route.params.email
+    }
+  },
+  methods: {
+    goToSite() {
+      let idx = this.email.indexOf('@')
+      let site = this.email.slice(idx,)
+      window.open('https://' + site, '_blank');
     }
   }
 }
