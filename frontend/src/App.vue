@@ -179,13 +179,18 @@
         </button>
       </div>
       </div>
-      <router-view/>
-      
+      <router-view class="router-view"/>
       <!-- footer -->
-      <footer>
-        <p>만든이 101</p>
-        
-      </footer>
+      <div class="footer mt-5">
+        <p class="footer-p">© 2020 Copyright: 만든이101 </p>
+        <p class="m-0 pb-2">
+          <i class="fab fa-github"></i><a href="https://github.com/smhwang0109" target="_blank"> smhwang0109</a>
+          | <i class="fab fa-github"></i> <a href="https://github.com/scl2589" target="_blank"> chaelinshin96</a> 
+          | <i class="fab fa-github"></i><a href="https://github.com/SunHwan-Park" target="_blank"> SunHwan-Park</a>
+          | <i class="fab fa-github"></i><a href="https://github.com/genie97" target="_blank"> genie97</a>
+          | <i class="fab fa-github"></i><a href="https://github.com/pandaHun" target="_blank"> pandaHun</a>
+        </p>
+      </div>
     </div>
     <div id="app2">
       <div class="media-q d-flex flex-column justify-content-center align-items-center">
@@ -347,7 +352,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  max-height: 960px;
+  max-height: 200vh;
+}
+
+.router-view {
+  margin-bottom: 100px;
 }
 
 #nav {
@@ -398,8 +407,9 @@ export default {
 
 .btn-up {
   position: fixed;
-  bottom: 20px;
+  bottom: 120px;
   right: 20px;
+  border-radius: 50%;
 }
 
 /* Search bar */
@@ -611,5 +621,18 @@ input::-webkit-input-placeholder {
   background: #88A498; 
   -webkit-border-radius: 15px; border-radius: 15px; 
   /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
+}
+
+.footer {
+  background-color: #88A498;
+  color: white;
+  position: static;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 99;
+}
+.footer a, .footer a:link {
+  color: white;
 }
 </style>
