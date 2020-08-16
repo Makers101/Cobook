@@ -66,7 +66,7 @@
                 참가 신청
               </button>
               <button
-                class="btn btn-secondary"
+                class="btn btn-gray"
                 v-if="isParticipant && !isLeader"
                 @click="clickParticipateOnedayEvent('cancel')">
                 참가 취소
