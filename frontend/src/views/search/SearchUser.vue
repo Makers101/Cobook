@@ -53,6 +53,7 @@ export default {
     ...mapState('searchStore', ['users']),
   },
   methods: {
+    ...mapActions(['createNoti']),
     ...mapActions('searchStore', ['fetchUsers']),
     ...mapActions('profileStore', ['clickFollow']),
     clickedFollow(user, type) {
@@ -65,12 +66,28 @@ export default {
           icon: "warning",
         })
           .then((result) => {
+            let notiData = new Object()
+            notiData = {
+              to: user.id,
+              dataId: 0,
+              isRead: false,
+              type: "follow"
+            }
+            this.createNoti(notiData)
             if (result.value) {
               this.clickFollow(user.id)
               user.isFollow = false
             }
           })
       } else {
+        let notiData = new Object()
+        notiData = {
+          to: user.id,
+          dataId: 0,
+          isRead: false,
+          type: "follow"
+        }
+        this.createNoti(notiData)
         this.clickFollow(user.id)
         user.isFollow = true
       }
