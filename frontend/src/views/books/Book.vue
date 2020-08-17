@@ -96,7 +96,7 @@
                   
                     <div 
                       class="card-style row no-gutters pointer" 
-                      style="height: 120px"
+                      style="height: 100px"
                       @click="postDetail(post.id)"
                       :key="post.id">
                       <div class="col-4 bg-green d-flex align-items-center left-card">
@@ -105,13 +105,13 @@
                             <img
                               v-if="!post.profileImg"
                               class="img-fluid feed-profile-img mt-2"
-                              style="max-width: 50%; border-radius: 50%;" 
+                              style="max-width: 30%; border-radius: 50%;" 
                               src="http://bit.do/anonymouseuser"
                               alt="유저 프로필 사진">
                             <img 
                               v-else
                               class="img-fluid feed-profile-img mt-2"
-                              style="max-width: 50%; border-radius: 50%;" 
+                              style="max-width: 30%; border-radius: 50%;" 
                               :src="post.profileImg" alt="작성자 프로필 사진">
                           </span>
                           <span class="other-nickName">
@@ -123,9 +123,9 @@
                       
                       <div class="col-8 d-flex align-items-center">
                         <div>
-                          <div class="px-3 pt-2 large-text text-left"><i class="fas fa-quote-left"></i></div>
+                          <div class="px-3 large-text text-left"><i class="fas fa-quote-left"></i></div>
                           <div class="px-4 text-center post-onelineReview">{{ post.onelineReview }}</div>               
-                          <div class="px-3 pb-2 large-text text-right"><i class="fas fa-quote-right"></i></div>
+                          <div class="px-3 large-text text-right"><i class="fas fa-quote-right"></i></div>
                         </div>
                       </div>
                       
@@ -564,9 +564,10 @@ p, h1, h2, h3, h4, h5, h6, div {
 }
 
 .card-style {
-  border-radius: 100px;
-  box-shadow: rgba(0,0,0,0.5) 0 1em 0.6em;
+  border-radius: 10px;
+  box-shadow: rgba(0,0,0,0.2) 0 0.8em 0.8em;
   width: 95%;
+  border: 0.5px solid rgb(136, 164, 152, 0.2);
 }
 
 .left-card {
