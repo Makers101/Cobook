@@ -80,7 +80,7 @@ export default {
   data() {
     return {
       bookmarkList: [], 
-      page: 0
+      page: 6
     }
   },
   computed: {
@@ -102,6 +102,11 @@ export default {
     },
     selectFeed(id) {
       this.$router.push({name: 'PostDetail', params: {postId: id}})
+    }
+  },
+  watch: {
+    bookmarks() {
+      this.bookmarkList = this.bookmarks.slice(0, 6)
     }
   },
   created(){
