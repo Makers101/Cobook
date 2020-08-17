@@ -125,7 +125,7 @@ export default {
         genre_filter: new Set()
       },
       clubList: [], 
-      page: 0
+      page: 6
     }
   },
   computed: {
@@ -163,15 +163,19 @@ export default {
       }
       this.$forceUpdate();
       this.filterClubs(this.filters)
-      this.clubList = []
-      this.page = 0
+      if (this.filteredClubs.length < 7) {
+        this.clubList = this.filteredClubs
+      } else {
+        this.clubList = this.filteredClubs.slice(0, 6)
+      }
+      this.page = 6
     }
   },
-  // watch: {
-  //   clubs() {
-  //     this.clubList = this.filteredClubs.slice(0, 6)
-  //   }
-  // },
+  watch: {
+    clubs() {
+      this.clubList = this.filteredClubs.slice(0, 6)
+    }
+  },
   created() {
     this.fetchClubs()
   }
