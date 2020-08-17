@@ -183,12 +183,12 @@
               <!-- 책에 대한 리뷰 리스트 -->
               <h5 class="mb-4"><strong>다른 유저들의 리뷰</strong></h5>
               <div class="w-100" style="height:190px;">
-                <div class="scroll-sect" v-if="selectedPost.posts.length">
-                  <div class="mb-2" v-for="post in selectedPost.posts" :key="post.postId">
+                <div v-if="selectedPost.posts.length">
+                  <div class="mb-2" v-for="post in selectedPost.posts.slice(0, 6) " :key="post.postId">
                     <div
                       class="pointer row no-gutters" 
                       @click="postDetail(post.postId)">
-                      <div class="m-0 col-3 text-left">
+                      <div class="m-0 col-3 text-left other-nickName">
                         <span class="rounded-circle">
                           <img
                             v-if="!post.user.profileImg"
@@ -202,7 +202,7 @@
                         </span>
                         <small class="ml-2">{{ post.user.nickName }}</small>
                       </div>
-                      <div class="changeFont m-0 col-9 text-left">
+                      <div class="changeFont m-0 col-9 text-left other-onelineReview">
                         "{{ post.onelineReview }}"
                       </div>
                     </div>
@@ -525,6 +525,15 @@ export default {
 </script>
 
 <style scoped>
+.other-nickName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+}
+
 .book-info {
   font-size: 0.9em;
 }
