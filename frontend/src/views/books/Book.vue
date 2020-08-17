@@ -114,8 +114,8 @@
                               style="max-width: 50%; border-radius: 50%;" 
                               :src="post.profileImg" alt="작성자 프로필 사진">
                           </span>
-                          <span>
-                            <p class="mb-2">{{ post.nickName }}</p>
+                          <span class="other-nickName">
+                            <p class="mb-2 px-2">{{ post.nickName }}</p>
                           </span>
                         </div>
                       </div>
@@ -213,6 +213,16 @@ body {
   height: 200px;
   box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
   border-radius: 6px;
+}
+
+.other-nickName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+  line-height: 2em;
 }
 
 
