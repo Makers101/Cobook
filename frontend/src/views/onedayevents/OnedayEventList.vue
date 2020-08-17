@@ -107,7 +107,7 @@ export default {
         genre_filter: null,
       },
       onedayEventList: [], 
-      page: 0
+      page: 6
     }
   },
   computed: {
@@ -145,8 +145,17 @@ export default {
       }
       this.$forceUpdate();
       this.filterOnedayEvents(this.filters);
-      this.onedayEventList = []
-      this.page = 0
+      if (this.filteredOnedayEvents.length < 7) {
+        this.onedayEventList = this.filteredOnedayEvents
+      } else {
+        this.onedayEventList = this.filteredOnedayEvents.slice(0, 6)
+      }
+      this.page = 6
+    }
+  },
+  watch: {
+    onedayEvents() {
+      this.onedayEventList = this.filteredOnedayEvents.slice(0, 6)
     }
   },
   created() {
