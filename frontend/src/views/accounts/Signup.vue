@@ -60,14 +60,17 @@
           placeholder="비밀번호를 다시 입력해주세요."
           class="inputs"
           required
-          @keyup.enter="isSubmit && clickSignup"
+          @keyup.enter="clickSignup"
         />
         <label for="password-confirm"></label>
         <div class="error-text ml-3" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
       </div>
-      <div class="buttons mt-5">
-        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="isSubmit && clickSignup" >가입하기</button>
+      <div class="buttons mt-3">
+        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickSignup">가입하기</button>
       </div>
+      <p class="my-3">
+        <span class="items" @click="toLogin">로그인하기</span>
+      </p>
     </div>
   </div>
 </template>
@@ -159,6 +162,9 @@ export default {
       if ( this.isSubmit ){
         this.signup(this.signupData)
       }
+    },
+    toLogin() {
+      this.$router.push({name: "Login"});
     },
     ...mapActions('accountStore', ['signup'])
   }
@@ -264,4 +270,8 @@ input[type="password"] {
   opacity: 0.9;
 }
 
+.items:hover {
+  cursor: pointer;
+  color: #d6cbbd;
+}
 </style>

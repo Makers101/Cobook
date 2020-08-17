@@ -22,10 +22,10 @@
         <h5 class="feed-titles">#인기 리뷰</h5>
         <carousel
           class="slide-container"
-          :autoplay="false"
+          :autoplay="true"
           :autoplayHoverPause="true"
           :autoplayTimeout="5000"
-          :loop="false"
+          :loop="true"
           :navigationEnabled="true"
           navigationNextLabel="<h3 class='navigation'><i class='fas fa-angle-right'></i></h3>"
           navigationPrevLabel="<h3 class='navigation'><i class='fas fa-angle-left'></i></h3>"

@@ -37,6 +37,13 @@
             </div>
             <div class="d-flex justify-content-end align-items-end">
               <button
+                class="btn btn-green mr-2"
+                @click="enterRoom(selectedOnedayEvent.id)"
+                v-if="(isLeader || isParticipant) & !selectedOnedayEvent.closed & (selectedOnedayEvent.place === '온라인')">
+                온라인 입장
+              </button>
+
+              <button
                 class="btn btn-secondary dropdown-toggle"
                 data-toggle="dropdown"
                 aria-haspopup="true"

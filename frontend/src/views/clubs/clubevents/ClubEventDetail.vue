@@ -25,7 +25,6 @@
               <h3 class="mb-0 font-weight-bold">{{ selectedClubEvent.name }}</h3>
               <span class="badge mb-0 ml-2 clubEvent-closed-true" v-if="selectedClubEvent.closed">종료</span>
               <span class="badge mb-0 ml-2 clubEvent-closed-false" v-else>예정</span>
-              <span class="btn mb-0 ml-2 clubEvent-closed-true" @click="enterRoom(selectedClubEvent.id)">온라인 입장</span>
             </div>
             <div class="d-flex justify-content-start align-items-center">
               <span class="badge badge-genre ml-1">{{ selectedClubEvent.book.genre }}</span>
@@ -42,6 +41,13 @@
                 <p class="mb-0 ml-1 font-weight-bold">{{ selectedClubEvent.datetime | moment('YYYY년 MM월 DD일 HH시 mm분') }}</p>
               </div>
               <div class="d-flex justify-content-end align-items-end">
+                <button
+                  class="btn btn-green mr-2"
+                  @click="enterRoom(selectedClubEvent.id)"
+                  v-if="(isLeader || isParticipant) & !selectedClubEvent.closed & (selectedClubEvent.place === '온라인')">
+                  온라인 입장
+                </button>
+
                 <button
                   class="btn btn-secondary dropdown-toggle"
                   data-toggle="dropdown"
@@ -64,7 +70,7 @@
                     이벤트 삭제
                   </button>
                 </div>
-
+                
                 <button
                   class="btn btn-warning"
                   v-if="selectedClubEvent.isMember & !isParticipant & !isLeader"
@@ -380,7 +386,18 @@ export default {
       } else {
         return false
       }
-    }
+    },
+    // isCurrent() {
+    //   if (Date() < new Date(this.selectedClubEvent.datetime)) {
+    //     console.log(Date())
+    //     console.log(new Date(this.selectedClubEvent.datetime))
+    //     console.log(Date() < new Date(this.selectedClubEvent.datetime))
+    //     // console.log()
+    //     return true
+    //   } else {
+    //     return false
+    //   }
+    // }
   },
   methods: {
     ...mapActions('clubStore', ['findClub', 'findClubEvent', 'participateClubEvent', 'deleteClubEvent']),

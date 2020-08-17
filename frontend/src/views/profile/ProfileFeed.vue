@@ -77,7 +77,7 @@ export default {
   data() {
     return {
       feedList: [], 
-      page: 0
+      page: 6
     }
   },
   computed: {
@@ -99,6 +99,11 @@ export default {
     },
     selectFeed(id) {
       this.$router.push({name: 'PostDetail', params: {postId: id}})
+    }
+  },
+  watch: {
+    feeds() {
+      this.feedList = this.feeds.slice(0, 6)
     }
   },
   created() {
