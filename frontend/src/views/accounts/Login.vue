@@ -28,7 +28,7 @@
           type="password"
           placeholder="비밀번호를 입력하세요."
           required
-          @keyup.enter="isSubmit  && login(loginData)"
+          @keyup.enter="clickLogin"
         />
         <label for="password"></label>
         <div class="error-text ml-3" v-if="error.password">{{error.password}}</div>
@@ -41,7 +41,7 @@
         <button
           class="btn login-button"
           :class="{disabled: !isSubmit}"
-          @click="isSubmit && login(loginData)"
+          @click="clickLogin"
         >로그인하기</button>
       </div>
 
@@ -143,6 +143,11 @@ export default {
           this.$router.push("/");
         });
     },
+    clickLogin() {
+      if ( this.isSubmit ){
+        this.login(this.loginData)
+      }
+    },
     kakaoLogin() {
       window.Kakao.Auth.login({
         scope: "profile, account_email",
@@ -236,11 +241,6 @@ export default {
     },
     clickSignup() {
       this.$router.push({name: "Signup"});
-    },
-    clickLogin() {
-      if (this.isSubmit) {
-          this.$router.push("/");
-      }
     },
     clickPasswordFind() {
       this.$router.push({name: "PasswordFind"});
