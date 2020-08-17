@@ -171,8 +171,17 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['createNoti']),
     ...mapActions('clubStore', ['findClub', 'fetchCandidates', 'decideClubApply', 'updateRecruit', 'deleteClub']),
     clickDecideClubApply(clubMemberId, decision) {
+      let notiData = new Object()
+      notiData = {
+        to: clubMemberId,
+        dataId: this.$route.params.clubId,
+        isRead: false,
+        type: decision
+      }
+      this.createNoti(notiData)
       this.applyDecisionData.clubMemberId = clubMemberId
       this.applyDecisionData.decision = decision
       this.decideClubApply(this.applyDecisionData)

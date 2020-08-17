@@ -109,33 +109,47 @@
                   <small class="badge rounded-circle badge-danger go-left" v-if="notis">{{ notis.length }}</small>
                 </div>
                 <div class="dropdown-menu dropdown-noti py-0 text-center scroll-sect" aria-labelledby="navbarDropdown" v-if="myaccount" >
-                  <div
-                    class="dropdown-item setting-btn"
-                    v-for="(noti, idx) in notis"
-                    :key="`noti-${idx}`"
-                    @click="toRoute(noti)"
-                  >
-                    <div class="row no-gutters">
-                      <div class="col-2">
-                        <img
-                          v-if="!findUsers[noti.from][1]"
-                          class="img-fluid noti-profile-img mr-1" 
-                          src="http://bit.do/anonymouseuser" 
-                          alt="유저 프로필 사진">
-                        <img 
-                          v-else
-                          class="img-fluid noti-profile-img mr-1" 
-                          :src="findUsers[noti.from][1]" alt="유저 프로필 사진">
+                  <div v-if="notis">
+                    <div
+                      class="dropdown-item setting-btn"
+                      v-for="(noti, idx) in notis"
+                      :key="`noti-${idx}`"
+                      @click="toRoute(noti)"
+                    >
+                      <div class="row no-gutters">
+                        <div class="col-2">
+                          <img
+                            v-if="!findUsers[noti.from][1]"
+                            class="img-fluid noti-profile-img mr-1" 
+                            src="http://bit.do/anonymouseuser" 
+                            alt="유저 프로필 사진">
+                          <img 
+                            v-else
+                            class="img-fluid noti-profile-img mr-1" 
+                            :src="findUsers[noti.from][1]" alt="유저 프로필 사진">
+                        </div>
+                        <div class="col-9 d-flex align-items-center text-left pl-2">
+                          <span v-if="noti.type==='club'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 '{{ findClubs[noti.dataId] }}' 북클럽에 가입신청했습니다.</span>
+                          <span v-if="noti.type==='comment'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 댓글을 작성했습니다.</span>
+                          <span v-if="noti.type==='follow'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 팔로우했습니다.</span>
+                          <span v-if="noti.type==='like'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 게시물을 좋아합니다.</span>
+                        </div>
+                        <div class="col-1 d-flex align-items-center justify-content-end">
+                          <span class="text-muted" style="font-size:10px">X</span>
+                        </div>
                       </div>
-                      <div class="col-9 d-flex align-items-center text-left pl-2">
-                        <span v-if="noti.type==='club'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 '{{ findClubs[noti.dataId] }}' 북클럽에 가입신청했습니다.</span>
-                        <span v-if="noti.type==='comment'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 댓글을 작성했습니다.</span>
-                        <span v-if="noti.type==='follow'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 팔로우했습니다.</span>
-                        <span v-if="noti.type==='like'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 게시물을 좋아합니다.</span>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <div
+                      class="dropdown-item setting-btn"
+                    >
+                      <div class="row no-gutters">
+                        <div class="col-12">
+                          <p class="mt-2">알림이 없습니다.</p>
+                        </div>
                       </div>
-                      <div class="col-1 d-flex align-items-center justify-content-end">
-                        <span class="text-muted" style="font-size:10px">X</span>
-                      </div>
+                    
                     </div>
                   </div>
                 </div>
