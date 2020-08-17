@@ -154,11 +154,15 @@ public class NotificationService {
             } else {
                 saveNoti.setValueAsync(notificationSaveDto);
             }
-        } else { // 댓글
+        } else if(type.equals("comment")) { // 댓글
             PostComment postComment = postCommentRepository.findByLastComment(fromUser, post).stream()
                     .limit(1)
                     .collect(Collectors.toList()).get(0);
             notificationSaveDto.setCommentId(postComment.getId());
+            saveNoti.setValueAsync(notificationSaveDto);
+        } else if(type.equals("approve")){
+            saveNoti.setValueAsync(notificationSaveDto);
+        } else {
             saveNoti.setValueAsync(notificationSaveDto);
         }
     }
