@@ -82,9 +82,7 @@ export default new Vuex.Store({
         .catch(err => console.log(err.response.data))
     },
     createNoti({ getters }, notiData) {
-      console.log(notiData)
       axios.post(SERVER.URL + SERVER.ROUTES.noti, notiData, getters.config)
-        .then(res => console.log(res))
         .catch(err => console.log(err.response.data))
     },
     logout({ commit }) {
