@@ -116,10 +116,11 @@ export default {
       const googleUser = await this.$gAuth.signIn();
       const profile = googleUser.getBasicProfile();
       const userInfo = {
-          nickname: profile.getName(),
+          nickName: profile.getName(),
           email: profile.getEmail(),
           platformType: "GOOGLE",
       };
+      console.log(userInfo);
       axios
         .post(SERVER.URL + SERVER.ROUTES.social, userInfo)
         .then((res) => {
@@ -160,7 +161,7 @@ export default {
         success: (res) => {
           const kakao_account = res.kakao_account;
           const userInfo = {
-            nickname: kakao_account.profile.nickname,
+            nickName: kakao_account.profile.nickname,
             email: kakao_account.email,
             platformType: "KAKAO",
           };
