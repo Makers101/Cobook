@@ -120,11 +120,27 @@ export default {
           email: profile.zu,
           platformType: "GOOGLE",
       };
-      axios
-        .post(SERVER.URL + SERVER.ROUTES.social, userInfo)
+      axios.post(SERVER.URL + SERVER.ROUTES.social, userInfo)
         .then((res) => {
-          console.log(res);
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            onOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          })
           this.SET_TOKEN(res.data)
+          Toast.fire({
+              icon: 'success',
+              title: "로그인에 성공하였습니다."
+          })
+          this.$router.push("/");
+        })
+        .catch((err) => {
           const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -137,11 +153,11 @@ export default {
             }
           })
           Toast.fire({
-              icon: 'success',
-              title: "로그인에 성공하였습니다."
+              icon: 'error',
+              title: err.response.data.message
           })
           this.$router.push("/");
-        });
+        })
     },
     clickLogin() {
       if ( this.isSubmit ){
