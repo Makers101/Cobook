@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-3 mb-5">
+  <div class="mt-3" style="padding-bottom:100px">
     
     <!-- profile-clubs -->
     
