@@ -32,8 +32,8 @@ public class GenreService {
                 .collect(Collectors.toList());
     }
 
-    public List<BookResponseDto> getBooks(Long genreId) {
-        Genre genre = genreRepository.findById(genreId)
+    public List<BookResponseDto> getBooks(String genreName) {
+        Genre genre = genreRepository.findByGenreName(genreName)
                 .orElseThrow(()->new BaseException(ErrorCode.INVALID_GENRE));
         List<BookResponseDto> dtos = bookRepository.findAllByGenre(genre).stream()
                 .map(BookResponseDto::new)

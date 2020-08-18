@@ -33,8 +33,8 @@ public class GenreController {
     }
 
     @ApiOperation(value = "장르의 책 조회")
-    @GetMapping("/{genreId}/books")
-    public ResponseEntity<List<BookResponseDto>> getBooksByGenre(@PathVariable("genreId") Long genreId) {
-        return ResponseEntity.status(HttpStatus.OK).body(genreService.getBooks(genreId));
+    @GetMapping("/{genreName}/books")
+    public ResponseEntity<List<BookResponseDto>> getBooksByGenre(@PathVariable("genreName") String genreName) {
+        return ResponseEntity.status(HttpStatus.OK).body(genreService.getBooks(genreName));
     }
 }
