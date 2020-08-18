@@ -1,5 +1,5 @@
 <template>
-  <v-app class="custom-container">
+  <v-app class="custom-container" style="padding-bottom:100px;">
 
     <!-- posts-banner -->
     <div class="posts-banner">

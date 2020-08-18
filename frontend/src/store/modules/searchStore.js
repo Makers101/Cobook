@@ -8,6 +8,7 @@ const searchStore = {
   state: {
     users: null,
     books: null,
+    genreBooks: null,
     posts: null,
     clubs: null,
     onedayevents: null,
@@ -20,6 +21,9 @@ const searchStore = {
     },
     SET_BOOKS(state, books) {
       state.books = books
+    },
+    SET_GENREBOOKS(state, genreBooks) {
+      state.genreBooks = genreBooks
     },
     SET_POSTS(state, posts) {
       state.posts = posts
@@ -43,6 +47,15 @@ const searchStore = {
       axios.get(SERVER.URL + SERVER.ROUTES.search + SERVER.ROUTES.books + '/' + content)
         .then(res => {
           commit('SET_BOOKS', res.data)
+        })
+        .catch(err => {
+          console.log(err.data)
+        })
+    },
+    fetchGenreBooks({commit}, content) {
+      axios.get(SERVER.URL + SERVER.ROUTES.genres + '/' + content + SERVER.ROUTES.books)
+        .then(res => {
+          commit('SET_GENREBOOKS', res.data)
         })
         .catch(err => {
           console.log(err.data)

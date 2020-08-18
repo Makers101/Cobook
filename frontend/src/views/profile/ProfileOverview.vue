@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-5">
+  <div style="padding-bottom:100px">
     <!-- profile-overview-calendar -->
     <v-app>
       <v-row class="fill-height">

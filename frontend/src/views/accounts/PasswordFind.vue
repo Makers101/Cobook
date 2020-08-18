@@ -114,7 +114,7 @@ export default {
         headers: { 'Content-Type': 'application/json' }
       })
         .then (() => {                                    
-          router.push({ name: 'PasswordFindEmail', params: {email: this.passwordFindData.email}})
+          router.push({ name: 'PasswordFindEmail', params: {passwordFindData: this.passwordFindData}})
         })
         .catch (() =>{
           const Toast = Swal.mixin({

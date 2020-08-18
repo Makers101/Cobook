@@ -177,7 +177,7 @@
           </div>
         </nav>
       </div>
-      <div class="mt-5" v-else>
+      <div v-else>
         <img 
           class="img-fluid logo-img"
           style="height: 50px"
@@ -195,7 +195,7 @@
       </div>
       <router-view class="router-view"/>
       <!-- footer -->
-      <div class="footer mt-5" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail'">
+      <div class="footer" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail'">
         <p class="footer-p">© 2020 Copyright: 만든이101 </p>
         <p class="m-0 pb-2">
           <i class="fab fa-github github-color"></i><a href="https://github.com/smhwang0109" target="_blank"> smhwang0109</a>
@@ -366,10 +366,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-.router-view {
-  margin-bottom: 100px;
+  min-height: 920px;
+  position: relative
 }
 
 #nav {
@@ -645,6 +643,7 @@ input::-webkit-input-placeholder {
   bottom: 0;
   width: 100%;
   z-index: 99;
+  position: absolute;
 }
 
 .footer a, .footer a:link {

@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container mb-5">
+  <div class="custom-container">
     
     <div class="profile-banner">
       <img class="profile-banner-img"
