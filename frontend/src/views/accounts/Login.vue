@@ -116,8 +116,8 @@ export default {
       const googleUser = await this.$gAuth.signIn();
       const profile = googleUser.getBasicProfile();
       const userInfo = {
-          nickname: profile.Cd,
-          email: profile.zu,
+          nickname: profile.getName(),
+          email: profile.getEmail(),
           platformType: "GOOGLE",
       };
       axios
