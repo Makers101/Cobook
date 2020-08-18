@@ -7,7 +7,7 @@
         <p class="mb-0 text--primary">{{ profile.nickName }}님이 팔로잉 하는 유저입니다.</p>
       </v-card-text>
       <v-divider class="m-0"></v-divider>
-      <v-virtual-scroll :itemHeight="50" height="300" :items="followingList"  v-if="followingList.length">
+      <v-virtual-scroll :itemHeight="50" height="300" :items="profile.followingList"  v-if="profile.followingList.length">
         <template v-slot="{item}">
           <v-list-item>
             <v-list-item-avatar>
@@ -17,10 +17,10 @@
               </v-avatar>
             </v-list-item-avatar>
             <v-list-item-content class="text-left">
-              <v-list-item-title><span @click="selectUser(item.toUserId)" class="nicknameSection">{{ item.nickname }}</span></v-list-item-title>
+              <v-list-item-title><span @click="selectUser(item.id)" class="nicknameSection">{{ item.nickname }}</span></v-list-item-title>
             </v-list-item-content>
             <v-list-item-action>
-              <div v-if="item.toUserId !== myaccount.id">
+              <div v-if="item.id !== myaccount.id">
                 <v-btn 
                   small dark color="grey lighten-1" 
                   v-show="item.isFollow"
@@ -59,7 +59,6 @@ export default {
   props: {
      value: Boolean,
      profile: Object,
-     followingList: Array,
   },
   computed: {
     show: {
@@ -70,25 +69,24 @@ export default {
          this.$emit('input', value)
       }
     },
-    ...mapState('profileStore', ['followingList']), 
     ...mapState(['myaccount'])
   },
   methods: {
     ...mapActions(['createNoti']),
-    ...mapActions('profileStore', ['clickFollow']),
+    ...mapActions('profileStore', ['clickFollowModal']),
     selectUser(userId) {
       router.push({ name: 'ProfileFeed', params: { userId: userId }})
     }, 
     clickedFollow(item) {
       let notiData = new Object()
       notiData = {
-        to: item.toUserId,
+        to: item.id,
         dataId: 0,
         isRead: false,
         type: "follow"
       }
       this.createNoti(notiData)
-      this.clickFollow(item.toUserId)
+      this.clickFollowModal(item.id)
       item.isFollow = !item.isFollow
     }
   },

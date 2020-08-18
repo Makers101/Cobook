@@ -124,7 +124,7 @@ public class UserService {
             messageHelper.setTo(recipient);
             if (!isFind) { // 이메일 인증
                 messageHelper.setSubject("Cobook 회원가입 인증이메일입니다.");
-                URL url = new URL("http://i3a111.p.ssafy.io:8090/api/users/authentication/" + token);
+                URL url = new URL("https://i3a111.p.ssafy.io:8090/api/users/authentication/" + token);
                 String content = stringBuilder.append("하단의 링크로 접속하여 인증해주세요!")
                         .append("\n")
                         .append(url)
@@ -132,7 +132,7 @@ public class UserService {
                 messageHelper.setText(content, true);
             } else {
                 messageHelper.setSubject("Cobook 비밀번호 변경 메일입니다.");
-                URL url = new URL("http://i3a111.p.ssafy.io:8090/api/users/resetPassword/" + token);
+                URL url = new URL("https://i3a111.p.ssafy.io:8090/api/users/resetPassword/" + token);
 //                URL url = new URL("http://localhost:8080/api/users/resetPassword/" + token);
                 String content = stringBuilder.append("하단의 링크로 접속하여 새로운 비밀번호를 입력해주세요!")
                         .append("\n")
@@ -142,6 +142,18 @@ public class UserService {
             }
         };
         emailSender.send(messagePreparator);
+    }
+
+
+    public void resend(ResendEmailDto resendEmailDto) {
+        User user = getUser(resendEmailDto.getEmail());
+        String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
+
+        if (resendEmailDto.getType().equals("signup")) {
+            preparedAndSend(user.getEmail(), false, token);
+        } else {
+            preparedAndSend(user.getEmail(), true, token);
+        }
     }
 
     public void getPassword(UserEmailSimpleDto userEmailSimpleDto, boolean isFind) {
@@ -180,4 +192,5 @@ public class UserService {
         String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
         return token;
     }
+
 }

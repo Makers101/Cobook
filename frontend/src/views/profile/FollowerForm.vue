@@ -7,7 +7,7 @@
         <p class="mb-0 text--primary">{{ profile.nickName }}님을 팔로우 하는 유저입니다.</p>
       </v-card-text>
       <v-divider class="m-0"></v-divider>
-      <v-virtual-scroll :itemHeight="50" height="300" :items="followerList" v-if="followerList">
+      <v-virtual-scroll :itemHeight="50" height="300" :items="profile.followerList" v-if="profile.followerList">
         <template v-slot="{item}">
           <v-list-item>
             <v-list-item-avatar>
@@ -17,10 +17,10 @@
               </v-avatar>
             </v-list-item-avatar>
             <v-list-item-content class="text-left">
-              <v-list-item-title class="nicknameSection" @click="selectUser(item.toUserId)">{{ item.nickname }}</v-list-item-title>
+              <v-list-item-title class="nicknameSection" @click="selectUser(item.id)">{{ item.nickname }}</v-list-item-title>
             </v-list-item-content>
             <v-list-item-action  >
-              <div v-if="item.toUserId !== myaccount.id">
+              <div v-if="item.id !== myaccount.id">
                 <v-btn 
                   small dark color="grey lighten-1" 
                   v-show="item.isFollow"
@@ -59,7 +59,6 @@ export default {
   props: {
      value: Boolean,
      profile: Object,
-     followerList: Array,
   },
   computed: {
     show: {
@@ -70,7 +69,6 @@ export default {
          this.$emit('input', value)
       }
     },
-    ...mapState('profileStore', ['followerList']), 
     ...mapState(['myaccount'])
   },
   methods: {
@@ -80,15 +78,16 @@ export default {
       router.push({ name: 'ProfileFeed', params: { userId: userId }})
     },
     clickedFollow(item) {
+      console.log(item)
       let notiData = new Object()
       notiData = {
-        to: item.toUserId,
+        to: item.id,
         dataId: 0,
         isRead: false,
         type: "follow"
       }
       this.createNoti(notiData)
-      this.clickFollowModal(item.toUserId)
+      this.clickFollowModal(item.id)
       item.isFollow = !item.isFollow
     }
   },

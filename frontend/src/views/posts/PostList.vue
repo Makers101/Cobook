@@ -64,7 +64,7 @@
           </slide>
         </carousel>
         <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 200px" v-else >
-          <h3>인기 게시물이 없습니다 ㄴ(°0°)ㄱ</h3>
+          <h3>인기 게시물이 없습니다</h3>
         </div>
       </div>
 
@@ -115,7 +115,7 @@
         </carousel>
         <div class="my-5 pt-1" v-else >
           <div class="d-flex flex-column justify-content-center align-items-center mt-5">
-            <h5 class="mb-1 font-weight-bold">아직 팔로우 하는 유저가 없습니다 ㄴ(°0°)ㄱ</h5>
+            <h5 class="mb-1 font-weight-bold">아직 팔로우 하는 유저가 없습니다</h5>
             <small class="mb-1 font-weight-bold">새로운 유저를 팔로우 하고 리뷰를 받아보세요 :)</small>
           </div>
           <div class="d-flex justify-content-center mt-3">
@@ -196,7 +196,7 @@
 
         <div class="my-5 pt-1" v-else>
           <div class="d-flex flex-column justify-content-center align-items-center mt-5">
-            <h5 class="mb-1 font-weight-bold">아직 {{ postSet.genre }} 장르의 리뷰가 없습니다 ㄴ(°0°)ㄱ</h5>
+            <h5 class="mb-1 font-weight-bold">아직 {{ postSet.genre }} 장르의 리뷰가 없습니다</h5>
             <small class="mb-1 font-weight-bold">{{ postSet.genre }} 장르의 첫 번째 리뷰를 작성해보세요 :)</small>
           </div>
 
@@ -339,7 +339,7 @@ export default {
     ...mapState('postStore', ['postsByPopularity', 'postsByFollow', 'postsByGenre', 'recommendedUsers']),
   },
   methods: {
-    ...mapActions(['findMyAccount']),
+    ...mapActions(['findMyAccount', 'createNoti']),
     ...mapActions('profileStore', ['updateProfile', 'clickFollow']),
     ...mapActions('postStore', ['fetchPostsByPopularity', 'fetchPostsByFollow', 'fetchPostsByGenre', 'createLike', 'createBookmark']),
     clubDetail(clubId) {
@@ -365,6 +365,14 @@ export default {
       } else {
         user['isFollow'] = true
       }
+      let notiData = new Object()
+      notiData = {
+        to: user.id,
+        dataId: 0,
+        isRead: false,
+        type: "follow"
+      }
+      this.createNoti(notiData)
       this.clickFollow(user.id)
       this.$forceUpdate();
     },

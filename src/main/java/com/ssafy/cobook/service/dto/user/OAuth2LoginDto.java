@@ -16,7 +16,7 @@ public class OAuth2LoginDto {
 
     @NotEmpty(message = "닉네임을 입력해주세요.")
     @Length(min = 2, max = 128)
-    private String nickname;
+    private String nickName;
 
     @NotEmpty(message = "이메일을 입력해주세요.")
     @Email(message = "이메일 형식이 올바르지 않습니다.")
@@ -30,7 +30,7 @@ public class OAuth2LoginDto {
 
         return User.builder()
                 .email(email)
-                .nickName(nickname)
+                .nickName(nickName)
                 .accept(true)
                 .platformType(PlatformType.valueOf(platformType))
                 .roles(Collections.singletonList("USER_ROLE"))

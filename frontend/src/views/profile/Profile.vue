@@ -19,7 +19,7 @@
           <div class="d-flex justify-content-between">
             <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>
             <span v-if="myaccount.id !== profile.id">
-              <button v-if="checkFollow(profile)" class="btn px-4 btn-gray" @click="clickedFollow(profile, 'unfollow')">언팔로우</button>
+              <button v-if="checkFollow" class="btn px-4 btn-gray" @click="clickedFollow(profile, 'unfollow')">언팔로우</button>
               <button v-else class="btn btn-green px-4" @click="clickedFollow(profile, 'follow')">팔로우</button>
             </span>
           </div>
@@ -43,16 +43,14 @@
 
     <FollowerForm 
       v-if="showFollowerForm" 
-      v-model="showFollowerForm" 
-      :followerList = "this.followerList"
-      :profile="this.profile" 
+      v-model="showFollowerForm"
+      :profile="profile" 
       id="followerModal"
     />
     <FollowingForm 
     v-if="showFollowingForm" 
-    v-model="showFollowingForm" 
-    :followingList = "this.followingList"
-    :profile="this.profile"
+    v-model="showFollowingForm"
+    :profile="profile"
     id="followingModal"/>
 
     <!-- routers -->
@@ -84,7 +82,16 @@ export default {
   name: 'Profile',
   computed: {
     ...mapState('profileStore',['profile', 'followingList', 'followerList']),
-    ...mapState(['myaccount'])
+    ...mapState(['myaccount']),
+    checkFollow() {
+      let flag = false
+      this.profile.followerList.forEach(user => {
+        if (user.id === this.myaccount.id) {
+          flag = true
+        }
+      })
+      return flag
+    },
   },
   data() {
     return {
@@ -130,24 +137,24 @@ export default {
             }
             this.createNoti(notiData)
             this.clickFollow(profile.id)
-            var temp = {
-              isFollow: true,
-              nickname: this.myaccount.nickName,
-              profileImg: this.myaccount.profileImg,
-              toUserId: this.myaccount.id
-            }
-            var flag = false
-            for (let [index, key] of profile.followerList.entries()) {
-              // 일치하는 id가 있다면 followerList에서 제거
-              if (key.toUserId === this.myaccount.id){
-                flag = true
-                profile.followerList.splice(index, 1);
-                break;
-              }
-            }
-            if (flag === false){
-              profile.followerList.push(temp)
-            }
+            // var temp = {
+            //   isFollow: true,
+            //   nickname: this.myaccount.nickName,
+            //   profileImg: this.myaccount.profileImg,
+            //   toUserId: this.myaccount.id
+            // }
+            // var flag = false
+            // for (let [index, key] of profile.followerList.entries()) {
+            //   // 일치하는 id가 있다면 followerList에서 제거
+            //   if (key.toUserId === this.myaccount.id){
+            //     flag = true
+            //     profile.followerList.splice(index, 1);
+            //     break;
+            //   }
+            // }
+            // if (flag === false){
+            //   profile.followerList.push(temp)
+            // }
           } 
         });
       } else {
@@ -160,37 +167,24 @@ export default {
         }
         this.createNoti(notiData)
         this.clickFollow(profile.id)
-        var temp = {
-          isFollow: true,
-          nickname: this.myaccount.nickName,
-          profileImg: this.myaccount.profileImg,
-          toUserId: this.myaccount.id
-        }
-        var flag = false
-        for (let [index, key] of profile.followerList.entries()) {
-          // 일치하는 id가 있다면 followerList에서 제거
-          if (key.toUserId === this.myaccount.id){
-            flag = true
-            profile.followerList.splice(index, 1);
-            break;
-          }
-        }
-        if (flag === false){
-          profile.followerList.push(temp)
-        }
-      }
-    },
-    checkFollow(profile) {
-      var flag = false
-      for (let key of profile.followerList.entries()) {
-        // 일치하는 id가 있다면 followerList에서 제거
-        if (key[1].toUserId === this.myaccount.id){
-          flag = true
-          return true
-        }
-      }
-      if (flag === false){
-        return false
+        // var temp = {
+        //   isFollow: true,
+        //   nickname: this.myaccount.nickName,
+        //   profileImg: this.myaccount.profileImg,
+        //   toUserId: this.myaccount.id
+        // }
+        // var flag = false
+        // for (let [index, key] of profile.followerList.entries()) {
+        //   // 일치하는 id가 있다면 followerList에서 제거
+        //   if (key.toUserId === this.myaccount.id){
+        //     flag = true
+        //     profile.followerList.splice(index, 1);
+        //     break;
+        //   }
+        // }
+        // if (flag === false){
+        //   profile.followerList.push(temp)
+        // }
       }
     },
     closeDialog: function() {
