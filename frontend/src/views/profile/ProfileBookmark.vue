@@ -3,7 +3,7 @@
     <div class="row rows-cols-1 row-cols-md-3 pointer" v-if="bookmarks.length">
       <div 
         class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
-        v-for="bookmark in bookmarks"
+        v-for="bookmark in bookmarkList"
         :key="bookmark.id"
         @click="selectFeed(bookmark.id)">
         <div class="card m-0 ">
@@ -56,7 +56,9 @@
             
           </div>
         </div>
-      </div>   
+      </div>
+      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="bookmarks" spinner="waveDots"></infinite-loading>
+
       
     </div>
     <div v-else>
@@ -68,10 +70,17 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import InfiniteLoading from 'vue-infinite-loading'
+
 export default {
   name: 'ProfileBookmark',
+  components: {
+    InfiniteLoading
+  },
   data() {
     return {
+      bookmarkList: [], 
+      page: 6
     }
   },
   computed: {
@@ -80,8 +89,24 @@ export default {
   },
   methods: {
     ...mapActions('profileStore', ['fetchBookmarks']),
+    infiniteHandler($state) {
+      setTimeout(() => {
+        if (this.bookmarks.slice(this.page, this.page + 6).length) {
+          this.bookmarkList = this.bookmarkList.concat(this.bookmarks.slice(this.page, this.page + 6))
+          $state.loaded();
+          this.page += 6
+        } else {
+          $state.complete();
+        }
+      }, 700)
+    },
     selectFeed(id) {
       this.$router.push({name: 'PostDetail', params: {postId: id}})
+    }
+  },
+  watch: {
+    bookmarks() {
+      this.bookmarkList = this.bookmarks.slice(0, 6)
     }
   },
   created(){

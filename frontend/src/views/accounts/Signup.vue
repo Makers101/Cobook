@@ -54,7 +54,6 @@
       <div class="input-with-label">
         <input
           v-model="signupData.passwordConfirm"
-          
           type="password"
           id="password-confirm"
           v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&signupData.passwordConfirm.length!==0}"
@@ -66,26 +65,12 @@
         <label for="password-confirm"></label>
         <div class="error-text ml-3" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
       </div>
-
       <div class="buttons mt-3">
-        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickSignup" >가입하기</button>
+        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickSignup">가입하기</button>
       </div>
-
-      <hr class="divide">
-
-      <div class="buttons d-flex justify-content-center">
-        <button class="btn kakao d-flex align-items-center justify-content-center">
-          <i class="xi-2x xi-kakaotalk text-dark"></i>
-          <span class="justify-content-center">카카오 아이디 회원가입</span>
-        </button>
-      </div>
-      <div class="buttons mt-2 d-flex justify-content-center mx-auto px-0" style="width: 70%">
-        <button class="btn google d-flex align-items-center justify-content-center" style="width:100% !important">
-          <!-- <i class="fab fa-google-plus-g"></i> -->
-          <img class="google-logo" src="https://user-images.githubusercontent.com/57381062/88908677-291dcb80-d295-11ea-8a24-2a96837dd714.png" width="32px" height="32px" >
-          <span class="justify-content-center">구글 아이디 회원가입</span>
-        </button>
-      </div>
+      <p class="my-3">
+        <span class="items" @click="toLogin">로그인하기</span>
+      </p>
     </div>
   </div>
 </template>
@@ -177,6 +162,9 @@ export default {
       if ( this.isSubmit ){
         this.signup(this.signupData)
       }
+    },
+    toLogin() {
+      this.$router.push({name: "Login"});
     },
     ...mapActions('accountStore', ['signup'])
   }
@@ -282,4 +270,8 @@ input[type="password"] {
   opacity: 0.9;
 }
 
+.items:hover {
+  cursor: pointer;
+  color: #d6cbbd;
+}
 </style>

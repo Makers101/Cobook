@@ -183,12 +183,12 @@
               <!-- 책에 대한 리뷰 리스트 -->
               <h5 class="mb-4"><strong>다른 유저들의 리뷰</strong></h5>
               <div class="w-100" style="height:190px;">
-                <div class="scroll-sect" v-if="selectedPost.posts.length">
-                  <div class="mb-2" v-for="post in selectedPost.posts" :key="post.postId">
+                <div v-if="selectedPost.posts.length">
+                  <div class="mb-2" v-for="post in selectedPost.posts.slice(0, 6) " :key="post.postId">
                     <div
                       class="pointer row no-gutters" 
                       @click="postDetail(post.postId)">
-                      <div class="m-0 col-3 text-left">
+                      <div class="m-0 col-3 text-left other-nickName">
                         <span class="rounded-circle">
                           <img
                             v-if="!post.user.profileImg"
@@ -202,7 +202,7 @@
                         </span>
                         <small class="ml-2">{{ post.user.nickName }}</small>
                       </div>
-                      <div class="changeFont m-0 col-9 text-left">
+                      <div class="changeFont m-0 col-9 text-left other-onelineReview">
                         "{{ post.onelineReview }}"
                       </div>
                     </div>
@@ -305,11 +305,12 @@
 <script>
 const swal = Swal.mixin({
   customClass: {
-    confirmButton: 'btn btn-danger',
-    cancelButton: 'btn btn-success mr-2'
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
   },
   buttonsStyling: false
 })
+
 import { mapState, mapActions } from 'vuex'
 import Swal from 'sweetalert2'
 import router from '@/router'
@@ -446,12 +447,10 @@ export default {
     },
     clickDeletePost(postId) {
       swal.fire({
-        // title: "Are you sure?",
         text: "정말 리뷰를 삭제하시겠습니까?",
         showCancelButton: true,
-        confirmButtonText: '삭제',
-        cancelButtonText: '취소',
-        reverseButtons: true,
+        confirmButtonText: '네',
+        cancelButtonText: '아니요',
         icon: "warning",
       })
       .then((result) => {
@@ -462,12 +461,10 @@ export default {
     },
     clickDeleteComment(commentCreateData, commentId) {
       swal.fire({
-        // title: "Are you sure?",
         text: "정말 삭제하시겠습니까?",
         showCancelButton: true,
-        confirmButtonText: '삭제',
-        cancelButtonText: '취소',
-        reverseButtons: true,
+        confirmButtonText: '네',
+        cancelButtonText: '아니요',
         icon: "warning",
       })
       .then((result) => {
@@ -502,12 +499,10 @@ export default {
   beforeRouteLeave(to, from, next) {
     if (this.commentCreateData.content) {
       swal.fire({
-        // title: "Are you sure?",
-        text: "작성 중인 댓글이 있습니다. 정말 넘어가시겠습니까?",
+        html: "<p>작성 중인 댓글이 있습니다.</p><p>정말 넘어가시겠습니까?</p> ",
         showCancelButton: true,
         confirmButtonText: '네',
-        cancelButtonText: '취소',
-        reverseButtons: true,
+        cancelButtonText: '아니요',
         icon: "warning",
       })
       .then((result) => {
@@ -530,6 +525,15 @@ export default {
 </script>
 
 <style scoped>
+.other-nickName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+}
+
 .book-info {
   font-size: 0.9em;
 }

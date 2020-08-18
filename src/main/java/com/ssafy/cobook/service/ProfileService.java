@@ -111,19 +111,20 @@ public class ProfileService {
     // 팔로잉 리스트를 가져온다
     public List<UserByFollowDto> getFollowingList(Long fromUserId, Long toUserId) {
 
-        User toUser = userRepository.findById(toUserId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER)); // 지금 접속자
-
         User fromUser = userRepository.findById(fromUserId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER)); // 지금 접속한 페이지
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER)); // 토큰 (접속자)
 
-        List<UserByFollowDto> followingList = followRepository.findAllByFromUser(fromUser).stream()
+        User toUser = userRepository.findById(toUserId)
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER)); // 페이지 주인
+
+        // 페이지 주인의 팔로잉 리스트를 가져온다
+        List<UserByFollowDto> followingList = followRepository.findAllByFromUser(toUser).stream()
                 .map(Follow::getToUser)
                 .map(UserByFollowDto::new)
                 .collect(Collectors.toList());
 
-        for(UserByFollowDto users : followingList){
-            if(followRepository.findByToUserAndFromUser(users.getToUserId(), toUser.getId()).isPresent()){
+        for (UserByFollowDto users : followingList) {
+            if (followRepository.findByToUserAndFromUser(fromUser.getId(), users.getId()).isPresent()) {
                 users.setIsFollow(true);
             }
         }
@@ -131,21 +132,21 @@ public class ProfileService {
         return followingList;
     }
 
-    // 팔로워 리스트 가져오기 (fromUser의 아이디가 들어오면 toUser가 fromUser의 값인 애들을 뽑아야함)
+    // 팔로워 리스트 가져오기
     public List<UserByFollowDto> getFollowerList(Long fromUserId, Long toUserId) {
-        User toUser = userRepository.findById(toUserId)
-                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
-
         User fromUser = userRepository.findById(fromUserId)
                 .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
 
-        List<UserByFollowDto> followerList = followRepository.findAllByToUser(fromUser).stream()
+        User toUser = userRepository.findById(toUserId)
+                .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
+
+        List<UserByFollowDto> followerList = followRepository.findAllByToUser(toUser).stream()
                 .map(Follow::getFromUser)
                 .map(UserByFollowDto::new)
                 .collect(Collectors.toList());
 
-        for(UserByFollowDto users : followerList){
-            if(followRepository.findByToUserAndFromUser(users.getToUserId(), toUser.getId()).isPresent()){
+        for (UserByFollowDto users : followerList) {
+            if (followRepository.findByToUserAndFromUser(fromUser.getId(), users.getId()).isPresent()) {
                 users.setIsFollow(true);
             }
         }
@@ -218,6 +219,7 @@ public class ProfileService {
         return postRepository.findAllByUser(user)
                 .stream()
                 .filter(Post::getOpen)
+                .sorted((post1, post2) -> post2.getCreatDateTime().compareTo(post1.getCreatDateTime()))
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
     }
@@ -226,7 +228,7 @@ public class ProfileService {
         User user = getUserById(userId);
 
         return clubMemberRepository.findAllByUser(user).stream()
-                .filter(c->!c.getRole().equals(MemberRole.WAITING))
+                .filter(c -> !c.getRole().equals(MemberRole.WAITING))
                 .map(ClubMember::getClub)
                 .map(ClubResDto::new)
                 .collect(Collectors.toList());
@@ -257,6 +259,7 @@ public class ProfileService {
         return postBookMarkRepository.findAllByUser(user)
                 .stream()
                 .map(PostBookMark::getPost)
+                .sorted((post1, post2) -> post2.getCreatDateTime().compareTo(post1.getCreatDateTime()))
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
     }

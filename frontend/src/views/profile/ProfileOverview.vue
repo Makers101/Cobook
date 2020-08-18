@@ -20,8 +20,8 @@
               </v-toolbar-title>
               <v-spacer></v-spacer>
               <div>
-                <small class="mr-2"><i class="fas fa-dot-circle" style="color: #b484bf"></i>독서</small>
-                <small class="mr-2"><i class="fas fa-dot-circle" style="color: #AA706A"></i>북클럽 이벤트</small>
+                <small class="mr-2"><i class="fas fa-dot-circle" style="color: #74a892"></i>독서</small>
+                <small class="mr-2"><i class="fas fa-dot-circle" style="color: #b484bf"></i>북클럽 이벤트</small>
                 <small class="mr-3"><i class="fas fa-dot-circle" style="color: #7393C2"></i>원데이 이벤트</small>
               </div>
               <v-menu bottom right>

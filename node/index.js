@@ -4,11 +4,12 @@ var os = require('os');
 const fs = require('fs');
 const path = require('path')
 var nodeStatic = require('node-static');
+// var http = require('http');
 var https = require('https');
 var socketIO = require('socket.io');
 
 var fileServer = new(nodeStatic.Server)();
-// var app = https.createServer(function(req, res) {
+// var app = http.createServer(function(req, res) {
 //   fileServer.serve(req, res);
 // }).listen(8000);
 
@@ -41,10 +42,18 @@ io.sockets.on('connection', function(socket) {
     socket.emit('log', array);
   }
 
-  socket.on('message', function(message) {
-    log('Client said: ', message);
-    // for a real app, would be room-only (not broadcast)
-    socket.broadcast.emit('message', message);
+  socket.on('message', function(messageData) {
+    log('Client said: ', messageData['message']);
+    socket.broadcast.in(messageData['room']).emit('message', messageData['message']);
+    if (messageData['message'] === 'bye') {
+      socket.leave(messageData['room'])
+      log('Client leave', messageData['room']);
+    }
+    // let roomMembers
+    io.in(messageData['room']).clients((error, clients) => {
+      if (error) throw error;
+      log(messageData['room'], clients, socket.id);
+    })
   });
 
   socket.on('create or join', function(room) {
@@ -63,7 +72,7 @@ io.sockets.on('connection', function(socket) {
       log('Client ID ' + socket.id + ' joined room ' + room);
       io.sockets.in(room).emit('join', room);
       socket.join(room);
-      socket.emit('joined', room, socket.id);
+      io.sockets.in(room).emit('joined', numClients, socket.id);
       io.sockets.in(room).emit('ready');
     } else { // max two clients
       socket.emit('full', room);
@@ -74,9 +83,9 @@ io.sockets.on('connection', function(socket) {
     var ifaces = os.networkInterfaces();
     for (var dev in ifaces) {
       ifaces[dev].forEach(function(details) {
-        if (details.family === 'IPv4' && details.address !== '127.0.0.1') {
+        // if (details.family === 'IPv4' && details.address !== '127.0.0.1') {
           socket.emit('ipaddr', details.address);
-        }
+        // }
       });
     }
   });

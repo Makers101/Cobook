@@ -25,7 +25,6 @@
               <h3 class="mb-0 font-weight-bold">{{ selectedClubEvent.name }}</h3>
               <span class="badge mb-0 ml-2 clubEvent-closed-true" v-if="selectedClubEvent.closed">종료</span>
               <span class="badge mb-0 ml-2 clubEvent-closed-false" v-else>예정</span>
-              <span class="btn mb-0 ml-2 clubEvent-closed-true" @click="enterRoom(selectedClubEvent.id)">온라인 입장</span>
             </div>
             <div class="d-flex justify-content-start align-items-center">
               <span class="badge badge-genre ml-1">{{ selectedClubEvent.book.genre }}</span>
@@ -42,6 +41,13 @@
                 <p class="mb-0 ml-1 font-weight-bold">{{ selectedClubEvent.datetime | moment('YYYY년 MM월 DD일 HH시 mm분') }}</p>
               </div>
               <div class="d-flex justify-content-end align-items-end">
+                <button
+                  class="btn btn-green mr-2"
+                  @click="enterRoom(selectedClubEvent.id)"
+                  v-if="(isLeader || isParticipant) & !selectedClubEvent.closed & (selectedClubEvent.place === '온라인')">
+                  온라인 입장
+                </button>
+
                 <button
                   class="btn btn-secondary dropdown-toggle"
                   data-toggle="dropdown"
@@ -64,7 +70,7 @@
                     이벤트 삭제
                   </button>
                 </div>
-
+                
                 <button
                   class="btn btn-warning"
                   v-if="selectedClubEvent.isMember & !isParticipant & !isLeader"
@@ -72,7 +78,7 @@
                   참가 신청
                 </button>
                 <button
-                  class="btn btn-warning"
+                  class="btn btn-gray"
                   v-if="selectedClubEvent.isMember & isParticipant & !isLeader"
                   @click="clickParticipateClubEvent('cancel')">
                   참가 취소
@@ -346,13 +352,6 @@ const swal = Swal.mixin({
   buttonsStyling: false
 })
 
-const swalDelete = Swal.mixin({
-  customClass: {
-    confirmButton: 'btn btn-danger ',
-    cancelButton: 'btn btn-success mr-2'
-  },
-  buttonsStyling: false
-})
 import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
@@ -387,7 +386,18 @@ export default {
       } else {
         return false
       }
-    }
+    },
+    // isCurrent() {
+    //   if (Date() < new Date(this.selectedClubEvent.datetime)) {
+    //     console.log(Date())
+    //     console.log(new Date(this.selectedClubEvent.datetime))
+    //     console.log(Date() < new Date(this.selectedClubEvent.datetime))
+    //     // console.log()
+    //     return true
+    //   } else {
+    //     return false
+    //   }
+    // }
   },
   methods: {
     ...mapActions('clubStore', ['findClub', 'findClubEvent', 'participateClubEvent', 'deleteClubEvent']),
@@ -400,7 +410,7 @@ export default {
           text: "북클럽 이벤트에 참가하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -413,7 +423,7 @@ export default {
           text: "북클럽 이벤트 참가를 취소하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -436,12 +446,11 @@ export default {
       router.push({ name: 'ClubEventUpdate', params: { clubEventId: clubEventId }})
     },
     clickClubEventDelete() {
-      swalDelete.fire({
+      swal.fire({
           text: "북클럽 이벤트를 삭제하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
-          reverseButtons: true,
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {

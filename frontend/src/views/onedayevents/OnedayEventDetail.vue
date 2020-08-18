@@ -37,6 +37,13 @@
             </div>
             <div class="d-flex justify-content-end align-items-end">
               <button
+                class="btn btn-green mr-2"
+                @click="enterRoom(selectedOnedayEvent.id)"
+                v-if="(isLeader || isParticipant) & !selectedOnedayEvent.closed & (selectedOnedayEvent.place === '온라인')">
+                온라인 입장
+              </button>
+
+              <button
                 class="btn btn-secondary dropdown-toggle"
                 data-toggle="dropdown"
                 aria-haspopup="true"
@@ -66,7 +73,7 @@
                 참가 신청
               </button>
               <button
-                class="btn btn-secondary"
+                class="btn btn-gray"
                 v-if="isParticipant && !isLeader"
                 @click="clickParticipateOnedayEvent('cancel')">
                 참가 취소
@@ -332,13 +339,6 @@ const swal = Swal.mixin({
   buttonsStyling: false
 })
 
-const swalDelete = Swal.mixin({
-  customClass: {
-    confirmButton: 'btn btn-danger ',
-    cancelButton: 'btn btn-success mr-2'
-  },
-  buttonsStyling: false
-})
 import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
@@ -382,11 +382,10 @@ export default {
     clickParticipateOnedayEvent(type) {
       if (type === 'apply') {
         swal.fire({
-        // title: "Are you sure?",
           text: "원데이 이벤트에 참가하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -396,11 +395,10 @@ export default {
         });
       } else if (type === 'cancel') {
         swal.fire({
-        // title: "Are you sure?",
           text: "원데이 이벤트 참가를 취소하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -420,13 +418,11 @@ export default {
       router.push({ name: 'OnedayEventUpdate', params: { onedayEventId: onedayEventId }})
     },
     clickOnedayEventDelete(onedayEventId) {
-      swalDelete.fire({
-        // title: "Are you sure?",
+      swal.fire({
           text: "원데이 이벤트를 삭제하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
-          reverseButtons: true,
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {

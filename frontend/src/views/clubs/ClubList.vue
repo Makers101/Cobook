@@ -63,7 +63,7 @@
     <div class="club-list my-2 row">
       <div 
         class="col-lg-4 col-md-6 col-sm-12 p-3"
-        v-for="club in filteredClubs"
+        v-for="club in clubList"
         :key="`club_${club.id}`">
         <div class="card">
           <div class="card-head club-image-container">
@@ -104,6 +104,7 @@
           </div>
         </div>
       </div>
+      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="filteredClubs" spinner="waveDots"></infinite-loading>
     </div>
   </div>
 </template>
@@ -111,14 +112,20 @@
 <script>
 import router from '@/router'
 import { mapState, mapActions } from 'vuex'
+import InfiniteLoading from 'vue-infinite-loading'
 export default {
   name: 'ClubList',
+  components: {
+    InfiniteLoading
+  },
   data() {
     return {
       filters: {
         recruit_filter: false,
         genre_filter: new Set()
-      }
+      },
+      clubList: [], 
+      page: 6
     }
   },
   computed: {
@@ -127,6 +134,17 @@ export default {
   },
   methods: {
     ...mapActions('clubStore', ['fetchClubs', 'filterClubs']),
+    infiniteHandler($state) {
+      setTimeout(() => {
+        if (this.filteredClubs.slice(this.page, this.page + 6).length) {
+          this.clubList = this.clubList.concat(this.filteredClubs.slice(this.page, this.page + 6))
+          $state.loaded();
+          this.page += 6
+        } else {
+          $state.complete();
+        }
+      }, 700)
+    },
     selectClub(clubId) {
       router.push({ name: 'ClubDetail', params: { clubId: clubId }})
     },
@@ -144,7 +162,18 @@ export default {
         }
       }
       this.$forceUpdate();
-      this.filterClubs(this.filters);
+      this.filterClubs(this.filters)
+      if (this.filteredClubs.length < 7) {
+        this.clubList = this.filteredClubs
+      } else {
+        this.clubList = this.filteredClubs.slice(0, 6)
+      }
+      this.page = 6
+    }
+  },
+  watch: {
+    clubs() {
+      this.clubList = this.filteredClubs.slice(0, 6)
     }
   },
   created() {

@@ -400,7 +400,7 @@ export default {
   }
 
   .clubEvent-badge {
-    background-color: #AA706A; 
+    background-color: #b46ec4; 
     color: #F8F8F8;
     text-align: center;
     padding: 6px;

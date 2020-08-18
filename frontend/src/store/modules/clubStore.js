@@ -63,7 +63,7 @@ const clubStore = {
               new_clubs2.add(club)
             }
           })
-          state.filteredClubs = new_clubs2
+          state.filteredClubs = Array.from(new_clubs2)
         } else {
           state.filteredClubs = new_clubs1
         }
