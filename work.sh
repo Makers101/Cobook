@@ -1,3 +1,5 @@
+sudo chmod 777 ./frontend/run.sh
+sudo chmod 777 ./node/run.sh
 sudo ./frontend/run.sh
 sudo ./node/run.sh
 sudo chmod 777 build/libs/cobook-0.0.1-SNAPSHOT.jar
