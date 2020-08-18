@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container mb-5">
+  <div class="custom-container" style="padding-bottom:120px">
 
     <!-- onedayEvent-create-banner -->
     <div class="onedayEvent-banner">
