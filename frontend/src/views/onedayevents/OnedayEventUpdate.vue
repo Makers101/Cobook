@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container mb-5" v-if="selectedOnedayEvent">
+  <div class="custom-container" v-if="selectedOnedayEvent" style="padding-bottom:120px">
 
     <!-- onedayEvent-update-banner -->
     <div class="onedayEvent-banner">
