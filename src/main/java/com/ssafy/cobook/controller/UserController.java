@@ -70,6 +70,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(jwtTokenProvider.createToken(user.getId(), user.getRoles()));
     }
 
+    @ApiOperation(value = "다시 이메일을 보내는 경우", response = UserResponseIdDto.class)
+    @PostMapping("/resend")
+    public ResponseEntity<Void> resendEmail(@RequestBody @Valid ResendEmailDto resendEmailDto) {
+        userService.resend(resendEmailDto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
 
     @ApiOperation(value = "자기 자신의 정보를 가져온다")
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
