@@ -33,7 +33,12 @@
           </p> 
           <div class="d-flex justify-content-between">
             <div>
-              <button class="btn btn-genre mr-2" disabled v-for="genre in profile.likeGenres" :key="genre.id">#{{ genre.name }}</button>
+              <button 
+                class="btn btn-genre mr-2" 
+                @click="clickGenre(genre.name)"
+                v-for="genre in profile.likeGenres" 
+                :key="genre.id">#{{ genre.name }}
+              </button>
             </div>
             <button class="btn btn-gray" v-if="myaccount.id === profile.id" @click="clickUpdate(profile.id)">프로필 수정</button>   
           </div>
@@ -193,6 +198,9 @@ export default {
     },
     clickUpdate(userId) {
       this.$router.push({ name: 'ProfileUpdate', params: { userId: userId }})
+    },
+    clickGenre(genre) {
+      this.$router.push({ name: 'SearchBook', params: { content: genre }})
     }
   },
   created() {

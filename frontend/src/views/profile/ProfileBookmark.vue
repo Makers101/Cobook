@@ -57,7 +57,10 @@
           </div>
         </div>
       </div>
-      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="bookmarks" spinner="waveDots"></infinite-loading>
+      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="bookmarks" spinner="waveDots">
+        <div slot="no-more">더 이상 북마크한 리뷰가 존재하지 않습니다.</div>
+        <div slot="no-results">더 이상 북마크한 리뷰가 존재하지 않습니다.</div>
+      </infinite-loading>
 
       
     </div>
