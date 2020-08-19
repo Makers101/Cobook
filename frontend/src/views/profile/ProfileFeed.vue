@@ -56,7 +56,10 @@
           </div>
         </div>
       </div>
-      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="feeds" spinner="waveDots"></infinite-loading>
+      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="feeds" spinner="waveDots">
+        <div slot="no-more">더 이상 리뷰가 존재하지 않습니다.</div>
+        <div slot="no-results">더 이상 리뷰가 존재하지 않습니다.</div>
+      </infinite-loading>
     </div>
     <div v-else>
       <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
