@@ -44,6 +44,7 @@ public class ClubEvent {
     private String place;
     private String description;
     private Boolean closed;
+    private String roomUrl;
 
     @Builder
     public ClubEvent(String title, LocalDateTime dateTime, String place, String description, Boolean closed) {
@@ -107,5 +108,9 @@ public class ClubEvent {
         if (this.dateTime.isBefore(now)) {
             this.closed = true;
         }
+    }
+
+    public void updateRoom(String url) {
+        this.roomUrl = url;
     }
 }

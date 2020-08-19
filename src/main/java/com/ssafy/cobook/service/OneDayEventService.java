@@ -16,6 +16,7 @@ import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.service.dto.clubevent.ClubEventDetailResDto;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventRoomReqDto;
 import com.ssafy.cobook.service.dto.onedayevent.*;
 import com.ssafy.cobook.service.dto.post.PostByMembersResDto;
 import lombok.RequiredArgsConstructor;
@@ -180,5 +181,17 @@ public class OneDayEventService {
         for (OneDayEvent event : events) {
             event.isEnd(now);
         }
+    }
+
+    @Transactional
+    public void updateRoom(Long userId, Long eventId, ClubEventRoomReqDto dto) {
+        User user = getUser(userId);
+        OneDayEvent event = getEvent(eventId);
+        OneDayEventMember member = memberRepository.findByUserAndOneDayEvent(user, event)
+                .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_EVENT));
+        if (member.isNotLeader()) {
+            throw new BaseException(ErrorCode.UNEXPECTED_EVENT);
+        }
+        event.updateRoom(dto.getUrl());
     }
 }

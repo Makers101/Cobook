@@ -25,6 +25,7 @@ public class ClubEventDetailResDto {
     private Integer participantCnt;
     private Boolean closed;
     private Boolean isMember;
+    private String roomUrl;
     private BookSimpleResDto book;
     private List<QuestionResDto> questions;
     private ClubEventMemberResponseDto leader;
@@ -38,6 +39,7 @@ public class ClubEventDetailResDto {
         this.place = clubEvent.getPlace();
         this.description = clubEvent.getDescription();
         this.closed = clubEvent.getClosed();
+        this.roomUrl = clubEvent.getRoomUrl();
         this.book = new BookSimpleResDto(clubEvent.getBook());
         this.questions = clubEvent.getQuestions().stream()
                 .map(QuestionResDto::new)
