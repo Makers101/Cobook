@@ -30,8 +30,8 @@ export default {
   methods: {
     ...mapActions("accountStore", ["resendPasswordEmail"]),
     goToSite() {
-      let idx = this.email.indexOf('@')
-      let site = this.email.slice(idx,)
+      let idx = this.passwordFindData.data.email.indexOf('@')
+      let site = this.passwordFindData.data.email.slice(idx,)
       window.open('https://' + site, '_blank');
     }
   }

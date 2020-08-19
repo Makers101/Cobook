@@ -177,7 +177,7 @@
           </div>
         </nav>
       </div>
-      <div v-else>
+      <div v-else style="padding-top:50px">
         <img 
           class="img-fluid logo-img"
           style="height: 50px"
@@ -188,7 +188,7 @@
       <!-- 위로가기 버튼 -->
       <div>
       <div>
-        <button class="btn btn-green btn-up m-0" @click="scrollToTop()" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail'">
+        <button class="btn btn-green btn-up m-0" @click="scrollToTop()" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail' &&  authToken != null">
           <i class="fas fa-caret-up" style="color:white;"></i>
         </button>
       </div>
@@ -196,7 +196,7 @@
       <router-view class="router-view"/>
     </div>
     <!-- footer -->
-    <div class="footer" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail'">
+    <div class="footer" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail' && authToken != null">
       <p class="footer-p">© 2020 Copyright: 만든이101 </p>
       <p class="m-0 pb-2">
         <i class="fab fa-github github-color"></i><a href="https://github.com/smhwang0109" target="_blank"> smhwang0109</a>
@@ -390,6 +390,10 @@ export default {
   color: #3A2F15;
 }
 
+.navbar {
+  margin-left: 1vw;
+}
+
 .navbar-bg-color {
   height: 65px;
 }
@@ -427,6 +431,7 @@ export default {
   bottom: 120px;
   right: 20px;
   border-radius: 50%;
+  z-index: 99;
 }
 
 /* Search bar */

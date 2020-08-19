@@ -214,7 +214,7 @@
       <v-col cols="6">
         <h3>장르별 독서 통계</h3>
         <div class="d-flex justify-content-center align-items-center h-75">
-          <pie-chart class="col-12 mt-2" v-if="pieData.labels.length"></pie-chart>
+          <pie-chart class="col-12 mt-4" v-if="pieData.labels.length"></pie-chart>
           <div v-else>
             <div>
               <img

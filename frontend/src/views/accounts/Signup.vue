@@ -177,17 +177,19 @@ export default {
   border-radius: 25px;
 }
 
-h3 { 
-  color: #88A498;
+h3 {
+  color: #88a498;
+  font-weight: 800;
 }
 
 .inputs {
   border-style: none;
   border-bottom: 1px solid #88A498;
   background-color: transparent;
-  width: 100%;
+  width: 80%;
   padding: 10px;
-  padding-left: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin-top: 20px;
 }
 
@@ -233,7 +235,7 @@ input[type="password"] {
 .error-text {
   color: rgb(250, 25, 59, 0.7);
   text-align: left;
-  padding-left: 5px;
+  padding-left: 30px;
 }
 
 .signup-button:hover {

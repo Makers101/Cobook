@@ -208,6 +208,10 @@ export default {
   left: 0;
 }
 
+.additional:hover .user-card img {
+  border: 5px solid #fff;
+}
+
 .card .additional .user-card {
   width: 120px;
   height: 100%;

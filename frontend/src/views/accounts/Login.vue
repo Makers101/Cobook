@@ -1,7 +1,7 @@
 <template>
     <div class="background">
-        <div class="container p-3 mt-5 bg-light-ivory login-form">
-            <h3>로그인</h3>
+        <div class="container p-3 mt-5 bg-light-ivory login-form" >
+            <h3 class="login-title"><strong>로그인</strong></h3>
 
             <div class="input-with-label">
                 <input
@@ -57,10 +57,9 @@
                     <span class="justify-content-center">카카오 아이디 로그인</span>
                 </button>
             </div>
-            <div class="buttons mt-2 d-flex justify-content-center mx-auto px-0" style="width: 70%">
+            <div class="buttons mt-2 d-flex justify-content-center mx-auto px-0" >
                 <button
                         class="btn google d-flex align-items-center justify-content-center"
-                        style="width:100%!important"
                         @click="handleClickSignIn"
                 >
                     <!-- <i class="fab fa-google-plus-g"></i> -->
@@ -283,108 +282,114 @@
 </script>
 
 <style scoped>
-    .background {
-        background-repeat: repeat;
-    }
+.background {
+    background-repeat: repeat;
+}
 
-    .container {
-        width: 30%;
-        border-radius: 25px;
-    }
+.login-form {
+    opacity: 0.9;
+}
 
-    h3 {
-        color: #88a498;
-    }
+.container {
+    width: 30%;
+    border-radius: 25px;
+}
 
-    .inputs {
-        border-style: none;
-        border-bottom: 1px solid #88a498;
-        background-color: transparent;
-        width: 100%;
-        padding: 10px;
-        padding-left: 20px;
-        margin-top: 20px;
-    }
+h3 {
+    color: #88a498;
+    font-weight: 900;
+}
 
-    .login-button {
-        background-color: #88a498;
-        color: #f8f8f8;
-        width: 70%;
-    }
+.inputs {
+    border-style: none;
+    border-bottom: 1px solid #88a498;
+    background-color: transparent;
+    width: 80%;
+    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 20px;
+}
 
-    .divide {
-        width: 10%;
-        border-top: 1px solid #88a498;
-        margin-left: auto;
-        margin-right: auto;
-    }
+.login-button {
+    background-color: #88a498;
+    color: #f8f8f8;
+    width: 80%;
+}
 
-    .kakao {
-        background-color: #ffe812;
-        border-radius: 5px;
-        width: 70%;
-    }
+.divide {
+    width: 10%;
+    border-top: 1px solid #88a498;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-    .google {
-        background-color: #ffffff;
-        border-radius: 5px;
-        width: 70% !important;
-    }
+.kakao {
+    background-color: #ffe812;
+    border-radius: 5px;
+    width: 80%;
+}
 
-    .inputs:focus {
-        border-style: none;
-        border-bottom: 2px solid #d6cbbd;
-        outline-style: none;
-    }
+.google {
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 80% !important;
+}
 
-    input[type="password"] {
-        font-family: sans-serif;
-    }
+.inputs:focus {
+    border-style: none;
+    border-bottom: 2px solid #d6cbbd;
+    outline-style: none;
+}
 
-    .error,
-    .error:focus {
-        border-bottom: 2px solid rgb(250, 25, 59, 0.7);
-    }
+input[type="password"] {
+    font-family: sans-serif;
+}
 
-    .error-text {
-        color: rgb(250, 25, 59, 0.7);
-        text-align: left;
-        padding-left: 5px;
-    }
+.error,
+.error:focus {
+    border-bottom: 2px solid rgb(250, 25, 59, 0.7);
+}
 
-    .login-button:hover {
-        background-color: #3c755a;
-        color: #f8f8f8;
-    }
+.error-text {
+    color: rgb(250, 25, 59, 0.7);
+    text-align: left;
+    padding-left: 30px;
+}
 
-    .disabled,
-    .disabled:hover {
-        background-color: rgb(136, 154, 152, 0.25);
-        color: #f8f8f8;
-        cursor: inherit;
-    }
+.login-button:hover {
+    background-color: #3c755a;
+    color: #f8f8f8;
+}
 
-    .items:hover {
-        cursor: pointer;
-        color: #d6cbbd;
-    }
+.disabled,
+.disabled:hover {
+    background-color: rgb(136, 154, 152, 0.25);
+    color: #f8f8f8;
+    cursor: inherit;
+}
 
-    .background::after {
-        content: "";
-        background-image: url("https://user-images.githubusercontent.com/57381062/88908481-de03b880-d294-11ea-8567-9e74079c2a7b.jpg");
-        opacity: 0.5;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        position: absolute;
-        z-index: -1;
-        width: 100vw;
-        height: 100vh;
-        filter: brightness(0.7);
-    }
+.items:hover {
+    cursor: pointer;
+    color: #d6cbbd;
+}
 
-    .formatting {
-        opacity: 0.9;
-    }
+.background::after {
+    content: "";
+    background-image: url("https://user-images.githubusercontent.com/57381062/88908481-de03b880-d294-11ea-8567-9e74079c2a7b.jpg");
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    filter: brightness(0.7);
+}
+
+.formatting {
+    opacity: 0.9;
+}
 </style>

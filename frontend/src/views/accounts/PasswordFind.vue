@@ -157,14 +157,15 @@ export default {
 }
 
 h3 { 
-  color: #88A498;
+  color: #88a498;
+  font-weight: 900;
 }
 
 .inputs {
   border-style: none;
   border-bottom: 1px solid #88A498;
   background-color: transparent;
-  width: 100%;
+  width: 80%;
   padding: 10px;
   padding-left: 20px;
   margin-top: 20px;
@@ -186,13 +187,13 @@ input[type="password"] {
 .error-text {
   color: rgb(250, 25, 59, 0.7);
   text-align: left;
-  padding-left: 5px;
+  padding-left: 30px;
 }
 
 .done-button{
   background-color: #88A498;
   color: #F8F8F8;
-  width: 70%;
+  width: 80%;
 }
 
 .done-button:hover {

@@ -122,8 +122,8 @@
     <hr>
 
     <!-- club-detail-members -->
-    <div>
-      <h4 class="text-left font-weight-bold mb-3">북클럽 멤버({{ selectedClub.memberCnt }})</h4>
+    <div class="my-4">
+      <h4 class="text-left font-weight-bold mb-4">북클럽 멤버({{ selectedClub.memberCnt }})</h4>
       <carousel
         :loop="true"
         :navigationEnabled="true"
@@ -221,7 +221,7 @@
     <hr>
 
     <!-- club-description -->
-    <div>
+    <div class="my-4">
       <h4 class="text-left font-weight-bold mb-3">북클럽 설명</h4>
       <p class="text-left px-2 description">{{ selectedClub.description }}</p>
     </div>
@@ -230,8 +230,8 @@
 
     <!-- club-clubEvents -->
 
-    <div>
-      <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 북클럽 이벤트</h4>
+    <div class="my-4">
+      <h4 class="text-left font-weight-bold mb-5">{{ selectedClub.name }}에서 진행한 북클럽 이벤트</h4>
       <carousel
         :loop="true"
         :navigationEnabled="true"
