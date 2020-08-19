@@ -351,12 +351,14 @@ export default {
       this.findUsers = Object.fromEntries(mapData)
     },
     myaccount() {
-      const mapData = []
-      this.clickNoti()
-      this.myaccount.myClubs.forEach(club => {
-        mapData.push([club.id, club.name])
-      })
-      this.findClubs = Object.fromEntries(mapData)
+      if (this.myaccount) {
+        const mapData = []
+        this.clickNoti()
+        this.myaccount.myClubs.forEach(club => {
+          mapData.push([club.id, club.name])
+        })
+        this.findClubs = Object.fromEntries(mapData)
+      }
     }
   },
   created() {
