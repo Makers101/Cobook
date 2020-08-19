@@ -81,7 +81,7 @@ public class UserService {
         if (!user.getPlatformType().toString().equals("NONE")) {
             throw new UserException(String.format("소셜 회원입니다. %s 로그인을 이용해주세요", user.getPlatformType().toString()), ErrorCode.MEMBER_NOT_SOCIAL_PLATFORM_TYPE);
         }
-        if (!user.getAccept().toString().equals("1")) {
+        if (!user.getAccept().toString().equals("true")) {
             throw new UserException("아직 이메일 인증이 되지 않은 회원입니다.", ErrorCode.WRONG_EMAIL_CHECK_AUTH);
         }
         String encodePassword = user.getPassword();
