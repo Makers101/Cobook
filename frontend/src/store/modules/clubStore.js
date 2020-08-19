@@ -1,5 +1,6 @@
 import axios from 'axios'
 import SERVER from '@/api/api'
+import WEBEXSERVER from '@/api/webexApi'
 import router from '@/router'
 
 const clubStore = {
@@ -9,7 +10,8 @@ const clubStore = {
       filteredClubs: null,
       selectedClub: null,
       selectedClubEvent: null,
-      candidates: null
+      candidates: null,
+      webexToken: { headers: { Authorization : 'Bearer YWY3OThjNzAtNWVjYS00OWQ0LTgxOWUtMTExOWU0NDYxNTk5YWI5NzRiZjItYmJi_P0A1_357e376f-831b-42a4-8c5a-06d11771e9c2'}},
     },
     getters: {
     },
@@ -28,7 +30,7 @@ const clubStore = {
       },
       SET_CANDIDATES(state, candidates) {
         state.candidates = candidates
-      }
+      },
     },
     actions: {
       fetchClubs({ commit }) {
@@ -227,6 +229,69 @@ const clubStore = {
           .then(() => {
             router.push({ name: 'ClubDetail', params: { clubId: params.clubId } })
           })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      checkPeople({ state, dispatch }, webexData) {
+        axios.get(WEBEXSERVER.URL + WEBEXSERVER.ROUTES.createPeople + '?email=' + webexData.emails[0], state.webexToken)
+          .then((res) => {
+            if (!res.data.items.length) {
+              dispatch('createPeople', webexData)
+            } else {
+              dispatch('createRoom', webexData)
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      createPeople({ state }, webexData) {
+        axios.post(WEBEXSERVER.URL + WEBEXSERVER.ROUTES.createPeople, webexData, state.webexToken)
+          .then(() => {
+            alert('이메일에서 승인 절차를 진행해주세요.')
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      createRoom({ state, dispatch }, webexData) {
+        let roomData = {
+          "title": webexData.selectedClubEvent.name,
+          "agenda": webexData.selectedClubEvent.description,
+          "password": "ssafyssafy1",
+          "start": webexData.selectedClubEvent.datetime + '+09:00',
+          "end": webexData.selectedClubEvent.datetime + '+08:00',
+          "enabledAutoRecordMeeting": false,
+          "allowAnyUserToBeCoHost": true,
+          "invitees": [
+            {
+              "email": webexData.emails[0],
+              "displayName": webexData.displayName,
+              "coHost": true
+            }
+          ]
+        }
+        axios.post(WEBEXSERVER.URL + WEBEXSERVER.ROUTES.createMeetings, roomData, state.webexToken)
+          .then((res) => {
+            webexData.url = res.data.webLink
+            dispatch('createRoomUrl', webexData)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      createRoomUrl({ rootGetters }, webexData) {
+        let urlData = {
+          url: webexData.url
+        }
+        axios.put(
+          SERVER.URL + SERVER.ROUTES.clubs + '/' + webexData.clubId + '/clubevents/' + webexData.clubEventId + '/url',
+          urlData,
+          rootGetters.config)
+          // .then(() => {
+          //   dispatch('')
+          // })
           .catch(err => {
             console.log(err.response.data)
           })
