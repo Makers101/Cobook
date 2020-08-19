@@ -13,7 +13,7 @@
                 <div class="w-100">
                   <!-- 한줄평-->
                   <div class="d-flex flex-column justify-content-center"> 
-                    <h2 class="chapter-title book-title pt-0" style="height:85px;">"{{ selectedPost.onelineReview }}"</h2>
+                    <h2 v-if="selectedPost" class="chapter-title book-title pt-0" style="height:85px;">"{{ selectedPost.onelineReview }}"</h2>
                   </div>
                   <!-- 책 이미지 및 정보 -->
                   <div class="row no-gutters">
@@ -28,6 +28,7 @@
                                   <img 
                                     class="pointer"
                                     style="height: 105px;" 
+                                    v-if="selectedPost"
                                     :src="selectedPost.book.bookImg" 
                                     alt="책 이미지"
                                     @click="bookDetail(selectedPost.book.id)">
@@ -66,7 +67,7 @@
                         alt="책 이미지"
                         @click="bookDetail(selectedPost.book.id)"> -->
                     </div>
-                    <div class="col-8 text-left pr-3 align-self-center">
+                    <div class="col-8 text-left pr-3 align-self-center" v-if="selectedPost">
                       <p><mark>{{ selectedPost.book.title }}</mark></p>
                       <p class="book-info"><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953039-4a9da800-d2d3-11ea-8f6b-5792b4f87c45.png" width="20px"> {{ selectedPost.book.author }} </p>
                       <p class="book-info"><img class="mr-2" src="https://user-images.githubusercontent.com/25967949/88953045-4b363e80-d2d3-11ea-8f26-0502556bf651.png" width="20px"> {{ selectedPost.book.publisher }}</p>
@@ -79,20 +80,20 @@
                     <div class="m-0">
                       <span class="rounded-circle">
                         <img
-                          v-if="!selectedPost.user.profileImg"
+                          v-if="selectedPost && !selectedPost.user.profileImg"
                           class="img-fluid feed-profile-img mr-1" 
                           src="http://bit.do/anonymouseuser" 
                           alt="유저 프로필 사진">
                         <img 
                           v-else
-                          class="img-fluid feed-profile-img mr-1" 
+                          class="img-fluid feed-profile-img mr-1"
                           :src="selectedPost.user.profileImg" alt="작성자 프로필 사진">
                       </span>
                       <strong>
-                        <span class="pointer" @click="selectUser(selectedPost.user.id)">{{ selectedPost.user.nickName }}</span>
+                        <span class="pointer" v-if="selectedPost" @click="selectUser(selectedPost.user.id)">{{ selectedPost.user.nickName }}</span>
                       </strong>
                       <!-- 수정하기 및 삭제하기 버튼 -->
-                      <div class="btn-group ml-2" v-if="myaccount.id===selectedPost.user.id">
+                      <div class="btn-group ml-2" v-if="selectedPost && myaccount.id===selectedPost.user.id">
                         <button class="btn-green dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         </button>
                         <div class="dropdown-menu text-center py-0">
@@ -191,7 +192,7 @@
                       <div class="m-0 col-3 text-left other-nickName">
                         <span class="rounded-circle">
                           <img
-                            v-if="!post.user.profileImg"
+                            v-if="post && !post.user.profileImg"
                             class="img-fluid feed-profile-img" 
                             src="http://bit.do/anonymouseuser"
                             alt="유저 프로필 사진">
@@ -200,7 +201,7 @@
                             class="img-fluid feed-profile-img" 
                             :src="post.user.profileImg" alt="작성자 프로필 사진">
                         </span>
-                        <small class="ml-2">{{ post.user.nickName }}</small>
+                        <small class="ml-2" v-if="post">{{ post.user.nickName }}</small>
                       </div>
                       <div class="changeFont m-0 col-9 text-left other-onelineReview">
                         "{{ post.onelineReview }}"
@@ -512,15 +513,21 @@ export default {
       this.$router.push({ name: 'SearchPost', params: {content: tag}})
     }
   },
+  watch: {
+    // selectedPost() {
+    //   this.findBook(this.selectedPost.book.id)
+    //   this.rating = this.selectedPost.rank
+    // }
+  },
   created() {
     this.commentCreateData.postId = this.$route.params['postId']
     this.findPost(this.commentCreateData.postId)
     this.fetchComments(this.commentCreateData.postId)
-    this.findBook(this.selectedPost.book.id)
+    // this.findBook(this.selectedPost.book.id)
     
   },
   mounted() {
-    this.rating = this.selectedPost.rank
+    // this.rating = this.selectedPost.rank
   },
   beforeRouteLeave(to, from, next) {
     if (this.commentCreateData.content) {
@@ -545,7 +552,7 @@ export default {
     next()
     this.commentCreateData.postId = this.$route.params['postId']
     this.fetchComments(to.params.postId)
-    this.findBook(this.selectedPost.book.id)
+    // this.findBook(this.selectedPost.book.id)
   },
 }
 </script>

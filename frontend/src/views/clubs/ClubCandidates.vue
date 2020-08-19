@@ -7,18 +7,18 @@
         class="club-image col-4"
         :src="selectedClub.clubImg"
         :alt="selectedClub.name"
-        v-if="selectedClub.clubImg">
+        v-if="selectedClub && selectedClub.clubImg">
       <img
         class="club-image col-4"
         :src="'http://placehold.jp/300x200.png?text=' + selectedClub.name"
         :alt="selectedClub.name"
-        v-else>
-      <div class="col-8 py-2 d-flex flex-column justify-content-between">
+        v-else-if="selectedClub">
+      <div class="col-8 py-2 d-flex flex-column justify-content-between" v-if="selectedClub">
         <div>
           <div class="d-flex justify-content-between mb-2">
             <div class="d-flex justify-content-start align-items-center">
               <!-- club-candidate-name -->
-              <h3 class="mb-0 font-weight-bold">{{ selectedClub.name }}</h3>
+              <h3 class="mb-0 font-weight-bold" v-if="selectedClub">{{ selectedClub.name }}</h3>
               <!-- club-candidate-recruit -->
               <span class="badge mb-0 ml-2 club-recruit" v-if="selectedClub.recruit">모집중</span>
             </div>
@@ -101,7 +101,7 @@
 
     <div>
       <h4 class="text-left font-weight-bold mb-3">북클럽 가입 신청</h4>
-      <div class="list-group" v-if="candidates.length">
+      <div class="list-group" v-if="candidates && candidates.length">
         <div class="list-group-item d-flex justify-content-between align-items-center" v-for="candidate in candidates" :key="candidate.userId">
           <div class="d-flex justify-content-start align-items-center pointer" @click="toProfile(candidate.userId)">
             <img class="rounded-circle profile-image" :src="candidate.profileImg" alt="" v-if="candidate.profileImg">

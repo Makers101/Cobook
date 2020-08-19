@@ -4,7 +4,7 @@
     <!-- profile-clubs -->
     
     <div class="my-5">
-      <h5 class="text-left font-weight-bold ml-3">{{ profile.nickName }}님의 북클럽</h5>
+      <h5 class="text-left font-weight-bold ml-3" v-if="profile">{{ profile.nickName }}님의 북클럽</h5>
       <carousel
         :loop="true"
         :navigationEnabled="true"
@@ -13,11 +13,11 @@
         :perPageCustom="[[1, 1], [1000, 2], [1500, 3]]"
         paginationActiveColor="#3c756a"
         paginationColor="#88A498"
-        paginationPadding="4"
-        paginationSize="10"
+        :paginationPadding="4"
+        :paginationSize="10"
         easing="linear"
-        speed="300"
-        v-if="clubs.length">
+        :speed="300"
+        v-if="clubs && clubs.length">
       
         <slide
           v-for="club in clubs"
@@ -64,7 +64,7 @@
 
       <div v-else>
         <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
-        <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 가입한 북클럽이 없습니다. </h3>
+        <h3 class="mt-3">현재 <strong v-if="profile">{{ profile.nickName }}</strong>님이 가입한 북클럽이 없습니다. </h3>
       </div>
     </div>
     
@@ -123,7 +123,7 @@
     <!-- profile-events -->
 
     <div class="my-5">
-      <h5 class="text-left font-weight-bold ml-3">{{ profile.nickName }}님의 이벤트</h5>
+      <h5 class="text-left font-weight-bold ml-3" v-if="profile">{{ profile.nickName }}님의 이벤트</h5>
       <carousel
         :loop="true"
         :navigationEnabled="true"
@@ -132,10 +132,10 @@
         :perPageCustom="[[1, 1], [1000, 2], [1500, 3]]"
         paginationActiveColor="#3c756a"
         paginationColor="#88A498"
-        paginationPadding="4"
-        paginationSize="10"
+        :paginationPadding="4"
+        :paginationSize="10"
         easing="linear"
-        speed="300"
+        :speed="300"
         v-if="integratedEvents.length">
       
         <slide

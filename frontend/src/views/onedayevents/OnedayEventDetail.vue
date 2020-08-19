@@ -123,10 +123,10 @@
         :perPageCustom="[[1, 1], [600, 2], [900, 3], [1200, 4], [1400, 5]]"
         paginationActiveColor="#3c756a"
         paginationColor="#88A498"
-        paginationPadding="4"
-        paginationSize="10"
+        :paginationPadding="4"
+        :paginationSize="10"
         easing="linear"
-        speed="300">
+        :speed="300">
         <slide>
           <div class="profile-container pointer" @click="selectUser(selectedOnedayEvent.leader.id)">
             <img
@@ -252,10 +252,10 @@
         :perPageCustom="[[1, 1], [1000, 2], [1500, 3]]"
         paginationActiveColor="#3c756a"
         paginationColor="#88A498"
-        paginationPadding="4"
-        paginationSize="10"
+        :paginationPadding="4"
+        :paginationSize="10"
         easing="linear"
-        speed="300"
+        :speed="300"
         v-if="selectedOnedayEvent.memberPosts.length">
       
         <slide
@@ -368,6 +368,11 @@ import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'OnedayEventDetail',
+  data() {
+    return {
+      webexEmail: null,
+    }
+  },
   components: {
     Carousel,
     Slide

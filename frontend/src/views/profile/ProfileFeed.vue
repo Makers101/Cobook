@@ -1,6 +1,6 @@
 <template>
   <div class="mt-3" style="padding-bottom:100px">
-    <div class="row rows-cols-1 row-cols-md-3" v-if="this.feeds.length">
+    <div class="row rows-cols-1 row-cols-md-3" v-if="feeds && feeds.length">
       <div 
         class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
         v-for="feed in feedList"
@@ -63,7 +63,7 @@
     </div>
     <div v-else>
       <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
-      <h3 class="mt-3">현재 <strong>{{ profile.nickName }}</strong>님이 작성한 피드가 없습니다. </h3>
+      <h3 class="mt-3">현재 <strong v-if="profile">{{ profile.nickName }}</strong>님이 작성한 피드가 없습니다. </h3>
     </div>
   </div>
 </template>
