@@ -314,7 +314,7 @@ export default {
       this.$router.push({ name: 'Profile', params: {userId : userId}})
     },
     toRoute(noti) {
-      if (noti.type === 'club') {
+      if (noti.type === 'club' || noti.type === 'approve' || noti.type === 'reject') {
         this.$router.push({name: 'ClubCandidates', params: { clubId: noti.dataId }})
       } else if (noti.type === 'follow') {
         this.$router.push({name: 'Profile', params: { userId: noti.dataId }})
