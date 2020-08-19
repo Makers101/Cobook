@@ -65,7 +65,7 @@
                       </div>
                       <div class="modal-body">
                         <p>webex에 가입되어 있는 이메일을 입력해주세요!</p>
-                        <input type="email" v-model="webexEmail" autofocus @keyup.enter="createLeader">
+                        <input type="email" v-model="webexEmail" autofocus>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-green" @click="createLeader" data-dismiss="modal">온라인 만들기</button>
