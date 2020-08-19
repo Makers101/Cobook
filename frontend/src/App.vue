@@ -613,10 +613,11 @@ input::-webkit-input-placeholder {
 
 .dropdown-item {
   font-weight: 600 !important;
+  white-space: pre-wrap;
 }
 
-.dropdown-item {
-  white-space: pre-wrap;
+.dropdown-item:active {
+  background-color: #88A498;
 }
 
 .dropdown-noti {
