@@ -32,10 +32,10 @@
           :perPageCustom="[[1, 1], [700, 1], [900, 2], [1100, 3], [1300, 4], [1500, 5]]"
           paginationActiveColor="#3c756a"
           paginationColor="#88A498"
-          paginationPadding=4
-          paginationSize=10
+          paginationPadding="4"
+          paginationSize="10"
           easing="linear"
-          speed=300
+          speed="300"
           v-if="postsByPopularity.length">
         
           <slide
@@ -82,10 +82,10 @@
           :perPageCustom="[[1, 1], [700, 1], [900, 2], [1100, 3], [1300, 4], [1500, 5]]"
           paginationActiveColor="#3c756a"
           paginationColor="#88A498"
-          paginationPadding=4
-          paginationSize=10
+          paginationPadding="4"
+          paginationSize="10"
           easing="linear"
-          speed=300
+          speed="300"
           v-if="postsByFollow.length">
         
           <slide
@@ -162,10 +162,10 @@
           :perPageCustom="[[1, 1], [700, 1], [900, 2], [1100, 3], [1300, 4], [1500, 5]]"
           paginationActiveColor="#3c756a"
           paginationColor="#88A498"
-          paginationPadding=4
-          paginationSize=10
+          paginationPadding="4"
+          paginationSize="10"
           easing="linear"
-          speed=300
+          speed="300"
           v-if="postSet.posts.length">
         
           <slide
