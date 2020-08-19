@@ -213,13 +213,15 @@
       </v-col>
       <v-col cols="6">
         <h3>장르별 독서 통계</h3>
-        <div class="d-flex justify-content-center align-items-center">
-          <pie-chart class="col-12" v-if="pieData.labels.length"></pie-chart>
+        <div class="d-flex justify-content-center align-items-center h-75">
+          <pie-chart class="col-12 mt-2" v-if="pieData.labels.length"></pie-chart>
           <div v-else>
-            <img
+            <div>
+              <img
               src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png"
               width="150px">
-            <p class="my-3"><span class="font-weight-bold">{{ profile.nickName }}</span>님의 독서 기록이 없습니다.</p>
+              <p class="my-3"><span class="font-weight-bold">{{ profile.nickName }}</span>님의 독서 기록이 없습니다.</p>
+            </div>
           </div>
         </div>
       </v-col>
