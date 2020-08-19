@@ -1,6 +1,6 @@
 <template>
   <div class="mt-3"  style="padding-bottom:100px">
-    <div class="row rows-cols-1 row-cols-md-3 pointer" v-if="bookmarks.length">
+    <div class="row rows-cols-1 row-cols-md-3" v-if="bookmarks.length">
       <div 
         class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
         v-for="bookmark in bookmarkList"
