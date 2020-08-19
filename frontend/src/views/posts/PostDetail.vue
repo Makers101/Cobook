@@ -209,8 +209,8 @@
                   </div>
                 </div>
                 <div v-else>
-                  <h5 class="mb-1">아직 다른 유저들이 작성한 리뷰는 없어요 ㅠ_ㅠ</h5>
-                  <h5>리뷰... 작성해주시겠어요?</h5>
+                  <h6 class="mb-1">아직 다른 유저들이 작성한 리뷰는 없어요 ㅠ_ㅠ</h6>
+                  <h6>리뷰... 작성해주시겠어요?</h6>
                   <button class="btn btn-green mt-3" @click="clickPostCreate(selectedPost.book.id)">리뷰 작성하러 가기</button>
                 </div>
               </div>
@@ -223,8 +223,40 @@
                   <div
                   v-for="comment in comments"
                   :key="`comment-${comment.id}`">
-                    <div class="d-flex">
-                      <div class="m-0 p-0 col-9 text-left">
+                    <div v-if="comment.user.id === myaccount.id">
+                      <div class="d-flex">
+                        <div class="m-0 p-0 col-9 text-left">
+                          <span class="rounded-circle">
+                            <!-- 댓글 프로필 사진 -->
+                            <img
+                              v-if="!comment.user.profileImg"
+                              class="img-fluid feed-profile-img" 
+                              src="http://bit.do/anonymouseuser"
+                              alt="유저 프로필 사진">
+                            <img 
+                              v-else
+                              class="img-fluid feed-profile-img" 
+                              :src="comment.user.profileImg" alt="작성자 프로필 사진">
+                          </span>
+                          <!-- 댓글 Username -->
+                          <span class="pointer ml-2 mr-2" @click="selectUser(comment.user.id)"><strong>{{ comment.user.nickName }}</strong></span>
+                          <span v-if="comment.isClub" class="badge bg-green">Club</span>
+                          <!-- 댓글-->
+                          <span class="m-0">{{ comment.content }}</span>
+                        </div>
+                        <div
+                          class="btn text-danger btn-sm m-0 p-0 col-3"
+                          v-if="comment.user.id === myaccount.id"
+                          @click="clickDeleteComment(commentCreateData, comment.id)"
+                        > 삭제
+                        </div>
+                      </div>
+                      <div class="text-left mb-3">
+                        <small style="color:#979797">{{ comment.createdAt | moment("from", "now") }}</small>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <div class="m-0 p-0 col-12 text-left">
                         <span class="rounded-circle">
                           <!-- 댓글 프로필 사진 -->
                           <img
@@ -243,15 +275,9 @@
                         <!-- 댓글-->
                         <span class="m-0">{{ comment.content }}</span>
                       </div>
-                      <div
-                        class="btn text-danger btn-sm m-0 p-0 col-3"
-                        v-if="comment.user.id === myaccount.id"
-                        @click="clickDeleteComment(commentCreateData, comment.id)"
-                      > 삭제
+                      <div class="text-left mb-3">
+                        <small style="color:#979797">{{ comment.createdAt | moment("from", "now") }}</small>
                       </div>
-                    </div>
-                    <div class="text-left mb-3">
-                      <small style="color:#979797">{{ comment.createdAt | moment("from", "now") }}</small>
                     </div>
                   </div>
                 </div>
