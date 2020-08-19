@@ -415,7 +415,7 @@ export default {
       }
     },
     roomUrl() {
-      return this.selectedOnedayEvent.roomUrl
+      return this.selectedClubEvent.roomUrl
     }
     // isCurrent() {
     //   if (Date() < new Date(this.selectedClubEvent.datetime)) {
