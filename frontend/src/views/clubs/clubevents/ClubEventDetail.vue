@@ -25,7 +25,6 @@
               <h3 class="mb-0 font-weight-bold">{{ selectedClubEvent.name }}</h3>
               <span class="badge mb-0 ml-2 clubEvent-closed-true" v-if="selectedClubEvent.closed">종료</span>
               <span class="badge mb-0 ml-2 clubEvent-closed-false" v-else>예정</span>
-              <span class="btn mb-0 ml-2 clubEvent-closed-true" @click="enterRoom(selectedClubEvent.id)">온라인 입장</span>
             </div>
             <div class="d-flex justify-content-start align-items-center">
               <span class="badge badge-genre ml-1">{{ selectedClubEvent.book.genre }}</span>
@@ -42,6 +41,39 @@
                 <p class="mb-0 ml-1 font-weight-bold">{{ selectedClubEvent.datetime | moment('YYYY년 MM월 DD일 HH시 mm분') }}</p>
               </div>
               <div class="d-flex justify-content-end align-items-end">
+                <button
+                  type="button"
+                  class="btn btn-green mr-2"
+                  data-toggle="modal" data-target="#makeRoomModal"
+                  v-if="isLeader & !selectedClubEvent.closed & (selectedClubEvent.place === '온라인') & !selectedClubEvent.roomUrl">
+                  온라인 만들기
+                </button>
+                <button
+                  class="btn btn-green mr-2"
+                  v-else-if="(isLeader || isParticipant) && !selectedClubEvent.closed && (selectedClubEvent.place === '온라인') && selectedClubEvent.roomUrl">
+                  <a :href="selectedClubEvent.roomUrl" target="_blank">온라인 입장</a>
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="makeRoomModal" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="makeRoomModalLabel">온라인 만들기</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>webex에 가입되어 있는 이메일을 입력해주세요!</p>
+                        <input type="email" v-model="webexEmail">
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-green" @click="createLeader" data-dismiss="modal">온라인 만들기</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <button
                   class="btn btn-secondary dropdown-toggle"
                   data-toggle="dropdown"
@@ -64,7 +96,7 @@
                     이벤트 삭제
                   </button>
                 </div>
-
+                
                 <button
                   class="btn btn-warning"
                   v-if="selectedClubEvent.isMember & !isParticipant & !isLeader"
@@ -72,7 +104,7 @@
                   참가 신청
                 </button>
                 <button
-                  class="btn btn-warning"
+                  class="btn btn-gray"
                   v-if="selectedClubEvent.isMember & isParticipant & !isLeader"
                   @click="clickParticipateClubEvent('cancel')">
                   참가 취소
@@ -88,6 +120,60 @@
 
       <!-- clubEvent-detail-members -->
       <div>
+        <h4 class="text-left font-weight-bold mb-3">북클럽 이벤트 멤버({{ selectedClubEvent.participantCnt }})</h4>
+        <carousel
+          :loop="true"
+          :navigationEnabled="true"
+          navigationNextLabel="<h3><i class='fas fa-angle-right'></i></h3>"
+          navigationPrevLabel="<h3><i class='fas fa-angle-left'></i></h3>"
+          :perPageCustom="[[1, 1], [600, 2], [900, 3], [1200, 4], [1400, 5]]"
+          paginationActiveColor="#3c756a"
+          paginationColor="#88A498"
+          paginationPadding="4"
+          paginationSize="10"
+          easing="linear"
+          speed="300">
+          <slide>
+            <div class="profile-container pointer" @click="selectUser(selectedClubEvent.leader.id)">
+              <img
+                class="rounded-circle profile-image mx-auto"
+                :src="selectedClubEvent.leader.profileImg"
+                :alt="selectedClubEvent.leader.nickName"
+                v-if="selectedClubEvent.leader.profileImg">
+              <img
+                class="rounded-circle profile-image mx-auto"
+                src="http://bit.do/anonymouseuser"
+                :alt="selectedClubEvent.leader.nickName"
+                v-else>
+              <div class="overlay rounded-circle mx-auto">
+                <div class="text">{{ selectedClubEvent.leader.nickName }}</div>
+              </div>
+            </div>
+          </slide>
+          
+          <slide v-for="participant in selectedClubEvent.participants" :key="participant.id">
+            <div
+              class="profile-container pointer"
+              @click="selectUser(participant.id)">
+              <img
+                class="rounded-circle profile-image mx-auto"
+                :src="participant.profileImg"
+                :alt="participant.nickName"
+                v-if="participant.profileImg">
+              <img
+                class="rounded-circle profile-image mx-auto"
+                src="http://bit.do/anonymouseuser"
+                :alt="participant.nickName"
+                v-else>
+              <div class="overlay rounded-circle mx-auto">
+                <div class="text">{{ participant.nickName }}</div>
+              </div>
+            </div>
+          </slide>
+        </carousel>
+      </div>
+
+      <!-- <div>
         <h4 class="text-left font-weight-bold mb-3">북클럽 이벤트 멤버({{ selectedClubEvent.participantCnt }})</h4>
         <div class="d-flex justify-content-start">
           <div class="profile-container pointer mr-3" @click="selectUser(selectedClubEvent.leader.id)">
@@ -126,7 +212,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <hr>
 
@@ -157,7 +243,65 @@
       <hr>
 
       <!-- clubEvent-detail-posts -->
-      <div>
+      <div v-if="isParticipant || isLeader">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="text-left font-weight-bold mb-0">멤버의 책 리뷰</h4>
+          <button class="btn btn-green" @click="toPostCreate(selectedClubEvent.book.id)">책 리뷰 작성하기</button>
+        </div>
+
+        <carousel
+          :loop="true"
+          :navigationEnabled="true"
+          navigationNextLabel="<h3><i class='fas fa-angle-right'></i></h3>"
+          navigationPrevLabel="<h3><i class='fas fa-angle-left'></i></h3>"
+          :perPageCustom="[[1, 1], [1000, 2], [1500, 3]]"
+          paginationActiveColor="#3c756a"
+          paginationColor="#88A498"
+          paginationPadding="4"
+          paginationSize="10"
+          easing="linear"
+          speed="300"
+          v-if="selectedClubEvent.memberPosts.length">
+        
+          <slide
+            v-for="post in selectedClubEvent.memberPosts"
+            :key="post.id">
+            <div class="card pointer mx-auto my-auto" @click="toPostDetail(post.id)" style="width: 315px">
+              <div class="additional d-flex justify-content-center">
+                <div class="user-card">
+                  <div class="level center">
+                    {{ post.nickName }}
+                  </div>
+                  <div class="points center">
+                    <i class="fas fa-heart mr-1"></i> {{ post.likeUsers.length }}
+                  </div>
+                  <img :src="post.profileImg" v-if="post.profileImg">
+                  <img src="http://bit.do/anonymouseuser" v-else>
+                </div>
+              </div>
+              <div class="general d-flex flex-column justify-content-between">
+                <div class="w-100 h-100 d-flex flex-column justify-content-around">
+                  <div class="mb-2">
+                    <span class="mb-3 star-container" v-for="index in post.rank" :key="index"><i class="fas fa-star" style="color:yellow"></i></span>
+                  </div>
+                  <p class="text-left m-0"><i class="fas fa-quote-left"></i></p>
+                  <p class="card-text px-3" style="word-break:keep-all;">{{ post.onelineReview }}</p>
+                  <p class="text-right m-0"><i class="fas fa-quote-right"></i></p>
+                </div>
+                <div class="more">
+                  <span class="text-black-50"><small>{{ post.createdAt | moment('YYYY-MM-DD')}}</small></span>
+                </div>
+              </div>
+            </div>
+          </slide>
+        </carousel>
+
+        <div class="no-content d-flex justify-content-center align-items-center" v-else>
+          <p class="mb-0">아직 멤버의 책 리뷰가 없습니다 ㄴ(°0°)ㄱ</p>
+        </div>
+      </div>
+      
+      <!-- <div>
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h4 class="text-left font-weight-bold mb-0">멤버의 책 리뷰</h4>
           <button class="btn btn-green" @click="toPostCreate(selectedClubEvent.book.id)">책 리뷰 작성하기</button>
@@ -201,7 +345,7 @@
         <div class="no-content d-flex justify-content-center align-items-center" v-else>
           <p class="mb-0">아직 멤버의 책 리뷰가 없습니다 ㄴ(°0°)ㄱ</p>
         </div>
-      </div>
+      </div> -->
 
       <!-- <hr> -->
 
@@ -224,6 +368,7 @@
 </template>
 
 <script>
+import { Carousel, Slide } from 'vue-carousel'
 import Swal from 'sweetalert2'
 const swal = Swal.mixin({
   customClass: {
@@ -233,28 +378,26 @@ const swal = Swal.mixin({
   buttonsStyling: false
 })
 
-const swalDelete = Swal.mixin({
-  customClass: {
-    confirmButton: 'btn btn-danger ',
-    cancelButton: 'btn btn-success mr-2'
-  },
-  buttonsStyling: false
-})
 import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'ClubEventDetail',
+  components: {
+    Carousel,
+    Slide
+  },
   data() {
     return {
       params: {
         clubId: this.$route.params.clubId,
         clubEventId: this.$route.params.clubEventId
-      }
+      },
+      webexEmail: null,
     }
   },
   computed: {
     ...mapState(['myaccount']),
-    ...mapState('clubStore', ['selectedClub', 'selectedClubEvent']),
+    ...mapState('clubStore', ['selectedClub', 'selectedClubEvent', 'webexUrl']),
     isParticipant() {
       let result = false
       this.selectedClubEvent.participants.forEach(participant => {
@@ -270,10 +413,21 @@ export default {
       } else {
         return false
       }
-    }
+    },
+    // isCurrent() {
+    //   if (Date() < new Date(this.selectedClubEvent.datetime)) {
+    //     console.log(Date())
+    //     console.log(new Date(this.selectedClubEvent.datetime))
+    //     console.log(Date() < new Date(this.selectedClubEvent.datetime))
+    //     // console.log()
+    //     return true
+    //   } else {
+    //     return false
+    //   }
+    // }
   },
   methods: {
-    ...mapActions('clubStore', ['findClub', 'findClubEvent', 'participateClubEvent', 'deleteClubEvent']),
+    ...mapActions('clubStore', ['findClub', 'findClubEvent', 'participateClubEvent', 'deleteClubEvent', 'checkPeople', 'createRoomUrl']),
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
     },
@@ -283,7 +437,7 @@ export default {
           text: "북클럽 이벤트에 참가하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -296,7 +450,7 @@ export default {
           text: "북클럽 이벤트 참가를 취소하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -319,12 +473,11 @@ export default {
       router.push({ name: 'ClubEventUpdate', params: { clubEventId: clubEventId }})
     },
     clickClubEventDelete() {
-      swalDelete.fire({
+      swal.fire({
           text: "북클럽 이벤트를 삭제하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
-          reverseButtons: true,
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -333,11 +486,33 @@ export default {
           } 
         });
     },
-    enterRoom(roomId) {
-      router.push({name: 'ClubEventRoom', params: { roomId: roomId }})
+    enterRoom() {
+      console.log((this.isLeader || this.isParticipant))
+      console.log(!this.selectedClubEvent.closed)
+      console.log(this.selectedClubEvent.place === '온라인')
+      console.log(this.selectedClubEvent.roomUrl)
+      console.log((this.isLeader || this.isParticipant) && !this.selectedClubEvent.closed && (this.selectedClubEvent.place === '온라인') && this.selectedClubEvent.roomUrl)
     },
-    toBookDetail(bookId) {
-      router.push({ name: 'BookDetail', params: { bookId: bookId}})
+    toBookDetail() {
+      // router.push({ name: 'BookDetail', params: { bookId: bookId}})
+    },
+    createLeader() {
+      let webexData=  {
+        emails: [
+          this.webexEmail
+        ],
+        displayName: this.selectedClubEvent.leader.nickName,
+        firstName: this.selectedClubEvent.leader.nickName,
+        lastName: this.selectedClubEvent.leader.nickName,
+        roles: [
+          "Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfcmVhZG9ubHlfYWRtaW4"
+        ],
+        selectedClubEvent: this.selectedClubEvent,
+        clubId: this.selectedClub.id,
+        clubEventId: this.selectedClubEvent.id,
+        url: null,
+      }
+      this.checkPeople(webexData)
     },
   },
   created() {
@@ -406,6 +581,11 @@ export default {
     opacity: 0;
     transition: .5s ease;
     background-color: #3e3f3f;
+  }
+
+  .profile-container .overlay {
+    height: 150px;
+    width: 150px;
   }
 
   .profile-container:hover .overlay {
@@ -697,5 +877,20 @@ export default {
 
   .scroll-sect:hover{
     overflow-x: scroll;
+  }
+
+  input {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    width: 100%;
+    text-align: center;
+  }
+
+  input:focus {
+    outline: none;
+  }
+  
+  a {
+    color: white;
+    text-decoration: none;
   }
 </style>

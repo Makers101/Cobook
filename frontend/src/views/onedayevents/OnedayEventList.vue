@@ -63,7 +63,7 @@
     <div class="onedayEvents-list my-2 row">
       <div 
         class="col-lg-4 col-md-6 col-sm-12 p-3 pointer"
-        v-for="onedayEvent in filteredOnedayEvents"
+        v-for="onedayEvent in onedayEventList"
         :key="`onedayEvent_${onedayEvent.id}`"
         @click="selectOnedayEvent(onedayEvent.id)">
         <div class="card h-100">
@@ -84,8 +84,12 @@
             </div>
           </div>
         </div>
-
       </div>
+      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="filteredOnedayEvents" spinner="waveDots">
+        <div slot="no-more">더 이상 원데이 이벤트가 존재하지 않습니다.</div>
+        <div slot="no-results">더 이상 원데이 이벤트가 존재하지 않습니다.</div>
+      </infinite-loading>
+
     </div>
   </div>
 </template>
@@ -93,14 +97,20 @@
 <script>
 import router from '@/router'
 import { mapState, mapActions } from 'vuex'
+import InfiniteLoading from 'vue-infinite-loading'
 export default {
   name: 'OnedayEventList',
+  components: {
+    InfiniteLoading
+  },
   data() {
     return {
       filters: {
         recruit_filter: false,
         genre_filter: null,
-      }
+      },
+      onedayEventList: [], 
+      page: 6
     }
   },
   computed: {
@@ -109,6 +119,17 @@ export default {
   },
   methods: {
     ...mapActions('onedayEventStore', ['fetchOnedayEvents', 'filterOnedayEvents']),
+    infiniteHandler($state) {
+      setTimeout(() => {
+        if (this.filteredOnedayEvents.slice(this.page, this.page + 6).length) {
+          this.onedayEventList = this.onedayEventList.concat(this.filteredOnedayEvents.slice(this.page, this.page + 6))
+          $state.loaded();
+          this.page += 6
+        } else {
+          $state.complete();
+        }
+      }, 700)
+    },
     selectOnedayEvent(onedayEventId) {
       router.push({ name: 'OnedayEventDetail', params: { onedayEventId: onedayEventId }})
     },
@@ -127,6 +148,17 @@ export default {
       }
       this.$forceUpdate();
       this.filterOnedayEvents(this.filters);
+      if (this.filteredOnedayEvents.length < 7) {
+        this.onedayEventList = this.filteredOnedayEvents
+      } else {
+        this.onedayEventList = this.filteredOnedayEvents.slice(0, 6)
+      }
+      this.page = 6
+    }
+  },
+  watch: {
+    onedayEvents() {
+      this.onedayEventList = this.filteredOnedayEvents.slice(0, 6)
     }
   },
   created() {

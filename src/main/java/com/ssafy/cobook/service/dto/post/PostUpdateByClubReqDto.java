@@ -21,7 +21,7 @@ public class PostUpdateByClubReqDto {
     @ApiModelProperty(position = 3)
     private Boolean open;
     @ApiModelProperty(position = 4)
-    @Length(min =1, max = 32000)
+    @Length(min =1)
     private String review;
     @ApiModelProperty(position = 5)
     private Boolean isClub;

@@ -108,17 +108,49 @@
                   <i class="fas fa-bell"></i>
                   <small class="badge rounded-circle badge-danger go-left" v-if="notis">{{ notis.length }}</small>
                 </div>
-                <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
-                  <div
-                    class="dropdown-item setting-btn"
-                    v-for="(noti, idx) in notis"
-                    :key="`noti-${idx}`"
-                    @click="toRoute(noti)"
-                  >
-                    <p v-if="noti.type==='club'">{{ findUsers[noti.from] }}님이 '{{ findClubs[noti.dataId] }}' 북클럽에 가입신청했습니다.</p>
-                    <p v-if="noti.type==='follow'">{{ findUsers[noti.from] }}님이 팔로우했습니다.</p>
-                    <p v-if="noti.type==='like'">{{ findUsers[noti.from] }}님이 게시물을 좋아합니다.</p>
-                    <p v-if="noti.type==='comment'">{{ findUsers[noti.from] }}님이 댓글을 작성했습니다.</p>
+                <div class="dropdown-menu dropdown-noti py-0 text-center scroll-sect" aria-labelledby="navbarDropdown" v-if="myaccount" >
+                  <div v-if="notis">
+                    <div
+                      class="dropdown-item setting-btn"
+                      v-for="(noti, idx) in notis"
+                      :key="`noti-${idx}`"
+                      @click="toRoute(noti)"
+                    >
+                      <div class="row no-gutters">
+                        <div class="col-2">
+                          <img
+                            v-if="!findUsers[noti.from][1]"
+                            class="img-fluid noti-profile-img mr-1" 
+                            src="http://bit.do/anonymouseuser" 
+                            alt="유저 프로필 사진">
+                          <img 
+                            v-else
+                            class="img-fluid noti-profile-img mr-1" 
+                            :src="findUsers[noti.from][1]" alt="유저 프로필 사진">
+                        </div>
+                        <div class="col-9 d-flex align-items-center text-left pl-2">
+                          <span v-if="noti.type==='club'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 '{{ findClubs[noti.dataId] }}' 북클럽에 가입신청했습니다.</span>
+                          <span v-if="noti.type==='comment'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 댓글을 작성했습니다.</span>
+                          <span v-if="noti.type==='follow'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 팔로우했습니다.</span>
+                          <span v-if="noti.type==='like'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 게시물을 좋아합니다.</span>
+                        </div>
+                        <div class="col-1 d-flex align-items-center justify-content-end">
+                          <span class="text-muted" style="font-size:10px">X</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <div
+                      class="dropdown-item setting-btn"
+                    >
+                      <div class="row no-gutters">
+                        <div class="col-12">
+                          <p class="mt-2">알림이 없습니다.</p>
+                        </div>
+                      </div>
+                    
+                    </div>
                   </div>
                 </div>
               </li>
@@ -134,10 +166,8 @@
                 >
                   <i class="fas fa-user"></i>
                 </div>
-                <div class="dropdown-menu py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
+                <div class="dropdown-menu dropdown-profile py-0 text-center" aria-labelledby="navbarDropdown" v-if="myaccount" >
                   <router-link class="dropdown-item setting-btn menus" :to="{ name: 'Profile', params: {userId: myaccount.id} }">프로필</router-link>
-                  <!-- <router-link v-if="myaccount" class="dropdown-item" :to="{ name: 'ProfileUpdate', params: {userId: myaccount.id} }">프로필 수정</router-link> -->
-                  <!-- <div class="dropdown-divider"></div> -->
                   <div class="dropdown-item setting-btn pointer menus" @click="logout">로그아웃</div>
                 </div>
               </li>
@@ -147,7 +177,7 @@
           </div>
         </nav>
       </div>
-      <div class="mt-5" v-else>
+      <div v-else>
         <img 
           class="img-fluid logo-img"
           style="height: 50px"
@@ -155,7 +185,26 @@
           alt="로고 이미지"
         >
       </div>
-      <router-view/>
+      <!-- 위로가기 버튼 -->
+      <div>
+      <div>
+        <button class="btn btn-green btn-up m-0" @click="scrollToTop()" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail'">
+          <i class="fas fa-caret-up" style="color:white;"></i>
+        </button>
+      </div>
+      </div>
+      <router-view class="router-view"/>
+    </div>
+    <!-- footer -->
+    <div class="footer" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail'">
+      <p class="footer-p">© 2020 Copyright: 만든이101 </p>
+      <p class="m-0 pb-2">
+        <i class="fab fa-github github-color"></i><a href="https://github.com/smhwang0109" target="_blank"> smhwang0109</a>
+        | <i class="fab fa-github github-color"></i> <a href="https://github.com/scl2589" target="_blank"> chaelinshin96</a> 
+        | <i class="fab fa-github github-color"></i><a href="https://github.com/SunHwan-Park" target="_blank"> SunHwan-Park</a>
+        | <i class="fab fa-github github-color"></i><a href="https://github.com/genie97" target="_blank"> genie97</a>
+        | <i class="fab fa-github github-color"></i><a href="https://github.com/pandaHun" target="_blank"> pandaHun</a>
+      </p>
     </div>
     <div id="app2">
       <div class="media-q d-flex flex-column justify-content-center align-items-center">
@@ -258,7 +307,11 @@ export default {
     // Firebase
     clickNoti() {
       firebase.database().ref('noti/' + this.myaccount.id).on('value', data => {
-        this.notis = Object.values(data.val()).reverse()
+        if (data.val()) {
+          this.notis = Object.values(data.val()).reverse()
+        } else {
+          this.notis = null
+        }
       })
     },
     // clickNoti() {
@@ -266,11 +319,14 @@ export default {
     // },
     search(keyword){
       this.$router.push({name: 'SearchUser', params: { content : keyword }})
+    },
+    scrollToTop() {
+      window.scrollTo(0,0)
     }
   },
   watch: {
     users() {
-      const mapData = this.users.map(user => [user.id, user.nickName])
+      const mapData = this.users.map(user => [user.id, [user.nickName, user.profileImg]])
       this.findUsers = Object.fromEntries(mapData)
     },
     myaccount() {
@@ -298,6 +354,12 @@ export default {
   }
 }
 
+@media (max-width: 960px) {
+  .footer {
+    display: none;
+  }
+}
+
 @media (min-width: 960px) {
   #app2 {
     display: none;
@@ -310,11 +372,16 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  max-height: 960px;
+  min-height: 100vh;
+  position: relative;
 }
 
 #nav {
-  box-shadow: 0px 2px 5px rgb(0, 0, 0, 0.2)
+  box-shadow: 0px 2px 5px rgb(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  background-color: white;
 }
 
 #nav a, i {
@@ -343,6 +410,23 @@ export default {
 .dropdown-menu {
   top: 50px;
   left: -70px !important;
+  overflow-y: auto;
+}
+
+.dropdown-profile {
+  left: -16vh !important;
+}
+
+.noti-profile-img {
+  max-width: 100%;
+  border-radius: 50%
+}
+
+.btn-up {
+  position: fixed;
+  bottom: 120px;
+  right: 20px;
+  border-radius: 50%;
 }
 
 /* Search bar */
@@ -502,6 +586,16 @@ input::-webkit-input-placeholder {
   font-weight: 600 !important;
 }
 
+.dropdown-item {
+  white-space: pre-wrap;
+}
+
+.dropdown-noti {
+  width: 25vw;
+  left: -18vw !important;
+  max-height: 40vh;
+}
+
 .setting-btn:focus {
   background-color: #88A498 !important;
   color: #F7F7F7 !important;
@@ -518,5 +612,53 @@ input::-webkit-input-placeholder {
 
 .go-left {
   margin-left: -2px;
+}
+
+.scroll-sect::-webkit-scrollbar {
+  width: 8px; height: 8px; border: 3px solid white; 
+} 
+
+.scroll-sect::-webkit-scrollbar-button,.scroll-sect::-webkit-scrollbar-button:END {
+  background-color: white;
+}
+
+.scroll-sect::-webkit-scrollbar-button:start:decrement{
+}
+
+.scroll-sect::-webkit-scrollbar-track {
+  background: white; 
+  -webkit-border-radius: 10px white; 
+  border-radius:10px white;
+  /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.2) */
+}
+
+.scroll-sect::-webkit-scrollbar-thumb {
+  height: 10px; 
+  width: 50px; 
+  background: #88A498; 
+  -webkit-border-radius: 15px; border-radius: 15px; 
+  /* -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1) */
+}
+
+.footer {
+  text-align: center;
+  background-color: rgb(34, 34, 34);
+  color: white;
+  padding-top: 20px;
+  height: 100px;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 99;
+  position: relative;
+}
+
+.footer a, .footer a:link {
+  color: white;
+  text-decoration: none;
+}
+
+.github-color {
+  color: white;
 }
 </style>

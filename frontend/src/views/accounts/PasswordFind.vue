@@ -18,12 +18,13 @@
           autocorrect="none"
           style="text-transform:lowercase"
           required
+          @click="isSubmit && findPassword(passwordFindData)"
           />
         <label for="email"></label>
         <div class="error-text ml-3" v-if="error.email">{{error.email}}</div>
       </div>
       <div class="buttons mt-5 ">
-        <button class="btn done-button" :class="{disabled: !isSubmit}" @click="findPassword(passwordFindData)" >입력완료</button>
+        <button class="btn done-button" :class="{disabled: !isSubmit}" @click="isSubmit && findPassword(passwordFindData)" >입력완료</button>
       </div>
 
     </div>
@@ -113,7 +114,7 @@ export default {
         headers: { 'Content-Type': 'application/json' }
       })
         .then (() => {                                    
-          router.push({ name: 'PasswordFindEmail', params: {email: this.passwordFindData.email}})
+          router.push({ name: 'PasswordFindEmail', params: {passwordFindData: this.passwordFindData}})
         })
         .catch (() =>{
           const Toast = Swal.mixin({

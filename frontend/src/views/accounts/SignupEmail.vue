@@ -1,27 +1,40 @@
 <template>
-  <div class="background">
+  <div class="background" style="padding-top:10px;">
     <div class="container py-5 mt-5 bg-light-ivory formatting">
       <h5 class="mt-3">회원가입 인증메일이 발송되었습니다.</h5>
       <h5>이메일을 확인해주세요.</h5>
       <h5 class="bold">{{ email }}</h5>
       <div class="button-container d-flex justify-content-center mt-5 mx-auto">
-        <button class="bg-green green-btn btn " type="button">인증 메일 재발송하기</button>
+        <button class="btn-green btn" type="button" @click="resendSignupEmail(signupData, type)">인증 메일 재발송하기</button>
       </div>
       <div class="button-container d-flex justify-content-center mt-3 mx-auto">
-        <button class="bg-beige beige-btn btn" type="button">메일함가기</button>
+        <button class="btn-beige btn" type="button" @click="goToSite()">메일함가기</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: 'SignupEmail',
   data() {
     return {
-      email: this.$route.params.signupEmail.email
+      email: this.$route.params.signupEmail.email,
+      signupData: {
+        data: this.$route.params.signupEmail,
+        type: "signup"
+      }
     }
-  }
+  },
+  methods: {
+    ...mapActions("accountStore", ["resendSignupEmail"]),
+    goToSite() {
+      let idx = this.email.indexOf('@')
+      let site = this.email.slice(idx,)
+      window.open('https://' + site, '_blank');
+    }
+  },
 }
 </script>
 
@@ -41,15 +54,12 @@ button {
   color: #F8F8F8;
 }
 
-.green-btn:hover {
-  background-color: #3c755a;
-  /* color: #D6CBBD; */
-  color: #F8F8F8;
+.btn-beige {
+  color: black !important;
 }
 
-.beige-btn:hover {
-  background-color: #907a62;
-  color: #F8F8F8;
+.btn-beige {
+  color: white !important;
 }
 
 .bold {

@@ -125,8 +125,8 @@
 import Swal from 'sweetalert2'
 const swalDelete = Swal.mixin({
   customClass: {
-    confirmButton: 'btn btn-danger ',
-    cancelButton: 'btn btn-success mr-2'
+    confirmButton: 'btn btn-danger mr-2',
+    cancelButton: 'btn btn-success'
   },
   buttonsStyling: false
 })
@@ -171,8 +171,17 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['createNoti']),
     ...mapActions('clubStore', ['findClub', 'fetchCandidates', 'decideClubApply', 'updateRecruit', 'deleteClub']),
     clickDecideClubApply(clubMemberId, decision) {
+      let notiData = new Object()
+      notiData = {
+        to: clubMemberId,
+        dataId: this.$route.params.clubId,
+        isRead: false,
+        type: decision
+      }
+      this.createNoti(notiData)
       this.applyDecisionData.clubMemberId = clubMemberId
       this.applyDecisionData.decision = decision
       this.decideClubApply(this.applyDecisionData)
@@ -186,8 +195,8 @@ export default {
         text: "북클럽을 삭제하시겠습니까?",
         showCancelButton: true,
         confirmButtonText: '네',
-        cancelButtonText: '아니오',
-        reverseButtons: true,
+        cancelButtonText: '아니요',
+        // reverseButtons: true,
         icon: "warning",
       })
       .then((result) => {

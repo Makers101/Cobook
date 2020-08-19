@@ -188,6 +188,15 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success  mr-2',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+})
+
 export default {
   name: 'PostUpdate',
   data() {
@@ -306,13 +315,21 @@ export default {
           || (window.$('#summernote').summernote('code') !== '<p><br></p>') && (window.$('#summernote').summernote('code') !== this.selectedPost.review)
           || this.postUpdateData.basicData.tags.length !== this.selectedPost.tags.length
          ) {
-        if (confirm('수정 중인 리뷰가 있습니다. 정말 넘어가시겠습니까?') === true) {
-          next()
+        swal.fire({
+            text: "수정 중인 리뷰가 있습니다. 정말 넘어가시겠습니까?",
+            showCancelButton: true,
+            confirmButtonText: '네',
+            cancelButtonText: '아니요',
+            icon: "warning",
+          })
+          .then((result) => {
+            if (result.value) {
+              next()
+            }
+          });
         } else {
-          return false
+          next()
         }
-      }
-      next()
     } else {
       next()
     }

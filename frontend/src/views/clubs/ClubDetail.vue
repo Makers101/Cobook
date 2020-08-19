@@ -102,13 +102,13 @@
                 가입 신청
               </button>
               <button
-                class="btn btn-warning"
+                class="btn btn-gray"
                 v-if="selectedClub.recruit && isCandidate"
                 @click="clickApplyClub('cancel', selectedClub.id)">
                 가입 취소
               </button>
               <button
-                class="btn btn-warning"
+                class="btn btn-gray"
                 v-if="!isLeader && isMember"
                 @click="clickClubSecede(selectedClub.id)">
                 북클럽 탈퇴
@@ -123,6 +123,61 @@
 
     <!-- club-detail-members -->
     <div>
+      <h4 class="text-left font-weight-bold mb-3">북클럽 멤버({{ selectedClub.memberCnt }})</h4>
+      <carousel
+        :loop="true"
+        :navigationEnabled="true"
+        navigationNextLabel="<h3><i class='fas fa-angle-right'></i></h3>"
+        navigationPrevLabel="<h3><i class='fas fa-angle-left'></i></h3>"
+        :perPageCustom="[[1, 1], [600, 2], [900, 3], [1200, 4], [1400, 5]]"
+        paginationActiveColor="#3c756a"
+        paginationColor="#88A498"
+        paginationPadding="4"
+        paginationSize="10"
+        easing="linear"
+        speed="300">
+        <slide>
+          <div class="profile-container pointer" @click="selectUser(selectedClub.leader.id)">
+            <img
+              class="rounded-circle profile-image mx-auto"
+              :src="selectedClub.leader.profileImg"
+              :alt="selectedClub.leader.nickName"
+              v-if="selectedClub.leader.profileImg">
+            <img
+              class="rounded-circle profile-image mx-auto"
+              src="http://bit.do/anonymouseuser"
+              :alt="selectedClub.leader.nickName"
+              v-else>
+            <div class="overlay rounded-circle mx-auto">
+              <div class="text">{{ selectedClub.leader.nickName }}</div>
+            </div>
+          </div>
+        </slide>
+        
+        <slide v-for="member in selectedClub.members" :key="member.id">
+          <div
+            class="profile-container pointer"
+            @click="selectUser(member.id)">
+            <img
+              class="rounded-circle profile-image mx-auto"
+              :src="member.profileImg"
+              :alt="member.nickName"
+              v-if="member.profileImg">
+            <img
+              class="rounded-circle profile-image mx-auto"
+              src="http://bit.do/anonymouseuser"
+              :alt="member.nickName"
+              v-else>
+            <div class="overlay rounded-circle mx-auto">
+              <div class="text">{{ member.nickName }}</div>
+            </div>
+          </div>
+        </slide>
+      </carousel>
+    </div>
+
+
+    <!-- <div>
       <h4 class="text-left font-weight-bold mb-3">북클럽 멤버({{ selectedClub.memberCnt }})</h4>
       <div class="d-flex justify-content-start">
         <div class="profile-container pointer mr-3" @click="selectUser(selectedClub.leader.id)">
@@ -161,7 +216,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <hr>
 
@@ -174,7 +229,53 @@
     <hr>
 
     <!-- club-clubEvents -->
+
     <div>
+      <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 북클럽 이벤트</h4>
+      <carousel
+        :loop="true"
+        :navigationEnabled="true"
+        navigationNextLabel="<h3><i class='fas fa-angle-right'></i></h3>"
+        navigationPrevLabel="<h3><i class='fas fa-angle-left'></i></h3>"
+        :perPageCustom="[[1, 1], [1000, 2], [1500, 3]]"
+        paginationActiveColor="#3c756a"
+        paginationColor="#88A498"
+        paginationPadding="4"
+        paginationSize="10"
+        easing="linear"
+        speed="300"
+        v-if="selectedClub.clubEvents.length">
+      
+        <slide
+          v-for="clubEvent in selectedClub.clubEvents"
+          :key="clubEvent.id">
+          <div class="card pointer mx-auto my-auto" @click="selectClubEvent(clubEvent.id)" style="width: 315px">
+            <div class="row no-gutters">
+              <div class="col-6 clubEvent-left">
+                <img class="bg-image" :src="clubEvent.book.bookImg" width="100%">
+                <span class="badge mb-0 clubEvent-closed-true" v-if="clubEvent.closed">종료</span>
+                <span class="badge mb-0 clubEvent-closed-false" v-else>예정</span>
+              </div>
+              <div class="col-6 text-left d-flex flex-column align-items-start p-2">
+                <p class="clubEvent-name font-weight-bold" lt="book">{{ clubEvent.name }}</p>
+                <span class="badge badge-genre">{{ clubEvent.book.genre }}</span>
+                <div class="mt-auto">
+                  <p class="mb-0"><small><i class="fas fa-users"></i> {{ clubEvent.participantCnt}}</small></p>
+                  <p class="mb-0"><small><i class="fas fa-map-marker-alt"></i> {{ clubEvent.place }}</small></p>
+                  <p class="clubEvent-date mb-0"><small>{{ clubEvent.datetime | moment('YYYY-MM-DD HH:mm') }}</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </slide>
+      </carousel>
+
+      <div class="no-content d-flex justify-content-center align-items-center" v-else>
+        <p class="mb-0">아직 {{ selectedClub.name }}의 북클럽 이벤트가 없습니다 ㄴ(°0°)ㄱ</p>
+      </div>
+    </div>
+    
+    <!-- <div>
       <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 북클럽 이벤트</h4>
       <div class="d-flex scroll-sect" id="scroll-area-event" v-if="selectedClub.clubEvents.length">
         <div
@@ -207,7 +308,7 @@
       <div class="no-content d-flex justify-content-center align-items-center" v-else>
         <p class="mb-0">아직 {{ selectedClub.name }}의 북클럽 이벤트가 없습니다 ㄴ(°0°)ㄱ</p>
       </div>
-    </div>  
+    </div>   -->
     
     <!-- <hr> -->
 
@@ -222,6 +323,7 @@
 </template>
 
 <script>
+import { Carousel, Slide } from 'vue-carousel'
 import Swal from 'sweetalert2'
 const swal = Swal.mixin({
   customClass: {
@@ -231,17 +333,14 @@ const swal = Swal.mixin({
   buttonsStyling: false
 })
 
-const swalDelete = Swal.mixin({
-  customClass: {
-    confirmButton: 'btn btn-danger ',
-    cancelButton: 'btn btn-success mr-2'
-  },
-  buttonsStyling: false
-})
 import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'ClubDetail',
+  components: {
+    Carousel,
+    Slide
+  },
   data() {
     return {
     }
@@ -326,7 +425,7 @@ export default {
           text: "북클럽을 탈퇴하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -342,12 +441,12 @@ export default {
       router.push({ name: 'ClubUpdate', params: { clubId: clubId } })
     },
     clickClubDelete(clubId) {
-      swalDelete.fire({
+      swal.fire({
           text: "북클럽을 삭제하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
-          reverseButtons: true,
+          cancelButtonText: '아니요',
+          // reverseButtons: true,
           icon: "warning",
         })
         .then((result) => {
@@ -396,11 +495,16 @@ export default {
     background-color: #3e3f3f;
   }
 
+  .profile-container .overlay {
+    height: 150px;
+    width: 150px;
+  }
+
   .profile-container:hover .overlay {
     opacity: 0.8;
   }
 
-  .image {
+  .profile-image {
     display: block;
     width: 150px;
     height: 150px;

@@ -78,11 +78,14 @@ public class UserService {
 
     public User login(UserLoginRequestDto userLoginRequestDto) {
         User user = getUser(userLoginRequestDto.getEmail());
-        String encodePassword = user.getPassword();
-        String rawPassword = userLoginRequestDto.getPassword();
-        if (user.getAccept() == null) {
+        if(!user.getPlatformType().toString().equals("NONE")){
+            throw new UserException(String.format("소셜 회원입니다. %s 로그인을 이용해주세요", user.getPlatformType().toString()), ErrorCode.MEMBER_NOT_SOCIAL_PLATFORM_TYPE);
+        }
+        if (!user.getAccept().toString().equals("1")) {
             throw new UserException("아직 이메일 인증이 되지 않은 회원입니다.", ErrorCode.WRONG_EMAIL_CHECK_AUTH);
         }
+        String encodePassword = user.getPassword();
+        String rawPassword = userLoginRequestDto.getPassword();
         if (!passwordEncoder.matches(rawPassword, encodePassword)) {
             throw new UserException("잘못된 비밀번호입니다.", ErrorCode.WRONG_PASSWORD);
         }
@@ -111,7 +114,7 @@ public class UserService {
             messageHelper.setTo(recipient);
             if (!isFind) { // 이메일 인증
                 messageHelper.setSubject("Cobook 회원가입 인증이메일입니다.");
-                URL url = new URL("http://i3a111.p.ssafy.io:8080/api/users/authentication/" + token);
+                URL url = new URL("https://i3a111.p.ssafy.io:8090/api/users/authentication/" + token);
                 String content = stringBuilder.append("하단의 링크로 접속하여 인증해주세요!")
                         .append("\n")
                         .append(url)
@@ -119,7 +122,7 @@ public class UserService {
                 messageHelper.setText(content, true);
             } else {
                 messageHelper.setSubject("Cobook 비밀번호 변경 메일입니다.");
-                URL url = new URL("http://i3a111.p.ssafy.io:8080/api/users/resetPassword/" + token);
+                URL url = new URL("https://i3a111.p.ssafy.io:8090/api/users/resetPassword/" + token);
 //                URL url = new URL("http://localhost:8080/api/users/resetPassword/" + token);
                 String content = stringBuilder.append("하단의 링크로 접속하여 새로운 비밀번호를 입력해주세요!")
                         .append("\n")
@@ -129,6 +132,18 @@ public class UserService {
             }
         };
         emailSender.send(messagePreparator);
+    }
+
+
+    public void resend(ResendEmailDto resendEmailDto) {
+        User user = getUser(resendEmailDto.getEmail());
+        String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
+
+        if (resendEmailDto.getType().equals("signup")) {
+            preparedAndSend(user.getEmail(), false, token);
+        } else {
+            preparedAndSend(user.getEmail(), true, token);
+        }
     }
 
     public void getPassword(UserEmailSimpleDto userEmailSimpleDto, boolean isFind) {
@@ -161,7 +176,15 @@ public class UserService {
         }
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
+<<<<<<< src/main/java/com/ssafy/cobook/service/UserService.java
+=======
+
+        if (user.getPlatformType().toString().equals("NONE")) {
+            throw new UserException(ErrorCode.MEMBER_WRONG_PLATFORM_TYPE);
+        }
+>>>>>>> src/main/java/com/ssafy/cobook/service/UserService.java
         String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
         return token;
     }
+
 }

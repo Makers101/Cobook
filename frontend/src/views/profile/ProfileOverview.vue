@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-5">
+  <div style="padding-bottom:100px">
     <!-- profile-overview-calendar -->
     <v-app>
       <v-row class="fill-height">
@@ -20,8 +20,8 @@
               </v-toolbar-title>
               <v-spacer></v-spacer>
               <div>
-                <small class="mr-2"><i class="fas fa-dot-circle" style="color: #b484bf"></i>독서</small>
-                <small class="mr-2"><i class="fas fa-dot-circle" style="color: #AA706A"></i>북클럽 이벤트</small>
+                <small class="mr-2"><i class="fas fa-dot-circle" style="color: #74a892"></i>독서</small>
+                <small class="mr-2"><i class="fas fa-dot-circle" style="color: #b484bf"></i>북클럽 이벤트</small>
                 <small class="mr-3"><i class="fas fa-dot-circle" style="color: #7393C2"></i>원데이 이벤트</small>
               </div>
               <v-menu bottom right>
@@ -213,13 +213,15 @@
       </v-col>
       <v-col cols="6">
         <h3>장르별 독서 통계</h3>
-        <div class="d-flex justify-content-center align-items-center">
-          <pie-chart class="col-12" v-if="pieData.labels.length"></pie-chart>
+        <div class="d-flex justify-content-center align-items-center h-75">
+          <pie-chart class="col-12 mt-2" v-if="pieData.labels.length"></pie-chart>
           <div v-else>
-            <img
+            <div>
+              <img
               src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png"
               width="150px">
-            <p class="my-3"><span class="font-weight-bold">{{ profile.nickName }}</span>님의 독서 기록이 없습니다.</p>
+              <p class="my-3"><span class="font-weight-bold">{{ profile.nickName }}</span>님의 독서 기록이 없습니다.</p>
+            </div>
           </div>
         </div>
       </v-col>

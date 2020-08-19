@@ -21,7 +21,7 @@
           </div>
           <!-- 팔로잉 여부 -->
           <div class="d-flex align-items-center mr-3">
-            <button v-if="user.isFollow" class="btn btn-following" @click="clickedFollow(user, 'unfollow')">언팔로잉</button>
+            <button v-if="user.isFollow" class="btn btn-gray" @click="clickedFollow(user, 'unfollow')">언팔로잉</button>
             <button v-else class="btn btn-follow" @click="clickedFollow(user, 'follow')">팔로우</button>
             <!-- <button v-if="checkFollow(profile)" class="btn px-4 btn-following" @click="clickedFollow(profile, 'unfollow')">언팔로우</button>
             <button v-else class="btn btn-follow px-4" @click="clickedFollow(profile, 'follow')">팔로우</button> -->
@@ -37,6 +37,15 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+})
+
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'SearchUser',
@@ -44,19 +53,42 @@ export default {
     ...mapState('searchStore', ['users']),
   },
   methods: {
+    ...mapActions(['createNoti']),
     ...mapActions('searchStore', ['fetchUsers']),
     ...mapActions('profileStore', ['clickFollow']),
     clickedFollow(user, type) {
       if (type === 'unfollow') {
-        if (confirm('팔로우를 취소하시겠습니까?') === false) {
-          return false
-        } 
-      }
-      this.clickFollow(user.id)
-
-      if (type === 'unfollow') {
-        user.isFollow = false
+        swal.fire({
+          text: "팔로우를 취소하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: '네',
+          cancelButtonText: '아니요',
+          icon: "warning",
+        })
+          .then((result) => {
+            let notiData = new Object()
+            notiData = {
+              to: user.id,
+              dataId: 0,
+              isRead: false,
+              type: "follow"
+            }
+            this.createNoti(notiData)
+            if (result.value) {
+              this.clickFollow(user.id)
+              user.isFollow = false
+            }
+          })
       } else {
+        let notiData = new Object()
+        notiData = {
+          to: user.id,
+          dataId: 0,
+          isRead: false,
+          type: "follow"
+        }
+        this.createNoti(notiData)
+        this.clickFollow(user.id)
         user.isFollow = true
       }
     },
@@ -100,7 +132,8 @@ p {
 }
 
 .btn-following {
-  background-color: #88A498;
+  /*background-color: #88A498;*/
+  background-color: #999999;
   color: #F8F8F8;
 }
 

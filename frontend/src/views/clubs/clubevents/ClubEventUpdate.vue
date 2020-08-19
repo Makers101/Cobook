@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container mb-5" v-if="selectedClubEvent">
+  <div class="custom-container" v-if="selectedClubEvent" style="padding-bottom:100px">
 
     <!-- clubEvent-update-banner -->
     <div class="clubEvent-banner">
@@ -245,6 +245,15 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+})
+
 export default {
   name: 'ClubEventUpdate',
   data() {
@@ -380,13 +389,21 @@ export default {
           || this.time !== this.selectedClubEvent.datetime.slice(11, 16)
           || this.clubEventUpdateData.questions.length !== this.selectedClubEvent.questions.length
          ) {
-        if (confirm('수정 중인 북클럽 이벤트가 있습니다. 정말 넘어가시겠습니까?') === true) {
-          next()
-        } else {
-          return false
-        }
-      }
-      next()
+            swal.fire({
+              html: "<p>수정 중인 북클럽 이벤트가 있습니다.</p><p>정말 넘어가시겠습니까?</p>",
+              showCancelButton: true,
+              confirmButtonText: '네',
+              cancelButtonText: '아니요',
+              icon: "warning",
+            })
+            .then((result) => {
+              if (result.value) {
+                next()
+              }
+            });
+          } else {
+            next()
+          }
     } else {
       next()
     }

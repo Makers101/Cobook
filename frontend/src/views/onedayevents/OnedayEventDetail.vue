@@ -37,6 +37,13 @@
             </div>
             <div class="d-flex justify-content-end align-items-end">
               <button
+                class="btn btn-green mr-2"
+                @click="enterRoom(selectedOnedayEvent.id)"
+                v-if="(isLeader || isParticipant) & !selectedOnedayEvent.closed & (selectedOnedayEvent.place === '온라인')">
+                온라인 입장
+              </button>
+
+              <button
                 class="btn btn-secondary dropdown-toggle"
                 data-toggle="dropdown"
                 aria-haspopup="true"
@@ -66,7 +73,7 @@
                 참가 신청
               </button>
               <button
-                class="btn btn-secondary"
+                class="btn btn-gray"
                 v-if="isParticipant && !isLeader"
                 @click="clickParticipateOnedayEvent('cancel')">
                 참가 취소
@@ -82,6 +89,60 @@
 
     <!-- onedayEvent-detail-members -->
     <div>
+      <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity }})</h4>
+      <carousel
+        :loop="true"
+        :navigationEnabled="true"
+        navigationNextLabel="<h3><i class='fas fa-angle-right'></i></h3>"
+        navigationPrevLabel="<h3><i class='fas fa-angle-left'></i></h3>"
+        :perPageCustom="[[1, 1], [600, 2], [900, 3], [1200, 4], [1400, 5]]"
+        paginationActiveColor="#3c756a"
+        paginationColor="#88A498"
+        paginationPadding="4"
+        paginationSize="10"
+        easing="linear"
+        speed="300">
+        <slide>
+          <div class="profile-container pointer" @click="selectUser(selectedOnedayEvent.leader.id)">
+            <img
+              class="rounded-circle profile-image mx-auto"
+              :src="selectedOnedayEvent.leader.profileImg"
+              :alt="selectedOnedayEvent.leader.nickName"
+              v-if="selectedOnedayEvent.leader.profileImg">
+            <img
+              class="rounded-circle profile-image mx-auto"
+              src="http://bit.do/anonymouseuser"
+              :alt="selectedOnedayEvent.leader.nickName"
+              v-else>
+            <div class="overlay rounded-circle mx-auto">
+              <div class="text">{{ selectedOnedayEvent.leader.nickName }}</div>
+            </div>
+          </div>
+        </slide>
+        
+        <slide v-for="participant in selectedOnedayEvent.participants" :key="participant.id">
+          <div
+            class="profile-container pointer"
+            @click="selectUser(participant.id)">
+            <img
+              class="rounded-circle profile-image mx-auto"
+              :src="participant.profileImg"
+              :alt="participant.nickName"
+              v-if="participant.profileImg">
+            <img
+              class="rounded-circle profile-image mx-auto"
+              src="http://bit.do/anonymouseuser"
+              :alt="participant.nickName"
+              v-else>
+            <div class="overlay rounded-circle mx-auto">
+              <div class="text">{{ participant.nickName }}</div>
+            </div>
+          </div>
+        </slide>
+      </carousel>
+    </div>
+
+    <!-- <div>
       <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity }})</h4>
       <div class="d-flex justify-content-start">
         <div class="profile-container pointer mr-3" @click="selectUser(selectedOnedayEvent.leader.id)">
@@ -120,7 +181,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <hr>
 
@@ -150,8 +211,67 @@
 
     <hr v-if="isParticipant || isLeader">
 
+
     <!-- onedayEvent-detail-posts -->
     <div v-if="isParticipant || isLeader">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="text-left font-weight-bold mb-0">멤버의 책 리뷰</h4>
+        <button class="btn btn-green" @click="toPostCreate(selectedOnedayEvent.book.id)">책 리뷰 작성하기</button>
+      </div>
+
+      <carousel
+        :loop="true"
+        :navigationEnabled="true"
+        navigationNextLabel="<h3><i class='fas fa-angle-right'></i></h3>"
+        navigationPrevLabel="<h3><i class='fas fa-angle-left'></i></h3>"
+        :perPageCustom="[[1, 1], [1000, 2], [1500, 3]]"
+        paginationActiveColor="#3c756a"
+        paginationColor="#88A498"
+        paginationPadding="4"
+        paginationSize="10"
+        easing="linear"
+        speed="300"
+        v-if="selectedOnedayEvent.memberPosts.length">
+      
+        <slide
+          v-for="post in selectedOnedayEvent.memberPosts"
+          :key="post.id">
+          <div class="card pointer mx-auto my-auto" @click="toPostDetail(post.id)" style="width: 315px">
+            <div class="additional d-flex justify-content-center">
+              <div class="user-card">
+                <div class="level center">
+                  {{ post.nickName }}
+                </div>
+                <div class="points center">
+                  <i class="fas fa-heart mr-1"></i> {{ post.likeUsers.length }}
+                </div>
+                <img :src="post.profileImg" v-if="post.profileImg">
+                <img src="http://bit.do/anonymouseuser" v-else>
+              </div>
+            </div>
+            <div class="general d-flex flex-column justify-content-between">
+              <div class="w-100 h-100 d-flex flex-column justify-content-around">
+                <div class="mb-2">
+                  <span class="mb-3 star-container" v-for="index in post.rank" :key="index"><i class="fas fa-star" style="color:yellow"></i></span>
+                </div>
+                <p class="text-left m-0"><i class="fas fa-quote-left"></i></p>
+                <p class="card-text px-3" style="word-break:keep-all;">{{ post.onelineReview }}</p>
+                <p class="text-right m-0"><i class="fas fa-quote-right"></i></p>
+              </div>
+              <div class="more">
+                <span class="text-black-50"><small>{{ post.createdAt | moment('YYYY-MM-DD')}}</small></span>
+              </div>
+            </div>
+          </div>
+        </slide>
+      </carousel>
+
+      <div class="no-content d-flex justify-content-center align-items-center" v-else>
+        <p class="mb-0">아직 멤버의 책 리뷰가 없습니다 ㄴ(°0°)ㄱ</p>
+      </div>
+    </div>
+
+    <!-- <div v-if="isParticipant || isLeader">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="text-left font-weight-bold mb-0">멤버의 책 리뷰</h4>
         <button class="btn btn-green" @click="toPostCreate(selectedOnedayEvent.book.id)">책 리뷰 작성하기</button>
@@ -196,7 +316,7 @@
       <div class="no-content d-flex justify-content-center align-items-center" v-else>
         <p class="mb-0">아직 멤버의 책 리뷰가 없습니다 ㄴ(°0°)ㄱ</p>
       </div>
-    </div>
+    </div> -->
 
     <!-- <hr> -->
 
@@ -209,6 +329,7 @@
 </template>
 
 <script>
+import { Carousel, Slide } from 'vue-carousel'
 import Swal from 'sweetalert2'
 const swal = Swal.mixin({
   customClass: {
@@ -218,17 +339,14 @@ const swal = Swal.mixin({
   buttonsStyling: false
 })
 
-const swalDelete = Swal.mixin({
-  customClass: {
-    confirmButton: 'btn btn-danger ',
-    cancelButton: 'btn btn-success mr-2'
-  },
-  buttonsStyling: false
-})
 import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'OnedayEventDetail',
+  components: {
+    Carousel,
+    Slide
+  },
   computed: {
     ...mapState(['myaccount']),
     ...mapState('onedayEventStore', ['selectedOnedayEvent']),
@@ -264,11 +382,10 @@ export default {
     clickParticipateOnedayEvent(type) {
       if (type === 'apply') {
         swal.fire({
-        // title: "Are you sure?",
           text: "원데이 이벤트에 참가하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -278,11 +395,10 @@ export default {
         });
       } else if (type === 'cancel') {
         swal.fire({
-        // title: "Are you sure?",
           text: "원데이 이벤트 참가를 취소하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -302,13 +418,11 @@ export default {
       router.push({ name: 'OnedayEventUpdate', params: { onedayEventId: onedayEventId }})
     },
     clickOnedayEventDelete(onedayEventId) {
-      swalDelete.fire({
-        // title: "Are you sure?",
+      swal.fire({
           text: "원데이 이벤트를 삭제하시겠습니까?",
           showCancelButton: true,
           confirmButtonText: '네',
-          cancelButtonText: '아니오',
-          reverseButtons: true,
+          cancelButtonText: '아니요',
           icon: "warning",
         })
         .then((result) => {
@@ -385,6 +499,11 @@ export default {
     opacity: 0;
     transition: .5s ease;
     background-color: #3e3f3f;
+  }
+
+  .profile-container .overlay {
+    height: 150px;
+    width: 150px;
   }
 
   .profile-container:hover .overlay {

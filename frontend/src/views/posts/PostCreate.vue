@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container mb-5">
+  <div class="custom-container" style="padding-bottom:100px">
 
     <!-- post-create_banner -->
     <div class="post-banner">
@@ -186,14 +186,14 @@
 </template>
 
 <script>
-// import Swal from 'sweetalert2'
-// const swal = Swal.mixin({
-//   customClass: {
-//     confirmButton: 'btn btn-danger',
-//     cancelButton: 'btn btn-success mr-2'
-//   },
-//   buttonsStyling: false
-// })
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger '
+  },
+  buttonsStyling: false
+})
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -292,29 +292,21 @@ export default {
           || (window.$('#summernote').summernote('code') !== '<p><br></p>')
           || (this.postCreateData.tags.length !== 0)
          ) {
-        // swal.fire({
-        // // title: "Are you sure?",
-        //   text: "작성 중인 리뷰가 있습니다. 정말 넘어가시겠습니까?",
-        //   showCancelButton: true,
-        //   confirmButtonText: '네',
-        //   cancelButtonText: '아니오',
-        //   reverseButtons: true,
-        //   icon: "warning",
-        // })
-        // .then((result) => {
-        //   if (result.value) {
-        //     next()
-        //   } else {
-        //     return false
-        //   }
-        // });
-        if (confirm('작성 중인 리뷰가 있습니다. 정말 넘어가시겠습니까?') === true) {
-          next()
-        } else {
-          return false
-        }
-      }
-      next()
+            swal.fire({
+              html: "<p>작성 중인 리뷰가 있습니다.</p><p>정말 넘어가시겠습니까?</p>",
+              showCancelButton: true,
+              confirmButtonText: '네',
+              cancelButtonText: '아니요',
+              icon: "warning",
+            })
+            .then((result) => {
+              if (result.value) {
+                next()
+              }
+            });
+          } else {
+            next()
+          }
     } else {
       next()
     }

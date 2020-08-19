@@ -31,7 +31,6 @@ import ClubCandidates from '@/views/clubs/ClubCandidates'
 import ClubEventDetail from '@/views/clubs/clubevents/ClubEventDetail'
 import ClubEventCreate from '@/views/clubs/clubevents/ClubEventCreate'
 import ClubEventUpdate from '@/views/clubs/clubevents/ClubEventUpdate'
-import ClubEventRoom from '@/views/clubs/clubevents/ClubEventRoom'
 
 // onedayevents
 import OnedayEventList from '@/views/onedayevents/OnedayEventList'
@@ -201,11 +200,6 @@ Vue.use(VueRouter)
     path: '/clubs/:clubId/clubevents/:clubEventId/update',
     name: 'ClubEventUpdate',
     component: ClubEventUpdate
-  },
-  {
-    path: '/clubs/:clubId/clubevents/:clubEventId/rooms/:roomId',
-    name: 'ClubEventRoom',
-    component: ClubEventRoom
   },
   // onedayevents
   {

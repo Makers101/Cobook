@@ -9,6 +9,7 @@ import com.ssafy.cobook.domain.clubmember.MemberRole;
 import com.ssafy.cobook.domain.follow.FollowRepository;
 import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
+import com.ssafy.cobook.domain.postcomment.PostComment;
 import com.ssafy.cobook.domain.postcomment.PostCommentRepository;
 import com.ssafy.cobook.domain.postlike.PostLikeRepository;
 import com.ssafy.cobook.domain.user.User;
@@ -17,6 +18,7 @@ import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
 import com.ssafy.cobook.service.dto.notification.NotificationReqDto;
 import com.ssafy.cobook.service.dto.notification.NotificationSaveDto;
+import com.ssafy.cobook.service.dto.postcomment.CommentsResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -50,23 +54,30 @@ public class NotificationService {
                 .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_POST));
     }
 
-    private Club getClub(Long clubId){
+    private Club getClub(Long clubId) {
         return clubRepository.findById(clubId)
                 .orElseThrow(() -> new BaseException(ErrorCode.UNEXPECTED_CLUB));
     }
-    private void saveNotificationData(Long fromUserId, DatabaseReference notiRef) {
+
+    private void saveNotificationData(Long fromUserId, DatabaseReference notiRef, String type) {
         notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 exFindData:
                 for (DataSnapshot data : snapshot.getChildren()) {
                     String postKey = data.getKey();
-                    for (DataSnapshot values : data.getChildren()) {
-                        if (values.getKey().equals("from")) {
-                            if (values.getValue() == fromUserId) {
-                                DatabaseReference deleteRef = notiRef.child(postKey);
-                                deleteRef.removeValueAsync();
-                                break exFindData;
+                    for (DataSnapshot valueForFrom : data.getChildren()) {
+                        if (valueForFrom.getKey().equals("from")) {
+                            if (valueForFrom.getValue() == fromUserId) {
+                                for (DataSnapshot valueForType : data.getChildren()) {
+                                    if (valueForType.getKey().equals("type")) {
+                                        if (valueForType.getValue().equals(type)) {
+                                            DatabaseReference deleteRef = notiRef.child(postKey);
+                                            deleteRef.removeValueAsync();
+                                            break exFindData;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -127,31 +138,34 @@ public class NotificationService {
 
         if (type.equals("club")) { // 클럽 가입 신청
             if (clubMemberRepository.findByUserAndClub(fromUser, club).isPresent()) {
-                saveNotificationData(fromUserId, notiRef);
+                saveNotificationData(fromUserId, notiRef, type);
             } else {
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         } else if (type.equals("follow")) { // 팔로우
             if (followRepository.findByToUserAndFromUser(fromUser.getId(), toUser.getId()).isPresent()) {
-                saveNotificationData(fromUserId, notiRef);
+                saveNotificationData(fromUserId, notiRef, type);
             } else {
                 saveNoti.setValueAsync(notificationSaveDto);
             }
         } else if (type.equals("like")) { // 좋아요
             if (postLikeRepository.findByUserAndPost(fromUser, post).isPresent()) {
-                saveNotificationData(fromUserId, notiRef);
+                saveNotificationData(fromUserId, notiRef, type);
             } else {
                 saveNoti.setValueAsync(notificationSaveDto);
             }
-        } else { // 댓글
-            if(postCommentRepository.findByUserAndPost(fromUser, post).isPresent()){
-                saveNotificationData(fromUserId, notiRef);
-            } else{
-                saveNoti.setValueAsync(notificationSaveDto);
-            }
+        } else if(type.equals("comment")) { // 댓글
+            PostComment postComment = postCommentRepository.findByLastComment(fromUser, post).stream()
+                    .limit(1)
+                    .collect(Collectors.toList()).get(0);
+            notificationSaveDto.setCommentId(postComment.getId());
+            saveNoti.setValueAsync(notificationSaveDto);
+        } else if(type.equals("approve")){
+            saveNoti.setValueAsync(notificationSaveDto);
+        } else {
+            saveNoti.setValueAsync(notificationSaveDto);
         }
     }
-
 
 
     @Transactional
@@ -170,6 +184,37 @@ public class NotificationService {
         DatabaseReference notiRef = ref.child(userId.toString()); // noti의 child node: to의 아이디 값
         DatabaseReference deleteRef = notiRef.child(notiId);
         deleteRef.removeValueAsync();
+    }
+
+    @Transactional
+    public void deleteCommentAlert(Long commentId, Long userId) {
+        if (postCommentRepository.findById(commentId).isPresent()) {
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference ref = database.getReference("noti"); // 최상위 root: noti
+            DatabaseReference notiRef = ref.child(userId.toString()); // noti의 child node: to의 아이디 값
+            notiRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    exFindData:
+                    for (DataSnapshot data : snapshot.getChildren()) {
+                        String postKey = data.getKey();
+                        for (DataSnapshot value : data.getChildren()) {
+                            if (value.getKey().equals("commentId")) {
+                                if (value.getValue() == commentId) {
+                                    DatabaseReference deleteRef = notiRef.child(postKey);
+                                    deleteRef.removeValueAsync();
+                                    break exFindData;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                }
+            });
+        }
     }
 
 }

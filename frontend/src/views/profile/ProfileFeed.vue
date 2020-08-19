@@ -1,9 +1,9 @@
 <template>
-  <div class="mt-3">
+  <div class="mt-3" style="padding-bottom:100px">
     <div class="row rows-cols-1 row-cols-md-3" v-if="this.feeds.length">
       <div 
         class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
-        v-for="feed in feeds"
+        v-for="feed in feedList"
         :key="feed.id"
         @click="selectFeed(feed.id)">
         <div class="card m-0 ">
@@ -55,7 +55,11 @@
             </div>
           </div>
         </div>
-      </div>   
+      </div>
+      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="feeds" spinner="waveDots">
+        <div slot="no-more">더 이상 리뷰가 존재하지 않습니다.</div>
+        <div slot="no-results">더 이상 리뷰가 존재하지 않습니다.</div>
+      </infinite-loading>
     </div>
     <div v-else>
       <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
@@ -66,11 +70,17 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import InfiniteLoading from 'vue-infinite-loading'
 
 export default {
   name: 'ProfileFeed',
+  components: {
+    InfiniteLoading
+  },
   data() {
     return {
+      feedList: [], 
+      page: 6
     }
   },
   computed: {
@@ -79,8 +89,24 @@ export default {
   },
   methods: {
     ...mapActions('profileStore', ['fetchFeeds', 'findProfile']),
+    infiniteHandler($state) {
+      setTimeout(() => {
+        if (this.feeds.slice(this.page, this.page + 6).length) {
+          this.feedList = this.feedList.concat(this.feeds.slice(this.page, this.page + 6))
+          $state.loaded();
+          this.page += 6
+        } else {
+          $state.complete();
+        }
+      }, 700)
+    },
     selectFeed(id) {
       this.$router.push({name: 'PostDetail', params: {postId: id}})
+    }
+  },
+  watch: {
+    feeds() {
+      this.feedList = this.feeds.slice(0, 6)
     }
   },
   created() {

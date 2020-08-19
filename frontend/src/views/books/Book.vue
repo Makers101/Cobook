@@ -82,7 +82,7 @@
               <div v-for="genre in selectedBook.Genres" :key="genre.id">
                 <p>#{{ genre.name }}</p>
               </div>
-              <div class="d-flex justify-content-between mt-3">
+              <div class="d-flex justify-content-between mt-auto">
                 <button class="btn btn-green m-0" @click="clickPostCreate(selectedBook.id)" v-if="selectedBook.posts.length">리뷰 작성하러 가기</button>
                 <button v-else></button>
                 <button class="btn btn-green m-0"><a class="url" :href="selectedBook.url" target="_blank">자세히보기</a></button>
@@ -96,7 +96,7 @@
                   
                     <div 
                       class="card-style row no-gutters pointer" 
-                      style="height: 120px"
+                      style="height: 100px"
                       @click="postDetail(post.id)"
                       :key="post.id">
                       <div class="col-4 bg-green d-flex align-items-center left-card">
@@ -105,17 +105,17 @@
                             <img
                               v-if="!post.profileImg"
                               class="img-fluid feed-profile-img mt-2"
-                              style="max-width: 50%; border-radius: 50%;" 
+                              style="max-width: 30%; border-radius: 50%;" 
                               src="http://bit.do/anonymouseuser"
                               alt="유저 프로필 사진">
                             <img 
                               v-else
                               class="img-fluid feed-profile-img mt-2"
-                              style="max-width: 50%; border-radius: 50%;" 
+                              style="max-width: 30%; border-radius: 50%;" 
                               :src="post.profileImg" alt="작성자 프로필 사진">
                           </span>
-                          <span>
-                            <p class="mb-2">{{ post.nickName }}</p>
+                          <span class="other-nickName">
+                            <p class="mb-2 px-2">{{ post.nickName }}</p>
                           </span>
                         </div>
                       </div>
@@ -123,9 +123,9 @@
                       
                       <div class="col-8 d-flex align-items-center">
                         <div>
-                          <div class="px-3 pt-2 large-text text-left"><i class="fas fa-quote-left"></i></div>
+                          <div class="px-3 large-text text-left"><i class="fas fa-quote-left"></i></div>
                           <div class="px-4 text-center post-onelineReview">{{ post.onelineReview }}</div>               
-                          <div class="px-3 pb-2 large-text text-right"><i class="fas fa-quote-right"></i></div>
+                          <div class="px-3 large-text text-right"><i class="fas fa-quote-right"></i></div>
                         </div>
                       </div>
                       
@@ -213,6 +213,16 @@ body {
   height: 200px;
   box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
   border-radius: 6px;
+}
+
+.other-nickName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+  line-height: 2em;
 }
 
 
@@ -554,9 +564,10 @@ p, h1, h2, h3, h4, h5, h6, div {
 }
 
 .card-style {
-  border-radius: 100px;
-  box-shadow: rgba(0,0,0,0.5) 0 1em 0.6em;
+  border-radius: 10px;
+  box-shadow: rgba(0,0,0,0.2) 0 0.8em 0.8em;
   width: 95%;
+  border: 0.5px solid rgb(136, 164, 152, 0.2);
 }
 
 .left-card {

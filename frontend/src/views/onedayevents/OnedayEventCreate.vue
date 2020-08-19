@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container mb-5">
+  <div class="custom-container" style="padding-bottom:120px">
 
     <!-- onedayEvent-create-banner -->
     <div class="onedayEvent-banner">
@@ -272,6 +272,15 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+})
+
 export default {
   name: 'OnedayEventCreate',
   data() {
@@ -385,13 +394,21 @@ export default {
           || this.time !== this.localDatetime('time')
           || this.onedayEventCreateData.questions.length > 0
          ) {
-        if (confirm('생성 중인 원데이 이벤트가 있습니다. 정말 넘어가시겠습니까?') === true) {
-          next()
-        } else {
-          return false
-        }
-      }
-      next()
+            swal.fire({
+              html: "<p>생성 중인 원데이 이벤트가 있습니다.</p><p>정말 넘어가시겠습니까?</p>",
+              showCancelButton: true,
+              confirmButtonText: '네',
+              cancelButtonText: '아니요',
+              icon: "warning",
+            })
+            .then((result) => {
+              if (result.value) {
+                next()
+              }
+            });
+          } else {
+            next()
+          }
     } else {
       next()
     }

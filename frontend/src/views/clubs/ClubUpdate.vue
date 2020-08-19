@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container mb-5">
+  <div class="custom-container" style="padding-bottom:100px">
 
     <!-- clubs-update-banner -->
     <div class="club-banner">
@@ -198,6 +198,15 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Swal from 'sweetalert2'
+const swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success mr-2',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+})
+
 export default {
   name: 'ClubUpdate',
   data() {
@@ -312,13 +321,22 @@ export default {
           || this.clubUpdateData.basicData.genres.length !== this.selectedClub.genres.length
           || this.clubImg
          ) {
-        if (confirm('수정 중인 북클럽이 있습니다. 정말 넘어가시겠습니까?') === true) {
-          next()
-        } else {
-          return false
-        }
-      }
-      next()
+            swal.fire({
+              html: "<p>수정 중인 북클럽이 있습니다.</p><p>정말 넘어가시겠습니까?</p>",
+              showCancelButton: true,
+              confirmButtonText: '네',
+              cancelButtonText: '아니요',
+              // reverseButtons: true,
+              icon: "warning",
+            })
+            .then((result) => {
+              if (result.value) {
+                next()
+              }
+            });
+          } else {
+            next()
+          }
     } else {
       next()
     }

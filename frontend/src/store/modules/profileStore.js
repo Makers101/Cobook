@@ -83,10 +83,10 @@ const profileStore = {
     },
     clickFollow({ dispatch, rootGetters}, userId){
       axios.get(SERVER.URL + SERVER.ROUTES.profile + '/' + userId + SERVER.ROUTES.follow, rootGetters.config)
-        .then(res => {
-          dispatch('fetchFollowerList', userId)
-          dispatch('fetchFollowingList', userId)
-          console.log(res)
+        .then(() => {
+          // dispatch('fetchFollowerList', userId)
+          // dispatch('fetchFollowingList', userId)
+          dispatch('findProfile', userId)
         })
         .catch(err => {
           console.log(err.response)
@@ -174,7 +174,7 @@ const profileStore = {
             name: clubEvent.name,
             start: clubEvent.datetime.slice(0, 16),
             end: '',
-            color: '#AA706A',
+            color: '#b484bf',
             timed: false,
             clubEvent: clubEvent
           }
@@ -200,7 +200,7 @@ const profileStore = {
             name: post.book.title,
             start: post.createdAt.slice(0, 10),
             end: '',
-            color: '#b484bf',
+            color: '#74a892',
             timed: false,
             post: post
           }
@@ -354,14 +354,23 @@ const profileStore = {
               })
                 .then(() => {
                   dispatch('findMyAccount', null, { root: true })
-                  router.push({ name: 'Profile', params: { userId: userId }})
+                  if (router.currentRoute.name === 'ProfileUpdate') {
+                    router.push({ name: 'PostList'})
+                  } else {
+                    router.push({ name: 'Profile', params: { userId: userId }})
+                  }
                 })
                 .catch(err => {
                   console.log(err.response.data)
                 })
           } else {
             dispatch('findMyAccount', null, { root: true })
+            if (router.currentRoute.name === 'PostList') {
+              dispatch('postStore/fetchPostsByGenre', null, { root: true } )
+              router.push({ name: 'PostList'})
+            } else {
             router.push({ name: 'Profile', params: { userId: userId }})
+            }
           }
         })
         .catch(err => {
