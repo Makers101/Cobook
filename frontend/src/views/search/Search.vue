@@ -72,13 +72,6 @@ export default {
       this.$router.push({name: 'SearchPost', params: { content : keyword }})
     }
   },
-  created() {
-    this.search(this.$route.params.content)
-  },
-  mounted(){
-      this.$router.push({ name: 'SearchPost', params: { content: this.$route.params.content}})
-    // this.$router.push({ name: 'SearchUser', params: { content: this.$route.params.content}})
-  },
 
     
     
