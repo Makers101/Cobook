@@ -59,10 +59,12 @@
                   <p class="text-left m-0"><i class="fas fa-quote-left"></i></p>
                   <p class="card-text px-3 feed-onelineReview" >{{ feed.onelineReview }}</p>
                   <p class="text-right m-0"><i class="fas fa-quote-right"></i></p>
-                  <div class="d-flex justify-content-center">
-                    <div v-for="tag in feed.tags" :key="`tag-${tag.id}`">
-                      <span class="badge bg-green rounded-pill px-3 py-2 mr-2">#{{ tag.name }}</span>
-                    </div>
+                  <div class="tag-container w-100">
+                  <div class="tag">
+                    <span v-for="tag in feed.tags" :key="`tag-${tag.id}`" >
+                      <span class="badge bg-green rounded-pill px-3 py-2 mr-2 tag">#{{ tag.name }}</span>
+                    </span>
+                  </div>
                   </div>
 
                   
@@ -101,13 +103,30 @@ export default {
     this.fetchPosts(this.$route.params.content)
   },
   beforeRouteUpdate (to, from, next) {
-    this.fetchPosts(this.params.content)
+    this.fetchPosts(this.$route.params.content)
     next();
   },
 }
 </script>
 
 <style scoped>
+.tag {
+  white-space: pre-wrap;
+  overflow: hidden;
+}
+
+.tag-container {
+  overflow: hidden;
+  white-space: pre-wrap;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  line-height: 1.5em;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .bg-image {
   position: static;
   width: 100%;
@@ -193,6 +212,7 @@ export default {
 
 .card .additional:hover .user-card img {
   max-width: 90%;
+  border: 5px solid #fff;
 }
 
 .card .additional .user-card {
@@ -238,6 +258,7 @@ export default {
   max-width: 90%;
   border-radius: 5%;
   margin-top: 20px;
+  margin-right: 5px;
   /* position: absolute; */
 }
 
