@@ -40,7 +40,13 @@
           <div class="d-flex justify-content-between">
             <!-- club-detail-genres -->
             <div>
-              <button class="btn btn-genre mr-2" disabled v-for="genre in selectedClub.genres" :key="genre.id">#{{ genre.name }}</button>
+              <button 
+                class="btn btn-genre mr-2" 
+                @click="searchGenre(genre.name)"
+                v-for="genre in selectedClub.genres" 
+                :key="genre.id">
+                #{{ genre.name }}
+              </button>
             </div>
             <!-- club-detail-buttons -->
             <div>
@@ -149,7 +155,7 @@
               :alt="selectedClub.leader.nickName"
               v-else>
             <div class="overlay rounded-circle mx-auto">
-              <div class="text">{{ selectedClub.leader.nickName }}</div>
+              <div class="text"><i class="fas fa-book-reader mr-2"></i>북클럽장<br>{{ selectedClub.leader.nickName }}</div>
             </div>
           </div>
         </slide>
@@ -454,6 +460,9 @@ export default {
             this.deleteClub(clubId)
           } 
         });
+    },
+    searchGenre(content) {
+      router.push({ name: 'SearchClub', params: { content: content }})
     }
   },
   created() {
