@@ -109,8 +109,8 @@
             <h5 class="mb-0 ml-2 font-weight-bold">{{ candidate.nickName }}</h5>
           </div>
           <div class="d-flex justify-content-end align-items-center">
-            <button class="btn btn-green mr-2" @click="clickDecideClubApply(candidate.clubMemberId, 'approve')">승인</button>
-            <button class="btn btn-danger" @click="clickDecideClubApply(candidate.clubMemberId, 'reject')">거절</button>
+            <button class="btn btn-green mr-2" @click="clickDecideClubApply(candidate, 'approve')">승인</button>
+            <button class="btn btn-danger" @click="clickDecideClubApply(candidate, 'reject')">거절</button>
           </div>
         </div>
       </div>
@@ -173,17 +173,17 @@ export default {
   methods: {
     ...mapActions(['createNoti']),
     ...mapActions('clubStore', ['findClub', 'fetchCandidates', 'decideClubApply', 'updateRecruit', 'deleteClub']),
-    clickDecideClubApply(clubMemberId, decision) {
+    clickDecideClubApply(candidate, decision) {
       let notiData = new Object()
       notiData = {
-        to: clubMemberId,
+        to: candidate.userId,
         dataId: this.$route.params.clubId,
         isRead: false,
         type: decision
       }
       console.log(notiData)
       this.createNoti(notiData)
-      this.applyDecisionData.clubMemberId = clubMemberId
+      this.applyDecisionData.clubMemberId = candidate.clubMemberId
       this.applyDecisionData.decision = decision
       this.decideClubApply(this.applyDecisionData)
     },
