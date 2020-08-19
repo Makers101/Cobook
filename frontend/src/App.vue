@@ -194,17 +194,17 @@
       </div>
       </div>
       <router-view class="router-view"/>
-      <!-- footer -->
-      <div class="footer" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail'">
-        <p class="footer-p">© 2020 Copyright: 만든이101 </p>
-        <p class="m-0 pb-2">
-          <i class="fab fa-github github-color"></i><a href="https://github.com/smhwang0109" target="_blank"> smhwang0109</a>
-          | <i class="fab fa-github github-color"></i> <a href="https://github.com/scl2589" target="_blank"> chaelinshin96</a> 
-          | <i class="fab fa-github github-color"></i><a href="https://github.com/SunHwan-Park" target="_blank"> SunHwan-Park</a>
-          | <i class="fab fa-github github-color"></i><a href="https://github.com/genie97" target="_blank"> genie97</a>
-          | <i class="fab fa-github github-color"></i><a href="https://github.com/pandaHun" target="_blank"> pandaHun</a>
-        </p>
-      </div>
+    </div>
+    <!-- footer -->
+    <div class="footer" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail'">
+      <p class="footer-p">© 2020 Copyright: 만든이101 </p>
+      <p class="m-0 pb-2">
+        <i class="fab fa-github github-color"></i><a href="https://github.com/smhwang0109" target="_blank"> smhwang0109</a>
+        | <i class="fab fa-github github-color"></i> <a href="https://github.com/scl2589" target="_blank"> chaelinshin96</a> 
+        | <i class="fab fa-github github-color"></i><a href="https://github.com/SunHwan-Park" target="_blank"> SunHwan-Park</a>
+        | <i class="fab fa-github github-color"></i><a href="https://github.com/genie97" target="_blank"> genie97</a>
+        | <i class="fab fa-github github-color"></i><a href="https://github.com/pandaHun" target="_blank"> pandaHun</a>
+      </p>
     </div>
     <div id="app2">
       <div class="media-q d-flex flex-column justify-content-center align-items-center">
@@ -354,6 +354,12 @@ export default {
   }
 }
 
+@media (max-width: 960px) {
+  .footer {
+    display: none;
+  }
+}
+
 @media (min-width: 960px) {
   #app2 {
     display: none;
@@ -366,8 +372,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  min-height: 920px;
-  position: relative
+  min-height: 100vh;
+  position: relative;
 }
 
 #nav {
@@ -635,6 +641,7 @@ input::-webkit-input-placeholder {
 }
 
 .footer {
+  text-align: center;
   background-color: rgb(34, 34, 34);
   color: white;
   padding-top: 20px;
@@ -643,7 +650,7 @@ input::-webkit-input-placeholder {
   bottom: 0;
   width: 100%;
   z-index: 99;
-  position: absolute;
+  position: relative;
 }
 
 .footer a, .footer a:link {
