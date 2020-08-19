@@ -1120,6 +1120,10 @@ body {
   word-break: keep-all;
 }
 
+.scroll-sect {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
 .scroll-sect::-webkit-scrollbar {
   width: 8px; height: 8px; border: 3px solid white; 
