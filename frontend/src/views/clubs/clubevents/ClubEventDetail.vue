@@ -146,7 +146,7 @@
                 :alt="selectedClubEvent.leader.nickName"
                 v-else>
               <div class="overlay rounded-circle mx-auto">
-                <div class="text">{{ selectedClubEvent.leader.nickName }}</div>
+                <div class="text"><i class="fas fa-book-reader mr-2"></i>북클럽장<br>{{ selectedClubEvent.leader.nickName }}</div>
               </div>
             </div>
           </slide>
