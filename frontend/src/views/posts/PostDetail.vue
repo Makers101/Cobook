@@ -243,7 +243,7 @@
                           <span class="pointer ml-2 mr-2" @click="selectUser(comment.user.id)"><strong>{{ comment.user.nickName }}</strong></span>
                           <span v-if="comment.isClub" class="badge bg-green">Club</span>
                           <!-- 댓글-->
-                          <span class="m-0">{{ comment.content }}</span>
+                          <span class="m-0 comment-content">{{ comment.content }}</span>
                         </div>
                         <div
                           class="btn text-danger btn-sm m-0 p-0 col-3"
@@ -569,6 +569,10 @@ export default {
 
 .book-info {
   font-size: 0.9em;
+}
+
+.comment-content {
+  word-break: break-all;
 }
 
 .feed-profile-img {
