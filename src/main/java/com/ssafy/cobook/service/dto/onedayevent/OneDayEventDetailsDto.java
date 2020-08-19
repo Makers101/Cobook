@@ -25,6 +25,7 @@ public class OneDayEventDetailsDto {
     private Integer participantCnt;
     private Boolean closed;
     private Boolean isMember;
+    private String roomUrl;
     private BookSimpleResDto book;
     private Integer capacity;
     private List<QuestionResDto> questions;
@@ -39,6 +40,7 @@ public class OneDayEventDetailsDto {
         this.place = oneDayEvent.getPlace();
         this.description = oneDayEvent.getDescription();
         this.closed = oneDayEvent.getClosed();
+        this.roomUrl = oneDayEvent.getRoomUrl();
         this.book = new BookSimpleResDto(oneDayEvent.getBook());
         this.questions = oneDayEvent.getQuestions().stream()
                 .map(QuestionResDto::new)

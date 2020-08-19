@@ -40,6 +40,7 @@ public class OneDayEvent {
     private String description;
     private Boolean closed;
     private Integer capacity;
+    private String roomUrl;
 
     @Builder
     public OneDayEvent(String title, LocalDateTime dateTime, String place, String description, Boolean closed, Integer capacity) {
@@ -85,5 +86,9 @@ public class OneDayEvent {
         if (this.dateTime.isBefore(now)) {
             this.closed = true;
         }
+    }
+
+    public void updateRoom(String url) {
+        this.roomUrl = url;
     }
 }

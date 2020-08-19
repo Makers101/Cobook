@@ -3,6 +3,7 @@ package com.ssafy.cobook.controller;
 import com.ssafy.cobook.domain.onedayevent.OneDayEvent;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.service.OneDayEventService;
+import com.ssafy.cobook.service.dto.clubevent.ClubEventRoomReqDto;
 import com.ssafy.cobook.service.dto.onedayevent.*;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -85,6 +86,17 @@ public class OneDayEventController {
                                              @PathVariable("eventId") final Long eventId) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         oneDayEventService.deleteEvents(userId, eventId);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "클럽의 화상 정보를 수정한다.")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PutMapping("/{eventId}/url")
+    public ResponseEntity<Void> updateRoom(@ApiIgnore final Authentication authentication,
+                                           @PathVariable("eventId") final Long eventId,
+                                           @RequestBody final ClubEventRoomReqDto dto) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        oneDayEventService.updateRoom(userId, eventId, dto);
         return ResponseEntity.ok().build();
     }
 }

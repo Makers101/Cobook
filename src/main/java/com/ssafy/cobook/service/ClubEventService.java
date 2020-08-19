@@ -20,11 +20,8 @@ import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
 import com.ssafy.cobook.exception.BaseException;
 import com.ssafy.cobook.exception.ErrorCode;
-import com.ssafy.cobook.service.dto.clubevent.ClubEventSaveReqDto;
-import com.ssafy.cobook.service.dto.clubevent.ClubEventSaveResDto;
-import com.ssafy.cobook.service.dto.clubevent.ClubEventUpdateReqDto;
+import com.ssafy.cobook.service.dto.clubevent.*;
 import com.ssafy.cobook.service.dto.post.PostByMembersResDto;
-import com.ssafy.cobook.service.dto.clubevent.ClubEventDetailResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -151,12 +148,12 @@ public class ClubEventService {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
         }
         ClubEvent event = getClubEvent(eventId);
-        if( !clubId.equals(event.getClub().getId())) {
+        if (!clubId.equals(event.getClub().getId())) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
         }
         ClubEventMember member = clubEventMemberRepository.findByUserAndClubEvent(user, event)
-                .orElseThrow(()-> new BaseException(ErrorCode.ILLEGAL_ACCESS_READING));
-        if( member.isNotLeader()) {
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_READING));
+        if (member.isNotLeader()) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
         }
         event.updateInfo(reqDto);
@@ -180,12 +177,12 @@ public class ClubEventService {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
         }
         ClubEvent event = getClubEvent(eventId);
-        if( !clubId.equals(event.getClub().getId())) {
+        if (!clubId.equals(event.getClub().getId())) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
         }
         ClubEventMember member = clubEventMemberRepository.findByUserAndClubEvent(user, event)
-                .orElseThrow(()-> new BaseException(ErrorCode.ILLEGAL_ACCESS_READING));
-        if( member.isNotLeader()) {
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_READING));
+        if (member.isNotLeader()) {
             throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
         }
         club.removeEvents(event);
@@ -199,10 +196,26 @@ public class ClubEventService {
     public void checkEnded() {
         LocalDateTime now = LocalDateTime.now();
         List<ClubEvent> events = clubEventRepository.findAll().stream()
-                .filter(e->!e.getClosed())
+                .filter(e -> !e.getClosed())
                 .collect(Collectors.toList());
-        for(ClubEvent event: events) {
+        for (ClubEvent event : events) {
             event.isEnd(now);
         }
+    }
+
+    @Transactional
+    public void updateRoom(Long userId, Long clubId, Long clubEventId, ClubEventRoomReqDto dto) {
+        User user = getUser(userId);
+        Club club = getClub(clubId);
+        ClubEvent event = getClubEvent(clubEventId);
+        ClubMember member = clubMemberRepository.findByUserAndClub(user, club)
+                .orElseThrow(() -> new BaseException(ErrorCode.ILLEGAL_ACCESS_READING));
+        if (!clubId.equals(event.getClub().getId())) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
+        }
+        if (member.isNotLeader()) {
+            throw new BaseException(ErrorCode.ILLEGAL_ACCESS_READING);
+        }
+        event.updateRoom(dto.getUrl());
     }
 }
