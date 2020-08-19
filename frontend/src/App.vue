@@ -332,6 +332,7 @@ export default {
             dataObject[idx].id= idx
             this.notis.push(dataObject[idx])
           }
+          this.notis.reverse()
         } else {
           this.notis = null
         }

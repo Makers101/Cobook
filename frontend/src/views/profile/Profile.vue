@@ -7,14 +7,14 @@
           class="profile-image bg-light-ivory"
           :src="profile.profileImg"
           :alt="profile.nickName"
-          v-if="profile.profileImg">
+          v-if="profile && profile.profileImg">
         <img
           class="profile-image bg-light-ivory"
           src="http://bit.do/anonymouseuser"
           :alt="profile.nickName"
-          v-else>
+          v-else-if="profile">
       </div>
-      <div class="col-9 part text-left d-flex flex-column justify-content-between">
+      <div class="col-9 part text-left d-flex flex-column justify-content-between" v-if="profile">
         <div class="d-flex flex-column justify-content-start">
           <div class="d-flex justify-content-between">
             <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>

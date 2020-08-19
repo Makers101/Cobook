@@ -8,7 +8,7 @@
           </header>
           <article>
             <!-- 페이지1 -->
-            <div class="page1 d-flex flex-column" style="height: 580px">
+            <div class="page1 d-flex flex-column" v-if="selectedBook" style="height: 580px">
               <!-- 책 제목 -->
               <div class="d-flex align-items-center" style="height:85px;"> 
                 <h2 class="chapter-title book-title pt-0">『{{ selectedBook.title }}』</h2>
@@ -89,7 +89,7 @@
               </div>
             </div>
             <!-- 페이지2 -->
-            <div class="page2" style="height: 600px">
+            <div class="page2" v-if="selectedBook" style="height: 600px">
               <h5 class="mb-4"><strong>코북 유저들의 리뷰</strong></h5>
               <div class="review-list scroll-sect"  v-if="selectedBook.posts.length">
                 <div class="mb-3" v-for="post in selectedBook.posts" :key="post.id">

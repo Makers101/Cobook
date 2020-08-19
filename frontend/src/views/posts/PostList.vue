@@ -32,11 +32,11 @@
           :perPageCustom="[[1, 1], [700, 1], [900, 2], [1100, 3], [1300, 4], [1500, 5]]"
           paginationActiveColor="#3c756a"
           paginationColor="#88A498"
-          paginationPadding="4"
-          paginationSize="10"
+          :paginationPadding="4"
+          :paginationSize="10"
           easing="linear"
-          speed="300"
-          v-if="postsByPopularity.length">
+          :speed="300"
+          v-if="postsByPopularity && postsByPopularity.length">
         
           <slide
             class="custom-slide"
@@ -82,11 +82,11 @@
           :perPageCustom="[[1, 1], [700, 1], [900, 2], [1100, 3], [1300, 4], [1500, 5]]"
           paginationActiveColor="#3c756a"
           paginationColor="#88A498"
-          paginationPadding="4"
-          paginationSize="10"
+          :paginationPadding="4"
+          :paginationSize="10"
           easing="linear"
-          speed="300"
-          v-if="postsByFollow.length">
+          :speed="300"
+          v-if="postsByFollow && postsByFollow.length">
         
           <slide
             class="custom-slide"
@@ -162,11 +162,11 @@
           :perPageCustom="[[1, 1], [700, 1], [900, 2], [1100, 3], [1300, 4], [1500, 5]]"
           paginationActiveColor="#3c756a"
           paginationColor="#88A498"
-          paginationPadding="4"
-          paginationSize="10"
+          :paginationPadding="4"
+          :paginationSize="10"
           easing="linear"
-          speed="300"
-          v-if="postSet.posts.length">
+          :speed="300"
+          v-if="postSet.posts && postSet.posts.length">
         
           <slide
             class="custom-slide"
@@ -242,8 +242,8 @@
                         color="blue-grey lighten-2"
                         counter="3"
                         :rules="[
-                          v => (v.length !== 0) || '필수항목입니다.',
-                          v => (v.length < 4) || '최대 3개의 관심 장르를 고를 수 있습니다.'
+                          v => (v && v.length !== 0) || '필수항목입니다.',
+                          v => (v && v.length < 4) || '최대 3개의 관심 장르를 고를 수 있습니다.'
                         ]"
                         label="관심 장르"
                         item-text="name"
@@ -424,15 +424,16 @@ export default {
         stopWheel()
       })
     }
-
-    this.postsByGenre.forEach(postSet => {
-      if (document.querySelector(`#scroll-area-${postSet.genre}`)) {
-        document.querySelector(`#scroll-area-${postSet.genre}`).addEventListener('wheel', (e) => {
-          document.querySelector(`#scroll-area-${postSet.genre}`).scrollLeft += e.deltaY;
-          stopWheel()
-        })
-      }
-    });
+    if(this.postsByGenre) {
+      this.postsByGenre.forEach(postSet => {
+        if (document.querySelector(`#scroll-area-${postSet.genre}`)) {
+          document.querySelector(`#scroll-area-${postSet.genre}`).addEventListener('wheel', (e) => {
+            document.querySelector(`#scroll-area-${postSet.genre}`).scrollLeft += e.deltaY;
+            stopWheel()
+          })
+        }
+      });
+    }
   },
   beforeRouteUpdate() {
     this.fetchPostsByPopularity()

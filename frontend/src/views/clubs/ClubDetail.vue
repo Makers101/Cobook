@@ -9,7 +9,7 @@
         class="club-image col-4"
         :src="selectedClub.clubImg"
         :alt="selectedClub.name"
-        v-if="selectedClub.clubImg">
+        v-if="selectedClub && selectedClub.clubImg">
       <img
         class="club-image col-4"
         :src="'http://placehold.jp/300x200.png?text=' + selectedClub.name"
@@ -138,10 +138,10 @@
         :perPageCustom="[[1, 1], [600, 2], [900, 3], [1200, 4], [1400, 5]]"
         paginationActiveColor="#3c756a"
         paginationColor="#88A498"
-        paginationPadding="4"
-        paginationSize="10"
+        :paginationPadding="4"
+        :paginationSize="10"
         easing="linear"
-        speed="300">
+        :speed="300">
         <slide>
           <div class="profile-container pointer" @click="selectUser(selectedClub.leader.id)">
             <img
@@ -246,10 +246,10 @@
         :perPageCustom="[[1, 1], [1000, 2], [1500, 3]]"
         paginationActiveColor="#3c756a"
         paginationColor="#88A498"
-        paginationPadding="4"
-        paginationSize="10"
+        :paginationPadding="4"
+        :paginationSize="10"
         easing="linear"
-        speed="300"
+        :speed="300"
         v-if="selectedClub.clubEvents.length">
       
         <slide
