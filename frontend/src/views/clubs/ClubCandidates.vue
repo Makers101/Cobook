@@ -181,6 +181,7 @@ export default {
         isRead: false,
         type: decision
       }
+      console.log(notiData)
       this.createNoti(notiData)
       this.applyDecisionData.clubMemberId = clubMemberId
       this.applyDecisionData.decision = decision
