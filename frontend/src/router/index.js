@@ -278,8 +278,8 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['Login', 'Signup', 'SignupEmail', 'SignupKakao', 'PasswordFind', 'PasswordFindEmail', 'PasswordChange', 'PasswordChangeSuccessful'] // Login 안해도 됨
-  const authPages = ['Login', 'Signup', 'SignupEmail', 'SignupKakao', 'PasswordFind', 'PasswordFindEmail', 'PasswordChange', 'PasswordChangeSuccessful'] // Login 되어있으면 안됨
+  const publicPages = ['Login', 'Signup', 'SignupEmail', 'SignupKakao', 'SignupSuccessful', 'PasswordFind', 'PasswordFindEmail', 'PasswordChange', 'PasswordChangeSuccessful'] // Login 안해도 됨
+  const authPages = ['Login', 'Signup', 'SignupEmail', 'SignupKakao', 'SignupSuccessful', 'PasswordFind', 'PasswordFindEmail', 'PasswordChange', 'PasswordChangeSuccessful'] // Login 되어있으면 안됨
   // const pubicPages = ['Login', 'Signup'] // Login 안해도 됨
   // const authPages = ['Login', 'Signup'] // Login 되어있으면 안됨
   const authRequired = !publicPages.includes(to.name) // 로그인 해야하는 페이지면 true 반환
