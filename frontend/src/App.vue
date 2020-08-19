@@ -338,7 +338,7 @@ export default {
       })
     },
     search(keyword){
-      this.$router.push({name: 'SearchUser', params: { content : keyword }})
+      this.$router.push({name: 'SearchPost', params: { content : keyword }})
     },
     scrollToTop() {
       window.scrollTo(0,0)
