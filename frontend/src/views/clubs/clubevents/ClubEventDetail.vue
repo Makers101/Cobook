@@ -45,12 +45,12 @@
                   type="button"
                   class="btn btn-green mr-2"
                   data-toggle="modal" data-target="#makeRoomModal"
-                  v-if="isLeader & !selectedClubEvent.closed & (selectedClubEvent.place === '온라인') & !selectedClubEvent.roomUrl">
+                  v-if="isLeader & !selectedClubEvent.closed & (selectedClubEvent.place === '온라인') & !roomUrl">
                   온라인 만들기
                 </button>
                 <button
                   class="btn btn-green mr-2"
-                  v-else-if="(isLeader || isParticipant) && !selectedClubEvent.closed && (selectedClubEvent.place === '온라인') && selectedClubEvent.roomUrl">
+                  v-else-if="(isLeader || isParticipant) && !selectedClubEvent.closed && (selectedClubEvent.place === '온라인') && roomUrl">
                   <a :href="selectedClubEvent.roomUrl" target="_blank">온라인 입장</a>
                 </button>
                 <!-- Modal -->
@@ -65,7 +65,7 @@
                       </div>
                       <div class="modal-body">
                         <p>webex에 가입되어 있는 이메일을 입력해주세요!</p>
-                        <input type="email" v-model="webexEmail">
+                        <input type="email" v-model="webexEmail" autofocus>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-green" @click="createLeader" data-dismiss="modal">온라인 만들기</button>
@@ -414,6 +414,9 @@ export default {
         return false
       }
     },
+    roomUrl() {
+      return this.selectedOnedayEvent.roomUrl
+    }
     // isCurrent() {
     //   if (Date() < new Date(this.selectedClubEvent.datetime)) {
     //     console.log(Date())
@@ -485,13 +488,6 @@ export default {
             this.deleteClubEvent(this.params)
           } 
         });
-    },
-    enterRoom() {
-      console.log((this.isLeader || this.isParticipant))
-      console.log(!this.selectedClubEvent.closed)
-      console.log(this.selectedClubEvent.place === '온라인')
-      console.log(this.selectedClubEvent.roomUrl)
-      console.log((this.isLeader || this.isParticipant) && !this.selectedClubEvent.closed && (this.selectedClubEvent.place === '온라인') && this.selectedClubEvent.roomUrl)
     },
     toBookDetail() {
       // router.push({ name: 'BookDetail', params: { bookId: bookId}})

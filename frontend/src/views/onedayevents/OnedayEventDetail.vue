@@ -37,11 +37,36 @@
             </div>
             <div class="d-flex justify-content-end align-items-end">
               <button
+                type="button"
                 class="btn btn-green mr-2"
-                @click="enterRoom(selectedOnedayEvent.id)"
-                v-if="(isLeader || isParticipant) & !selectedOnedayEvent.closed & (selectedOnedayEvent.place === '온라인')">
-                온라인 입장
+                data-toggle="modal" data-target="#makeRoomModal"
+                v-if="isLeader & !selectedOnedayEvent.closed & (selectedOnedayEvent.place === '온라인') & !roomUrl">
+                온라인 만들기
               </button>
+              <button
+                class="btn btn-green mr-2"
+                v-else-if="(isLeader || isParticipant) && !selectedOnedayEvent.closed && (selectedOnedayEvent.place === '온라인') && roomUrl">
+                <a :href="selectedOnedayEvent.roomUrl" target="_blank">온라인 입장</a>
+              </button>
+              <div class="modal fade" id="makeRoomModal" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="makeRoomModalLabel">온라인 만들기</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p>webex에 가입되어 있는 이메일을 입력해주세요!</p>
+                      <input type="email" v-model="webexEmail" autofocus>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-green" @click="createLeader" data-dismiss="modal">온라인 만들기</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <button
                 class="btn btn-secondary dropdown-toggle"
@@ -372,10 +397,13 @@ export default {
       } else {
         return false
       }
+    },
+    roomUrl() {
+      return this.selectedOnedayEvent.roomUrl
     }
   },
   methods: {
-    ...mapActions('onedayEventStore', ['findOnedayEvent', 'participateOnedayEvent', 'deleteOnedayEvent']),
+    ...mapActions('onedayEventStore', ['findOnedayEvent', 'participateOnedayEvent', 'deleteOnedayEvent', 'checkPeople']),
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
     },
@@ -433,6 +461,23 @@ export default {
     },
     toBookDetail(bookId) {
       router.push({ name: 'BookDetail', params: { bookId: bookId}})
+    },
+    createLeader() {
+      let webexData=  {
+        emails: [
+          this.webexEmail
+        ],
+        displayName: this.selectedOnedayEvent.leader.nickName,
+        firstName: this.selectedOnedayEvent.leader.nickName,
+        lastName: this.selectedOnedayEvent.leader.nickName,
+        roles: [
+          "Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfcmVhZG9ubHlfYWRtaW4"
+        ],
+        selectedOnedayEvent: this.selectedOnedayEvent,
+        url: null,
+      }
+      console.log(webexData)
+      this.checkPeople(webexData)
     },
   },
   created() {
@@ -787,6 +832,21 @@ export default {
 
   .scroll-sect:hover{
     overflow-x: scroll;
+  }
+
+  input {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    width: 100%;
+    text-align: center;
+  }
+
+  input:focus {
+    outline: none;
+  }
+  
+  a {
+    color: white;
+    text-decoration: none;
   }
 /* https://www.gamasutra.com/db_area/images/news/2018/Jun/320213/supermario64thumb1.jpg */
 </style>
