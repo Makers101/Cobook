@@ -18,7 +18,7 @@ public class OneDayEventSaveReqDto {
     @Length(min = 1, max = 30)
     private String name;
     @ApiModelProperty(position = 2)
-    @Length(min = 1, max = 30)
+    @Length(min = 1, max = 100)
     private String description;
     @ApiModelProperty(position = 3)
     private LocalDateTime datetime;
