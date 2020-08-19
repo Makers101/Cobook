@@ -2,6 +2,7 @@ import axios from 'axios'
 import SERVER from '@/api/api'
 import WEBEXSERVER from '@/api/webexApi'
 import router from '@/router'
+import Swal from 'sweetalert2'
 
 const onedayEventStore = {
     namespaced: true,
@@ -107,10 +108,8 @@ const onedayEventStore = {
       },
       
       checkPeople({ state, dispatch }, webexData) {
-        console.log('체크')
         axios.get(WEBEXSERVER.URL + WEBEXSERVER.ROUTES.createPeople + '?email=' + webexData.emails[0], state.webexToken)
           .then((res) => {
-            console.log(res)
             if (!res.data.items.length) {
               dispatch('createPeople', webexData)
             } else {
@@ -122,6 +121,28 @@ const onedayEventStore = {
           })
       },
       createPeople({ state }, webexData) {
+        let timerInterval
+        Swal.fire({
+          title: '이메일을 보내는 중입니다.',
+          html: '조금만 기다려주세요',
+          timer: 8000,
+          timerProgressBar: true,
+          onBeforeOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+              const content = Swal.getContent()
+              if (content) {
+                const b = content.querySelector('b')
+                if (b) {
+                  b.textContent = Swal.getTimerLeft()
+                }
+              }
+            }, 100)
+          },
+          onClose: () => {
+            clearInterval(timerInterval)
+          }
+        })
         axios.post(WEBEXSERVER.URL + WEBEXSERVER.ROUTES.createPeople, webexData, state.webexToken)
           .then(() => {
             alert('이메일에서 승인 절차를 진행해주세요.')
@@ -131,6 +152,28 @@ const onedayEventStore = {
           })
       },
       createRoom({ state, dispatch }, webexData) {
+        let timerInterval
+        Swal.fire({
+          title: '방을 생성중입니다.',
+          html: '조금만 기다려주세요',
+          timer: 3000,
+          timerProgressBar: true,
+          onBeforeOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+              const content = Swal.getContent()
+              if (content) {
+                const b = content.querySelector('b')
+                if (b) {
+                  b.textContent = Swal.getTimerLeft()
+                }
+              }
+            }, 100)
+          },
+          onClose: () => {
+            clearInterval(timerInterval)
+          }
+        })
         let roomData = {
           "title": webexData.selectedOnedayEvent.name,
           "agenda": webexData.selectedOnedayEvent.description,

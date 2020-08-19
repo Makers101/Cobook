@@ -2,6 +2,7 @@ import axios from 'axios'
 import SERVER from '@/api/api'
 import WEBEXSERVER from '@/api/webexApi'
 import router from '@/router'
+import Swal from 'sweetalert2'
 
 const clubStore = {
     namespaced: true,
@@ -247,6 +248,28 @@ const clubStore = {
           })
       },
       createPeople({ state }, webexData) {
+        let timerInterval
+        Swal.fire({
+          title: '이메일을 보내는 중입니다.',
+          html: '조금만 기다려주세요',
+          timer: 8000,
+          timerProgressBar: true,
+          onBeforeOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+              const content = Swal.getContent()
+              if (content) {
+                const b = content.querySelector('b')
+                if (b) {
+                  b.textContent = Swal.getTimerLeft()
+                }
+              }
+            }, 100)
+          },
+          onClose: () => {
+            clearInterval(timerInterval)
+          }
+        })
         axios.post(WEBEXSERVER.URL + WEBEXSERVER.ROUTES.createPeople, webexData, state.webexToken)
           .then(() => {
             alert('이메일에서 승인 절차를 진행해주세요.')
@@ -256,6 +279,28 @@ const clubStore = {
           })
       },
       createRoom({ state, dispatch }, webexData) {
+        let timerInterval
+        Swal.fire({
+          title: '방을 생성중입니다.',
+          html: '조금만 기다려주세요',
+          timer: 3000,
+          timerProgressBar: true,
+          onBeforeOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+              const content = Swal.getContent()
+              if (content) {
+                const b = content.querySelector('b')
+                if (b) {
+                  b.textContent = Swal.getTimerLeft()
+                }
+              }
+            }, 100)
+          },
+          onClose: () => {
+            clearInterval(timerInterval)
+          }
+        })
         let roomData = {
           "title": webexData.selectedClubEvent.name,
           "agenda": webexData.selectedClubEvent.description,
@@ -281,7 +326,7 @@ const clubStore = {
             console.log(err.response.data)
           })
       },
-      createRoomUrl({ rootGetters }, webexData) {
+      createRoomUrl({ dispatch, rootGetters }, webexData) {
         let urlData = {
           url: webexData.url
         }
@@ -289,9 +334,12 @@ const clubStore = {
           SERVER.URL + SERVER.ROUTES.clubs + '/' + webexData.clubId + '/clubevents/' + webexData.clubEventId + '/url',
           urlData,
           rootGetters.config)
-          // .then(() => {
-          //   dispatch('')
-          // })
+          .then(() => {
+            dispatch('findClubEvent', {
+              clubId: webexData.clubId,
+              clubEventId: webexData.clubEventId,
+            })
+          })
           .catch(err => {
             console.log(err.response.data)
           })
