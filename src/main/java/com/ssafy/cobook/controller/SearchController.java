@@ -52,7 +52,6 @@ public class SearchController {
         return ResponseEntity.status(HttpStatus.OK).body(searchService.searchPosts(keyword));
     }
 
-
     @ApiOperation(value = "클럽 검색하기 (클럽 이름으로 검색)")
     @GetMapping("/clubs/{keyword}")
     public ResponseEntity<List<ClubBySearchResDto>> searchClubs(@PathVariable("keyword") final String keyword) {

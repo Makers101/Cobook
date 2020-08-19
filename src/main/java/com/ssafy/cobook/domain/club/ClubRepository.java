@@ -17,5 +17,5 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 //    List<Club> findAllFetch();
 
     @Query("SELECT c FROM Club c where c.name like %:keyword%")
-    List<ClubBySearchResDto> findByKeyword(@Param("keyword") String keyword);
+    List<Club> findByKeyword(@Param("keyword") String keyword);
 }

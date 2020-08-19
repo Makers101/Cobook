@@ -51,7 +51,6 @@ public class UserService {
         if (userRepository.findByNickName(userSaveRequestDto.getNickName()).isPresent()) {
             throw new UserException("이미 존재하는 닉네임입니다", ErrorCode.MEMBER_DUPLICATED_NICKNAME);
         }
-
         if (userRepository.findByEmail(userSaveRequestDto.getEmail()).isPresent()) {
             throw new UserException("이미 가입된 메일입니다", ErrorCode.MEMBER_DUPLICATED_EMAIL);
         }
@@ -59,12 +58,9 @@ public class UserService {
         User user = userSaveRequestDto.toEntity();
         user.changePassword(encodePassword);
         user = userRepository.save(user);
-
         String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
-
         // 이메일 인증 메일을 보낸다
         preparedAndSend(userSaveRequestDto.getEmail(), isFind, token);
-
         return new UserResponseIdDto(user.getId());
     }
 
@@ -81,43 +77,32 @@ public class UserService {
     }
 
     public User login(UserLoginRequestDto userLoginRequestDto) {
-
         User user = getUser(userLoginRequestDto.getEmail());
-
-
         if(!user.getPlatformType().toString().equals("NONE")){
             throw new UserException(String.format("소셜 회원입니다. %s 로그인을 이용해주세요", user.getPlatformType().toString()), ErrorCode.MEMBER_NOT_SOCIAL_PLATFORM_TYPE);
         }
-
         if (!user.getAccept().toString().equals("1")) {
             throw new UserException("아직 이메일 인증이 되지 않은 회원입니다.", ErrorCode.WRONG_EMAIL_CHECK_AUTH);
         }
-
         String encodePassword = user.getPassword();
         String rawPassword = userLoginRequestDto.getPassword();
-
         if (!passwordEncoder.matches(rawPassword, encodePassword)) {
             throw new UserException("잘못된 비밀번호입니다.", ErrorCode.WRONG_PASSWORD);
         }
-
         return user;
     }
 
     public ProfileResponseDto getMyInfo(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException("존재 하지 않는 회원 입니다.", ErrorCode.UNEXPECTED_USER));
-
         List<ClubResDto> clubList = clubMemberRepository.findAllByUser(user).stream()
                 .map(ClubMember::getClub)
                 .map(ClubResDto::new)
                 .sorted()
                 .collect(Collectors.toList());
-
         List<UserByFollowDto> followerList = profileService.getFollowerList(user.getId(), user.getId());
         List<UserByFollowDto> followingList = profileService.getFollowingList(user.getId(), user.getId());
-
-        ProfileResponseDto profileResponseDto = new ProfileResponseDto(user, clubList, followerList, followingList);
-        return profileResponseDto;
+        return new ProfileResponseDto(user, clubList, followerList, followingList);
     }
 
     private void preparedAndSend(String recipient, boolean isFind, String token) {
@@ -181,6 +166,7 @@ public class UserService {
         userRepository.updatePassword(user.getId(), encodePassword);
     }
 
+    @Transactional
     public String socialLogin(OAuth2LoginDto oAuth2LoginDto) {
         String email = oAuth2LoginDto.getEmail();
         String platformType = oAuth2LoginDto.getPlatformType();
@@ -190,10 +176,13 @@ public class UserService {
         }
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
+<<<<<<< src/main/java/com/ssafy/cobook/service/UserService.java
+=======
 
         if (user.getPlatformType().toString().equals("NONE")) {
             throw new UserException(ErrorCode.MEMBER_WRONG_PLATFORM_TYPE);
         }
+>>>>>>> src/main/java/com/ssafy/cobook/service/UserService.java
         String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
         return token;
     }
