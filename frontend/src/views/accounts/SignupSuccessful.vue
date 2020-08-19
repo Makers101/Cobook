@@ -1,6 +1,7 @@
 <template>
   <div class="background">
     <div class="container py-5 mt-5 bg-light-ivory formatting">
+      <h3>회원가입 완료</h3>
       <h5 class="mt-3">회원가입이 완료되었습니다.<br>
       로그인해주세요.</h5>
       <div class="buttons mt-5">
@@ -28,8 +29,13 @@ export default {
   border-radius: 25px;
 }
 
+h3 {
+  color: #88a498;
+  font-weight: 800;
+}
+
 h5 { 
-  color: #88A498;
+  color: black;
 }
 
 .login-button{
