@@ -78,7 +78,7 @@ public class UserService {
 
     public User login(UserLoginRequestDto userLoginRequestDto) {
         User user = getUser(userLoginRequestDto.getEmail());
-        if(!user.getPlatformType().toString().equals("NONE")){
+        if (!user.getPlatformType().toString().equals("NONE")) {
             throw new UserException(String.format("소셜 회원입니다. %s 로그인을 이용해주세요", user.getPlatformType().toString()), ErrorCode.MEMBER_NOT_SOCIAL_PLATFORM_TYPE);
         }
         if (!user.getAccept().toString().equals("1")) {
@@ -176,15 +176,9 @@ public class UserService {
         }
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
-<<<<<<< src/main/java/com/ssafy/cobook/service/UserService.java
-=======
-
         if (user.getPlatformType().toString().equals("NONE")) {
             throw new UserException(ErrorCode.MEMBER_WRONG_PLATFORM_TYPE);
         }
->>>>>>> src/main/java/com/ssafy/cobook/service/UserService.java
-        String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
-        return token;
+        return jwtTokenProvider.createToken(user.getId(), user.getRoles());
     }
-
 }
