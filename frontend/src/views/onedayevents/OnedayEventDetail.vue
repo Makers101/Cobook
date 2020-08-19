@@ -88,8 +88,8 @@
     <hr>
 
     <!-- onedayEvent-detail-members -->
-    <div>
-      <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity }})</h4>
+    <div class="my-4">
+      <h4 class="text-left font-weight-bold mb-4">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity }})</h4>
       <carousel
         :loop="true"
         :navigationEnabled="true"
@@ -186,7 +186,7 @@
     <hr>
 
     <!-- onedayEvent-detail-description -->
-    <div>
+    <div class="my-4">
       <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 설명</h4>
       <p class="text-left px-2 description">{{ selectedOnedayEvent.description }}</p>
     </div>
@@ -194,7 +194,7 @@
     <hr>
 
     <!-- onedayEvent-detail-question -->
-    <div v-if="isParticipant || isLeader">
+    <div v-if="isParticipant || isLeader" class="my-4">
       <h4 class="text-left font-weight-bold mb-3">질문지</h4>
       <ul class="ml-4" v-if="selectedOnedayEvent.questions.length !== 0">
         <li
@@ -213,7 +213,7 @@
 
 
     <!-- onedayEvent-detail-posts -->
-    <div v-if="isParticipant || isLeader">
+    <div v-if="isParticipant || isLeader" class="my-4">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="text-left font-weight-bold mb-0">멤버의 책 리뷰</h4>
         <button class="btn btn-green" @click="toPostCreate(selectedOnedayEvent.book.id)">책 리뷰 작성하기</button>
