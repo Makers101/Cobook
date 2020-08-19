@@ -104,7 +104,10 @@
           </div>
         </div>
       </div>
-      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="filteredClubs" spinner="waveDots"></infinite-loading>
+      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="filteredClubs" spinner="waveDots">
+         <div slot="no-more">더 이상 클럽이 존재하지 않습니다.</div>
+         <div slot="no-results">더 이상 클럽이 존재하지 않습니다.</div> 
+      </infinite-loading>
     </div>
   </div>
 </template>
