@@ -10,6 +10,7 @@ import com.ssafy.cobook.domain.genre.Genre;
 import com.ssafy.cobook.domain.genre.GenreRepository;
 import com.ssafy.cobook.domain.onedayevent.OneDayEvent;
 import com.ssafy.cobook.domain.onedayevent.OneDayEventRepository;
+import com.ssafy.cobook.domain.post.Post;
 import com.ssafy.cobook.domain.post.PostRepository;
 import com.ssafy.cobook.domain.user.User;
 import com.ssafy.cobook.domain.user.UserRepository;
@@ -52,9 +53,7 @@ public class SearchService {
                 .orElseThrow(() -> new UserException(ErrorCode.UNEXPECTED_USER));
         List<User> userList = userRepository.findByKeyword(keyword);
         List<UserBySearchResDto> searchUserList = new ArrayList<>();
-
-        Boolean isFollow;
-
+        boolean isFollow;
         for (User user : userList) {
             if (followRepository.findByToUserAndFromUser(fromUser.getId(), user.getId()).isPresent()) {
                 isFollow = true;
@@ -63,7 +62,6 @@ public class SearchService {
             }
             searchUserList.add(new UserBySearchResDto(user, isFollow));
         }
-
         return searchUserList;
     }
 
@@ -72,7 +70,16 @@ public class SearchService {
     }
 
     public List<PostBySearchResDto> searchPosts(String keyword) {
-        return new ArrayList<>(postRepository.findByKeyword(keyword));
+        HashSet<Post> res = new HashSet<>();
+        if (!postRepository.findAllByOnelineReview(keyword).isEmpty()) {
+            res.addAll(new HashSet<>(postRepository.findAllByOnelineReview(keyword)));
+        }
+        if (!postRepository.findAllByTags(keyword).isEmpty()) {
+            res.addAll(new HashSet<>(postRepository.findAllByTags(keyword)));
+        }
+        return res.stream()
+                .map(PostBySearchResDto::new)
+                .collect(Collectors.toList());
     }
 
     public List<ClubBySearchResDto> searchClubs(String keyword) {
