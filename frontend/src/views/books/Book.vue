@@ -65,8 +65,8 @@
                       <strong>장르</strong>
                       <i class="fas fa-theater-masks color-green ml-2"></i> 
                     </div>
-                    <div class="col-7 col-lg-8">
-                      <span>{{ selectedBook.genre.name }}</span>
+                    <div class="col-7 col-lg-8 pointer">
+                      <span @click="searchGenre(selectedBook.genre.name)">{{ selectedBook.genre.name }}</span>
                     </div>
                   </div>
                 </div>
@@ -178,6 +178,9 @@ export default {
     },
     postDetail(postId) {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
+    },
+    searchGenre(content) {
+      this.$router.push({ name: 'SearchBook', params: {content: content} })
     }
   },
   mounted() {
