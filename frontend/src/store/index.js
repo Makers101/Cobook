@@ -85,6 +85,10 @@ export default new Vuex.Store({
       axios.post(SERVER.URL + SERVER.ROUTES.noti, notiData, getters.config)
         .catch(err => console.log(err.response.data))
     },
+    deleteNoti({ getters }, notiId) {
+      axios.delete(SERVER.URL + SERVER.ROUTES.noti + '/' + notiId, getters.config)
+        .catch(err => console.log(err.response.data))
+    },
     logout({ commit }) {
           commit('SET_TOKEN', null)
           cookies.remove('auth-token')

@@ -94,9 +94,9 @@
                   <i class="fas fa-pen"></i>
                 </router-link>
               </li>
-              <li class="nav-item dropdown pointer mr-4">
+              <li class="nav-item dropdown mr-4">
                 <div 
-                  class="nav-link dropdown-toggle" 
+                  class="nav-link dropdown-toggle pointer" 
                   id="navbarDropdown" 
                   type="button"
                   role="button" 
@@ -114,10 +114,9 @@
                       class="dropdown-item setting-btn"
                       v-for="(noti, idx) in notis"
                       :key="`noti-${idx}`"
-                      @click="toRoute(noti)"
                     >
                       <div class="row no-gutters">
-                        <div class="col-2">
+                        <div class="col-2 pointer" @click="toRoute(noti)">
                           <img
                             v-if="!findUsers[noti.from][1]"
                             class="img-fluid noti-profile-img mr-1" 
@@ -128,13 +127,13 @@
                             class="img-fluid noti-profile-img mr-1" 
                             :src="findUsers[noti.from][1]" alt="유저 프로필 사진">
                         </div>
-                        <div class="col-9 d-flex align-items-center text-left pl-2">
+                        <div class="col-9 d-flex align-items-center text-left pl-2 pointer" @click="toRoute(noti)">
                           <span v-if="noti.type==='club'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 '{{ findClubs[noti.dataId] }}' 북클럽에 가입신청했습니다.</span>
                           <span v-if="noti.type==='comment'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 댓글을 작성했습니다.</span>
                           <span v-if="noti.type==='follow'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 팔로우했습니다.</span>
                           <span v-if="noti.type==='like'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 게시물을 좋아합니다.</span>
                         </div>
-                        <div class="col-1 d-flex align-items-center justify-content-end">
+                        <div class="col-1 d-flex align-items-center justify-content-end pointer" @click="deleteNoti(noti.id)">
                           <span class="text-muted" style="font-size:10px">X</span>
                         </div>
                       </div>
@@ -250,7 +249,7 @@ export default {
     ...mapState(['genres', 'myaccount', 'books', 'users', 'authToken']),
   },
   methods: {
-    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'logout']),
+    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'logout', 'deleteNoti']),
     searchUser() {
       if (!this.keyword) {
         this.isActive = false
@@ -284,39 +283,21 @@ export default {
         this.$router.push({name: 'PostDetail', params: { postId: noti.dataId }})
       }
     },
-    // clickNoti() {
-    //   const text = {
-    //     // "token" : 'dwyx4pmx5p90GVEFWkl6Hu:APA91bGV0Da1jxCWuW70-akuu7PSJnOsIu75js9eQFjzUUVjkctHm8fYUyMoSrWbRlKvH5IWuh2VHpNOXlkpwNokwbIkbmB_sH6l-5VU4ExWf0iiFQAToMq0PUnMMo-MDYvSLTpovjui',
-    //     "to": "dwyx4pmx5p90GVEFWkl6Hu:APA91bGV0Da1jxCWuW70-akuu7PSJnOsIu75js9eQFjzUUVjkctHm8fYUyMoSrWbRlKvH5IWuh2VHpNOXlkpwNokwbIkbmB_sH6l-5VU4ExWf0iiFQAToMq0PUnMMo-MDYvSLTpovjui",
-    //     "data": {
-    //       "message": "FCM Message",
-    //       // "body": "This is a message from FCM"
-    //     }
-    //   }
-    //   const header = {
-    //     headers: {
-    //       "Accept": "application/json",
-    //       "Content-Type": "application/json",
-    //       "Authorization": "key=AAAABQJJTO0:APA91bF0ju8l8DHn82GuJndzCtFh178p5cKwSs32GdnJOIk3Rgl8gRJ5jf674Vj6tFQrhCy4WelWgqdSuQ9F2imhAnAgentNfktHjnPN1L_uNCZavDJjsUYqPS07zM9gbmSzfUZqBfYG"
-    //     }
-    //   }
-    //   axios.post('https://fcm.googleapis.com/fcm/send', text, header)
-    //     .then(res => console.log(res))
-    //     .catch(err => console.log(err))
-    // }
     // Firebase
     clickNoti() {
       firebase.database().ref('noti/' + this.myaccount.id).on('value', data => {
         if (data.val()) {
-          this.notis = Object.values(data.val()).reverse()
+          this.notis = []
+          let dataObject = data.val()
+          for (let idx in dataObject) {
+            dataObject[idx].id= idx
+            this.notis.push(dataObject[idx])
+          }
         } else {
           this.notis = null
         }
       })
     },
-    // clickNoti() {
-    //   console.log(1)
-    // },
     search(keyword){
       this.$router.push({name: 'SearchUser', params: { content : keyword }})
     },
