@@ -118,7 +118,16 @@
                       <div class="row no-gutters">
                         <div class="col-2 pointer" @click="toRoute(noti)">
                           <img
-                            v-if="!findUsers[noti.from][1]"
+                            v-if="(noti.type === 'approve' || noti.type === 'reject') && findClubImg(noti.dataId)"
+                            class="img-fluid noti-profile-img mr-1" 
+                            :src="findClubImg(noti.dataId)" alt="클럽 프로필 사진">
+                          <img
+                            v-else-if="(noti.type === 'approve' || noti.type === 'reject') && !findClubImg(noti.dataId)"
+                            class="img-fluid noti-profile-img mr-1" 
+                            src="http://bit.do/anonymouseuser" 
+                            alt="클럽 프로필 사진">
+                          <img
+                            v-else-if="!findUsers[noti.from][1]"
                             class="img-fluid noti-profile-img mr-1" 
                             src="http://bit.do/anonymouseuser" 
                             alt="유저 프로필 사진">
@@ -132,6 +141,8 @@
                           <span v-if="noti.type==='comment'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 댓글을 작성했습니다.</span>
                           <span v-if="noti.type==='follow'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 팔로우했습니다.</span>
                           <span v-if="noti.type==='like'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 게시물을 좋아합니다.</span>
+                          <span v-if="noti.type==='approve'" style="font-size: 14px;">'{{ findClubName(noti.dataId) }}' 북클럽에 가입 승인되었습니다.</span>
+                          <span v-if="noti.type==='reject'" style="font-size: 14px;">'{{ findClubName(noti.dataId) }}' 북클럽에 가입 거절되었습니다.</span>
                         </div>
                         <div class="col-1 d-flex align-items-center justify-content-end pointer" @click="deleteNoti(noti.id)">
                           <span class="text-muted" style="font-size:10px">X</span>
@@ -247,9 +258,37 @@ export default {
   },
   computed: {
     ...mapState(['genres', 'myaccount', 'books', 'users', 'authToken']),
+    ...mapState('clubStore', ['clubs']),
+    findClubName() {
+      return (clubId) => {
+        {
+          let name = '이름 미정'
+          this.clubs.forEach((club) => {
+            if (club.id === clubId) {
+              return name = club.name
+            }
+          })
+          return name
+        }
+      }
+    },
+    findClubImg() {
+      return (clubId) => {
+        {
+          let img = null
+          this.clubs.forEach((club) => {
+            if (club.id === clubId) {
+              return img = club.clubImg
+            }
+          })
+          return img
+        }
+      }
+    },
   },
   methods: {
     ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'logout', 'deleteNoti']),
+    ...mapActions('clubStore', ['fetchClubs']),
     searchUser() {
       if (!this.keyword) {
         this.isActive = false
@@ -324,6 +363,7 @@ export default {
     this.findMyAccount()
     this.fetchBooks()
     this.fetchUsers()
+    this.fetchClubs()
   },
 }
 </script>
