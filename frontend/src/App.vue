@@ -7,7 +7,7 @@
             <img 
               class="img-fluid logo-img"
               style="height: 50px"
-              src="@/assets/new logo.png" 
+              src="https://user-images.githubusercontent.com/59900633/90660520-045bb900-e281-11ea-9a28-07c9089126d1.png" 
               alt="로고 이미지"
             >
           </router-link>
@@ -190,8 +190,8 @@
       <div v-else style="padding-top:50px">
         <img 
           class="img-fluid logo-img"
-          style="height: 50px"
-          src="@/assets/new logo.png" 
+          style="height: 70px;"
+          src="https://user-images.githubusercontent.com/59900633/90660536-0756a980-e281-11ea-90e9-ec8a84c7c9d7.png"
           alt="로고 이미지"
         >
       </div>
