@@ -26,7 +26,7 @@
             <span class="badge mb-0 ml-2 onedayEvent-closed-false" v-else>예정</span>
           </div>
           <div class="d-flex justify-content-start align-items-center">
-            <span class="badge badge-genre ml-1">{{ selectedOnedayEvent.book.genre }}</span>
+            <span class="btn badge-genre ml-1 pointer py-1" @click="searchGenre(selectedOnedayEvent.book.genre)">#{{ selectedOnedayEvent.book.genre }}</span>
           </div>
         </div>
         <div>
@@ -140,7 +140,7 @@
               :alt="selectedOnedayEvent.leader.nickName"
               v-else>
             <div class="overlay rounded-circle mx-auto">
-              <div class="text">{{ selectedOnedayEvent.leader.nickName }}</div>
+              <div class="text"><i class="fas fa-book-reader mr-2"></i>이벤트장<br>{{ selectedOnedayEvent.leader.nickName }}</div>
             </div>
           </div>
         </slide>
@@ -479,6 +479,9 @@ export default {
       console.log(webexData)
       this.checkPeople(webexData)
     },
+    searchGenre(content) {
+      router.push({ name: 'SearchOneDayEvent', params: { content: content }})
+    }
   },
   created() {
     this.findOnedayEvent(this.$route.params.onedayEventId)
