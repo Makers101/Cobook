@@ -10,7 +10,7 @@ const onedayEventStore = {
       onedayEvents: null,
       filteredOnedayEvents: null,
       selectedOnedayEvent: null,
-      webexToken: { headers: { Authorization : 'Bearer YWY3OThjNzAtNWVjYS00OWQ0LTgxOWUtMTExOWU0NDYxNTk5YWI5NzRiZjItYmJi_P0A1_357e376f-831b-42a4-8c5a-06d11771e9c2'}},
+      webexToken: { headers: { Authorization : 'Bearer ZDc5NGExMWUtNzgzYy00MGY4LTgyZTktYjhhMzc0Yzc5MWViNmQzMzAwZDItZWUx_P0A1_357e376f-831b-42a4-8c5a-06d11771e9c2'}},
     },
     getters: {
     },
