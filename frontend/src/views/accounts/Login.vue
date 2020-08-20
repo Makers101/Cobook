@@ -182,7 +182,7 @@ export default {
             this.$router.push({
               name: "SignupKakao",
               params: {
-                nickname: userInfo.nickname,
+                nickName: userInfo.nickName,
                 platformType: userInfo.platformType,
               },
             });

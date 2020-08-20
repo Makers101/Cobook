@@ -42,9 +42,9 @@ export default {
   data() {
     return {
       signupKakaoData: {
-        nickname: this.$route.params.nickname,
+        nickName: this.$route.params.nickName,
         email: "",
-        platformType: this.$route.params.platyformType,
+        platformType: this.$route.params.platformType,
       },
       error: {
         email: false,
