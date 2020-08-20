@@ -282,10 +282,6 @@ export default {
 </script>
 
 <style scoped>
-.background {
-  background-repeat: repeat;
-}
-
 .login-form {
   margin-top: 20vh !important;
   opacity: 0.9;
@@ -382,8 +378,9 @@ input[type="password"] {
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: -1;
+  background-repeat: repeat;
 }
+
 
 
 

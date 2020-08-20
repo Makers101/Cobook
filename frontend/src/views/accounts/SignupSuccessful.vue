@@ -46,25 +46,18 @@ h5 {
 }
 
 .background {
+  background-image: url("https://user-images.githubusercontent.com/25967949/90751489-27ce4480-e311-11ea-93aa-2ab9d1f41b4e.png");
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
   background-repeat: repeat;
 }
 
-.background::after {
-  content:"";
-  background-image: url('https://user-images.githubusercontent.com/57381062/88908481-de03b880-d294-11ea-8567-9e74079c2a7b.jpg');
-  opacity: 0.5;
-  top: 0;
-  left:0;
-  bottom:0;
-  right: 0;
-  position: absolute;
-  z-index: -1;
-  width: 100vw;
-  height: 100vh;
-  filter: brightness(0.7);
-}
 
 .formatting {
+  margin-top: 20vh !important;
   opacity: 0.9;
 }
 

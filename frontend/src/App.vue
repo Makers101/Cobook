@@ -187,7 +187,7 @@
           </div>
         </nav>
       </div>
-      <div v-else style="padding-top:50px">
+      <div v-else style="padding-top:50px;position:absolute;z-index:999; top: 5%; left: 50%; height: 70px; width: 210px;  margin: -35px 0 0 -110px;">
         <img 
           class="img-fluid logo-img"
           style="height: 70px;"
