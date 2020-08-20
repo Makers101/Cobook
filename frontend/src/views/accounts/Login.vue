@@ -1,7 +1,9 @@
 <template>
   <div class="background">
     <div class="container p-3 mt-5 bg-light-ivory login-form">
-      <h3>로그인</h3>
+      <h3 class="login-title">
+        <strong>로그인</strong>
+      </h3>
 
       <div class="input-with-label">
         <input
@@ -38,11 +40,7 @@
         <span class="items" @click="clickPasswordFind">비밀번호 찾기</span>
       </p>
       <div class="buttons mt-3">
-        <button
-          class="btn login-button"
-          :class="{disabled: !isSubmit}"
-          @click="clickLogin"
-        >로그인하기</button>
+        <button class="btn login-button" :class="{disabled: !isSubmit}" @click="clickLogin">로그인하기</button>
       </div>
 
       <hr class="divide" />
@@ -56,10 +54,9 @@
           <span class="justify-content-center">카카오 아이디 로그인</span>
         </button>
       </div>
-      <div class="buttons mt-2 d-flex justify-content-center mx-auto px-0" style="width: 70%">
+      <div class="buttons mt-2 d-flex justify-content-center mx-auto px-0">
         <button
           class="btn google d-flex align-items-center justify-content-center"
-          style="width:100%!important"
           @click="handleClickSignIn"
         >
           <!-- <i class="fab fa-google-plus-g"></i> -->
@@ -78,7 +75,7 @@
 
 <script>
 import { mapActions, mapMutations } from "vuex";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 import axios from "axios";
 import SERVER from "@/api/api";
 
@@ -104,48 +101,65 @@ export default {
     loginData: {
       deep: true,
       handler() {
-          this.checkEmailForm();
-          this.checkPasswordForm();
-        },
+        this.checkEmailForm();
+        this.checkPasswordForm();
+      },
     },
   },
   methods: {
-    ...mapMutations(['SET_TOKEN']),
+    ...mapMutations(["SET_TOKEN"]),
     ...mapActions("accountStore", ["login"]),
     async handleClickSignIn() {
       const googleUser = await this.$gAuth.signIn();
       const profile = googleUser.getBasicProfile();
       const userInfo = {
-          nickname: profile.Cd,
-          email: profile.zu,
-          platformType: "GOOGLE",
+        nickName: profile.getName(),
+        email: profile.getEmail(),
+        platformType: "GOOGLE",
       };
       axios
         .post(SERVER.URL + SERVER.ROUTES.social, userInfo)
         .then((res) => {
-          console.log(res);
-          this.SET_TOKEN(res.data)
           const Toast = Swal.mixin({
             toast: true,
-            position: 'top-end',
+            position: "top-end",
             showConfirmButton: false,
             timer: 2000,
             timerProgressBar: true,
             onOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-          })
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          });
+          this.SET_TOKEN(res.data);
           Toast.fire({
-              icon: 'success',
-              title: "로그인에 성공하였습니다."
-          })
+            icon: "success",
+            title: "로그인에 성공하였습니다.",
+          });
+          this.$router.push("/");
+        })
+        .catch((err) => {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            onOpen: (toast) => {
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          });
+          Toast.fire({
+            icon: "error",
+            title: err.response.data.message,
+          });
           this.$router.push("/");
         });
     },
     clickLogin() {
-      if ( this.isSubmit ){
-        this.login(this.loginData)
+      if (this.isSubmit) {
+        this.login(this.loginData);
       }
     },
     kakaoLogin() {
@@ -160,7 +174,7 @@ export default {
         success: (res) => {
           const kakao_account = res.kakao_account;
           const userInfo = {
-            nickname: kakao_account.profile.nickname,
+            nickName: kakao_account.profile.nickname,
             email: kakao_account.email,
             platformType: "KAKAO",
           };
@@ -168,7 +182,7 @@ export default {
             this.$router.push({
               name: "SignupKakao",
               params: {
-                nickname: userInfo.nickname,
+                nickName: userInfo.nickName,
                 platformType: userInfo.platformType,
               },
             });
@@ -176,25 +190,43 @@ export default {
             axios
               .post(SERVER.URL + SERVER.ROUTES.social, userInfo)
               .then((res) => {
-                this.SET_TOKEN(res.data)
+                this.SET_TOKEN(res.data);
                 const Toast = Swal.mixin({
                   toast: true,
-                  position: 'top-end',
+                  position: "top-end",
                   showConfirmButton: false,
                   timer: 2000,
                   timerProgressBar: true,
                   onOpen: (toast) => {
-                  toast.addEventListener('mouseenter', Swal.stopTimer)
-                  toast.addEventListener('mouseleave', Swal.resumeTimer)
-                  }
-                })
-                Toast.fire({
-                  icon: 'success',
-                  title: "로그인에 성공하였습니다."
-                })
-                  this.$router.push("/");
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                  },
                 });
-              }
+                Toast.fire({
+                  icon: "success",
+                  title: "로그인에 성공하였습니다.",
+                });
+                this.$router.push("/");
+              })
+              .catch((err) => {
+                const Toast = Swal.mixin({
+                  toast: true,
+                  position: "top-end",
+                  showConfirmButton: false,
+                  timer: 2000,
+                  timerProgressBar: true,
+                  onOpen: (toast) => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                  },
+                });
+                Toast.fire({
+                  icon: "error",
+                  title: err.response.data.message,
+                });
+                this.$router.push("/");
+              });
+          }
         },
       });
     },
@@ -240,18 +272,19 @@ export default {
       return va.test(password);
     },
     clickSignup() {
-      this.$router.push({name: "Signup"});
+      this.$router.push({ name: "Signup" });
     },
     clickPasswordFind() {
-      this.$router.push({name: "PasswordFind"});
+      this.$router.push({ name: "PasswordFind" });
     },
   },
 };
 </script>
 
 <style scoped>
-.background {
-  background-repeat: repeat;
+.login-form {
+  margin-top: 20vh !important;
+  opacity: 0.9;
 }
 
 .container {
@@ -261,22 +294,24 @@ export default {
 
 h3 {
   color: #88a498;
+  font-weight: 900;
 }
 
 .inputs {
   border-style: none;
   border-bottom: 1px solid #88a498;
   background-color: transparent;
-  width: 100%;
+  width: 80%;
   padding: 10px;
-  padding-left: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin-top: 20px;
 }
 
 .login-button {
   background-color: #88a498;
   color: #f8f8f8;
-  width: 70%;
+  width: 80%;
 }
 
 .divide {
@@ -289,13 +324,13 @@ h3 {
 .kakao {
   background-color: #ffe812;
   border-radius: 5px;
-  width: 70%;
+  width: 80%;
 }
 
 .google {
   background-color: #ffffff;
   border-radius: 5px;
-  width: 70% !important;
+  width: 80% !important;
 }
 
 .inputs:focus {
@@ -316,7 +351,7 @@ input[type="password"] {
 .error-text {
   color: rgb(250, 25, 59, 0.7);
   text-align: left;
-  padding-left: 5px;
+  padding-left: 30px;
 }
 
 .login-button:hover {
@@ -336,20 +371,18 @@ input[type="password"] {
   color: #d6cbbd;
 }
 
-.background::after {
-  content: "";
-  background-image: url("https://user-images.githubusercontent.com/57381062/88908481-de03b880-d294-11ea-8567-9e74079c2a7b.jpg");
-  opacity: 0.5;
+.background {
+  background-image: url("https://user-images.githubusercontent.com/25967949/90751489-27ce4480-e311-11ea-93aa-2ab9d1f41b4e.png");
+  position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  position: absolute;
-  z-index: -1;
-  width: 100vw;
-  height: 100vh;
-  filter: brightness(0.7);
+  background-repeat: repeat;
 }
+
+
+
 
 .formatting {
   opacity: 0.9;

@@ -26,7 +26,7 @@
             <span class="badge mb-0 ml-2 onedayEvent-closed-false" v-else>예정</span>
           </div>
           <div class="d-flex justify-content-start align-items-center">
-            <span class="badge badge-genre ml-1">{{ selectedOnedayEvent.book.genre }}</span>
+            <span class="btn badge-genre ml-1 pointer py-1" @click="searchGenre(selectedOnedayEvent.book.genre)">#{{ selectedOnedayEvent.book.genre }}</span>
           </div>
         </div>
         <div>
@@ -37,11 +37,36 @@
             </div>
             <div class="d-flex justify-content-end align-items-end">
               <button
+                type="button"
                 class="btn btn-green mr-2"
-                @click="enterRoom(selectedOnedayEvent.id)"
-                v-if="(isLeader || isParticipant) & !selectedOnedayEvent.closed & (selectedOnedayEvent.place === '온라인')">
-                온라인 입장
+                data-toggle="modal" data-target="#makeRoomModal"
+                v-if="isLeader & !selectedOnedayEvent.closed & (selectedOnedayEvent.place === '온라인') & !roomUrl">
+                온라인 만들기
               </button>
+              <button
+                class="btn btn-green mr-2"
+                v-else-if="(isLeader || isParticipant) && !selectedOnedayEvent.closed && (selectedOnedayEvent.place === '온라인') && roomUrl">
+                <a :href="selectedOnedayEvent.roomUrl" target="_blank">온라인 입장</a>
+              </button>
+              <div class="modal fade" id="makeRoomModal" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="makeRoomModalLabel">온라인 만들기</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p>webex에 가입되어 있는 이메일을 입력해주세요!</p>
+                      <input type="email" v-model="webexEmail" autofocus>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-green" @click="createLeader" data-dismiss="modal">온라인 만들기</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <button
                 class="btn btn-secondary dropdown-toggle"
@@ -88,8 +113,8 @@
     <hr>
 
     <!-- onedayEvent-detail-members -->
-    <div>
-      <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity }})</h4>
+    <div class="my-4">
+      <h4 class="text-left font-weight-bold mb-4">원데이 이벤트 멤버({{ selectedOnedayEvent.participantCnt }}/{{ selectedOnedayEvent.capacity }})</h4>
       <carousel
         :loop="true"
         :navigationEnabled="true"
@@ -98,10 +123,10 @@
         :perPageCustom="[[1, 1], [600, 2], [900, 3], [1200, 4], [1400, 5]]"
         paginationActiveColor="#3c756a"
         paginationColor="#88A498"
-        paginationPadding="4"
-        paginationSize="10"
+        :paginationPadding="4"
+        :paginationSize="10"
         easing="linear"
-        speed="300">
+        :speed="300">
         <slide>
           <div class="profile-container pointer" @click="selectUser(selectedOnedayEvent.leader.id)">
             <img
@@ -115,7 +140,7 @@
               :alt="selectedOnedayEvent.leader.nickName"
               v-else>
             <div class="overlay rounded-circle mx-auto">
-              <div class="text">{{ selectedOnedayEvent.leader.nickName }}</div>
+              <div class="text"><i class="fas fa-book-reader mr-2"></i>이벤트장<br>{{ selectedOnedayEvent.leader.nickName }}</div>
             </div>
           </div>
         </slide>
@@ -186,7 +211,7 @@
     <hr>
 
     <!-- onedayEvent-detail-description -->
-    <div>
+    <div class="my-4">
       <h4 class="text-left font-weight-bold mb-3">원데이 이벤트 설명</h4>
       <p class="text-left px-2 description">{{ selectedOnedayEvent.description }}</p>
     </div>
@@ -194,7 +219,7 @@
     <hr>
 
     <!-- onedayEvent-detail-question -->
-    <div v-if="isParticipant || isLeader">
+    <div v-if="isParticipant || isLeader" class="my-4">
       <h4 class="text-left font-weight-bold mb-3">질문지</h4>
       <ul class="ml-4" v-if="selectedOnedayEvent.questions.length !== 0">
         <li
@@ -213,7 +238,7 @@
 
 
     <!-- onedayEvent-detail-posts -->
-    <div v-if="isParticipant || isLeader">
+    <div v-if="isParticipant || isLeader" class="my-4">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="text-left font-weight-bold mb-0">멤버의 책 리뷰</h4>
         <button class="btn btn-green" @click="toPostCreate(selectedOnedayEvent.book.id)">책 리뷰 작성하기</button>
@@ -227,10 +252,10 @@
         :perPageCustom="[[1, 1], [1000, 2], [1500, 3]]"
         paginationActiveColor="#3c756a"
         paginationColor="#88A498"
-        paginationPadding="4"
-        paginationSize="10"
+        :paginationPadding="4"
+        :paginationSize="10"
         easing="linear"
-        speed="300"
+        :speed="300"
         v-if="selectedOnedayEvent.memberPosts.length">
       
         <slide
@@ -343,6 +368,11 @@ import router from '@/router'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'OnedayEventDetail',
+  data() {
+    return {
+      webexEmail: null,
+    }
+  },
   components: {
     Carousel,
     Slide
@@ -372,10 +402,13 @@ export default {
       } else {
         return false
       }
+    },
+    roomUrl() {
+      return this.selectedOnedayEvent.roomUrl
     }
   },
   methods: {
-    ...mapActions('onedayEventStore', ['findOnedayEvent', 'participateOnedayEvent', 'deleteOnedayEvent']),
+    ...mapActions('onedayEventStore', ['findOnedayEvent', 'participateOnedayEvent', 'deleteOnedayEvent', 'checkPeople']),
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
     },
@@ -434,6 +467,26 @@ export default {
     toBookDetail(bookId) {
       router.push({ name: 'BookDetail', params: { bookId: bookId}})
     },
+    createLeader() {
+      let webexData=  {
+        emails: [
+          this.webexEmail
+        ],
+        displayName: this.selectedOnedayEvent.leader.nickName,
+        firstName: this.selectedOnedayEvent.leader.nickName,
+        lastName: this.selectedOnedayEvent.leader.nickName,
+        roles: [
+          "Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfcmVhZG9ubHlfYWRtaW4"
+        ],
+        selectedOnedayEvent: this.selectedOnedayEvent,
+        url: null,
+      }
+      console.log(webexData)
+      this.checkPeople(webexData)
+    },
+    searchGenre(content) {
+      router.push({ name: 'SearchOneDayEvent', params: { content: content }})
+    }
   },
   created() {
     this.findOnedayEvent(this.$route.params.onedayEventId)
@@ -787,6 +840,21 @@ export default {
 
   .scroll-sect:hover{
     overflow-x: scroll;
+  }
+
+  input {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    width: 100%;
+    text-align: center;
+  }
+
+  input:focus {
+    outline: none;
+  }
+  
+  a {
+    color: white;
+    text-decoration: none;
   }
 /* https://www.gamasutra.com/db_area/images/news/2018/Jun/320213/supermario64thumb1.jpg */
 </style>

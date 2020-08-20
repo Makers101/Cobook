@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container mb-5" v-if="selectedClubEvent">
+  <div class="custom-container" v-if="selectedClubEvent" style="padding-bottom:100px">
 
     <!-- clubEvent-update-banner -->
     <div class="clubEvent-banner">

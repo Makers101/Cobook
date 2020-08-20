@@ -70,7 +70,6 @@ const accountStore = {
     postAuthData2({ commit }, info) {
       axios.post(SERVER.URL + info.location, info.data)
         .then(res => {
-          console.log("SUCCESS")
           commit('SET_TOKEN', res.data, { root: true })
           const Toast = Swal.mixin({
             toast: true,
@@ -179,19 +178,92 @@ const accountStore = {
     //     dispatch('sendPasswordEmail', info)
     // },
     findPassword(email) {
-        const info = {
-            data: email,
-        }
-        axios.post(SERVER.URL + SERVER.ROUTES.password, info)
-            .then (res => {
-                console.log(res.data)
-                router.push({ name: 'PasswordFindEmail'})
-            })
-            .catch (err =>{
-                console.log(err.response)
-            })
+      const info = {
+        data: email,
+      }
+      axios.post(SERVER.URL + SERVER.ROUTES.password, info)
+        .then (() => {
+          router.push({ name: 'PasswordFindEmail'})
+        })
+        .catch (err =>{
+          console.log(err.response)
+        })
     },
-
+    // 이메일 재전송
+    resendSignupEmail({ commit }, data) {
+      let timerInterval
+        Swal.fire({
+          title: '이메일을 보내는 중입니다.',
+          html: '조금만 기다려주세요',
+          timer: 4000,
+          timerProgressBar: true,
+          onBeforeOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+              const content = Swal.getContent()
+              if (content) {
+                const b = content.querySelector('b')
+                if (b) {
+                  b.textContent = Swal.getTimerLeft()
+                }
+              }
+            }, 100)
+          },
+          onClose: () => {
+            clearInterval(timerInterval)
+          }
+        })
+      const resendData = {
+        email: data.data.email,
+        type: data.type
+      }
+      console.log(resendData)
+      axios.post(SERVER.URL + SERVER.ROUTES.myaccount + '/resend', resendData)
+        .then (() => {
+          console.log(commit)
+          router.push({ name: 'SignupEmail', params: {signupEmail: data.data} })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    resendPasswordEmail({ commit }, data) {
+      let timerInterval
+        Swal.fire({
+          title: '이메일을 보내는 중입니다.',
+          html: '조금만 기다려주세요',
+          timer: 4000,
+          timerProgressBar: true,
+          onBeforeOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+              const content = Swal.getContent()
+              if (content) {
+                const b = content.querySelector('b')
+                if (b) {
+                  b.textContent = Swal.getTimerLeft()
+                }
+              }
+            }, 100)
+          },
+          onClose: () => {
+            clearInterval(timerInterval)
+          }
+        })
+      const resendData = {
+        email: data.data.email,
+        type: data.type
+      }
+      console.log(resendData)
+      axios.post(SERVER.URL + SERVER.ROUTES.myaccount + '/resend', resendData)
+        .then (() => {
+          console.log(commit)
+          router.push({ name: 'PasswordFindEmail', params: {passwordFindData: data.data} })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   },
 }
 

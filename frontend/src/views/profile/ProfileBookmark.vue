@@ -1,6 +1,6 @@
 <template>
-  <div class="mt-3">
-    <div class="row rows-cols-1 row-cols-md-3 pointer" v-if="bookmarks.length">
+  <div class="mt-3"  style="padding-bottom:100px">
+    <div class="row rows-cols-1 row-cols-md-3" v-if="bookmarks && bookmarks.length">
       <div 
         class="col-12 col-sm-6 col-lg-4 mb-4 pointer"
         v-for="bookmark in bookmarkList"
@@ -57,13 +57,16 @@
           </div>
         </div>
       </div>
-      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="bookmarks" spinner="waveDots"></infinite-loading>
+      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="bookmarks" spinner="waveDots">
+        <div slot="no-more">더 이상 북마크한 리뷰가 존재하지 않습니다.</div>
+        <div slot="no-results">더 이상 북마크한 리뷰가 존재하지 않습니다.</div>
+      </infinite-loading>
 
       
     </div>
     <div v-else>
       <img src="https://user-images.githubusercontent.com/57381062/88909174-c11bb500-d295-11ea-81b6-90c7bc3642ab.png" width="150px" class="mt-3">
-      <h3 class="mt-3">현재 <strong>{{ this.profile.nickName }}</strong>님이 북마크한 피드가 없습니다. </h3>
+      <h3 class="mt-3">현재 <strong v-if="profile">{{ profile.nickName }}</strong>님이 북마크한 피드가 없습니다. </h3>
     </div>
   </div>
 </template>
@@ -202,6 +205,10 @@ export default {
 .additional:hover.user-card {
   position: absolute;
   left: 0;
+}
+
+.additional:hover .user-card img {
+  border: 5px solid #fff;
 }
 
 .card .additional .user-card {

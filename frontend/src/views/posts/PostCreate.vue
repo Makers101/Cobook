@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container mb-5">
+  <div class="custom-container" style="padding-bottom:100px">
 
     <!-- post-create_banner -->
     <div class="post-banner">
@@ -41,7 +41,7 @@
                   hide-selected
                   color="blue-grey lighten-2"
                   :rules="[
-                    v => (v.length !== 0) || '필수항목입니다.'
+                    v => (v && v.length !== 0) || '필수항목입니다.'
                   ]"
                   label="책 검색"
                   item-text="title"

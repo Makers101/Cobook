@@ -9,7 +9,7 @@
         alt="onedayEvents-banner-image">
       <div class="onedayEvents-banner-text">
         <h3 class="font-weight-bold">원데이이벤트</h3>
-        <p class="mb-0">
+        <p class="mb-0 banner-text">
           원데이이벤트는 간편하게 만나 함께 책을 읽는 일회성 책 모임입니다.
           <br>
           취향이 맞는 원데이이벤트에 참여하여 함께 읽는 즐거움을 경험해보세요.
@@ -85,7 +85,10 @@
           </div>
         </div>
       </div>
-      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="filteredOnedayEvents" spinner="waveDots"></infinite-loading>
+      <infinite-loading class="col-12" @infinite="infiniteHandler" :identifier="filteredOnedayEvents" spinner="waveDots">
+        <div slot="no-more">더 이상 원데이 이벤트가 존재하지 않습니다.</div>
+        <div slot="no-results">더 이상 원데이 이벤트가 존재하지 않습니다.</div>
+      </infinite-loading>
 
     </div>
   </div>
@@ -184,6 +187,8 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate( -50%, -50% );
+    word-break: keep-all;
+    width: 50vw;
   }
 
   .card {

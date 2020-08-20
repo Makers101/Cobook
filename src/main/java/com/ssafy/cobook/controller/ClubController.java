@@ -5,10 +5,7 @@ import com.ssafy.cobook.service.ClubEventService;
 import com.ssafy.cobook.service.ClubService;
 import com.ssafy.cobook.service.PostService;
 import com.ssafy.cobook.service.dto.club.*;
-import com.ssafy.cobook.service.dto.clubevent.ClubEventDetailResDto;
-import com.ssafy.cobook.service.dto.clubevent.ClubEventSaveReqDto;
-import com.ssafy.cobook.service.dto.clubevent.ClubEventSaveResDto;
-import com.ssafy.cobook.service.dto.clubevent.ClubEventUpdateReqDto;
+import com.ssafy.cobook.service.dto.clubevent.*;
 import com.ssafy.cobook.service.dto.post.PostByClubResponseDto;
 import com.ssafy.cobook.service.dto.post.PostSaveByClubReqDto;
 import com.ssafy.cobook.service.dto.post.PostSaveResDto;
@@ -268,6 +265,18 @@ public class ClubController {
                                            @RequestBody @Valid final ClubUpdateRequestDto requestDto) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         clubService.updateClub(userId, clubId, requestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "클럽의 화상 정보를 수정한다.")
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PutMapping("/{clubId}/clubevents/{clubEventId}/url")
+    public ResponseEntity<Void> updateRoom(@ApiIgnore final Authentication authentication,
+                                           @PathVariable("clubId") final Long clubId,
+                                           @PathVariable("clubEventId") final Long clubEventId,
+                                           @RequestBody final ClubEventRoomReqDto dto) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        clubEventService.updateRoom(userId, clubId, clubEventId, dto);
         return ResponseEntity.ok().build();
     }
 }

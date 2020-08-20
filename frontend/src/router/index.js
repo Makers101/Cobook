@@ -31,7 +31,6 @@ import ClubCandidates from '@/views/clubs/ClubCandidates'
 import ClubEventDetail from '@/views/clubs/clubevents/ClubEventDetail'
 import ClubEventCreate from '@/views/clubs/clubevents/ClubEventCreate'
 import ClubEventUpdate from '@/views/clubs/clubevents/ClubEventUpdate'
-import ClubEventRoom from '@/views/clubs/clubevents/ClubEventRoom'
 
 // onedayevents
 import OnedayEventList from '@/views/onedayevents/OnedayEventList'
@@ -202,11 +201,6 @@ Vue.use(VueRouter)
     name: 'ClubEventUpdate',
     component: ClubEventUpdate
   },
-  {
-    path: '/clubs/:clubId/clubevents/:clubEventId/rooms/:roomId',
-    name: 'ClubEventRoom',
-    component: ClubEventRoom
-  },
   // onedayevents
   {
     path: '/onedayevents',
@@ -284,8 +278,8 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['Login', 'Signup', 'SignupEmail', 'SignupKakao', 'PasswordFind', 'PasswordFindEmail', 'PasswordChange', 'PasswordChangeSuccessful'] // Login 안해도 됨
-  const authPages = ['Login', 'Signup', 'SignupEmail', 'SignupKakao', 'PasswordFind', 'PasswordFindEmail', 'PasswordChange', 'PasswordChangeSuccessful'] // Login 되어있으면 안됨
+  const publicPages = ['Login', 'Signup', 'SignupEmail', 'SignupKakao', 'SignupSuccessful', 'PasswordFind', 'PasswordFindEmail', 'PasswordChange', 'PasswordChangeSuccessful'] // Login 안해도 됨
+  const authPages = ['Login', 'Signup', 'SignupEmail', 'SignupKakao', 'SignupSuccessful', 'PasswordFind', 'PasswordFindEmail', 'PasswordChange', 'PasswordChangeSuccessful'] // Login 되어있으면 안됨
   // const pubicPages = ['Login', 'Signup'] // Login 안해도 됨
   // const authPages = ['Login', 'Signup'] // Login 되어있으면 안됨
   const authRequired = !publicPages.includes(to.name) // 로그인 해야하는 페이지면 true 반환

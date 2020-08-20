@@ -114,7 +114,7 @@ export default {
         headers: { 'Content-Type': 'application/json' }
       })
         .then (() => {                                    
-          router.push({ name: 'PasswordFindEmail', params: {email: this.passwordFindData.email}})
+          router.push({ name: 'PasswordFindEmail', params: {passwordFindData: this.passwordFindData}})
         })
         .catch (() =>{
           const Toast = Swal.mixin({
@@ -147,24 +147,21 @@ export default {
 </script>
 
 <style scoped>
-.background {
-  background-repeat: repeat;
-}
-
 .container {
   width: 30%;
   border-radius: 25px;
 }
 
 h3 { 
-  color: #88A498;
+  color: #88a498;
+  font-weight: 900;
 }
 
 .inputs {
   border-style: none;
   border-bottom: 1px solid #88A498;
   background-color: transparent;
-  width: 100%;
+  width: 80%;
   padding: 10px;
   padding-left: 20px;
   margin-top: 20px;
@@ -186,13 +183,13 @@ input[type="password"] {
 .error-text {
   color: rgb(250, 25, 59, 0.7);
   text-align: left;
-  padding-left: 5px;
+  padding-left: 30px;
 }
 
 .done-button{
   background-color: #88A498;
   color: #F8F8F8;
-  width: 70%;
+  width: 80%;
 }
 
 .done-button:hover {
@@ -205,22 +202,19 @@ input[type="password"] {
   color: #F8F8F8;
 }
 
-.background::after {
-  content:"";
-  background-image: url('https://user-images.githubusercontent.com/57381062/88908481-de03b880-d294-11ea-8567-9e74079c2a7b.jpg');
-  opacity: 0.5;
-  top: 0;
-  left:0;
-  bottom:0;
-  right: 0;
+.background {
+  background-image: url("https://user-images.githubusercontent.com/25967949/90751489-27ce4480-e311-11ea-93aa-2ab9d1f41b4e.png");
   position: absolute;
-  z-index: -1;
-  width: 100vw;
-  height: 100vh;
-  filter: brightness(0.7);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-repeat: repeat;
 }
 
+
 .formatting {
+  margin-top: 20vh !important;
   opacity: 0.9;
 }
 

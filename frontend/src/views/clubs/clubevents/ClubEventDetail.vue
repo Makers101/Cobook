@@ -42,11 +42,37 @@
               </div>
               <div class="d-flex justify-content-end align-items-end">
                 <button
+                  type="button"
                   class="btn btn-green mr-2"
-                  @click="enterRoom(selectedClubEvent.id)"
-                  v-if="(isLeader || isParticipant) & !selectedClubEvent.closed & (selectedClubEvent.place === '온라인')">
-                  온라인 입장
+                  data-toggle="modal" data-target="#makeRoomModal"
+                  v-if="isLeader & !selectedClubEvent.closed & (selectedClubEvent.place === '온라인') & !roomUrl">
+                  온라인 만들기
                 </button>
+                <button
+                  class="btn btn-green mr-2"
+                  v-else-if="(isLeader || isParticipant) && !selectedClubEvent.closed && (selectedClubEvent.place === '온라인') && roomUrl">
+                  <a :href="selectedClubEvent.roomUrl" target="_blank">온라인 입장</a>
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="makeRoomModal" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="makeRoomModalLabel">온라인 만들기</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>webex에 가입되어 있는 이메일을 입력해주세요!</p>
+                        <input type="email" v-model="webexEmail" autofocus>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-green" @click="createLeader" data-dismiss="modal">온라인 만들기</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                 <button
                   class="btn btn-secondary dropdown-toggle"
@@ -103,10 +129,10 @@
           :perPageCustom="[[1, 1], [600, 2], [900, 3], [1200, 4], [1400, 5]]"
           paginationActiveColor="#3c756a"
           paginationColor="#88A498"
-          paginationPadding="4"
-          paginationSize="10"
+          :paginationPadding="4"
+          :paginationSize="10"
           easing="linear"
-          speed="300">
+          :speed="300">
           <slide>
             <div class="profile-container pointer" @click="selectUser(selectedClubEvent.leader.id)">
               <img
@@ -120,7 +146,7 @@
                 :alt="selectedClubEvent.leader.nickName"
                 v-else>
               <div class="overlay rounded-circle mx-auto">
-                <div class="text">{{ selectedClubEvent.leader.nickName }}</div>
+                <div class="text"><i class="fas fa-book-reader mr-2"></i>북클럽장<br>{{ selectedClubEvent.leader.nickName }}</div>
               </div>
             </div>
           </slide>
@@ -231,10 +257,10 @@
           :perPageCustom="[[1, 1], [1000, 2], [1500, 3]]"
           paginationActiveColor="#3c756a"
           paginationColor="#88A498"
-          paginationPadding="4"
-          paginationSize="10"
+          :paginationPadding="4"
+          :paginationSize="10"
           easing="linear"
-          speed="300"
+          :speed="300"
           v-if="selectedClubEvent.memberPosts.length">
         
           <slide
@@ -365,12 +391,13 @@ export default {
       params: {
         clubId: this.$route.params.clubId,
         clubEventId: this.$route.params.clubEventId
-      }
+      },
+      webexEmail: null,
     }
   },
   computed: {
     ...mapState(['myaccount']),
-    ...mapState('clubStore', ['selectedClub', 'selectedClubEvent']),
+    ...mapState('clubStore', ['selectedClub', 'selectedClubEvent', 'webexUrl']),
     isParticipant() {
       let result = false
       this.selectedClubEvent.participants.forEach(participant => {
@@ -387,6 +414,9 @@ export default {
         return false
       }
     },
+    roomUrl() {
+      return this.selectedClubEvent.roomUrl
+    }
     // isCurrent() {
     //   if (Date() < new Date(this.selectedClubEvent.datetime)) {
     //     console.log(Date())
@@ -400,7 +430,7 @@ export default {
     // }
   },
   methods: {
-    ...mapActions('clubStore', ['findClub', 'findClubEvent', 'participateClubEvent', 'deleteClubEvent']),
+    ...mapActions('clubStore', ['findClub', 'findClubEvent', 'participateClubEvent', 'deleteClubEvent', 'checkPeople', 'createRoomUrl']),
     selectUser(userId) {
       router.push({ name: 'Profile', params: { userId: userId }})
     },
@@ -459,11 +489,26 @@ export default {
           } 
         });
     },
-    enterRoom(roomId) {
-      router.push({name: 'ClubEventRoom', params: { roomId: roomId }})
+    toBookDetail() {
+      // router.push({ name: 'BookDetail', params: { bookId: bookId}})
     },
-    toBookDetail(bookId) {
-      router.push({ name: 'BookDetail', params: { bookId: bookId}})
+    createLeader() {
+      let webexData=  {
+        emails: [
+          this.webexEmail
+        ],
+        displayName: this.selectedClubEvent.leader.nickName,
+        firstName: this.selectedClubEvent.leader.nickName,
+        lastName: this.selectedClubEvent.leader.nickName,
+        roles: [
+          "Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfcmVhZG9ubHlfYWRtaW4"
+        ],
+        selectedClubEvent: this.selectedClubEvent,
+        clubId: this.selectedClub.id,
+        clubEventId: this.selectedClubEvent.id,
+        url: null,
+      }
+      this.checkPeople(webexData)
     },
   },
   created() {
@@ -828,5 +873,20 @@ export default {
 
   .scroll-sect:hover{
     overflow-x: scroll;
+  }
+
+  input {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    width: 100%;
+    text-align: center;
+  }
+
+  input:focus {
+    outline: none;
+  }
+  
+  a {
+    color: white;
+    text-decoration: none;
   }
 </style>

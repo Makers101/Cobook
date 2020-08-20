@@ -9,7 +9,7 @@
         class="club-image col-4"
         :src="selectedClub.clubImg"
         :alt="selectedClub.name"
-        v-if="selectedClub.clubImg">
+        v-if="selectedClub && selectedClub.clubImg">
       <img
         class="club-image col-4"
         :src="'http://placehold.jp/300x200.png?text=' + selectedClub.name"
@@ -40,7 +40,13 @@
           <div class="d-flex justify-content-between">
             <!-- club-detail-genres -->
             <div>
-              <button class="btn btn-genre mr-2" disabled v-for="genre in selectedClub.genres" :key="genre.id">#{{ genre.name }}</button>
+              <button 
+                class="btn btn-genre mr-2" 
+                @click="searchGenre(genre.name)"
+                v-for="genre in selectedClub.genres" 
+                :key="genre.id">
+                #{{ genre.name }}
+              </button>
             </div>
             <!-- club-detail-buttons -->
             <div>
@@ -122,8 +128,8 @@
     <hr>
 
     <!-- club-detail-members -->
-    <div>
-      <h4 class="text-left font-weight-bold mb-3">북클럽 멤버({{ selectedClub.memberCnt }})</h4>
+    <div class="my-4">
+      <h4 class="text-left font-weight-bold mb-4">북클럽 멤버({{ selectedClub.memberCnt }})</h4>
       <carousel
         :loop="true"
         :navigationEnabled="true"
@@ -132,10 +138,10 @@
         :perPageCustom="[[1, 1], [600, 2], [900, 3], [1200, 4], [1400, 5]]"
         paginationActiveColor="#3c756a"
         paginationColor="#88A498"
-        paginationPadding="4"
-        paginationSize="10"
+        :paginationPadding="4"
+        :paginationSize="10"
         easing="linear"
-        speed="300">
+        :speed="300">
         <slide>
           <div class="profile-container pointer" @click="selectUser(selectedClub.leader.id)">
             <img
@@ -149,7 +155,7 @@
               :alt="selectedClub.leader.nickName"
               v-else>
             <div class="overlay rounded-circle mx-auto">
-              <div class="text">{{ selectedClub.leader.nickName }}</div>
+              <div class="text"><i class="fas fa-book-reader mr-2"></i>북클럽장<br>{{ selectedClub.leader.nickName }}</div>
             </div>
           </div>
         </slide>
@@ -221,7 +227,7 @@
     <hr>
 
     <!-- club-description -->
-    <div>
+    <div class="my-4">
       <h4 class="text-left font-weight-bold mb-3">북클럽 설명</h4>
       <p class="text-left px-2 description">{{ selectedClub.description }}</p>
     </div>
@@ -230,8 +236,8 @@
 
     <!-- club-clubEvents -->
 
-    <div>
-      <h4 class="text-left font-weight-bold mb-3">{{ selectedClub.name }}에서 진행한 북클럽 이벤트</h4>
+    <div class="my-4">
+      <h4 class="text-left font-weight-bold mb-5">{{ selectedClub.name }}에서 진행한 북클럽 이벤트</h4>
       <carousel
         :loop="true"
         :navigationEnabled="true"
@@ -240,10 +246,10 @@
         :perPageCustom="[[1, 1], [1000, 2], [1500, 3]]"
         paginationActiveColor="#3c756a"
         paginationColor="#88A498"
-        paginationPadding="4"
-        paginationSize="10"
+        :paginationPadding="4"
+        :paginationSize="10"
         easing="linear"
-        speed="300"
+        :speed="300"
         v-if="selectedClub.clubEvents.length">
       
         <slide
@@ -454,6 +460,9 @@ export default {
             this.deleteClub(clubId)
           } 
         });
+    },
+    searchGenre(content) {
+      router.push({ name: 'SearchClub', params: { content: content }})
     }
   },
   created() {

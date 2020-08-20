@@ -3,6 +3,19 @@
     <div class="d-flex justify-content-center" v-if="books.length"> 
       <div class="book-container">
         <div class="row no-gutters row-cols-1 row-cols-md-3">
+          <div v-for="book in genreBooks" :key="`genreBooks-${book.id}`">
+            <div class="col mb-4 p-3">
+              <div class="card h-100 pointer" @click="bookDetail(book.id)">
+                <img class="bookImg card-img-top" :src="book.bookImg">
+                <div class="overlay">
+                  <div class="text">
+                    <p class="m-0">{{ book.title }}</p>
+                    <small>By. {{book.author}}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div v-for="book in books" :key="book.id">
             <div class="col mb-4 p-3">
               <div class="card h-100 pointer" @click="bookDetail(book.id)">
@@ -31,19 +44,21 @@ import { mapState, mapActions } from 'vuex'
 export default {
   name: 'SearchBook',
   computed: {
-     ...mapState('searchStore', ['books']),
+     ...mapState('searchStore', ['books', 'genreBooks']),
   },
   methods: {
-    ...mapActions('searchStore', ['fetchBooks']),
+    ...mapActions('searchStore', ['fetchBooks', 'fetchGenreBooks']),
     bookDetail(bookId) {
       this.$router.push({ name: 'BookDetail', params: { bookId: bookId}})
     },
   },
   created() {
     this.fetchBooks(this.$route.params.content)
+    this.fetchGenreBooks(this.$route.params.content)
   },
   beforeRouteUpdate (to, from, next) {
-    this.fetchBooks(this.params.content)
+    this.fetchBooks(this.$route.params.content)
+    this.fetchGenreBooks(this.$route.params.content)
     next();
   },
 }

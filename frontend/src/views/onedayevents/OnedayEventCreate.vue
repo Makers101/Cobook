@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container mb-5">
+  <div class="custom-container" style="padding-bottom:120px">
 
     <!-- onedayEvent-create-banner -->
     <div class="onedayEvent-banner">
@@ -54,7 +54,7 @@
                   :items="books"
                   hide-selected
                   color="blue-grey lighten-2"
-                  :rules="[v => (v.length !== 0) || '필수항목입니다.']"
+                  :rules="[v => (v && v.length !== 0) || '필수항목입니다.']"
                   label="책 검색"
                   item-text="title"
                   item-value="id"
@@ -206,7 +206,7 @@
                   :rules="[
                             v => !!v || '필수항목입니다.',
                             v => v !== '1' || '2 이상의 숫자를 입력해주세요 :)',
-                            v => v[0] !== '0' || '올바른 숫자를 입력해주세요 :)',
+                            v => v && v[0] !== '0' || '올바른 숫자를 입력해주세요 :)',
                             v => /^\d*$/.test(v) || '올바른 숫자를 입력해주세요 :)'
                           ]"
                   label="총원"

@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-container mb-5">
+  <div class="custom-container">
     
     <div class="profile-banner">
       <img class="profile-banner-img"
@@ -82,8 +82,8 @@
                     color="blue-grey lighten-2"
                     counter="3"
                     :rules="[
-                      v => (v.length !== 0) || '필수항목입니다.',
-                      v => (v.length < 4) || '최대 3개의 관심 장르를 고를 수 있습니다.'
+                      v => (v && v.length !== 0) || '필수항목입니다.',
+                      v => (v && v.length < 4) || '최대 3개의 관심 장르를 고를 수 있습니다.'
                     ]"
                     label="관심 장르"
                     item-text="name"

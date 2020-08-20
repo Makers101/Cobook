@@ -1,13 +1,16 @@
 import axios from 'axios'
 import SERVER from '@/api/api'
+import WEBEXSERVER from '@/api/webexApi'
 import router from '@/router'
+import Swal from 'sweetalert2'
 
 const onedayEventStore = {
     namespaced: true,
     state: {
       onedayEvents: null,
       filteredOnedayEvents: null,
-      selectedOnedayEvent: null
+      selectedOnedayEvent: null,
+      webexToken: { headers: { Authorization : 'Bearer ZDc5NGExMWUtNzgzYy00MGY4LTgyZTktYjhhMzc0Yzc5MWViNmQzMzAwZDItZWUx_P0A1_357e376f-831b-42a4-8c5a-06d11771e9c2'}},
     },
     getters: {
     },
@@ -102,6 +105,114 @@ const onedayEventStore = {
         } else {
           state.filteredOnedayEvents = new_onedayEvents1
         }
+      },
+      
+      checkPeople({ state, dispatch }, webexData) {
+        axios.get(WEBEXSERVER.URL + WEBEXSERVER.ROUTES.createPeople + '?email=' + webexData.emails[0], state.webexToken)
+          .then((res) => {
+            if (!res.data.items.length) {
+              dispatch('createPeople', webexData)
+            } else {
+              dispatch('createRoom', webexData)
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      createPeople({ state }, webexData) {
+        let timerInterval
+        Swal.fire({
+          title: '이메일을 보내는 중입니다.',
+          html: '조금만 기다려주세요',
+          timer: 8000,
+          timerProgressBar: true,
+          onBeforeOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+              const content = Swal.getContent()
+              if (content) {
+                const b = content.querySelector('b')
+                if (b) {
+                  b.textContent = Swal.getTimerLeft()
+                }
+              }
+            }, 100)
+          },
+          onClose: () => {
+            clearInterval(timerInterval)
+          }
+        })
+        axios.post(WEBEXSERVER.URL + WEBEXSERVER.ROUTES.createPeople, webexData, state.webexToken)
+          .then(() => {
+            alert('이메일에서 승인 절차를 진행해주세요.')
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      createRoom({ state, dispatch }, webexData) {
+        let timerInterval
+        Swal.fire({
+          title: '방을 생성중입니다.',
+          html: '조금만 기다려주세요',
+          timer: 3000,
+          timerProgressBar: true,
+          onBeforeOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+              const content = Swal.getContent()
+              if (content) {
+                const b = content.querySelector('b')
+                if (b) {
+                  b.textContent = Swal.getTimerLeft()
+                }
+              }
+            }, 100)
+          },
+          onClose: () => {
+            clearInterval(timerInterval)
+          }
+        })
+        let roomData = {
+          "title": webexData.selectedOnedayEvent.name,
+          "agenda": webexData.selectedOnedayEvent.description,
+          "password": "ssafyssafy1",
+          "start": webexData.selectedOnedayEvent.datetime + '+09:00',
+          "end": webexData.selectedOnedayEvent.datetime + '+08:00',
+          "enabledAutoRecordMeeting": false,
+          "allowAnyUserToBeCoHost": true,
+          "invitees": [
+            {
+              "email": webexData.emails[0],
+              "displayName": webexData.displayName,
+              "coHost": true
+            }
+          ]
+        }
+        axios.post(WEBEXSERVER.URL + WEBEXSERVER.ROUTES.createMeetings, roomData, state.webexToken)
+          .then((res) => {
+            webexData.url = res.data.webLink
+            dispatch('createRoomUrl', webexData)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      },
+      createRoomUrl({ dispatch, rootGetters }, webexData) {
+        let urlData = {
+          url: webexData.url
+        }
+        axios.put(
+          SERVER.URL + SERVER.ROUTES.onedayevents + '/' + webexData.selectedOnedayEvent.id + '/url',
+          urlData,
+          rootGetters.config)
+          .then(() => {
+            dispatch('findOnedayEvent', webexData.selectedOnedayEvent.id)
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
       }
     },
 }

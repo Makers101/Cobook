@@ -7,7 +7,7 @@
             <img 
               class="img-fluid logo-img"
               style="height: 50px"
-              src="@/assets/new logo.png" 
+              src="https://user-images.githubusercontent.com/59900633/90660520-045bb900-e281-11ea-9a28-07c9089126d1.png" 
               alt="로고 이미지"
             >
           </router-link>
@@ -94,9 +94,9 @@
                   <i class="fas fa-pen"></i>
                 </router-link>
               </li>
-              <li class="nav-item dropdown pointer mr-4">
+              <li class="nav-item dropdown mr-4">
                 <div 
-                  class="nav-link dropdown-toggle" 
+                  class="nav-link dropdown-toggle pointer" 
                   id="navbarDropdown" 
                   type="button"
                   role="button" 
@@ -114,12 +114,20 @@
                       class="dropdown-item setting-btn"
                       v-for="(noti, idx) in notis"
                       :key="`noti-${idx}`"
-                      @click="toRoute(noti)"
                     >
                       <div class="row no-gutters">
-                        <div class="col-2">
+                        <div class="col-2 pointer" @click="toRoute(noti)">
                           <img
-                            v-if="!findUsers[noti.from][1]"
+                            v-if="(noti.type === 'approve' || noti.type === 'reject') && findClubImg(noti.dataId)"
+                            class="img-fluid noti-profile-img mr-1" 
+                            :src="findClubImg(noti.dataId)" alt="클럽 프로필 사진">
+                          <img
+                            v-else-if="(noti.type === 'approve' || noti.type === 'reject') && !findClubImg(noti.dataId)"
+                            class="img-fluid noti-profile-img mr-1" 
+                            src="http://bit.do/anonymouseuser" 
+                            alt="클럽 프로필 사진">
+                          <img
+                            v-else-if="!findUsers[noti.from][1]"
                             class="img-fluid noti-profile-img mr-1" 
                             src="http://bit.do/anonymouseuser" 
                             alt="유저 프로필 사진">
@@ -128,13 +136,15 @@
                             class="img-fluid noti-profile-img mr-1" 
                             :src="findUsers[noti.from][1]" alt="유저 프로필 사진">
                         </div>
-                        <div class="col-9 d-flex align-items-center text-left pl-2">
+                        <div class="col-9 d-flex align-items-center text-left pl-2 pointer" @click="toRoute(noti)">
                           <span v-if="noti.type==='club'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 '{{ findClubs[noti.dataId] }}' 북클럽에 가입신청했습니다.</span>
                           <span v-if="noti.type==='comment'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 댓글을 작성했습니다.</span>
                           <span v-if="noti.type==='follow'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 팔로우했습니다.</span>
                           <span v-if="noti.type==='like'" style="font-size: 14px;">{{ findUsers[noti.from][0] }}님이 게시물을 좋아합니다.</span>
+                          <span v-if="noti.type==='approve'" style="font-size: 14px;">'{{ findClubName(noti.dataId) }}' 북클럽에 가입 승인되었습니다.</span>
+                          <span v-if="noti.type==='reject'" style="font-size: 14px;">'{{ findClubName(noti.dataId) }}' 북클럽에 가입 거절되었습니다.</span>
                         </div>
-                        <div class="col-1 d-flex align-items-center justify-content-end">
+                        <div class="col-1 d-flex align-items-center justify-content-end pointer" @click="deleteNoti(noti.id)">
                           <span class="text-muted" style="font-size:10px">X</span>
                         </div>
                       </div>
@@ -177,34 +187,34 @@
           </div>
         </nav>
       </div>
-      <div class="mt-5" v-else>
+      <div v-else style="padding-top:50px;position:absolute;z-index:999; top: 5%; left: 50%; height: 70px; width: 210px;  margin: -35px 0 0 -110px;">
         <img 
           class="img-fluid logo-img"
-          style="height: 50px"
-          src="@/assets/new logo.png" 
+          style="height: 70px;"
+          src="https://user-images.githubusercontent.com/59900633/90660536-0756a980-e281-11ea-90e9-ec8a84c7c9d7.png"
           alt="로고 이미지"
         >
       </div>
       <!-- 위로가기 버튼 -->
       <div>
       <div>
-        <button class="btn btn-green btn-up m-0" @click="scrollToTop()" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail'">
+        <button class="btn btn-green btn-up m-0" @click="scrollToTop()" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail' &&  authToken != null">
           <i class="fas fa-caret-up" style="color:white;"></i>
         </button>
       </div>
       </div>
       <router-view class="router-view"/>
-      <!-- footer -->
-      <div class="footer mt-5" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail'">
-        <p class="footer-p">© 2020 Copyright: 만든이101 </p>
-        <p class="m-0 pb-2">
-          <i class="fab fa-github github-color"></i><a href="https://github.com/smhwang0109" target="_blank"> smhwang0109</a>
-          | <i class="fab fa-github github-color"></i> <a href="https://github.com/scl2589" target="_blank"> chaelinshin96</a> 
-          | <i class="fab fa-github github-color"></i><a href="https://github.com/SunHwan-Park" target="_blank"> SunHwan-Park</a>
-          | <i class="fab fa-github github-color"></i><a href="https://github.com/genie97" target="_blank"> genie97</a>
-          | <i class="fab fa-github github-color"></i><a href="https://github.com/pandaHun" target="_blank"> pandaHun</a>
-        </p>
-      </div>
+    </div>
+    <!-- footer -->
+    <div class="footer" v-if="this.$route.name!=='PostDetail' && this.$route.name!=='BookDetail' && authToken != null">
+      <p class="footer-p">© 2020 Copyright: 만든이101 </p>
+      <p class="m-0 pb-2">
+        <i class="fab fa-github github-color"></i><a href="https://github.com/smhwang0109" target="_blank"> smhwang0109</a>
+        | <i class="fab fa-github github-color"></i> <a href="https://github.com/scl2589" target="_blank"> chaelinshin96</a> 
+        | <i class="fab fa-github github-color"></i><a href="https://github.com/SunHwan-Park" target="_blank"> SunHwan-Park</a>
+        | <i class="fab fa-github github-color"></i><a href="https://github.com/genie97" target="_blank"> genie97</a>
+        | <i class="fab fa-github github-color"></i><a href="https://github.com/pandaHun" target="_blank"> pandaHun</a>
+      </p>
     </div>
     <div id="app2">
       <div class="media-q d-flex flex-column justify-content-center align-items-center">
@@ -248,9 +258,37 @@ export default {
   },
   computed: {
     ...mapState(['genres', 'myaccount', 'books', 'users', 'authToken']),
+    ...mapState('clubStore', ['clubs']),
+    findClubName() {
+      return (clubId) => {
+        {
+          let name = '이름 미정'
+          this.clubs.forEach((club) => {
+            if (club.id === clubId) {
+              return name = club.name
+            }
+          })
+          return name
+        }
+      }
+    },
+    findClubImg() {
+      return (clubId) => {
+        {
+          let img = null
+          this.clubs.forEach((club) => {
+            if (club.id === clubId) {
+              return img = club.clubImg
+            }
+          })
+          return img
+        }
+      }
+    },
   },
   methods: {
-    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'logout']),
+    ...mapActions(['fetchGenres', 'findMyAccount', 'fetchBooks', 'fetchUsers', 'logout', 'deleteNoti']),
+    ...mapActions('clubStore', ['fetchClubs']),
     searchUser() {
       if (!this.keyword) {
         this.isActive = false
@@ -282,43 +320,28 @@ export default {
         this.$router.push({name: 'Profile', params: { userId: noti.dataId }})
       } else if (noti.type === 'like' || noti.type === 'comment') {
         this.$router.push({name: 'PostDetail', params: { postId: noti.dataId }})
+      } else if (noti.type === 'approve' || noti.type === 'reject') {
+        this.$router.push({name: 'ClubDetail', params: { clubId: noti.dataId }})
       }
     },
-    // clickNoti() {
-    //   const text = {
-    //     // "token" : 'dwyx4pmx5p90GVEFWkl6Hu:APA91bGV0Da1jxCWuW70-akuu7PSJnOsIu75js9eQFjzUUVjkctHm8fYUyMoSrWbRlKvH5IWuh2VHpNOXlkpwNokwbIkbmB_sH6l-5VU4ExWf0iiFQAToMq0PUnMMo-MDYvSLTpovjui',
-    //     "to": "dwyx4pmx5p90GVEFWkl6Hu:APA91bGV0Da1jxCWuW70-akuu7PSJnOsIu75js9eQFjzUUVjkctHm8fYUyMoSrWbRlKvH5IWuh2VHpNOXlkpwNokwbIkbmB_sH6l-5VU4ExWf0iiFQAToMq0PUnMMo-MDYvSLTpovjui",
-    //     "data": {
-    //       "message": "FCM Message",
-    //       // "body": "This is a message from FCM"
-    //     }
-    //   }
-    //   const header = {
-    //     headers: {
-    //       "Accept": "application/json",
-    //       "Content-Type": "application/json",
-    //       "Authorization": "key=AAAABQJJTO0:APA91bF0ju8l8DHn82GuJndzCtFh178p5cKwSs32GdnJOIk3Rgl8gRJ5jf674Vj6tFQrhCy4WelWgqdSuQ9F2imhAnAgentNfktHjnPN1L_uNCZavDJjsUYqPS07zM9gbmSzfUZqBfYG"
-    //     }
-    //   }
-    //   axios.post('https://fcm.googleapis.com/fcm/send', text, header)
-    //     .then(res => console.log(res))
-    //     .catch(err => console.log(err))
-    // }
     // Firebase
     clickNoti() {
       firebase.database().ref('noti/' + this.myaccount.id).on('value', data => {
         if (data.val()) {
-          this.notis = Object.values(data.val()).reverse()
+          this.notis = []
+          let dataObject = data.val()
+          for (let idx in dataObject) {
+            dataObject[idx].id= idx
+            this.notis.push(dataObject[idx])
+          }
+          this.notis.reverse()
         } else {
           this.notis = null
         }
       })
     },
-    // clickNoti() {
-    //   console.log(1)
-    // },
     search(keyword){
-      this.$router.push({name: 'SearchUser', params: { content : keyword }})
+      this.$router.push({name: 'SearchPost', params: { content : keyword }})
     },
     scrollToTop() {
       window.scrollTo(0,0)
@@ -330,12 +353,14 @@ export default {
       this.findUsers = Object.fromEntries(mapData)
     },
     myaccount() {
-      const mapData = []
-      this.clickNoti()
-      this.myaccount.myClubs.forEach(club => {
-        mapData.push([club.id, club.name])
-      })
-      this.findClubs = Object.fromEntries(mapData)
+      if (this.myaccount) {
+        const mapData = []
+        this.clickNoti()
+        this.myaccount.myClubs.forEach(club => {
+          mapData.push([club.id, club.name])
+        })
+        this.findClubs = Object.fromEntries(mapData)
+      }
     }
   },
   created() {
@@ -343,6 +368,7 @@ export default {
     this.findMyAccount()
     this.fetchBooks()
     this.fetchUsers()
+    this.fetchClubs()
   },
 }
 </script>
@@ -350,6 +376,12 @@ export default {
 <style scoped>
 @media (max-width: 960px) {
   #app {
+    display: none;
+  }
+}
+
+@media (max-width: 960px) {
+  .footer {
     display: none;
   }
 }
@@ -366,10 +398,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-.router-view {
-  margin-bottom: 100px;
+  min-height: 100vh;
+  position: relative;
 }
 
 #nav {
@@ -384,6 +414,10 @@ export default {
   font-size: 1.1rem;
   font-weight: 900;
   color: #3A2F15;
+}
+
+.navbar {
+  margin-left: 1vw;
 }
 
 .navbar-bg-color {
@@ -423,6 +457,7 @@ export default {
   bottom: 120px;
   right: 20px;
   border-radius: 50%;
+  z-index: 99;
 }
 
 /* Search bar */
@@ -580,10 +615,11 @@ input::-webkit-input-placeholder {
 
 .dropdown-item {
   font-weight: 600 !important;
+  white-space: pre-wrap;
 }
 
-.dropdown-item {
-  white-space: pre-wrap;
+.dropdown-item:active {
+  background-color: #88A498;
 }
 
 .dropdown-noti {
@@ -637,6 +673,7 @@ input::-webkit-input-placeholder {
 }
 
 .footer {
+  text-align: center;
   background-color: rgb(34, 34, 34);
   color: white;
   padding-top: 20px;
@@ -645,6 +682,7 @@ input::-webkit-input-placeholder {
   bottom: 0;
   width: 100%;
   z-index: 99;
+  position: relative;
 }
 
 .footer a, .footer a:link {

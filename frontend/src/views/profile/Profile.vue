@@ -7,14 +7,14 @@
           class="profile-image bg-light-ivory"
           :src="profile.profileImg"
           :alt="profile.nickName"
-          v-if="profile.profileImg">
+          v-if="profile && profile.profileImg">
         <img
           class="profile-image bg-light-ivory"
           src="http://bit.do/anonymouseuser"
           :alt="profile.nickName"
-          v-else>
+          v-else-if="profile">
       </div>
-      <div class="col-9 part text-left d-flex flex-column justify-content-between">
+      <div class="col-9 part text-left d-flex flex-column justify-content-between" v-if="profile">
         <div class="d-flex flex-column justify-content-start">
           <div class="d-flex justify-content-between">
             <h3 class="color-beige font-weight-bold">{{ profile.nickName }}</h3>
@@ -33,7 +33,12 @@
           </p> 
           <div class="d-flex justify-content-between">
             <div>
-              <button class="btn btn-genre mr-2" disabled v-for="genre in profile.likeGenres" :key="genre.id">#{{ genre.name }}</button>
+              <button 
+                class="btn btn-genre mr-2" 
+                @click="clickGenre(genre.name)"
+                v-for="genre in profile.likeGenres" 
+                :key="genre.id">#{{ genre.name }}
+              </button>
             </div>
             <button class="btn btn-gray" v-if="myaccount.id === profile.id" @click="clickUpdate(profile.id)">프로필 수정</button>   
           </div>
@@ -193,6 +198,9 @@ export default {
     },
     clickUpdate(userId) {
       this.$router.push({ name: 'ProfileUpdate', params: { userId: userId }})
+    },
+    clickGenre(genre) {
+      this.$router.push({ name: 'SearchBook', params: { content: genre }})
     }
   },
   created() {

@@ -42,9 +42,9 @@ export default {
   data() {
     return {
       signupKakaoData: {
-        nickname: this.$route.params.nickname,
+        nickName: this.$route.params.nickName,
         email: "",
-        platformType: this.$route.params.platyformType,
+        platformType: this.$route.params.platformType,
       },
       error: {
         email: false,
@@ -122,8 +122,9 @@ export default {
   border-radius: 25px;
 }
 
-h3 { 
-  color: #88A498;
+h3 {
+  color: #88a498;
+  font-weight: 800;
 }
 
 .inputs {
@@ -171,22 +172,19 @@ input[type="password"] {
   color: #F8F8F8;
 }
 
-.background::after {
-  content:"";
-  background-image: url('https://user-images.githubusercontent.com/57381062/88908481-de03b880-d294-11ea-8567-9e74079c2a7b.jpg');
-  opacity: 0.5;
-  top: 0;
-  left:0;
-  bottom:0;
-  right: 0;
+.background {
+  background-image: url("https://user-images.githubusercontent.com/25967949/90751489-27ce4480-e311-11ea-93aa-2ab9d1f41b4e.png");
   position: absolute;
-  z-index: -1;
-  width: 100vw;
-  height: 100vh;
-  filter: brightness(0.7);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-repeat: repeat;
 }
 
+
 .formatting {
+  margin-top: 20vh !important;
   opacity: 0.9;
 }
 </style>

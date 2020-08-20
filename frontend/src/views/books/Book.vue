@@ -8,7 +8,7 @@
           </header>
           <article>
             <!-- 페이지1 -->
-            <div class="page1 d-flex flex-column" style="height: 580px">
+            <div class="page1 d-flex flex-column" v-if="selectedBook" style="height: 580px">
               <!-- 책 제목 -->
               <div class="d-flex align-items-center" style="height:85px;"> 
                 <h2 class="chapter-title book-title pt-0">『{{ selectedBook.title }}』</h2>
@@ -65,8 +65,8 @@
                       <strong>장르</strong>
                       <i class="fas fa-theater-masks color-green ml-2"></i> 
                     </div>
-                    <div class="col-7 col-lg-8">
-                      <span>{{ selectedBook.genre.name }}</span>
+                    <div class="col-7 col-lg-8 pointer">
+                      <span @click="searchGenre(selectedBook.genre.name)">{{ selectedBook.genre.name }}</span>
                     </div>
                   </div>
                 </div>
@@ -89,7 +89,7 @@
               </div>
             </div>
             <!-- 페이지2 -->
-            <div class="page2" style="height: 600px">
+            <div class="page2" v-if="selectedBook" style="height: 600px">
               <h5 class="mb-4"><strong>코북 유저들의 리뷰</strong></h5>
               <div class="review-list scroll-sect"  v-if="selectedBook.posts.length">
                 <div class="mb-3" v-for="post in selectedBook.posts" :key="post.id">
@@ -178,6 +178,9 @@ export default {
     },
     postDetail(postId) {
       this.$router.push({ name: 'PostDetail', params: { postId: postId }})
+    },
+    searchGenre(content) {
+      this.$router.push({ name: 'SearchBook', params: {content: content} })
     }
   },
   mounted() {

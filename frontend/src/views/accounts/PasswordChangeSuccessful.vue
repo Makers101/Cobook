@@ -1,6 +1,7 @@
 <template>
   <div class="background">
     <div class="container py-5 mt-5 bg-light-ivory formatting">
+      <h3>비밀번호 변경 완료</h3>
       <h5 class="mt-3">비밀번호 변경이 완료되었습니다.<br>
       로그인해주세요.</h5>
       <div class="buttons mt-5">
@@ -22,17 +23,18 @@ export default {
 </script>
 
 <style scoped>
-.background {
-  background-repeat: repeat;
-}
-
 .container {
   width: 30%;
   border-radius: 25px;
 }
 
+h3 {
+  color: #88a498;
+  font-weight: 800;
+}
+
 h5 { 
-  color: #88A498;
+  color: black;
 }
 
 .login-button{
@@ -42,22 +44,19 @@ h5 {
   /* font-size: 10px; */
 }
 
-.background::after {
-  content:"";
-  background-image: url('https://user-images.githubusercontent.com/57381062/88908481-de03b880-d294-11ea-8567-9e74079c2a7b.jpg');
-  opacity: 0.5;
-  top: 0;
-  left:0;
-  bottom:0;
-  right: 0;
+.background {
+  background-image: url("https://user-images.githubusercontent.com/25967949/90751489-27ce4480-e311-11ea-93aa-2ab9d1f41b4e.png");
   position: absolute;
-  z-index: -1;
-  width: 100vw;
-  height: 100vh;
-  filter: brightness(0.7);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-repeat: repeat;
 }
 
+
 .formatting {
+  margin-top: 20vh !important;
   opacity: 0.9;
 }
 </style>
