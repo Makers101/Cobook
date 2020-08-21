@@ -150,7 +150,7 @@
 
 ## 🔧 Tech Stack
 
-![image-20200821001213528](images/README/image-20200821001213528.png)
+![image-20200821125320577](images/README/image-20200821125320577.png)
 
 <details>
     <summary>Front 자세히 살펴보기</summary>
@@ -196,11 +196,30 @@
     $ npm run serve
     ```
 
+### Backend
+
+- Java (Open JDK 14)를 설치합니다.
+- Maven을 설치합니다.
+- VS Code 및 관련 Spring Boot Extension Pack 설치합니다.
+- Docker를 설치합니다.
+
+> Maria DB 컨테이너 실행
+
+- `docker run --name-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD={패스워드} -d mariddb`
+  - 패스워드를 칠 때는, 대괄호를 지우고 칩니다.
+
+- `docker exec -it maria-db mysql -u root -p`
+  - docker를 켜고, maria-db를 실행하기 위한 코드입니다.
+
+> DB 테이블 생성
+
+- DB 테이블을 생성합니다.
+
 <br>
 
 ## ✨3가지 가치 
 
-![image-20200821003509137](images/README/image-20200821003509137.png)
+![image-20200821125233557](images/README/image-20200821125233557.png)
 
 #### 편리성을 위한 '피드'
 
@@ -424,3 +443,8 @@
 ## 🎞 시연 영상
 
 - <a href="https://www.youtube.com/watch?v=hAW3b7z9Ifo&feature=youtu.be">중간발표 시연영상 </a>
+
+- <a href="https://youtu.be/X8WfPhbEnXE">최종발표 코북광고</a>
+- <a href="https://youtu.be/bOfSSnoSVi0">최종발표 시연영상</a>
+- <a href="https://youtu.be/MAfjGcCyYQw">최종발표 UCC</a>
+
