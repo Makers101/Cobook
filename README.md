@@ -34,16 +34,16 @@
 
 <br>
 
-## 📆 개발 계획
+## 📆 프로젝트 개요
 
-- 진행 기간: 2020.07.13 ~ 2020.08.21
+- **진행 기간**: 2020.07.13 ~ 2020.08.21
 - **목표**
   - 독서활동을 손쉽게 기록하고, 
   - 다른 사람들과 공유하고 싶은 사람, 
   - 꾸준히 책읽고 싶은 사람, 
   - 책과 사람 모두 만나고 싶은 사람, 
   - 책모임을 더 쉽게 관리하고 활동 내용을 정리하고 싶은 사람
-  - **이 모든 사람을 위한 웹사이트 만들기 ** 
+  - :star: 이 모든 사람들을 위한 웹사이트 만들기
 - **웹사이트 이름**: Cobook (코북)
   - 책 읽는 사람들을 위한 SNS 커뮤니티 & 모임 매칭 서비스
 - **슬로건**: '책 읽는 사람들의 소셜 살롱, 코북'
@@ -114,7 +114,6 @@
         <li><a href="Document/Dev_log/20200820_dev_log.md">8/20 - Back-end (서버 및 쿼리 안정화 + Google OAuth 프론트와 연결) & Front-end (Notification - 수정 + Signup - 회원가입 완료 페이지 routing + Login/ Signup/PasswordChange - background image 수정) + 발표 준비 및 피드백 + 영상 편집 (동원 참치 패러디 완료 + 시연 영상 완료)</a></li>
         <li><a href="Document/Dev_log/20200821_dev_log.md">8/21 - 최종발표</a></li>
 </ul></details>
-
 <details>
     <summary>Convention</summary>
     <ul>
@@ -128,7 +127,6 @@
     <ul>
         <a href="Document/Proposal/cobook_기획안.md"><li>기획안 Markdown</li></a>
         <a href="Document/Proposal/기획안_ver.pdf"><li>기획안 PDF</li></a>
-    <a href="Document/Convention/Vue_Vuex_Convention.md"><li>Vue Convention</li></a>
     </ul>
 </details>
 <details>
@@ -141,8 +139,7 @@
     <summary>Video Plan & Proposal</summary>
     <ul>
         <a href="Document/video/영상편집_Plan.md"><li>영상편집 계획</li></a>
-        <a href="Document/Convention/코북_영상_기획.md"><li>코북 영상 기획</li></a>
-    <a href="Document/Convention/Vue_Vuex_Convention.md"><li>Vue Convention</li></a>
+        <a href="Document/Video/코북_영상_기획.md"><li>코북 영상 기획</li></a>
     </ul>
 </details>
 
@@ -217,7 +214,9 @@
 
 <br>
 
-## ✨3가지 가치 
+## ✨개발목표
+
+> 3가지 가치를 통해 책 읽는 사람, 읽고 싶은 사람들을 위한 웹사이트 구현
 
 ![image-20200821125233557](images/README/image-20200821125233557.png)
 
@@ -440,11 +439,11 @@
 
 <br>
 
-## 🎞 시연 영상
+## 🎞 최종산출물
 
 - <a href="https://www.youtube.com/watch?v=hAW3b7z9Ifo&feature=youtu.be">중간발표 시연영상 </a>
-
 - <a href="https://youtu.be/X8WfPhbEnXE">최종발표 코북광고</a>
 - <a href="https://youtu.be/bOfSSnoSVi0">최종발표 시연영상</a>
 - <a href="https://youtu.be/MAfjGcCyYQw">최종발표 UCC</a>
+- <a href="">최종발표 pdf</a>
 
