@@ -445,5 +445,5 @@
 - <a href="https://youtu.be/X8WfPhbEnXE">최종발표 코북광고</a>
 - <a href="https://youtu.be/bOfSSnoSVi0">최종발표 시연영상</a>
 - <a href="https://youtu.be/MAfjGcCyYQw">최종발표 UCC</a>
-- <a href="">최종발표 pdf</a>
+- <a href="Document/Presentation/Cobook_발표_최종.pdf">최종발표 pdf</a>
 
