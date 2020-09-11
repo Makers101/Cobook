@@ -18,9 +18,9 @@ jwt:
 spring:
   profiles: local
   datasource:
-    url: jdbc:mariadb://54.180.126.17:3306/cobook
-    username: cobook
-    password: cobook
+    url: jdbc:mariadb://localhost:3306/cobook
+    username: root
+    password: root
     driver-class-name: org.mariadb.jdbc.Driver
   h2:
     console:
@@ -34,8 +34,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: cobookservice2020@gmail.com
-    password: hqltrepxhfnlohfn
+    username: $your_user_name
+    password: $your_password
     properties:
       mail:
         smtp:
@@ -48,14 +48,14 @@ spring:
       client:
         registration:
           google:
-            client-id: 722675530533-8lddsa5lo60rlmmlijrno06n5elge0tn.apps.googleusercontent.com
-            client-secret: bFE2aTcKEFwHSDhrMyUrUJz2
+            client-id: $your_client_id
+            client-secret: $your_client_pass
 
 custom:
   oauth2:
     kakao:
-      client-id: 8160c09915d18b2d717f58f39f209d61
-      client-secret: pW1lBMjL9wgNJYGnKeuMG1IjnrgpIFHu
+      client-id: $your_client_id
+      client-secret: $your_client_pass
 ---
 #spring:
 #  profiles: dev
